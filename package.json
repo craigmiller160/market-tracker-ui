@@ -3,7 +3,8 @@
   "version": "0.0.1-beta",
   "scripts": {
     "start": "craig-webpack-dev",
-    "forceBuild": "craig-webpack"
+    "forceBuild": "craig-webpack",
+    "temp": "cross-env NODE_ENV=development webpack-dev-server"
   },
   "devDependencies": {
     "@craigmiller160/babel-config": "^1.0.0-beta.2",
