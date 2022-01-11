@@ -1,8 +1,10 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
   "version": "0.0.1-beta",
-  "main": "index.js",
-  "license": "MIT",
+  "scripts": {
+    "start": "craig-webpack-dev",
+    "forceBuild": "craig-webpack"
+  },
   "devDependencies": {
     "@craigmiller160/babel-config": "^1.0.0-beta.2",
     "@craigmiller160/babel-config-react": "^1.0.0-beta.1",
