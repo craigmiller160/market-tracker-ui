@@ -1,1 +1,7 @@
-export const Content = () => <h1>Content</h1>;
+import { Welcome } from './Welcome';
+
+export const Content = () => (
+	<div>
+		<Welcome />
+	</div>
+);
