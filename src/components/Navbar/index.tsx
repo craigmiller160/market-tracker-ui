@@ -3,7 +3,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { match, when } from 'ts-pattern';
 import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
-import { useImmer } from 'use-immer';
+import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { FC } from 'react';
 import { MenuItemKey } from './MenuItemKey';
@@ -17,11 +17,9 @@ const initState: State = {
 	selected: ''
 };
 
-export const Navbar: FC<void> = () => {
-	const breakpoints: Breakpoints = useBreakpoint();
-	const [state, setState] = useImmer<State>(initState);
-
-	const handleMenuClick = (menuItemInfo: MenuInfo): void =>
+const createHandleMenuClick =
+	(setState: Updater<State>) =>
+	(menuItemInfo: MenuInfo): void =>
 		match(menuItemInfo.key)
 			.with('auth', () =>
 				setState((draft) => {
@@ -33,6 +31,12 @@ export const Navbar: FC<void> = () => {
 					draft.selected = _;
 				})
 			);
+
+export const Navbar: FC<void> = () => {
+	const breakpoints: Breakpoints = useBreakpoint();
+	const [state, setState] = useImmer<State>(initState);
+
+	const handleMenuClick = createHandleMenuClick(setState);
 
 	const props: NavbarProps = {
 		selected: state.selected,
