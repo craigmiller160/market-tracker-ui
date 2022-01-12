@@ -6,7 +6,8 @@
     "build": "yarn lint && yarn test && yarn forceBuild",
     "forceBuild": "craig-webpack",
     "lint": "craig-lint",
-    "test": "craig-test"
+    "test": "craig-test",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{ts,tsx}": "yarn lint"
