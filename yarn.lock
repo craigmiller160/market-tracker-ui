@@ -1152,10 +1152,8 @@
   dependencies:
     ts-loader "^9.2.6"
 
-"@craigmiller160/webpack-config@^1.0.0-beta.3":
-  version "1.0.0-beta.4"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config/-/webpack-config-1.0.0-beta.4.tgz#38ad1964adc477c9bf27409478d859b109459b0f"
-  integrity sha512-5pDXrWHV98lmnqBRSaVvdDi91iFSHYluVgLcOYV9MXc8ZBQjMnjXJBhGb2N3vA22N18P15E9iSma9ocBzTrKvg==
+"@craigmiller160/webpack-config@file:.yalc/@craigmiller160/webpack-config":
+  version "1.0.0-beta"
   dependencies:
     "@craigmiller160/postcss-config" "^1.0.0-beta.1"
     clean-webpack-plugin "^4.0.0"

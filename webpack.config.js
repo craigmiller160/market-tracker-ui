@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge');
 const config = require('@craigmiller160/webpack-config');
+const { isDevelopment } = require('@craigmiller160/webpack-config/utils/nodeEnvCheck')
 const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 
@@ -13,7 +14,7 @@ const localDevServerConfig = {
 
 const parts = [config, sassConfig, tsConfig];
 
-if (process.env.NODE_ENV === 'development') {
+if (isDevelopment()) {
     parts.push(localDevServerConfig);
 }
 

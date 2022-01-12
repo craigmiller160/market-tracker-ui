@@ -1,6 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.css'; // TODO antd.min.css
 import ReactDOM from 'react-dom';
 import { Button } from 'antd';
 
