@@ -1,6 +1,8 @@
 import { Layout, Menu } from 'antd';
+import { FC } from 'react';
+import { NavbarProps } from './NavbarProps';
 
-export const MobileNavbar = () => {
+export const MobileNavbar: FC<NavbarProps> = () => {
 	return (
 		<Layout.Sider breakpoint="lg" collapsedWidth={0}>
 			<Menu theme="dark" mode="inline">
