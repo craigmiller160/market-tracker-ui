@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Line } from '@ant-design/plots';
 import {Annotation} from '@antv/g2plot/src/types/annotation';
 

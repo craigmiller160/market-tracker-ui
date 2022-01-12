@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {Button, Menu,Layout} from 'antd';
 import './Navbar.scss';
 import { MenuInfo } from 'rc-menu/lib/interface';
