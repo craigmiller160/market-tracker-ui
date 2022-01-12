@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import {Navbar} from './Navbar';
+import {Chart} from './Chart';
 
 export const App = () => {
 	const onClick = () => alert('Clicked');
@@ -11,6 +12,7 @@ export const App = () => {
                 <Button type="primary" onClick={onClick}>
                     Click Me
                 </Button>
+                <Chart />
             </div>
 		</div>
 	);
