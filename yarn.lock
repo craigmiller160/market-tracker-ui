@@ -1257,6 +1257,11 @@
   dependencies:
     axios "^0.21.1"
 
+"@craigmiller160/ajax-error-handler@^1.0.0-beta.1":
+  version "1.0.0-beta.1"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ajax-error-handler/-/ajax-error-handler-1.0.0-beta.1.tgz#48e5544c9317ab9b10f6858bbd233753a1eafc5f"
+  integrity sha512-ikkz5sdeGn5imajg/bTR5OKDgVlPNglt7iMel208b/l0CdWNCaBEJL/zq+WOB9VyXvKrALgyRYFd+uslBaYDfA==
+
 "@craigmiller160/babel-config-react@^1.0.0-beta.1":
   version "1.0.0-beta.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config-react/-/babel-config-react-1.0.0-beta.2.tgz#b6a7c4cce3bd0e8deca3941579a7372bc9544829"
