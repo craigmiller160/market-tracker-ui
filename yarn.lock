@@ -4213,6 +4213,11 @@ forwarded@0.2.0:
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
   integrity sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==
 
+fp-ts@^2.11.7:
+  version "2.11.7"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/fp-ts/-/fp-ts-2.11.7.tgz#ac05ac9a682bcbde669d34c5d5a16d19bb7a4ab8"
+  integrity sha512-UUpeygu50mV/J96Nk92fzHDznYXJxsO20wrUZGJppja1f8P+fhCaclcqcfubEyrH7XXPsmYn98CJF0BVAEn3ZQ==
+
 fraction.js@^4.1.2:
   version "4.1.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/fraction.js/-/fraction.js-4.1.2.tgz#13e420a92422b6cf244dff8690ed89401029fbe8"
