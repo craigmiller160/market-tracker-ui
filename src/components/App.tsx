@@ -1,9 +1,12 @@
 import { Navbar } from './Navbar';
 import { Content } from './Content';
+import { BrowserRouter } from 'react-router-dom';
 
 export const App = () => (
 	<>
-		<Navbar />
-		<Content />
+		<BrowserRouter basename="/market-tracker">
+			<Navbar />
+			<Content />
+		</BrowserRouter>
 	</>
 );
