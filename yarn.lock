@@ -953,9 +953,9 @@
     to-fast-properties "^2.0.0"
 
 "@craigmiller160/babel-config-react@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config-react/-/babel-config-react-1.0.0-beta.1.tgz#aae81d9c8f77048801f79d7a27c0e6cb33b76ee7"
-  integrity sha512-C44zL8aKuSiMlUpoH3ZJnETkYqSmdw3Io2Hpc5s4StYHbF15ugGZsj4+KRCTzV5mm397MqhU2bLH5tvi4HyKvA==
+  version "1.0.0-beta.2"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config-react/-/babel-config-react-1.0.0-beta.2.tgz#b6a7c4cce3bd0e8deca3941579a7372bc9544829"
+  integrity sha512-jwHEBtAqpPQqa/Id18ajZm1xb/gVNeEqd2HPG7nUXhkpiEwqY4dwFuSsSHR9kd3j4ijM59xiT1+I1yN12GxSaw==
   dependencies:
     "@babel/preset-react" "^7.16.5"
 
