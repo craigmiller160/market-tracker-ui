@@ -1,11 +1,24 @@
 import { Layout, Menu } from 'antd';
 import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
+import './MobileNavbar.scss';
 
-export const MobileNavbar: FC<NavbarProps> = () => {
+export const MobileNavbar: FC<NavbarProps> = (props) => {
+	const { selected, handleMenuClick } = props;
 	return (
-		<Layout.Sider breakpoint="lg" collapsedWidth={0}>
-			<Menu theme="dark" mode="inline">
+		<Layout.Sider
+			className="MobileNavbar"
+			breakpoint="lg"
+			collapsedWidth={0}
+		>
+			<Menu
+				theme="dark"
+				mode="inline"
+				selectedKeys={[selected]}
+				onClick={handleMenuClick}
+			>
+				<Menu.Item key="portfolios">Portfolios</Menu.Item>
+				<Menu.Item key="watchlists">Watchlists</Menu.Item>
 				<Menu.Item key="auth">Login</Menu.Item>
 			</Menu>
 		</Layout.Sider>

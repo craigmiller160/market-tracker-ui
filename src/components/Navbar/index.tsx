@@ -14,25 +14,23 @@ interface State {
 }
 
 const initState: State = {
-	selected: ''
+	selected: 'portfolios'
 };
 
 const createHandleMenuClick =
 	(setState: Updater<State>) =>
 	(menuItemInfo: MenuInfo): void =>
-		match(menuItemInfo.key)
-			.with('auth', () =>
-				setState((draft) => {
-					draft.selected = '';
-				})
-			)
+		match(menuItemInfo.key as MenuItemKey)
+			.with('auth', () => {
+				// Do nothing for now
+			})
 			.otherwise((_) =>
 				setState((draft) => {
 					draft.selected = _;
 				})
 			);
 
-export const Navbar: FC<void> = () => {
+export const Navbar: FC<object> = () => {
 	const breakpoints: Breakpoints = useBreakpoint();
 	const [state, setState] = useImmer<State>(initState);
 
