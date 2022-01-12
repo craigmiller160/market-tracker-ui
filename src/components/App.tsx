@@ -1,5 +1,7 @@
 
 export const App = () => (
-    <h1>Hello World</h1>
-    <p>Test</p>
+    <>
+        <h1>Hello World</h1>
+        <p>Test</p>
+    </>
 )
