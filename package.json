@@ -26,6 +26,7 @@
     "@craigmiller160/webpack-config-ts": "^1.0.0-beta.1",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
+    "lint-staged": "^12.1.7",
     "typescript": "^4.5.4"
   },
   "dependencies": {
