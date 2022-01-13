@@ -10,7 +10,11 @@ export const MobileNavbar: FC<NavbarProps> = (props) => {
 			className="MobileNavbar"
 			breakpoint="lg"
 			collapsedWidth={0}
+			width={200}
 		>
+			<div className="Brand">
+				<h3 style={{ color: 'white' }}>Market Tracker</h3>
+			</div>
 			<Menu
 				theme="dark"
 				mode="inline"
