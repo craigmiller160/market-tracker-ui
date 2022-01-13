@@ -8,7 +8,7 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 	return (
 		<Layout.Header className="DesktopNavbar">
 			<div className="Brand">
-				<h3 style={{ color: 'white' }}>Market Tracker</h3>
+				<h3>Market Tracker</h3>
 			</div>
 			<Menu
 				onClick={handleMenuClick}
