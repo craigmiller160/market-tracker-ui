@@ -16,5 +16,9 @@ export const Content = () => {
 		dispatch(loadAuthUser());
 	}, [dispatch]);
 
-	return <Layout.Content>{hasChecked && <Welcome />}</Layout.Content>;
+	return (
+		<Layout.Content className="MainContent">
+			{hasChecked && <Welcome />}
+		</Layout.Content>
+	);
 };
