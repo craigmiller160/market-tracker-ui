@@ -1,13 +1,13 @@
-import { Breakpoints, isDesktop } from '../utils/Breakpoints';
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import { isDesktop } from '../utils/Breakpoints';
 import { match, when } from 'ts-pattern';
 import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
+import { ScreenContext } from '../ScreenContext';
 
 interface State {
 	selected: MenuItemKey;
@@ -31,7 +31,7 @@ const createHandleMenuClick =
 			);
 
 export const Navbar: FC<object> = () => {
-	const breakpoints: Breakpoints = useBreakpoint();
+	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
 
 	const handleMenuClick = createHandleMenuClick(setState);
