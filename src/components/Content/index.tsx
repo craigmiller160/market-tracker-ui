@@ -5,6 +5,7 @@ import { loadAuthUser } from '../../store/auth/actions';
 import { RootState } from '../../store';
 
 // TODO content disappears on smaller screen... why?
+// TODO because the CSS pushes it all the way to the very bottom of the screen lol
 export const Content = () => {
 	const dispatch = useDispatch();
 	const hasChecked = useSelector<RootState, boolean>(
