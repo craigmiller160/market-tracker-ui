@@ -9,7 +9,7 @@ export const hasCheckedSelector = (state: RootState): boolean =>
 const userDataSelector = (state: RootState): O.Option<AuthUser> =>
 	state.auth.userData;
 
-export const isAuthorized = createSelector(
+export const isAuthorizedSelector = createSelector(
 	userDataSelector,
 	(userData: O.Option<AuthUser>) => O.isSome(userData)
 );
