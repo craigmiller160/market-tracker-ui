@@ -8,6 +8,7 @@ import { FC, useContext } from 'react';
 import { MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
+import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 
 interface State {
 	selected: MenuItemKey;
@@ -33,12 +34,15 @@ const createHandleMenuClick =
 export const Navbar: FC<object> = () => {
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
+	const [isAuthorized, authBtnTxt] = useNavbarAuthCheck();
 
 	const handleMenuClick = createHandleMenuClick(setState);
 
 	const props: NavbarProps = {
 		selected: state.selected,
-		handleMenuClick
+		handleMenuClick,
+		isAuthorized,
+		authBtnTxt
 	};
 
 	return match(breakpoints)

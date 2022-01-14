@@ -2,11 +2,9 @@ import { Layout, Menu } from 'antd';
 import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
 import './MobileNavbar.scss';
-import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 
 export const MobileNavbar: FC<NavbarProps> = (props) => {
-	const [isAuthorized, authBtnTxt] = useNavbarAuthCheck();
-	const { selected, handleMenuClick } = props;
+	const { selected, handleMenuClick, isAuthorized, authBtnTxt } = props;
 	return (
 		<Layout.Sider
 			className="MobileNavbar"

@@ -1,12 +1,10 @@
-import { Menu, Layout } from 'antd';
+import { Layout, Menu } from 'antd';
 import './DesktopNavbar.scss';
 import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
-import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 
 export const DesktopNavbar: FC<NavbarProps> = (props) => {
-	const [isAuthorized, authBtnTxt] = useNavbarAuthCheck();
-	const { selected, handleMenuClick } = props;
+	const { selected, handleMenuClick, isAuthorized, authBtnTxt } = props;
 	return (
 		<Layout.Header className="DesktopNavbar">
 			<div className="Brand">
