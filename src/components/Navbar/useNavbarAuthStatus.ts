@@ -8,6 +8,6 @@ export type NavbarAuth = [boolean, string, TE.TaskEither<Error, unknown>];
 export const useNavbarAuthCheck = (): NavbarAuth => {
 	const isAuthorized = useSelector(isAuthorizedSelector);
 	const authBtnTxt = isAuthorized ? 'Logout' : 'Login';
-	const authBtnAction = isAuthorized ? login() : logout();
+	const authBtnAction = isAuthorized ? logout() : login();
 	return [isAuthorized, authBtnTxt, authBtnAction];
 };
