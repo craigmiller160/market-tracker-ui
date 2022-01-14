@@ -1,5 +1,5 @@
 import * as TE from 'fp-ts/es6/TaskEither';
-import {AuthCodeLogin, AuthUser} from '../types/auth';
+import { AuthCodeLogin, AuthUser } from '../types/auth';
 import { ajaxApi } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
