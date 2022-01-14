@@ -4,7 +4,13 @@ import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
 
 export const DesktopNavbar: FC<NavbarProps> = (props) => {
-	const { selected, handleMenuClick, isAuthorized, authBtnTxt } = props;
+	const {
+		selected,
+		handleMenuClick,
+		isAuthorized,
+		authBtnTxt,
+		authBtnAction
+	} = props;
 	return (
 		<Layout.Header className="DesktopNavbar">
 			<div className="Brand">
@@ -22,7 +28,11 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 						<Menu.Item key="watchlists">Watchlists</Menu.Item>
 					</>
 				)}
-				<Menu.Item className="AuthItem" key="auth">
+				<Menu.Item
+					className="AuthItem"
+					key="auth"
+					onClick={authBtnAction}
+				>
 					{authBtnTxt}
 				</Menu.Item>
 			</Menu>

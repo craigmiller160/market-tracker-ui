@@ -4,7 +4,13 @@ import { NavbarProps } from './NavbarProps';
 import './MobileNavbar.scss';
 
 export const MobileNavbar: FC<NavbarProps> = (props) => {
-	const { selected, handleMenuClick, isAuthorized, authBtnTxt } = props;
+	const {
+		selected,
+		handleMenuClick,
+		isAuthorized,
+		authBtnTxt,
+		authBtnAction
+	} = props;
 	return (
 		<Layout.Sider
 			className="MobileNavbar"
@@ -27,7 +33,9 @@ export const MobileNavbar: FC<NavbarProps> = (props) => {
 						<Menu.Item key="watchlists">Watchlists</Menu.Item>
 					</>
 				)}
-				<Menu.Item key="auth">{authBtnTxt}</Menu.Item>
+				<Menu.Item key="auth" onClick={authBtnAction}>
+					{authBtnTxt}
+				</Menu.Item>
 			</Menu>
 		</Layout.Sider>
 	);

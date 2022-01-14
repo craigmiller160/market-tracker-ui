@@ -34,7 +34,7 @@ const createHandleMenuClick =
 export const Navbar: FC<object> = () => {
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
-	const [isAuthorized, authBtnTxt] = useNavbarAuthCheck();
+	const [isAuthorized, authBtnTxt, authBtnAction] = useNavbarAuthCheck();
 
 	const handleMenuClick = createHandleMenuClick(setState);
 
@@ -42,7 +42,8 @@ export const Navbar: FC<object> = () => {
 		selected: state.selected,
 		handleMenuClick,
 		isAuthorized,
-		authBtnTxt
+		authBtnTxt,
+		authBtnAction
 	};
 
 	return match(breakpoints)
