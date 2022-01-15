@@ -4,6 +4,9 @@ import { ajaxApi } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
 import { AxiosResponse } from 'axios';
+import { store } from '../store';
+import { authSlice } from '../store/auth/slice';
+import * as O from 'fp-ts/es6/Option';
 
 // TODO write tests for this
 
@@ -42,5 +45,8 @@ export const logout = (): TE.TaskEither<Error, void> =>
 			uri: '/oauth/logout',
 			errorMsg: 'Error logging out'
 		}),
-		TE.map((_) => _.data)
+		TE.map((_) => {
+			store.dispatch(authSlice.actions.setUserData(O.none));
+			return _.data;
+		})
 	);
