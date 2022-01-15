@@ -29,7 +29,7 @@ export const App = () => {
 							element={<Navigate to="/market-tracker" />}
 						/>
 						<Route
-							path="/market-tracker"
+							path="/market-tracker/*"
 							element={
 								<Layout className="MarketTrackerApp">
 									<Navbar />
