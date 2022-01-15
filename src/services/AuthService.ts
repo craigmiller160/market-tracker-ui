@@ -38,7 +38,6 @@ export const login = (): TE.TaskEither<Error, AuthCodeLogin> =>
 		})
 	);
 
-// TODO implement this server-side
 export const logout = (): TE.TaskEither<Error, void> =>
 	pipe(
 		ajaxApi.get<void>({
