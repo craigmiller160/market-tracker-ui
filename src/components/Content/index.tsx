@@ -9,15 +9,23 @@ import {
 } from '../../store/auth/selectors';
 import { Routes, Navigate } from 'react-router-dom';
 import { Route } from 'react-router';
+import { ProtectedRoute, Rule } from '../routing/ProtectedRoute';
+import { Watchlists } from './Watchlists/Watchlists';
+import { Portfolios } from './Portfolios';
 
 interface RuleProps {
 	isAuthorized: boolean;
 }
 
-// const isAuthRule: Rule<RuleProps> = {
-// 	allow: (ruleProps?: RuleProps) => ruleProps?.isAuthorized ?? false,
-// 	redirect: '/welcome'
-// };
+const isAuthRule: Rule<RuleProps> = {
+	allow: (ruleProps: RuleProps) => ruleProps.isAuthorized,
+	redirect: '/welcome'
+};
+
+const isNotAuthRule: Rule<RuleProps> = {
+	allow: (ruleProps: RuleProps) => ruleProps.isAuthorized,
+	redirect: '/portfolios'
+};
 
 export const Content = () => {
 	const dispatch = useDispatch();
@@ -28,25 +36,33 @@ export const Content = () => {
 		dispatch(loadAuthUser());
 	}, [dispatch]);
 
+	const ruleProps: RuleProps = {
+		isAuthorized
+	};
+
 	return (
 		<Layout.Content className="MainContent">
 			{hasChecked && (
 				<Routes>
-					{/*<ProtectedRoute*/}
-					{/*	path="/portfolios"*/}
-					{/*	exact*/}
-					{/*	component={Portfolios}*/}
-					{/*	ruleProps={{ isAuthorized }}*/}
-					{/*	rules={[isAuthRule]}*/}
-					{/*/>*/}
-					{/*<ProtectedRoute*/}
-					{/*	path="/watchlists"*/}
-					{/*	exact*/}
-					{/*	component={Watchlists}*/}
-					{/*	ruleProps={{ isAuthorized }}*/}
-					{/*	rules={[isAuthRule]}*/}
-					{/*/>*/}
-					<Route path="welcome" element={<Welcome />} />
+					<ProtectedRoute
+						path="portfolios/"
+						ruleProps={ruleProps}
+						rules={[isAuthRule]}
+						element={<Portfolios />}
+					/>
+					<ProtectedRoute
+						path="watchlists/*"
+						ruleProps={ruleProps}
+						rules={[isAuthRule]}
+						element={<Watchlists />}
+					/>
+					<ProtectedRoute
+						path="welcome"
+						ruleProps={ruleProps}
+						rules={[isNotAuthRule]}
+						element={<Welcome />}
+					/>
+					{/*<Route path="welcome" element={<Welcome />} />*/}
 					<Route path="" element={<Navigate to="welcome" />} />
 				</Routes>
 			)}
