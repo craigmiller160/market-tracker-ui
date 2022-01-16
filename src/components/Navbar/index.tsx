@@ -22,6 +22,12 @@ const initState: State = {
 	selected: 'portfolios'
 };
 
+const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+
+interface PathRegexGroups {
+	key: string;
+}
+
 const createHandleMenuClick =
 	(setState: Updater<State>, navigate: NavigateFunction) =>
 	(menuItemInfo: MenuInfo): void =>
@@ -36,11 +42,18 @@ const createHandleMenuClick =
 				});
 			});
 
-const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
-
-interface PathRegexGroups {
-	key: string;
-}
+const createSetSelectedFromLocation =
+	(setState: Updater<State>) => (pathname: string) =>
+		pipe(
+			captureFromRegex<PathRegexGroups>(PATH_REGEX, pathname),
+			Option.filter((_) => isMenuItemKey(_.key)),
+			Option.map((groups) => {
+				setState((draft) => {
+					draft.selected = groups.key as MenuItemKey;
+				});
+				return groups;
+			})
+		);
 
 export const Navbar: FC<object> = () => {
 	const location = useLocation();
@@ -51,18 +64,11 @@ export const Navbar: FC<object> = () => {
 		useNavbarAuthCheck();
 
 	const handleMenuClick = createHandleMenuClick(setState, navigate);
+	const setSelectedFromLocation = createSetSelectedFromLocation(setState);
 
 	useEffect(() => {
-		pipe(
-			captureFromRegex<PathRegexGroups>(PATH_REGEX, location.pathname),
-			Option.filter((_) => isMenuItemKey(_.key)),
-			Option.map((groups) => {
-				setState((draft) => {
-					draft.selected = groups.key as MenuItemKey;
-				});
-			})
-		);
-	}, [location.pathname, setState]);
+		setSelectedFromLocation(location.pathname);
+	}, [location.pathname, setSelectedFromLocation]);
 
 	const props: NavbarProps = {
 		selected: state.selected,
