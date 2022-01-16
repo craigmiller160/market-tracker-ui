@@ -1,14 +1,12 @@
-import { Navbar } from './Navbar';
-import { Content } from './Content';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Outlet, useRoutes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import './App.scss';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { Breakpoints } from './utils/Breakpoints';
-import { ScreenContextValue, ScreenContext } from './ScreenContext';
-import { Navigate, Routes, Route } from 'react-router-dom';
-import { Layout } from 'antd';
+import { ScreenContext, ScreenContextValue } from './ScreenContext';
+import { routes } from '../routes';
+import { AppRoutes } from './AppRoutes';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -23,21 +21,22 @@ export const App = () => {
 		<ScreenContext.Provider value={screenContextValue}>
 			<Provider store={store}>
 				<BrowserRouter basename="/">
-					<Routes>
-						<Route
-							path="/"
-							element={<Navigate to="/market-tracker" />}
-						/>
-						<Route
-							path="/market-tracker/*"
-							element={
-								<Layout className="MarketTrackerApp">
-									<Navbar />
-									<Content />
-								</Layout>
-							}
-						/>
-					</Routes>
+					<AppRoutes />
+					{/*<Routes>*/}
+					{/*	<Route*/}
+					{/*		path="/"*/}
+					{/*		element={<Navigate to="/market-tracker" />}*/}
+					{/*	/>*/}
+					{/*	<Route*/}
+					{/*		path="/market-tracker/*"*/}
+					{/*		element={*/}
+					{/*			<Layout className="MarketTrackerApp">*/}
+					{/*				<Navbar />*/}
+					{/*				<Content />*/}
+					{/*			</Layout>*/}
+					{/*		}*/}
+					{/*	/>*/}
+					{/*</AppRoutes>*/}
 				</BrowserRouter>
 			</Provider>
 		</ScreenContext.Provider>
