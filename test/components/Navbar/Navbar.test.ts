@@ -9,7 +9,7 @@ describe('Navbar', () => {
 		throw new Error();
 	});
 
-	it('shows correct items for un-authenticated user', () => {
+	it('shows correct items for un-authenticated user, including welcome page', () => {
 		throw new Error();
 	});
 
