@@ -24,4 +24,12 @@ describe('Navbar', () => {
 	it('navigates to watchlists page', () => {
 		throw new Error();
 	});
+
+	it('sends login request', () => {
+		throw new Error();
+	});
+
+	it('sends logout request', () => {
+		throw new Error();
+	});
 });
