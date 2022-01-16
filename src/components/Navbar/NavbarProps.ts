@@ -6,6 +6,7 @@ export interface NavbarProps {
 	selected: MenuItemKey;
 	handleMenuClick: (mi: MenuInfo) => void;
 	isAuthorized: boolean;
+	hasChecked: boolean;
 	authBtnTxt: string;
 	authBtnAction: TE.TaskEither<Error, unknown>;
 }
