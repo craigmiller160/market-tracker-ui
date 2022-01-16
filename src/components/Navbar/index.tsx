@@ -4,12 +4,15 @@ import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { FC, useContext } from 'react';
-import { MenuItemKey } from './MenuItemKey';
+import { FC, useContext, useEffect } from 'react';
+import { isMenuItemKey, MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
-import { NavigateFunction, useNavigate } from 'react-router';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router';
+import { captureFromRegex } from '../../function/Regex';
+import { pipe } from 'fp-ts/es6/function';
+import * as Option from 'fp-ts/es6/Option';
 
 interface State {
 	selected: MenuItemKey;
@@ -33,7 +36,14 @@ const createHandleMenuClick =
 				});
 			});
 
+const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+
+interface PathRegexGroups {
+	key: string;
+}
+
 export const Navbar: FC<object> = () => {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
@@ -41,6 +51,18 @@ export const Navbar: FC<object> = () => {
 		useNavbarAuthCheck();
 
 	const handleMenuClick = createHandleMenuClick(setState, navigate);
+
+	useEffect(() => {
+		pipe(
+			captureFromRegex<PathRegexGroups>(PATH_REGEX, location.pathname),
+			Option.filter((_) => isMenuItemKey(_.key)),
+			Option.map((groups) => {
+				setState((draft) => {
+					draft.selected = groups.key as MenuItemKey;
+				});
+			})
+		);
+	}, [location.pathname, setState]);
 
 	const props: NavbarProps = {
 		selected: state.selected,
