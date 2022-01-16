@@ -6,6 +6,7 @@ import { RootState } from '../../../src/store';
 import { Provider } from 'react-redux';
 import { createStore } from '../../../src/store/createStore';
 import { EnhancedStore } from '@reduxjs/toolkit';
+import { BrowserRouter } from 'react-router-dom';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -26,7 +27,9 @@ const doRender = async (
 	await waitFor(() =>
 		render(
 			<Provider store={store}>
-				<RootLayout />
+				<BrowserRouter basename="/">
+					<RootLayout />
+				</BrowserRouter>
 			</Provider>
 		)
 	);
