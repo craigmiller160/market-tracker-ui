@@ -1,7 +1,7 @@
 import { RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
-import { match, when } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists/Watchlists';
 
@@ -20,10 +20,10 @@ const hasCheckedFalseRoutes: RouteObject[] = [
 const notAuthorizedRoutes: RouteObject[] = [
 	{
 		path: 'welcome',
-		element: <div />
+		element: <Welcome />
 	},
 	{
-		path: '',
+		path: '*',
 		element: <Navigate to="welcome" />
 	}
 ];
@@ -38,7 +38,7 @@ const isAuthorizedRoutes: RouteObject[] = [
 		element: <Watchlists />
 	},
 	{
-		path: '',
+		path: '*',
 		element: <Navigate to="portfolios" />
 	}
 ];
@@ -46,14 +46,14 @@ const isAuthorizedRoutes: RouteObject[] = [
 const buildLevelTwoRoutes = (rules: RouteRules): RouteObject[] => {
 	return match(rules.isAuthorized)
 		.with(true, () => isAuthorizedRoutes)
-		.otherwise(() => notAuthorizedRoutes)
-}
+		.otherwise(() => notAuthorizedRoutes);
+};
 
 const buildLevelOneRoutes = (rules: RouteRules): RouteObject[] => {
 	return match(rules.hasChecked)
-		.with(true, (): RouteObject[] => hasCheckedFalseRoutes)
+		.with(true, (): RouteObject[] => buildLevelTwoRoutes(rules))
 		.otherwise((): RouteObject[] => hasCheckedFalseRoutes);
-}
+};
 
 export const routes = (rules: RouteRules): RouteObject[] => [
 	{
