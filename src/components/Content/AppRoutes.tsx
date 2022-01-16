@@ -1,10 +1,10 @@
 import { useRoutes } from 'react-router-dom';
-import { routes } from '../routes';
+import { routes } from '../../routes';
 import { useSelector } from 'react-redux';
 import {
 	hasCheckedSelector,
 	isAuthorizedSelector
-} from '../store/auth/selectors';
+} from '../../store/auth/selectors';
 
 export const AppRoutes = () => {
 	const isAuthorized = useSelector(isAuthorizedSelector);

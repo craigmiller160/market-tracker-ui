@@ -5,8 +5,7 @@ import './App.scss';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
-import { Navbar } from './Navbar';
-import { Content } from './Content';
+import { RootLayout } from './RootLayout';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -21,8 +20,7 @@ export const App = () => {
 		<ScreenContext.Provider value={screenContextValue}>
 			<Provider store={store}>
 				<BrowserRouter basename="/">
-					<Navbar />
-					<Content />
+					<RootLayout />
 				</BrowserRouter>
 			</Provider>
 		</ScreenContext.Provider>
