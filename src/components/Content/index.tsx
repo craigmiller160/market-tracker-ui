@@ -8,9 +8,6 @@ import {
 	isAuthorizedSelector
 } from '../../store/auth/selectors';
 import { Routes, Navigate } from 'react-router-dom';
-// import ProtectedRoute, { Rule } from '@craigmiller160/react-protected-route';
-// import { Portfolios } from './Portfolios';
-// import { Watchlists } from './Watchlists/Watchlists';
 import { Route } from 'react-router';
 
 interface RuleProps {
