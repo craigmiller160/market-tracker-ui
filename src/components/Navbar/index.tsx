@@ -28,32 +28,40 @@ interface PathRegexGroups {
 	key: string;
 }
 
-const createHandleMenuClick =
-	(setState: Updater<State>, navigate: NavigateFunction) =>
-	(menuItemInfo: MenuInfo): void =>
-		match(menuItemInfo.key as MenuItemKey)
-			.with('auth', () => {
-				// Do nothing for now
-			})
-			.otherwise((key) => {
-				navigate(`/market-tracker/${key}`);
-				setState((draft) => {
-					draft.selected = key;
-				});
-			});
+const useHandleMenuClick = (
+	setState: Updater<State>,
+	navigate: NavigateFunction
+) =>
+	useCallback(
+		(menuItemInfo: MenuInfo) =>
+			match(menuItemInfo.key as MenuItemKey)
+				.with('auth', () => {
+					// Do nothing for now
+				})
+				.otherwise((key) => {
+					navigate(`/market-tracker/${key}`);
+					setState((draft) => {
+						draft.selected = key;
+					});
+				}),
+		[setState, navigate]
+	);
 
-const createSetSelectedFromLocation =
-	(setState: Updater<State>) => (pathname: string) =>
-		pipe(
-			captureFromRegex<PathRegexGroups>(PATH_REGEX, pathname),
-			Option.filter((_) => isMenuItemKey(_.key)),
-			Option.map((groups) => {
-				setState((draft) => {
-					draft.selected = groups.key as MenuItemKey;
-				});
-				return groups;
-			})
-		);
+const useSetSelectedFromLocation = (setState: Updater<State>) =>
+	useCallback(
+		(pathname: string) =>
+			pipe(
+				captureFromRegex<PathRegexGroups>(PATH_REGEX, pathname),
+				Option.filter((_) => isMenuItemKey(_.key)),
+				Option.map((groups) => {
+					setState((draft) => {
+						draft.selected = groups.key as MenuItemKey;
+					});
+					return groups;
+				})
+			),
+		[setState]
+	);
 
 export const Navbar: FC<object> = () => {
 	const location = useLocation();
@@ -63,15 +71,8 @@ export const Navbar: FC<object> = () => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
 
-	const handleMenuClick = useCallback(
-		(menuInfo: MenuInfo) =>
-			createHandleMenuClick(setState, navigate)(menuInfo),
-		[setState, navigate]
-	);
-	const setSelectedFromLocation = useCallback(
-		(location: string) => createSetSelectedFromLocation(setState)(location),
-		[setState]
-	);
+	const handleMenuClick = useHandleMenuClick(setState, navigate);
+	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
 		setSelectedFromLocation(location.pathname);
