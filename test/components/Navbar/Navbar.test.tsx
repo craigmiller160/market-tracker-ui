@@ -12,6 +12,7 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 
 interface RenderConfig {
 	readonly preloadedState: Partial<RootState>;
+	readonly initialPath: string;
 }
 
 interface RenderResult {
@@ -24,6 +25,7 @@ const doRender = async (
 	const store: EnhancedStore<RootState> = createStore(
 		renderConfig?.preloadedState
 	);
+	window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
 	await waitFor(() =>
 		render(
 			<Provider store={store}>
