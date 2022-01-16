@@ -10,51 +10,6 @@ export interface RouteRules {
 	hasChecked: boolean;
 }
 
-const hasCheckedFalseRoutes: RouteObject[] = [
-	{
-		path: '',
-		element: <div />
-	}
-];
-
-const notAuthorizedRoutes: RouteObject[] = [
-	{
-		path: 'welcome',
-		element: <Welcome />
-	},
-	{
-		path: '*',
-		element: <Navigate to="welcome" />
-	}
-];
-
-const isAuthorizedRoutes: RouteObject[] = [
-	{
-		path: 'portfolios',
-		element: <Portfolios />
-	},
-	{
-		path: 'watchlists',
-		element: <Watchlists />
-	},
-	{
-		path: '*',
-		element: <Navigate to="portfolios" />
-	}
-];
-
-const buildLevelTwoRoutes = (rules: RouteRules): RouteObject[] => {
-	return match(rules.isAuthorized)
-		.with(true, () => isAuthorizedRoutes)
-		.otherwise(() => notAuthorizedRoutes);
-};
-
-const buildLevelOneRoutes = (rules: RouteRules): RouteObject[] => {
-	return match(rules.hasChecked)
-		.with(true, (): RouteObject[] => buildLevelTwoRoutes(rules))
-		.otherwise((): RouteObject[] => hasCheckedFalseRoutes);
-};
-
 export const routes = (rules: RouteRules): RouteObject[] => [
 	{
 		path: '/',
@@ -62,6 +17,39 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 	},
 	{
 		path: '/market-tracker',
-		children: buildLevelOneRoutes(rules)
+		children: match(rules.hasChecked)
+			.with(true, () =>
+				match(rules.isAuthorized)
+					.with(true, () => [
+						{
+							path: 'portfolios',
+							element: <Portfolios />
+						},
+						{
+							path: 'watchlists',
+							element: <Watchlists />
+						},
+						{
+							path: '*',
+							element: <Navigate to="portfolios" />
+						}
+					])
+					.otherwise(() => [
+						{
+							path: 'welcome',
+							element: <Welcome />
+						},
+						{
+							path: '*',
+							element: <Navigate to="welcome" />
+						}
+					])
+			)
+			.otherwise(() => [
+				{
+					path: '*',
+					element: <div />
+				}
+			])
 	}
 ];
