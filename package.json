@@ -1,6 +1,6 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
-  "version": "0.0.1-beta",
+  "version": "0.0.1-beta.1",
   "scripts": {
     "start": "craig-webpack-dev",
     "build": "yarn lint && yarn test && yarn forceBuild",
