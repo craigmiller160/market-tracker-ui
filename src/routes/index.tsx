@@ -1,29 +1,67 @@
 import { RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
+import { match, when } from 'ts-pattern';
+import { Portfolios } from '../components/Content/Portfolios';
+import { Watchlists } from '../components/Content/Watchlists/Watchlists';
 
 export interface RouteRules {
-    isAuthorized: boolean;
-    hasChecked: boolean;
+	isAuthorized: boolean;
+	hasChecked: boolean;
 }
 
-export const routes = (rules: RouteRules): RouteObject[] =>
-    [
-        {
-            path: '/',
-            element: <Navigate to="/market-tracker" />
-        },
-        {
-            path: '/market-tracker',
-            children: [
-                {
-                    path: '',
-                    element: <Navigate to="welcome" />
-                },
-                {
-                    path: 'welcome',
-                    element: <Welcome />
-                }
-            ]
-        }
-    ]
+const hasCheckedFalseRoutes: RouteObject[] = [
+	{
+		path: '',
+		element: <div />
+	}
+];
+
+const notAuthorizedRoutes: RouteObject[] = [
+	{
+		path: 'welcome',
+		element: <div />
+	},
+	{
+		path: '',
+		element: <Navigate to="welcome" />
+	}
+];
+
+const isAuthorizedRoutes: RouteObject[] = [
+	{
+		path: 'portfolios',
+		element: <Portfolios />
+	},
+	{
+		path: 'watchlists',
+		element: <Watchlists />
+	},
+	{
+		path: '',
+		element: <Navigate to="portfolios" />
+	}
+];
+
+const buildLevelTwoRoutes = (rules: RouteRules): RouteObject[] => {
+	return match(rules.isAuthorized)
+		.with(true, () => isAuthorizedRoutes)
+		.otherwise(() => notAuthorizedRoutes)
+}
+
+const buildLevelOneRoutes = (rules: RouteRules): RouteObject[] => {
+	return match(rules.hasChecked)
+		.with(true, (): RouteObject[] => hasCheckedFalseRoutes)
+		.otherwise((): RouteObject[] => hasCheckedFalseRoutes);
+}
+
+export const routes = (rules: RouteRules): RouteObject[] => [
+	{
+		path: '/',
+		element: <Navigate to="/market-tracker" />
+	},
+	{
+		path: '/market-tracker',
+		children: buildLevelOneRoutes(rules)
+	}
+];
