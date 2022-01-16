@@ -3,6 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { getAuthUser, login, logout } from '../../src/services/AuthService';
 import { AuthCodeLogin, AuthUser } from '../../src/types/auth';
 import '@relmify/jest-fp-ts';
+import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -15,9 +16,15 @@ const authCodeLogin: AuthCodeLogin = {
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 describe('AuthService', () => {
+	let location: Location;
 	beforeEach(() => {
 		mockApi.reset();
 		jest.resetAllMocks();
+		location = mockLocation();
+	});
+
+	afterEach(() => {
+		restoreLocation(location);
 	});
 
 	it('getAuthUser', async () => {

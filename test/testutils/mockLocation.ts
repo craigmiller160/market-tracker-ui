@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export {};
 
-beforeEach(() => {
+export const mockLocation = (): Location => {
+	const location = window.location;
 	// @ts-ignore
 	delete window.location;
 	// @ts-ignore
@@ -12,4 +12,9 @@ beforeEach(() => {
 		hash: '',
 		href: ''
 	};
-});
+	return location;
+};
+
+export const restoreLocation = (location: Location): void => {
+	window.location = location;
+};
