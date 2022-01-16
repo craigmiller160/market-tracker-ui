@@ -9,7 +9,7 @@ import {
 } from '../../store/auth/selectors';
 import { Routes, Navigate } from 'react-router-dom';
 import { Route } from 'react-router';
-import { ProtectedRoute, Rule } from '../routing/ProtectedRoute';
+import { ProtectedRouteV2, RuleV2 } from '../routing/ProtectedRouteV2';
 import { Watchlists } from './Watchlists/Watchlists';
 import { Portfolios } from './Portfolios';
 
@@ -17,12 +17,12 @@ interface RuleProps {
 	isAuthorized: boolean;
 }
 
-const isAuthRule: Rule<RuleProps> = {
+const isAuthRule: RuleV2<RuleProps> = {
 	allow: (ruleProps: RuleProps) => ruleProps.isAuthorized,
 	redirect: '/welcome'
 };
 
-const isNotAuthRule: Rule<RuleProps> = {
+const isNotAuthRule: RuleV2<RuleProps> = {
 	allow: (ruleProps: RuleProps) => ruleProps.isAuthorized,
 	redirect: '/portfolios'
 };
@@ -44,19 +44,19 @@ export const Content = () => {
 		<Layout.Content className="MainContent">
 			{hasChecked && (
 				<Routes>
-					<ProtectedRoute
+					<ProtectedRouteV2
 						path="portfolios/"
 						ruleProps={ruleProps}
 						rules={[isAuthRule]}
 						element={<Portfolios />}
 					/>
-					<ProtectedRoute
+					<ProtectedRouteV2
 						path="watchlists/*"
 						ruleProps={ruleProps}
 						rules={[isAuthRule]}
 						element={<Watchlists />}
 					/>
-					<ProtectedRoute
+					<ProtectedRouteV2
 						path="welcome"
 						ruleProps={ruleProps}
 						rules={[isNotAuthRule]}
