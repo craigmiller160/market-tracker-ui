@@ -4,7 +4,7 @@ import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { FC, useContext, useEffect } from 'react';
+import { FC, useCallback, useContext, useEffect } from 'react';
 import { isMenuItemKey, MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
@@ -63,8 +63,15 @@ export const Navbar: FC<object> = () => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
 
-	const handleMenuClick = createHandleMenuClick(setState, navigate);
-	const setSelectedFromLocation = createSetSelectedFromLocation(setState);
+	const handleMenuClick = useCallback(
+		(menuInfo: MenuInfo) =>
+			createHandleMenuClick(setState, navigate)(menuInfo),
+		[setState, navigate]
+	);
+	const setSelectedFromLocation = useCallback(
+		(location: string) => createSetSelectedFromLocation(setState)(location),
+		[setState]
+	);
 
 	useEffect(() => {
 		setSelectedFromLocation(location.pathname);
