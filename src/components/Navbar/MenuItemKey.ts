@@ -1,1 +1,1 @@
-export type MenuItemKey = 'auth' | '' | 'portfolios' | 'watchlists';
+export type MenuItemKey = 'auth' | 'portfolios' | 'watchlists' | '';
