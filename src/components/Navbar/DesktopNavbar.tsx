@@ -4,20 +4,14 @@ import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
 import { match } from 'ts-pattern';
 
-const MainNavItems = () => (
+const MainNavItems = (
 	<>
 		<Menu.Item key="portfolios">Portfolios</Menu.Item>
 		<Menu.Item key="watchlists">Watchlists</Menu.Item>
 	</>
 );
 
-const AuthNavItem = ({
-	authBtnAction,
-	authBtnTxt
-}: {
-	authBtnAction: () => void;
-	authBtnTxt: string;
-}) => (
+const createAuthNavItem = (authBtnAction: () => void, authBtnTxt: string) => (
 	<Menu.Item className="AuthItem" key="auth" onClick={authBtnAction}>
 		{authBtnTxt}
 	</Menu.Item>
@@ -32,6 +26,9 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 		authBtnTxt,
 		authBtnAction
 	} = props;
+
+	const AuthNavItem = createAuthNavItem(authBtnAction, authBtnTxt);
+
 	return (
 		<Layout.Header className="DesktopNavbar">
 			<div className="Brand">
@@ -46,18 +43,12 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 				{match({ isAuthorized, hasChecked })
 					.with({ isAuthorized: true, hasChecked: true }, () => (
 						<>
-							<MainNavItems />
-							<AuthNavItem
-								authBtnAction={authBtnAction}
-								authBtnTxt={authBtnTxt}
-							/>
+							{MainNavItems}
+							{AuthNavItem}
 						</>
 					))
 					.with({ isAuthorized: false, hasChecked: true }, () => (
-						<AuthNavItem
-							authBtnAction={authBtnAction}
-							authBtnTxt={authBtnTxt}
-						/>
+						<>{AuthNavItem}</>
 					))
 					.otherwise(() => (
 						<></>
