@@ -1,11 +1,15 @@
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import { getAuthUser, logout } from '../../src/services/AuthService';
-import { AuthUser } from '../../src/types/auth';
+import { getAuthUser, login, logout } from '../../src/services/AuthService';
+import { AuthCodeLogin, AuthUser } from '../../src/types/auth';
 import '@relmify/jest-fp-ts';
 
 const authUser: AuthUser = {
 	userId: 1
+};
+
+const authCodeLogin: AuthCodeLogin = {
+	url: 'http://auth.com'
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
@@ -13,6 +17,7 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 describe('AuthService', () => {
 	beforeEach(() => {
 		mockApi.reset();
+		jest.resetAllMocks();
 	});
 
 	it('getAuthUser', async () => {
@@ -22,8 +27,12 @@ describe('AuthService', () => {
 		expect(result).toEqualRight(authUser);
 	});
 
-	it('login', () => {
-		throw new Error();
+	it('login', async () => {
+		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
+
+		const result = await login()();
+		expect(result).toEqualRight(authCodeLogin);
+		expect(window.location.assign).toHaveBeenCalledWith(authCodeLogin.url);
 	});
 
 	it('logout', async () => {
