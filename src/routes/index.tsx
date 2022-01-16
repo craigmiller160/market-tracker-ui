@@ -17,42 +17,39 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 	},
 	{
 		path: '/market-tracker',
-		children: match(rules.hasChecked)
-			.with(true, () =>
-				match(rules.isAuthorized)
-					.with(true, () => [
-						{
-							path: 'portfolios',
-							element: <Portfolios />
-						},
-						{
-							path: 'watchlists',
-							element: <Watchlists />
-						},
-						{
-							path: '',
-							element: <Navigate to="portfolios" />
-						},
-						{
-							path: '*',
-							element: <Navigate to="portfolios" />
-						}
-					])
-					.otherwise(() => [
-						{
-							path: 'welcome',
-							element: <Welcome />
-						},
-						{
-							path: '',
-							element: <Navigate to="welcome" />
-						},
-						{
-							path: '*',
-							element: <Navigate to="welcome" />
-						}
-					])
-			)
+		children: match(rules)
+			.with({ isAuthorized: true, hasChecked: true }, () => [
+				{
+					path: 'portfolios',
+					element: <Portfolios />
+				},
+				{
+					path: 'watchlists',
+					element: <Watchlists />
+				},
+				{
+					path: '',
+					element: <Navigate to="portfolios" />
+				},
+				{
+					path: '*',
+					element: <Navigate to="portfolios" />
+				}
+			])
+			.with({ isAuthorized: false, hasChecked: true }, () => [
+				{
+					path: 'welcome',
+					element: <Welcome />
+				},
+				{
+					path: '',
+					element: <Navigate to="welcome" />
+				},
+				{
+					path: '*',
+					element: <Navigate to="welcome" />
+				}
+			])
 			.otherwise(() => [
 				{
 					path: '',
