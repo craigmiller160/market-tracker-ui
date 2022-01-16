@@ -20,36 +20,45 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 		children: match(rules.hasChecked)
 			.with(true, () =>
 				match(rules.isAuthorized)
-					.with(true, () => [
-						{
-							path: 'portfolios',
-							element: <Portfolios />
-						},
-						{
-							path: 'watchlists',
-							element: <Watchlists />
-						},
-						{
-							path: '*',
-							element: <Navigate to="portfolios" />
-						}
-					])
-					.otherwise(() => [
-						{
-							path: 'welcome',
-							element: <Welcome />
-						},
-						{
-							path: '*',
-							element: <Navigate to="welcome" />
-						}
-					])
+					.with(true, () => {
+						console.log('IsChecked & IsAuthorized')
+						return [
+							{
+								path: 'portfolios',
+								element: <Portfolios />
+							},
+							{
+								path: 'watchlists',
+								element: <Watchlists />
+							},
+							{
+								path: '*',
+								element: <Navigate to="portfolios" />
+							}
+						]
+					})
+					.otherwise(() => {
+						console.log('IsCheckedOnly')
+						return [
+							{
+								path: 'welcome',
+								element: <Welcome />
+							},
+							{
+								path: '',
+								element: <Navigate to="welcome" />
+							}
+						]
+					})
 			)
-			.otherwise(() => [
-				{
-					path: '*',
-					element: <div />
-				}
-			])
+			.otherwise(() => {
+				console.log('AllFalse')
+				return [
+					{
+						path: '*',
+						element: <div />
+					}
+				]
+			})
 	}
 ];

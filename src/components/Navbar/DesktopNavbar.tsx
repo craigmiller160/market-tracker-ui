@@ -60,7 +60,7 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 						/>
 					))
 					.otherwise(() => (
-						<span />
+						<></>
 					))}
 			</Menu>
 		</Layout.Header>
