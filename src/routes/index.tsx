@@ -15,13 +15,15 @@ export const routes = (rules: RouteRules): RouteObject[] =>
         },
         {
             path: '/market-tracker',
-            element: <Welcome />
-            // element: <Navigate to="welcome" />,
-            // children: [
-            //     {
-            //         path: 'welcome',
-            //         element: <Welcome />
-            //     }
-            // ]
+            children: [
+                {
+                    path: '',
+                    element: <Navigate to="welcome" />
+                },
+                {
+                    path: 'welcome',
+                    element: <Welcome />
+                }
+            ]
         }
     ]
