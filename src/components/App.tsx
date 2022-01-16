@@ -7,6 +7,8 @@ import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { routes } from '../routes';
 import { AppRoutes } from './AppRoutes';
+import { Navbar } from './Navbar';
+import { Content } from './Content';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -21,22 +23,8 @@ export const App = () => {
 		<ScreenContext.Provider value={screenContextValue}>
 			<Provider store={store}>
 				<BrowserRouter basename="/">
-					<AppRoutes />
-					{/*<Routes>*/}
-					{/*	<Route*/}
-					{/*		path="/"*/}
-					{/*		element={<Navigate to="/market-tracker" />}*/}
-					{/*	/>*/}
-					{/*	<Route*/}
-					{/*		path="/market-tracker/*"*/}
-					{/*		element={*/}
-					{/*			<Layout className="MarketTrackerApp">*/}
-					{/*				<Navbar />*/}
-					{/*				<Content />*/}
-					{/*			</Layout>*/}
-					{/*		}*/}
-					{/*	/>*/}
-					{/*</AppRoutes>*/}
+					<Navbar />
+					<Content />
 				</BrowserRouter>
 			</Provider>
 		</ScreenContext.Provider>

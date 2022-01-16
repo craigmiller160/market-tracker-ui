@@ -2,8 +2,8 @@ import { useRoutes } from 'react-router-dom';
 import { routes } from '../routes';
 
 export const AppRoutes = () => {
-    const theRoute = useRoutes(routes({
-        isAuthorized: false
+    return useRoutes(routes({
+        isAuthorized: false,
+        hasChecked: false
     }));
-    return theRoute;
 }
