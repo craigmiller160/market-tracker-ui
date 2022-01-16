@@ -1,4 +1,9 @@
-export {};
+import {render, waitFor} from '@testing-library/react';
+import {RootLayout} from '../../../src/components/RootLayout';
+
+const doRender = () => waitFor(() => render(
+	<RootLayout />
+))
 
 describe('Navbar', () => {
 	it('renders for desktop', () => {
