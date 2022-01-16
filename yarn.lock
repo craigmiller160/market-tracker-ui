@@ -1369,11 +1369,6 @@
   dependencies:
     prettier "^2.5.1"
 
-"@craigmiller160/react-protected-route@^1.2.3":
-  version "1.2.4"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/react-protected-route/-/react-protected-route-1.2.4.tgz#9adc3a198ba272dc7e61197aaa646e279010d82c"
-  integrity sha512-V5mOaW/u6ytnoysAjg24AegDYWK6CNNvNLCO0q4Ne4P1w4Bcv0G2BMN9OYtzr/n0mtihohQJ/hM/SO91sGs1ig==
-
 "@craigmiller160/webpack-config-sass@^1.0.0-beta.3":
   version "1.0.0-beta.3"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config-sass/-/webpack-config-sass-1.0.0-beta.3.tgz#3433170ffdd7f8824c3c956fddf91b786421d276"
