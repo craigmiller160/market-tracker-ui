@@ -22,8 +22,12 @@ export const ProtectedRoute = <RuleProps extends object>(
 ) => {
 	const { path, ruleProps, rules, element } = props;
 
-	const failedRule = rules.find((rule) => !rule.allow(ruleProps));
+	const failedRule: Rule<RuleProps> | undefined = rules.find(
+		(rule) => !rule.allow(ruleProps)
+	);
 	return match(failedRule)
-		.with(when(isNotUndefined), () => <Navigate to={failedRule.redirect} />)
+		.with(when(isNotUndefined), (_: Rule<RuleProps>) => (
+			<Navigate to={_.redirect} />
+		))
 		.otherwise(() => <Route path={path} element={element} />);
 };
