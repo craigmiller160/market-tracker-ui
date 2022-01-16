@@ -8,8 +8,6 @@ import { store } from '../store';
 import { authSlice } from '../store/auth/slice';
 import * as O from 'fp-ts/es6/Option';
 
-// TODO write tests for this
-
 export const getAuthUser = (): TE.TaskEither<Error, AuthUser> =>
 	pipe(
 		ajaxApi.get<AuthUser>({

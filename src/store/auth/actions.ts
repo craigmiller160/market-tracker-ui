@@ -8,8 +8,6 @@ import { pipe } from 'fp-ts/es6/function';
 import { getAuthUser } from '../../services/AuthService';
 import { authSlice } from './slice';
 
-// TODO write tests for this
-
 export const loadAuthUser =
 	() =>
 	(dispatch: Dispatch): Promise<O.Option<AuthUser>> =>
