@@ -7,6 +7,8 @@ export interface RuleV2<RuleProps extends object> {
 	redirect: string;
 }
 
+// TODO delete if unused
+
 interface Props<RuleProps extends object> {
 	path: string;
 	ruleProps: RuleProps;
