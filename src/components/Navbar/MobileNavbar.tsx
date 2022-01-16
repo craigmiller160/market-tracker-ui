@@ -2,15 +2,25 @@ import { Layout, Menu } from 'antd';
 import { FC } from 'react';
 import { NavbarProps } from './NavbarProps';
 import './MobileNavbar.scss';
+import { useNavbarItems } from './useNavbarItems';
 
 export const MobileNavbar: FC<NavbarProps> = (props) => {
 	const {
 		selected,
 		handleMenuClick,
 		isAuthorized,
+		hasChecked,
 		authBtnTxt,
 		authBtnAction
 	} = props;
+
+	const NavbarItems = useNavbarItems({
+		isAuthorized,
+		hasChecked,
+		authBtnTxt,
+		authBtnAction
+	});
+
 	return (
 		<Layout.Sider
 			className="MobileNavbar"
@@ -27,15 +37,7 @@ export const MobileNavbar: FC<NavbarProps> = (props) => {
 				selectedKeys={[selected]}
 				onClick={handleMenuClick}
 			>
-				{isAuthorized && (
-					<>
-						<Menu.Item key="portfolios">Portfolios</Menu.Item>
-						<Menu.Item key="watchlists">Watchlists</Menu.Item>
-					</>
-				)}
-				<Menu.Item key="auth" onClick={authBtnAction}>
-					{authBtnTxt}
-				</Menu.Item>
+				{NavbarItems}
 			</Menu>
 		</Layout.Sider>
 	);
