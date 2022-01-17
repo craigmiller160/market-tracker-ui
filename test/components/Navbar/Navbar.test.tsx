@@ -73,6 +73,9 @@ const doRender = async (
 	};
 };
 
+const sleep = (millis: number): Promise<void> =>
+	new Promise((resolve) => setTimeout(resolve, millis));
+
 describe('Navbar', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -188,7 +191,8 @@ describe('Navbar', () => {
 		await doRender();
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
-			expect(await screen.queryByText('Login')).toBeInTheDocument();
+			await sleep(100);
 		});
+		expect(screen.queryByText('Login')).toBeInTheDocument();
 	});
 });

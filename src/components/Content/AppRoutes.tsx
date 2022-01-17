@@ -9,7 +9,6 @@ import {
 export const AppRoutes = () => {
 	const isAuthorized = useSelector(isAuthorizedSelector);
 	const hasChecked = useSelector(hasCheckedSelector);
-	console.log('AppRoutes', isAuthorized, hasChecked);
 	return useRoutes(
 		routes({
 			isAuthorized,

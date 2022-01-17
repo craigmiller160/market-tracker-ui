@@ -16,7 +16,6 @@ const setUserData = (
 	draft: StateType,
 	action: PayloadAction<O.Option<AuthUser>>
 ) => {
-	console.log('SettingUserData', draft.userData, action.payload);
 	draft.userData = action.payload;
 	draft.hasChecked = true;
 };
