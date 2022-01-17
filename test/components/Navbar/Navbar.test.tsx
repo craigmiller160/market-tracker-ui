@@ -39,8 +39,6 @@ const mockUserAuthSuccess = () =>
 	mockApi.onGet('/oauth/user').reply(200, authUser);
 const mockUserAuthFailure = () => mockApi.onGet('/oauth/user').reply(401);
 
-const sleep = (millis: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, millis));
-
 const doRender = async (
 	renderConfig?: Partial<RenderConfig>
 ): Promise<RenderResult> => {
@@ -180,10 +178,9 @@ describe('Navbar', () => {
 			isAuthorized: false
 		});
 		userEvent.click(screen.getByText('Login'));
-		console.log(mockApi.history);
 
 		// await waitFor(() => expect(screen.queryByText('Logout')))
-		throw new Error()
+		throw new Error();
 	});
 
 	it('sends logout request', async () => {
@@ -192,7 +189,7 @@ describe('Navbar', () => {
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
 			expect(await screen.queryByText('Login')).toBeInTheDocument();
-		})
+		});
 		// await userEvent.click(screen.getByText('Logout'));
 		// await waitFor(() => expect(mockApi.history.get).toHaveLength(2)) // TODO not good enough
 		//

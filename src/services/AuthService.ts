@@ -43,9 +43,7 @@ export const logout = (): TE.TaskEither<Error, void> =>
 			errorMsg: 'Error logging out'
 		}),
 		TE.map((_) => {
-			console.log('Finished')
 			store.dispatch(authSlice.actions.setUserData(O.none));
-			console.log('AfterAction')
 			return _.data;
 		})
 	);

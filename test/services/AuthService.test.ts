@@ -5,14 +5,14 @@ import { AuthCodeLogin, AuthUser } from '../../src/types/auth';
 import '@relmify/jest-fp-ts';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 import { store } from '../../src/store';
-import {authSlice} from '../../src/store/auth/slice';
+import { authSlice } from '../../src/store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 
 jest.mock('../../src/store', () => ({
 	store: {
 		dispatch: jest.fn()
 	}
-}))
+}));
 
 const authUser: AuthUser = {
 	userId: 1
@@ -60,6 +60,6 @@ describe('AuthService', () => {
 		expect(mockDispatch).toHaveBeenCalledWith({
 			type: authSlice.actions.setUserData.type,
 			payload: Option.none
-		})
+		});
 	});
 });
