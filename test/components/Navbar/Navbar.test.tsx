@@ -76,8 +76,14 @@ describe('Navbar', () => {
 		expect(screen.queryByTestId('mobile-navbar')).toBeInTheDocument();
 	});
 
-	it('shows correct items for un-authenticated user, including welcome page', () => {
-		throw new Error();
+	it('shows correct items for un-authenticated user', async () => {
+		await doRender();
+		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
+		expect(screen.queryByText('Login')).toBeInTheDocument();
+
+		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
+		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
+		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
 	});
 
 	it('shows correct items for authenticated user', () => {
