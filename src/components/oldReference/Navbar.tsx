@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {Button, Menu,Layout} from 'antd';
 import './Navbar.scss';
 import { MenuInfo } from 'rc-menu/lib/interface';
@@ -5,6 +6,7 @@ import {MailOutlined, MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/ic
 import {useState} from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {Breakpoint} from 'antd/es/_util/responsiveObserve';
+import {Breakpoints} from '../utils/Breakpoints';
 
 const isDesktop = (breakpoint: Partial<Record<Breakpoint, boolean>>): boolean => {
     return breakpoint.lg ?? false;
@@ -15,7 +17,7 @@ const isMobile = (breakpoint: Partial<Record<Breakpoint, boolean>>): boolean => 
 }
 
 export const Navbar = () => {
-    const breakpoint = useBreakpoint();
+    const breakpoint: Breakpoints = useBreakpoint();
     const [state, setState] = useState({
         selected: 'first',
         showSidebar: false

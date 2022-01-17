@@ -8,7 +8,26 @@ const localDevServerConfig = {
     devServer: {
         port: 3000,
         https: true,
-        proxy: {}
+        proxy: {
+            '/market-tracker/api': {
+                target: 'https://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+                pathRewrite: {
+                    '^/market-tracker/api': ''
+                },
+                logLevel: 'debug'
+            },
+            '/market-tracker/oauth2': {
+                target: 'https://localhost:7003',
+                changeOrigin: true,
+                secure: false,
+                pathRewrite: {
+                    '^/market-tracker/oauth2': ''
+                },
+                logLevel: 'debug'
+            }
+        }
     }
 };
 

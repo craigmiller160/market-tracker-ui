@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button } from 'antd';
 import {Navbar} from './Navbar';
 import {Chart} from './Chart';
