@@ -4,6 +4,15 @@ import { getAuthUser, login, logout } from '../../src/services/AuthService';
 import { AuthCodeLogin, AuthUser } from '../../src/types/auth';
 import '@relmify/jest-fp-ts';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
+import { store } from '../../src/store';
+import {authSlice} from '../../src/store/auth/slice';
+import * as Option from 'fp-ts/es6/Option';
+
+jest.mock('../../src/store', () => ({
+	store: {
+		dispatch: jest.fn()
+	}
+}))
 
 const authUser: AuthUser = {
 	userId: 1
@@ -14,6 +23,7 @@ const authCodeLogin: AuthCodeLogin = {
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
+const mockDispatch = store.dispatch as jest.Mock;
 
 describe('AuthService', () => {
 	let location: Location;
@@ -47,5 +57,9 @@ describe('AuthService', () => {
 
 		const result = await logout()();
 		expect(result).toBeRight();
+		expect(mockDispatch).toHaveBeenCalledWith({
+			type: authSlice.actions.setUserData.type,
+			payload: Option.none
+		})
 	});
 });
