@@ -64,8 +64,16 @@ describe('Navbar', () => {
 		expect(screen.queryByTestId('desktop-navbar')).toBeInTheDocument();
 	});
 
-	it('renders for mobile', () => {
-		throw new Error();
+	it('renders for mobile', async () => {
+		await doRender({
+			screenContextValue: {
+				breakpoints: {
+					lg: false,
+					md: true
+				}
+			}
+		});
+		expect(screen.queryByTestId('mobile-navbar')).toBeInTheDocument();
 	});
 
 	it('shows correct items for un-authenticated user, including welcome page', () => {
