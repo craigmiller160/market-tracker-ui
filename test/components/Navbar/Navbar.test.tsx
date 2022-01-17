@@ -1,27 +1,13 @@
-import { render, waitFor, screen, act } from '@testing-library/react';
-import { RootLayout } from '../../../src/components/RootLayout';
+import { act, screen } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import { RootState } from '../../../src/store';
-import { Provider } from 'react-redux';
-import { createStore } from '../../../src/store/createStore';
-import { EnhancedStore } from '@reduxjs/toolkit';
-import { BrowserRouter } from 'react-router-dom';
-import {
-	ScreenContext,
-	ScreenContextValue
-} from '../../../src/components/ScreenContext';
 import '@testing-library/jest-dom/extend-expect';
-import { AuthCodeLogin, AuthUser } from '../../../src/types/auth';
+import { AuthCodeLogin } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
-import { match } from 'ts-pattern';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import { sleep } from '../../../src/function/Sleep';
-
-const authUser: AuthUser = {
-	userId: 1
-};
+import { createRenderApp } from '../../testutils/RenderApp';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -31,54 +17,7 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-interface RenderConfig {
-	readonly preloadedState: Partial<RootState>;
-	readonly initialPath: string;
-	readonly screenContextValue: ScreenContextValue;
-	readonly isAuthorized: boolean;
-}
-
-interface RenderResult {
-	readonly store: EnhancedStore<RootState>;
-}
-
-const mockUserAuthSuccess = () =>
-	mockApi.onGet('/oauth/user').reply(200, authUser);
-const mockUserAuthFailure = () => mockApi.onGet('/oauth/user').reply(401);
-
-const doRender = async (
-	renderConfig?: Partial<RenderConfig>
-): Promise<RenderResult> => {
-	const store: EnhancedStore<RootState> = createStore(
-		renderConfig?.preloadedState
-	);
-	window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
-	const screenContextValue: ScreenContextValue =
-		renderConfig?.screenContextValue ?? {
-			breakpoints: {
-				lg: true
-			}
-		};
-
-	match(renderConfig?.isAuthorized)
-		.with(false, mockUserAuthFailure)
-		.otherwise(mockUserAuthSuccess);
-
-	await waitFor(() =>
-		render(
-			<Provider store={store}>
-				<ScreenContext.Provider value={screenContextValue}>
-					<BrowserRouter basename="/">
-						<RootLayout />
-					</BrowserRouter>
-				</ScreenContext.Provider>
-			</Provider>
-		)
-	);
-	return {
-		store
-	};
-};
+const renderApp = createRenderApp(mockApi);
 
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
@@ -91,12 +30,12 @@ describe('Navbar', () => {
 	});
 
 	it('renders for desktop', async () => {
-		await doRender();
+		await renderApp();
 		expect(screen.queryByTestId('desktop-navbar')).toBeInTheDocument();
 	});
 
 	it('renders for mobile', async () => {
-		await doRender({
+		await renderApp({
 			screenContextValue: {
 				breakpoints: {
 					lg: false,
@@ -108,7 +47,7 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for un-authenticated user', async () => {
-		await doRender({
+		await renderApp({
 			isAuthorized: false
 		});
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
@@ -120,7 +59,7 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for authenticated user', async () => {
-		await doRender();
+		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
@@ -130,7 +69,7 @@ describe('Navbar', () => {
 	});
 
 	it('starts on watchlists page due to route, then navigates to portfolios page', async () => {
-		await doRender({
+		await renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
 
@@ -158,7 +97,7 @@ describe('Navbar', () => {
 	});
 
 	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
-		await doRender({
+		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
 
@@ -187,7 +126,7 @@ describe('Navbar', () => {
 
 	it('sends login request', async () => {
 		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
-		await doRender({
+		await renderApp({
 			isAuthorized: false
 		});
 		location = Option.some(mockLocation());
@@ -200,7 +139,7 @@ describe('Navbar', () => {
 
 	it('sends logout request', async () => {
 		mockApi.onGet('/oauth/logout').reply(200);
-		await doRender();
+		await renderApp();
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
 			await sleep(100);
