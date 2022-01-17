@@ -7,12 +7,17 @@ import { Provider } from 'react-redux';
 import { createStore } from '../../../src/store/createStore';
 import { EnhancedStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
+import {
+	ScreenContext,
+	ScreenContextValue
+} from '../../../src/components/ScreenContext';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 interface RenderConfig {
 	readonly preloadedState: Partial<RootState>;
 	readonly initialPath: string;
+	readonly screenContextValue: ScreenContextValue;
 }
 
 interface RenderResult {
@@ -26,12 +31,20 @@ const doRender = async (
 		renderConfig?.preloadedState
 	);
 	window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
+	const screenContextValue: ScreenContextValue =
+		renderConfig?.screenContextValue ?? {
+			breakpoints: {
+				lg: true
+			}
+		};
 	await waitFor(() =>
 		render(
 			<Provider store={store}>
-				<BrowserRouter basename="/">
-					<RootLayout />
-				</BrowserRouter>
+				<ScreenContext.Provider value={screenContextValue}>
+					<BrowserRouter basename="/">
+						<RootLayout />
+					</BrowserRouter>
+				</ScreenContext.Provider>
 			</Provider>
 		)
 	);
