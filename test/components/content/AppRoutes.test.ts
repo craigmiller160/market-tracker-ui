@@ -1,6 +1,8 @@
+import { screen } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { createRenderApp } from '../../testutils/RenderApp';
+import '@testing-library/jest-dom/extend-expect';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -11,18 +13,42 @@ describe('AppRoutes', () => {
 	});
 
 	it('shows correct initial route for un-authenticated user', async () => {
-		throw new Error();
+		await renderApp({
+			isAuthorized: false
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/welcome'
+		);
+		expect(
+			screen.queryByText('Welcome to Market Tracker')
+		).toBeInTheDocument();
 	});
 
 	it('shows correct initial route for authenticated user', async () => {
-		throw new Error();
+		await renderApp();
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.queryByText('Portfolios Page'));
 	});
 
 	it('renders portfolios route', async () => {
-		throw new Error();
+		await renderApp({
+			initialPath: '/market-tracker/portfolios'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.queryByText('Portfolios Page'));
 	});
 
 	it('renders watchlists route', async () => {
-		throw new Error();
+		await renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/watchlists'
+		);
+		expect(screen.queryByText('Watchlists Page'));
 	});
 });
