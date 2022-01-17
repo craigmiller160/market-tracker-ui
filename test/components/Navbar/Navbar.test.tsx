@@ -19,6 +19,8 @@ const authUser: AuthUser = {
 	userId: 1
 };
 
+const SELECTED_CLASS = 'ant-menu-item-selected';
+
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 interface RenderConfig {
@@ -111,12 +113,27 @@ describe('Navbar', () => {
 		await doRender({
 			initialPath: '/market-tracker/watchlists'
 		});
+
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
 		);
+		expect(screen.getByText('Watchlists').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+		expect(
+			screen.getByText('Portfolios').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+
 		userEvent.click(screen.getByText('Portfolios'));
+
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
+		);
+		expect(
+			screen.getByText('Watchlists').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
 		);
 	});
 
