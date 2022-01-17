@@ -189,15 +189,14 @@ describe('Navbar', () => {
 	it('sends logout request', async () => {
 		mockApi.onGet('/oauth/logout').reply(200);
 		await doRender();
-		await userEvent.click(screen.getByText('Logout'));
-		// await waitFor(async () => await userEvent.click(screen.getByText('Logout')));
-		console.log(mockApi.history);
-		await waitFor(() => expect(mockApi.history.get).toHaveLength(2)) // TODO not good enough
-		await act(() => sleep(2000))
-
-		await screen.queryByText('Login')
-		expect(screen.queryByText('Login')).toBeInTheDocument();
-
-		// await waitFor(async () => expect(await screen.queryByText('Login')).toBeInTheDocument());
+		await act(async () => {
+			await userEvent.click(screen.getByText('Logout'));
+			screen.debug();
+			expect(screen.queryByText('Login')).toBeInTheDocument();
+		})
+		// await userEvent.click(screen.getByText('Logout'));
+		// await waitFor(() => expect(mockApi.history.get).toHaveLength(2)) // TODO not good enough
+		//
+		// expect(await screen.queryByText('Login')).toBeInTheDocument();
 	});
 });
