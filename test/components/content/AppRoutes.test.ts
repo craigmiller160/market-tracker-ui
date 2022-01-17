@@ -10,19 +10,19 @@ describe('AppRoutes', () => {
 		mockApi.reset();
 	});
 
-	it('shows correct initial route for un-authenticated user', () => {
+	it('shows correct initial route for un-authenticated user', async () => {
 		throw new Error();
 	});
 
-	it('shows correct initial route for authenticated user', () => {
+	it('shows correct initial route for authenticated user', async () => {
 		throw new Error();
 	});
 
-	it('navigates to portfolios page', () => {
+	it('renders portfolios route', async () => {
 		throw new Error();
 	});
 
-	it('navigates to watchlists page', () => {
+	it('renders watchlists route', async () => {
 		throw new Error();
 	});
 });
