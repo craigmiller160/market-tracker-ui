@@ -12,6 +12,11 @@ import {
 	ScreenContextValue
 } from '../../../src/components/ScreenContext';
 import '@testing-library/jest-dom/extend-expect';
+import { AuthUser } from '../../../src/types/auth';
+
+const authUser: AuthUser = {
+	userId: 1
+};
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -54,6 +59,9 @@ const doRender = async (
 	};
 };
 
+const mockUserAuthSuccess = () =>
+	mockApi.onGet('/oauth/user').reply(200, authUser);
+
 describe('Navbar', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -86,8 +94,15 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
 	});
 
-	it('shows correct items for authenticated user', () => {
-		throw new Error();
+	it('shows correct items for authenticated user', async () => {
+		mockUserAuthSuccess();
+		await doRender();
+		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
+		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
+		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
+		expect(screen.queryByText('Logout')).toBeInTheDocument();
+
+		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
 	it('navigates to portfolios page', () => {

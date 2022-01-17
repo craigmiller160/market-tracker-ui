@@ -1,1 +1,1 @@
-export const Watchlists = () => <h1>Watchlists</h1>;
+export const Watchlists = () => <h1>Watchlists Page</h1>;

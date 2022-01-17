@@ -1,1 +1,1 @@
-export const Portfolios = () => <h1>Portfolios</h1>;
+export const Portfolios = () => <h1>Portfolios Page</h1>;
