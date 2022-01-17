@@ -6,7 +6,7 @@ import { AuthCodeLogin } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
-import * as Sleep from '@craigmiller160/ts-functions/Sleep';
+import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
 
 const authCodeLogin: AuthCodeLogin = {

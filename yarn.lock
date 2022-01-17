@@ -1320,10 +1320,10 @@
     eslint-plugin-react "^7.28.0"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@craigmiller160/eslint-config-tree-shaking-import-restrictions@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-tree-shaking-import-restrictions/-/eslint-config-tree-shaking-import-restrictions-1.0.0-beta.1.tgz#3eb6d4d92044e534a6c6ea2b2211fe539dc31da3"
-  integrity sha512-h9+sT/N8EQ8gG9AGHHZBm59uczEbhEoFwws9NhYkrP/hdqHwze5+CqHSdjFovh6U1YysLFUQLI06eg84k/69jw==
+"@craigmiller160/eslint-config-tree-shaking-import-restrictions@^1.0.0-beta.2":
+  version "1.0.0-beta.2"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-tree-shaking-import-restrictions/-/eslint-config-tree-shaking-import-restrictions-1.0.0-beta.2.tgz#59d02c24979a865f2194c5550d004cafa06ba2bf"
+  integrity sha512-zl2DQvUvC2WNxlvKAQFAcYtEsTdJV6Lnhv+EghpH47vh/pf8puXxe6dvKivjkeu9wYkp/iPNuYDOjhwNOMR9Uw==
 
 "@craigmiller160/eslint-config-ts@^1.0.0-beta.1":
   version "1.0.0-beta.1"

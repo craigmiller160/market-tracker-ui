@@ -10,7 +10,7 @@ import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
-import * as Regex from '@craigmiller160/ts-functions/Regex';
+import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 
