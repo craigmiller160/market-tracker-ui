@@ -137,8 +137,33 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('starts on portfolios page due to route, then navigates to watchlists page', () => {
-		throw new Error();
+	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
+		mockUserAuthSuccess();
+		await doRender({
+			initialPath: '/market-tracker/portfolios'
+		});
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+		expect(
+			screen.getByText('Watchlists').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+
+		userEvent.click(screen.getByText('Watchlists'));
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/watchlists'
+		);
+		expect(
+			screen.getByText('Portfolios').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+		expect(screen.getByText('Watchlists').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
 	});
 
 	it('sends login request', () => {
