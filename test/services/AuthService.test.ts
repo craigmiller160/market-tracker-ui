@@ -55,7 +55,7 @@ describe('AuthService', () => {
 	it('logout', async () => {
 		mockApi.onGet('/oauth/logout').reply(200);
 
-		const result = await logout()();
+		const result = await logout(mockDispatch)();
 		expect(result).toBeRight();
 		expect(mockDispatch).toHaveBeenCalledWith({
 			type: authSlice.actions.setUserData.type,

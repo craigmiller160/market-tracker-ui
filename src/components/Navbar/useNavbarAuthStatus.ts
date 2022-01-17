@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	hasCheckedSelector,
 	isAuthorizedSelector
@@ -14,9 +14,10 @@ export type NavbarAuth = [
 ];
 
 export const useNavbarAuthCheck = (): NavbarAuth => {
+	const dispatch = useDispatch();
 	const isAuthorized = useSelector(isAuthorizedSelector);
 	const hasChecked = useSelector(hasCheckedSelector);
 	const authBtnTxt = isAuthorized ? 'Logout' : 'Login';
-	const authBtnAction = isAuthorized ? logout() : login();
+	const authBtnAction = isAuthorized ? logout(dispatch) : login();
 	return [isAuthorized, hasChecked, authBtnTxt, authBtnAction];
 };

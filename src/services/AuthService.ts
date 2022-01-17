@@ -4,9 +4,9 @@ import { ajaxApi } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
 import { AxiosResponse } from 'axios';
-import { store } from '../store';
 import { authSlice } from '../store/auth/slice';
 import * as O from 'fp-ts/es6/Option';
+import { Dispatch } from 'redux';
 
 export const getAuthUser = (): TE.TaskEither<Error, AuthUser> =>
 	pipe(
@@ -36,14 +36,15 @@ export const login = (): TE.TaskEither<Error, AuthCodeLogin> =>
 		})
 	);
 
-export const logout = (): TE.TaskEither<Error, void> =>
+export const logout = (dispatch: Dispatch): TE.TaskEither<Error, void> =>
 	pipe(
 		ajaxApi.get<void>({
 			uri: '/oauth/logout',
 			errorMsg: 'Error logging out'
 		}),
 		TE.map((_) => {
-			store.dispatch(authSlice.actions.setUserData(O.none));
+			console.log('DispatchingLogout');
+			dispatch(authSlice.actions.setUserData(O.none));
 			return _.data;
 		})
 	);
