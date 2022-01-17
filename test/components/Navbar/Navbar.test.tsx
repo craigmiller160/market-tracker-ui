@@ -17,6 +17,7 @@ import userEvent from '@testing-library/user-event';
 import { match } from 'ts-pattern';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
+import { sleep } from '../../../src/function/Sleep';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -78,9 +79,6 @@ const doRender = async (
 		store
 	};
 };
-
-const sleep = (millis: number): Promise<void> =>
-	new Promise((resolve) => setTimeout(resolve, millis));
 
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
