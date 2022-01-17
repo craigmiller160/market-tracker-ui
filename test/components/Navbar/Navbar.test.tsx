@@ -12,12 +12,18 @@ import {
 	ScreenContextValue
 } from '../../../src/components/ScreenContext';
 import '@testing-library/jest-dom/extend-expect';
-import { AuthUser } from '../../../src/types/auth';
+import { AuthCodeLogin, AuthUser } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
 import { match } from 'ts-pattern';
+import * as Option from 'fp-ts/es6/Option';
+import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 
 const authUser: AuthUser = {
 	userId: 1
+};
+
+const authCodeLogin: AuthCodeLogin = {
+	url: 'theUrl'
 };
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
@@ -77,8 +83,13 @@ const sleep = (millis: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, millis));
 
 describe('Navbar', () => {
+	let location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
+	});
+
+	afterEach(() => {
+		Option.map(restoreLocation)(location);
 	});
 
 	it('renders for desktop', async () => {
@@ -177,13 +188,16 @@ describe('Navbar', () => {
 	});
 
 	it('sends login request', async () => {
+		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
 		await doRender({
 			isAuthorized: false
 		});
-		userEvent.click(screen.getByText('Login'));
-
-		// await waitFor(() => expect(screen.queryByText('Logout')))
-		throw new Error();
+		location = Option.some(mockLocation());
+		await act(async () => {
+			await userEvent.click(screen.getByText('Login'));
+		});
+		expect(mockApi.history.post).toHaveLength(1);
+		expect(window.location.assign).toHaveBeenCalledWith('theUrl');
 	});
 
 	it('sends logout request', async () => {
