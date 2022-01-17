@@ -51,6 +51,7 @@
     "@ant-design/plots": "^1.0.7",
     "@craigmiller160/ajax-api-fp-ts": "^1.0.3",
     "@craigmiller160/ajax-error-handler": "^1.0.0-beta.1",
+    "@craigmiller160/ts-functions": "^1.0.0-beta.4",
     "@reduxjs/toolkit": "^1.7.1",
     "antd": "^4.18.3",
     "core-js": "^3.20.2",

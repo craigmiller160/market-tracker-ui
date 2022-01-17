@@ -10,7 +10,7 @@ import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
-import { captureFromRegex } from '../../function/Regex';
+import * as Regex from '@craigmiller160/ts-functions/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 
@@ -22,11 +22,12 @@ const initState: State = {
 	selected: 'portfolios'
 };
 
-const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
-
 interface PathRegexGroups {
 	key: string;
 }
+
+const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
 
 const useHandleMenuClick = (
 	setState: Updater<State>,
@@ -51,7 +52,7 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
 		(pathname: string) =>
 			pipe(
-				captureFromRegex<PathRegexGroups>(PATH_REGEX, pathname),
+				capturePathKey(pathname),
 				Option.filter((_) => isMenuItemKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {

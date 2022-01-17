@@ -6,7 +6,7 @@ import { AuthCodeLogin } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
-import { sleep } from '../../../src/function/Sleep';
+import * as Sleep from '@craigmiller160/ts-functions/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
 
 const authCodeLogin: AuthCodeLogin = {
@@ -18,6 +18,7 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 const renderApp = createRenderApp(mockApi);
+const sleep100 = Sleep.sleep(100);
 
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
@@ -142,7 +143,7 @@ describe('Navbar', () => {
 		await renderApp();
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
-			await sleep(100);
+			await sleep100();
 		});
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 	});
