@@ -190,9 +190,5 @@ describe('Navbar', () => {
 			await userEvent.click(screen.getByText('Logout'));
 			expect(await screen.queryByText('Login')).toBeInTheDocument();
 		});
-		// await userEvent.click(screen.getByText('Logout'));
-		// await waitFor(() => expect(mockApi.history.get).toHaveLength(2)) // TODO not good enough
-		//
-		// expect(await screen.queryByText('Login')).toBeInTheDocument();
 	});
 });
