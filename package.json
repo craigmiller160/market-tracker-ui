@@ -1,6 +1,10 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
   "version": "0.0.1-beta.1",
+  "author": "craigmiller160",
+  "publishConfig": {
+    "registry": "https://craigmiller160.ddns.net:30003/repository/npm-private/"
+  },
   "scripts": {
     "start": "craig-webpack-dev",
     "build": "yarn lint && yarn test && yarn forceBuild",
