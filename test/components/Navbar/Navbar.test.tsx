@@ -13,6 +13,7 @@ import {
 } from '../../../src/components/ScreenContext';
 import '@testing-library/jest-dom/extend-expect';
 import { AuthUser } from '../../../src/types/auth';
+import userEvent from '@testing-library/user-event';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -105,11 +106,21 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
-	it('navigates to portfolios page', () => {
-		throw new Error();
+	it('starts on watchlists page due to route, then navigates to portfolios page', async () => {
+		mockUserAuthSuccess();
+		await doRender({
+			initialPath: '/market-tracker/watchlists'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/watchlists'
+		);
+		userEvent.click(screen.getByText('Portfolios'));
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
 	});
 
-	it('navigates to watchlists page', () => {
+	it('starts on portfolios page due to route, then navigates to watchlists page', () => {
 		throw new Error();
 	});
 
