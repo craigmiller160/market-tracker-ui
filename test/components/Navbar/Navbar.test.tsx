@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import { RootLayout } from '../../../src/components/RootLayout';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
@@ -11,6 +11,7 @@ import {
 	ScreenContext,
 	ScreenContextValue
 } from '../../../src/components/ScreenContext';
+import '@testing-library/jest-dom/extend-expect';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -58,13 +59,9 @@ describe('Navbar', () => {
 		mockApi.reset();
 	});
 
-	// TODO delete this
-	it('practice', async () => {
+	it('renders for desktop', async () => {
 		await doRender();
-	});
-
-	it('renders for desktop', () => {
-		throw new Error();
+		expect(screen.queryByTestId('desktop-navbar')).toBeInTheDocument();
 	});
 
 	it('renders for mobile', () => {

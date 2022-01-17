@@ -24,6 +24,7 @@ export const MobileNavbar: FC<NavbarProps> = (props) => {
 	return (
 		<Layout.Sider
 			className="MobileNavbar"
+			data-testid="mobile-navbar"
 			breakpoint="lg"
 			collapsedWidth={0}
 			width={200}

@@ -22,7 +22,7 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 	});
 
 	return (
-		<Layout.Header className="DesktopNavbar">
+		<Layout.Header className="DesktopNavbar" data-testid="desktop-navbar">
 			<div className="Brand">
 				<h3>Market Tracker</h3>
 			</div>
