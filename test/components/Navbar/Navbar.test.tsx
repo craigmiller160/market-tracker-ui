@@ -173,11 +173,23 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('sends login request', () => {
-		throw new Error();
+	it('sends login request', async () => {
+		await doRender({
+			isAuthorized: false
+		});
+		userEvent.click(screen.getByText('Login'));
+		console.log(mockApi.history);
+
+		// await waitFor(() => expect(screen.queryByText('Logout')))
+		throw new Error()
 	});
 
-	it('sends logout request', () => {
-		throw new Error();
+	it('sends logout request', async () => {
+		mockApi.onGet('/oauth/logout').reply(200);
+		await doRender();
+		await userEvent.click(screen.getByText('Logout'));
+		console.log(mockApi.history);
+
+		await waitFor(async () => expect(await screen.queryByText('Login')).toBeInTheDocument());
 	});
 });
