@@ -14,6 +14,7 @@ import {
 import '@testing-library/jest-dom/extend-expect';
 import { AuthUser } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
+import { match } from 'ts-pattern';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -27,11 +28,16 @@ interface RenderConfig {
 	readonly preloadedState: Partial<RootState>;
 	readonly initialPath: string;
 	readonly screenContextValue: ScreenContextValue;
+	readonly isAuthorized: boolean;
 }
 
 interface RenderResult {
 	readonly store: EnhancedStore<RootState>;
 }
+
+const mockUserAuthSuccess = () =>
+	mockApi.onGet('/oauth/user').reply(200, authUser);
+const mockUserAuthFailure = () => mockApi.onGet('/oauth/user').reply(401);
 
 const doRender = async (
 	renderConfig?: Partial<RenderConfig>
@@ -46,6 +52,11 @@ const doRender = async (
 				lg: true
 			}
 		};
+
+	match(renderConfig?.isAuthorized)
+		.with(false, mockUserAuthFailure)
+		.otherwise(mockUserAuthSuccess);
+
 	await waitFor(() =>
 		render(
 			<Provider store={store}>
@@ -61,9 +72,6 @@ const doRender = async (
 		store
 	};
 };
-
-const mockUserAuthSuccess = () =>
-	mockApi.onGet('/oauth/user').reply(200, authUser);
 
 describe('Navbar', () => {
 	beforeEach(() => {
@@ -88,7 +96,9 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for un-authenticated user', async () => {
-		await doRender();
+		await doRender({
+			isAuthorized: false
+		});
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 
@@ -98,7 +108,6 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for authenticated user', async () => {
-		mockUserAuthSuccess();
 		await doRender();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
@@ -109,7 +118,6 @@ describe('Navbar', () => {
 	});
 
 	it('starts on watchlists page due to route, then navigates to portfolios page', async () => {
-		mockUserAuthSuccess();
 		await doRender({
 			initialPath: '/market-tracker/watchlists'
 		});
@@ -138,7 +146,6 @@ describe('Navbar', () => {
 	});
 
 	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
-		mockUserAuthSuccess();
 		await doRender({
 			initialPath: '/market-tracker/portfolios'
 		});
