@@ -1,4 +1,4 @@
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor, screen, act } from '@testing-library/react';
 import { RootLayout } from '../../../src/components/RootLayout';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
@@ -38,6 +38,8 @@ interface RenderResult {
 const mockUserAuthSuccess = () =>
 	mockApi.onGet('/oauth/user').reply(200, authUser);
 const mockUserAuthFailure = () => mockApi.onGet('/oauth/user').reply(401);
+
+const sleep = (millis: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, millis));
 
 const doRender = async (
 	renderConfig?: Partial<RenderConfig>
@@ -188,8 +190,14 @@ describe('Navbar', () => {
 		mockApi.onGet('/oauth/logout').reply(200);
 		await doRender();
 		await userEvent.click(screen.getByText('Logout'));
+		// await waitFor(async () => await userEvent.click(screen.getByText('Logout')));
 		console.log(mockApi.history);
+		await waitFor(() => expect(mockApi.history.get).toHaveLength(2)) // TODO not good enough
+		await act(() => sleep(2000))
 
-		await waitFor(async () => expect(await screen.queryByText('Login')).toBeInTheDocument());
+		await screen.queryByText('Login')
+		expect(screen.queryByText('Login')).toBeInTheDocument();
+
+		// await waitFor(async () => expect(await screen.queryByText('Login')).toBeInTheDocument());
 	});
 });
