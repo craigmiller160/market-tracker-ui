@@ -1,13 +1,14 @@
 import { Alert as AntAlert } from 'antd';
 import './Alert.scss';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { alertSelector } from '../../../store/alert/selectors';
-import { AlertType } from '../../../store/alert/slice';
+import { alertSlice, AlertType } from '../../../store/alert/slice';
 import { match } from 'ts-pattern';
+import { Dispatch } from 'redux';
 
 // TODO need tests for this
 
-const createAlert = (type: AlertType, message: string) => {
+const createAlert = (type: AlertType, message: string, dispatch: Dispatch) => {
 	const topMessage = match(type)
 		.with('success', () => 'Success')
 		.with('error', () => 'Error')
@@ -20,14 +21,16 @@ const createAlert = (type: AlertType, message: string) => {
 			description={message}
 			showIcon
 			closable
+			afterClose={() => dispatch(alertSlice.actions.hide())}
 		/>
 	);
 };
 
 const useAlert = () => {
 	const { show, type, message } = useSelector(alertSelector, shallowEqual);
+	const dispatch = useDispatch();
 	return match(show)
-		.with(true, () => createAlert(type, message))
+		.with(true, () => createAlert(type, message, dispatch))
 		.otherwise(() => <div />);
 };
 
