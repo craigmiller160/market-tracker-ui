@@ -12,6 +12,11 @@ const baseState: RootState = {
 	auth: {
 		hasChecked: false,
 		userData: Option.none
+	},
+	alert: {
+		show: false,
+		message: '',
+		type: 'success'
 	}
 };
 
