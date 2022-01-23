@@ -15,7 +15,7 @@ const initialState: StateType = {
 	message: ''
 };
 
-export const showSuccess = (
+const showSuccess = (
 	draft: Draft<StateType>,
 	action: PayloadAction<string>
 ) => {
@@ -24,16 +24,13 @@ export const showSuccess = (
 	draft.message = action.payload;
 };
 
-export const showError = (
-	draft: Draft<StateType>,
-	action: PayloadAction<string>
-) => {
+const showError = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	draft.show = true;
 	draft.type = 'error';
 	draft.message = action.payload;
 };
 
-export const hide = (draft: Draft<StateType>) => {
+const hide = (draft: Draft<StateType>) => {
 	draft.show = false;
 };
 

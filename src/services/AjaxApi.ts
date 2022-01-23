@@ -4,6 +4,7 @@ import createAjaxErrorHandler from '@craigmiller160/ajax-error-handler';
 import { AxiosResponse } from 'axios';
 import { authSlice } from '../store/auth/slice';
 import * as O from 'fp-ts/es6/Option';
+import { alertSlice } from '../store/alert/slice';
 
 interface ErrorResponse {
 	status: number;
@@ -23,8 +24,7 @@ const ajaxErrorHandler = createAjaxErrorHandler({
 		return '';
 	},
 	errorMessageHandler: (message: string) => {
-		// TODO need some kind of alert system
-		console.error('Error', message);
+		store.dispatch(alertSlice.actions.showError(message));
 	},
 	unauthorizedHandler: () =>
 		store.dispatch(authSlice.actions.setUserData(O.none))
