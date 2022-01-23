@@ -8,7 +8,7 @@ interface StateType {
 	readonly hasChecked: boolean;
 }
 
-export const initialState: StateType = {
+const initialState: StateType = {
 	userData: O.none,
 	hasChecked: false
 };

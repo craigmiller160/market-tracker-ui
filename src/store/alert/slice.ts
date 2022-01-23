@@ -3,13 +3,13 @@ import { Draft } from '@reduxjs/toolkit';
 
 type AlertType = 'success' | 'error';
 
-interface StateType {
+export interface StateType {
 	readonly show: boolean;
 	readonly type: AlertType;
 	readonly message: string;
 }
 
-export const initialState: StateType = {
+const initialState: StateType = {
 	show: false,
 	type: 'success',
 	message: ''
