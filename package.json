@@ -27,7 +27,7 @@
     "@craigmiller160/eslint-config-react": "^1.0.0-beta.1",
     "@craigmiller160/eslint-config-tree-shaking-import-restrictions": "^1.0.0-beta.2",
     "@craigmiller160/eslint-config-ts": "^1.0.0-beta.1",
-    "@craigmiller160/jest-config": "file:.yalc/@craigmiller160/jest-config",
+    "@craigmiller160/jest-config": "^1.0.0-beta.11",
     "@craigmiller160/jest-config-ts": "^1.0.0-beta.2",
     "@craigmiller160/prettier-config": "^1.0.0-beta.1",
     "@craigmiller160/webpack-config": "^1.0.0-beta.3",

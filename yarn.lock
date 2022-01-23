@@ -1341,8 +1341,10 @@
     "@types/jest" "^27.0.3"
     ts-jest "^27.1.2"
 
-"@craigmiller160/jest-config@file:.yalc/@craigmiller160/jest-config":
-  version "1.0.0-beta"
+"@craigmiller160/jest-config@^1.0.0-beta.11":
+  version "1.0.0-beta.11"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config/-/jest-config-1.0.0-beta.11.tgz#bb83338d7c413d81b6d51ea8d8d760d0a82f5194"
+  integrity sha512-824PEc+HdoPz0DB6w46ZKYA5Sx0StmZ6W3OzpLavnXbbCBh8alh208rpV5uBpiGV786eXaAgCftGLxMLO9WsQw==
   dependencies:
     cross-env "^7.0.3"
     cross-spawn "^7.0.3"
