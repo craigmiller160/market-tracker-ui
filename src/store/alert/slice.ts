@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Draft } from '@reduxjs/toolkit';
 
-type AlertType = 'success' | 'error';
+export type AlertType = 'success' | 'error';
 
 export interface StateType {
 	readonly show: boolean;
