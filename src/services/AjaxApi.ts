@@ -6,6 +6,8 @@ import { authSlice } from '../store/auth/slice';
 import * as O from 'fp-ts/es6/Option';
 import { alertSlice } from '../store/alert/slice';
 
+// TODO how to make sure I get the store from the component tree?
+
 interface ErrorResponse {
 	status: number;
 	message: string;
