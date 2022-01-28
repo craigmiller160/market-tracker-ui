@@ -6,8 +6,6 @@ import { alertSlice, AlertType } from '../../../store/alert/slice';
 import { match } from 'ts-pattern';
 import { Dispatch } from 'redux';
 
-// TODO need tests for this
-
 const createAlert = (type: AlertType, message: string, dispatch: Dispatch) => {
 	const topMessage = match(type)
 		.with('success', () => 'Success')
@@ -21,7 +19,7 @@ const createAlert = (type: AlertType, message: string, dispatch: Dispatch) => {
 			description={message}
 			showIcon
 			closable
-			afterClose={() => dispatch(alertSlice.actions.hide())}
+			onClose={() => dispatch(alertSlice.actions.hide())}
 		/>
 	);
 };
@@ -36,5 +34,9 @@ const useAlert = () => {
 
 export const Alert = () => {
 	const TheAlert = useAlert();
-	return <div className="AlertWrapper">{TheAlert}</div>;
+	return (
+		<div data-testid="alert-wrapper" className="AlertWrapper">
+			{TheAlert}
+		</div>
+	);
 };
