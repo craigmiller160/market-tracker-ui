@@ -9,6 +9,21 @@ const MainNavItems = (
 	</>
 );
 
+const TimeRangeNavItems = (
+	<>
+		<Menu.Item className="OneDayItem" key="oneDay">
+			1 Day
+		</Menu.Item>
+		<Menu.Item key="oneWeek">1 Week</Menu.Item>
+		<Menu.Item key="oneMonth">1 Month</Menu.Item>
+		<Menu.Item key="threeMonths">3 Months</Menu.Item>
+		<Menu.Item key="oneYear">1 Year</Menu.Item>
+		<Menu.Item className="FiveYearItem" key="fiveYears">
+			5 Years
+		</Menu.Item>
+	</>
+);
+
 const createAuthNavItem = (authBtnAction: () => void, authBtnTxt: string) => (
 	<Menu.Item className="AuthItem" key="auth" onClick={authBtnAction}>
 		{authBtnTxt}
@@ -31,6 +46,7 @@ export const useNavbarItems = (config: NavbarItemConfig): ReactNode => {
 		.with({ isAuthorized: true, hasChecked: true }, () => (
 			<>
 				{MainNavItems}
+				{TimeRangeNavItems}
 				{AuthNavItem}
 			</>
 		))
