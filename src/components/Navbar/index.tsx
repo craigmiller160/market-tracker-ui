@@ -15,7 +15,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 
 interface State {
-	readonly selected: MenuItemKey;
+	readonly selected: string; // TODO need new type to restrict this
 }
 
 const initState: State = {
@@ -49,8 +49,12 @@ const useHandleMenuClick = (
 						.with({ prefix: 'auth' }, () => {
 							// Do nothing for now
 						})
-						.with({ prefix: 'page', action: select() }, (_) => {
-							console.log('Page', _);
+						.with({ prefix: 'page', action: select() }, (page) => {
+							navigate(`/market-tracker/${page}`);
+							setState((draft) => {
+								console.log('Key', menuItemInfo.key);
+								draft.selected = menuItemInfo.key;
+							})
 						})
 						.with({ prefix: 'time', action: select() }, (_) => {
 							console.log('Time', _);
@@ -58,21 +62,11 @@ const useHandleMenuClick = (
 						.run()
 				)
 			)
-
-			// match(menuItemInfo.key as MenuItemKey)
-			// 	.with('auth', () => {
-			// 		// Do nothing for now
-			// 	})
-			// 	.otherwise((key) => {
-			// 		navigate(`/market-tracker/${key}`);
-			// 		setState((draft) => {
-			// 			draft.selected = key;
-			// 		});
-			// 	});
 		},
 		[setState, navigate]
 	);
 
+// TODO completely refactor how this works
 const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
 		(pathname: string) =>
@@ -101,7 +95,8 @@ export const Navbar: FC<object> = () => {
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
-		setSelectedFromLocation(location.pathname);
+		// TODO location.pathname triggers this too often... maybe...
+		// setSelectedFromLocation(location.pathname);
 	}, [location.pathname, setSelectedFromLocation]);
 
 	const props: NavbarProps = {

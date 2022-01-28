@@ -3,7 +3,7 @@ import { MenuInfo } from 'rc-menu/lib/interface';
 import * as TE from 'fp-ts/es6/TaskEither';
 
 export interface NavbarProps {
-	selected: MenuItemKey;
+	selected: string; // TODO need a better type here
 	handleMenuClick: (mi: MenuInfo) => void;
 	isAuthorized: boolean;
 	hasChecked: boolean;

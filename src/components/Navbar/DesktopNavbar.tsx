@@ -21,6 +21,8 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 		authBtnAction
 	});
 
+	console.log('Selected', selected);
+
 	return (
 		<Layout.Header className="DesktopNavbar" data-testid="desktop-navbar">
 			<div className="Brand">
