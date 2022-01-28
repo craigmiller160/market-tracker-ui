@@ -1,19 +1,20 @@
 import * as O from 'fp-ts/es6/Option';
 import { AuthUser } from '../../types/auth';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Draft } from '@reduxjs/toolkit';
 
 interface StateType {
-	userData: O.Option<AuthUser>;
-	hasChecked: boolean;
+	readonly userData: O.Option<AuthUser>;
+	readonly hasChecked: boolean;
 }
 
-export const initialState: StateType = {
+const initialState: StateType = {
 	userData: O.none,
 	hasChecked: false
 };
 
 const setUserData = (
-	draft: StateType,
+	draft: Draft<StateType>,
 	action: PayloadAction<O.Option<AuthUser>>
 ) => {
 	draft.userData = action.payload;

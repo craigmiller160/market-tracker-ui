@@ -20,6 +20,11 @@ const mockStore = createMockStore<RootState, DispatchExts>([thunk])({
 	auth: {
 		hasChecked: false,
 		userData: Option.none
+	},
+	alert: {
+		show: false,
+		type: 'success',
+		message: ''
 	}
 });
 

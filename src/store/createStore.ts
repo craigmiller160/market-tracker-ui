@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { authSlice } from './auth/slice';
 import { configureStore } from '@reduxjs/toolkit';
+import { alertSlice } from './alert/slice';
 
 export const rootReducer = combineReducers({
-	auth: authSlice.reducer
+	auth: authSlice.reducer,
+	alert: alertSlice.reducer
 });
 
 type RootState = ReturnType<typeof rootReducer>;
