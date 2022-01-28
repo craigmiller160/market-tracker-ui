@@ -41,6 +41,25 @@ describe('Alert', () => {
 	});
 
 	it('shows error alert, and hides on click of X', async () => {
-		throw new Error();
+		const { store } = await renderApp();
+		store.dispatch(alertSlice.actions.showError('Hello World'));
+		expect(screen.queryByText('Error')).toBeInTheDocument();
+		expect(screen.queryByText('Hello World')).toBeInTheDocument();
+
+		const closeBtn = getCloseBtn();
+		userEvent.click(closeBtn);
+
+		expect(screen.queryByText('Error')).not.toBeInTheDocument();
+		expect(screen.queryByText('Hello World')).not.toBeInTheDocument();
+
+		expect(store.getState()).toEqual(
+			expect.objectContaining({
+				alert: {
+					type: 'error',
+					message: 'Hello World',
+					show: false
+				}
+			})
+		);
 	});
 });
