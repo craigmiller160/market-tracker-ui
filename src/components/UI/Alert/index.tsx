@@ -34,5 +34,9 @@ const useAlert = () => {
 
 export const Alert = () => {
 	const TheAlert = useAlert();
-	return <div className="AlertWrapper">{TheAlert}</div>;
+	return (
+		<div data-testid="alert-wrapper" className="AlertWrapper">
+			{TheAlert}
+		</div>
+	);
 };
