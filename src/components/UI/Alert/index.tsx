@@ -6,8 +6,6 @@ import { alertSlice, AlertType } from '../../../store/alert/slice';
 import { match } from 'ts-pattern';
 import { Dispatch } from 'redux';
 
-// TODO need tests for this
-
 const createAlert = (type: AlertType, message: string, dispatch: Dispatch) => {
 	const topMessage = match(type)
 		.with('success', () => 'Success')
