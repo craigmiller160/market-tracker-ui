@@ -4,7 +4,6 @@ import {
 	ScreenContextValue
 } from '../../src/components/ScreenContext';
 import { EnhancedStore } from '@reduxjs/toolkit';
-import { createStore } from '../../src/store/createStore';
 import { match } from 'ts-pattern';
 import { render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -12,13 +11,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { RootLayout } from '../../src/components/RootLayout';
 import { AuthUser } from '../../src/types/auth';
 import MockAdapter from 'axios-mock-adapter';
+import { store } from '../../src/store';
 
 const authUser: AuthUser = {
 	userId: 1
 };
 
 interface RenderConfig {
-	readonly preloadedState: Partial<RootState>;
 	readonly initialPath: string;
 	readonly screenContextValue: ScreenContextValue;
 	readonly isAuthorized: boolean;
@@ -36,9 +35,6 @@ const mockUserAuthFailure = (mockApi: MockAdapter) =>
 export const createRenderApp =
 	(mockApi: MockAdapter) =>
 	async (renderConfig?: Partial<RenderConfig>): Promise<RenderResult> => {
-		const store: EnhancedStore<RootState> = createStore(
-			renderConfig?.preloadedState
-		);
 		window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
 		const screenContextValue: ScreenContextValue =
 			renderConfig?.screenContextValue ?? {
