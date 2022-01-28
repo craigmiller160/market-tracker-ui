@@ -19,7 +19,7 @@ const createAlert = (type: AlertType, message: string, dispatch: Dispatch) => {
 			description={message}
 			showIcon
 			closable
-			afterClose={() => dispatch(alertSlice.actions.hide())}
+			onClose={() => dispatch(alertSlice.actions.hide())}
 		/>
 	);
 };
