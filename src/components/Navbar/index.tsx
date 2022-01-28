@@ -42,6 +42,7 @@ const useHandleMenuClick = (
 ) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
+			// TODO add better null handling
 			pipe(
 				captureMenuKeyParts(menuItemInfo.key),
 				Option.map((keyParts) =>
@@ -54,14 +55,14 @@ const useHandleMenuClick = (
 							setState((draft) => {
 								console.log('Key', menuItemInfo.key);
 								draft.selected = menuItemInfo.key;
-							})
+							});
 						})
 						.with({ prefix: 'time', action: select() }, (_) => {
 							console.log('Time', _);
 						})
 						.run()
 				)
-			)
+			);
 		},
 		[setState, navigate]
 	);
