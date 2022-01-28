@@ -1,9 +1,12 @@
 import { Navbar } from './Navbar';
 import { Content } from './Content';
+import { Layout } from 'antd';
 
 export const RootLayout = () => (
 	<>
-		<Navbar />
-		<Content />
+		<Layout>
+			<Navbar />
+			<Content />
+		</Layout>
 	</>
 );
