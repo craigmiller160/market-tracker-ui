@@ -18,9 +18,7 @@ const TimeRangeNavItems = (
 		<Menu.Item key="oneMonth">1 Month</Menu.Item>
 		<Menu.Item key="threeMonths">3 Months</Menu.Item>
 		<Menu.Item key="oneYear">1 Year</Menu.Item>
-		<Menu.Item className="FiveYearItem" key="fiveYears">
-			5 Years
-		</Menu.Item>
+		<Menu.Item key="fiveYears">5 Years</Menu.Item>
 	</>
 );
 
