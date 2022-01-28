@@ -5,7 +5,6 @@ import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { FC, useCallback, useContext, useEffect } from 'react';
-import { isMenuItemKey, MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
@@ -13,6 +12,7 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 
 interface State {
 	readonly selected: string; // TODO need new type to restrict this
@@ -53,7 +53,6 @@ const useHandleMenuClick = (
 						.with({ prefix: 'page', action: select() }, (page) => {
 							navigate(`/market-tracker/${page}`);
 							setState((draft) => {
-								console.log('Key', menuItemInfo.key);
 								draft.selected = menuItemInfo.key;
 							});
 						})
@@ -67,16 +66,18 @@ const useHandleMenuClick = (
 		[setState, navigate]
 	);
 
-// TODO completely refactor how this works
+const isMenuPageKey: PredicateT<string> = (key) =>
+	['portfolios', 'watchlists'].includes(key);
+
 const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
 		(pathname: string) =>
 			pipe(
 				capturePathKey(pathname),
-				Option.filter((_) => isMenuItemKey(_.key)),
+				Option.filter((_) => isMenuPageKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {
-						draft.selected = groups.key as MenuItemKey;
+						draft.selected = `page.${groups.key}`;
 					});
 					return groups;
 				})
@@ -96,8 +97,7 @@ export const Navbar: FC<object> = () => {
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
-		// TODO location.pathname triggers this too often... maybe...
-		// setSelectedFromLocation(location.pathname);
+		setSelectedFromLocation(location.pathname);
 	}, [location.pathname, setSelectedFromLocation]);
 
 	const props: NavbarProps = {
