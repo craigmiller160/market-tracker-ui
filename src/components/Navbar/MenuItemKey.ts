@@ -1,5 +1,9 @@
-// TODO delete or refactor all of this
-export type MenuItemKey = 'auth' | 'portfolios' | 'watchlists' | '';
+export type MenuItemPageKey = 'page.portfolios' | 'page.watchlists';
 
-export const isMenuItemKey = (value: string): boolean =>
-	['auth', 'portfolios', 'watchlists', ''].includes(value);
+export type MenuItemTimeKey =
+	| 'time.oneDay'
+	| 'time.oneWeek'
+	| 'time.oneMonth'
+	| 'time.threeMonths'
+	| 'time.oneYear'
+	| 'time.fiveYears';

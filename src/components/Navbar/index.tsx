@@ -13,13 +13,14 @@ import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { MenuItemPageKey } from './MenuItemKey';
 
 interface State {
-	readonly selected: string; // TODO need new type to restrict this
+	readonly selectedPageKey: MenuItemPageKey;
 }
 
 const initState: State = {
-	selected: 'portfolios'
+	selectedPageKey: 'page.portfolios'
 };
 
 interface PathRegexGroups {
@@ -53,7 +54,8 @@ const useHandleMenuClick = (
 						.with({ prefix: 'page', action: select() }, (page) => {
 							navigate(`/market-tracker/${page}`);
 							setState((draft) => {
-								draft.selected = menuItemInfo.key;
+								draft.selectedPageKey =
+									menuItemInfo.key as MenuItemPageKey; // TODO guard to avoid casting
 							});
 						})
 						.with({ prefix: 'time', action: select() }, (_) => {
@@ -77,7 +79,8 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 				Option.filter((_) => isMenuPageKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {
-						draft.selected = `page.${groups.key}`;
+						draft.selectedPageKey =
+							`page.${groups.key}` as MenuItemPageKey; // TODO guard to avoid casting
 					});
 					return groups;
 				})
@@ -101,7 +104,7 @@ export const Navbar: FC<object> = () => {
 	}, [location.pathname, setSelectedFromLocation]);
 
 	const props: NavbarProps = {
-		selected: state.selected,
+		selectedPageKey: state.selectedPageKey,
 		handleMenuClick,
 		isAuthorized,
 		hasChecked,
