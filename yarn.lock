@@ -1370,9 +1370,9 @@
     prettier "^2.5.1"
 
 "@craigmiller160/ts-functions@^1.0.0-beta.4":
-  version "1.0.0-beta.4"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.0.0-beta.4.tgz#2cf71b7874f03a78d8c0901cddbd83f9bd225a23"
-  integrity sha512-357UIC5RhMt0N2Kgv1ZSh3kjVGT49ylifOMU89J7W7dHIbqwyXRwqiiDhGp80LWWFvuYQ0HgNMldIjsUqdlQMg==
+  version "1.0.0-beta.9"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.0.0-beta.9.tgz#238e5332182dccf38019dc2c27efb3b112dadcdf"
+  integrity sha512-WZa0FAUXvBGs6ZwTguVuyLblygzbeJIECjJ6mLq+O8PgURD4VwlNL6HGAz6L19tUF4t92B5BLMw9y1vQ9amGaw==
 
 "@craigmiller160/webpack-config-sass@^1.0.0-beta.3":
   version "1.0.0-beta.3"

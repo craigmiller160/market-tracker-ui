@@ -1,5 +1,5 @@
 import { isDesktop } from '../utils/Breakpoints';
-import { match, when } from 'ts-pattern';
+import { match, select, when } from 'ts-pattern';
 import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
@@ -15,7 +15,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 
 interface State {
-	selected: MenuItemKey;
+	readonly selected: MenuItemKey;
 }
 
 const initState: State = {
@@ -23,28 +23,53 @@ const initState: State = {
 };
 
 interface PathRegexGroups {
-	key: string;
+	readonly key: string;
+}
+
+interface MenuKeyParts {
+	readonly prefix: string;
+	readonly action: string;
 }
 
 const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+const MENU_KEY_PARTS_REGEX = /^(?<prefix>.*)\.(?<action>.*)$/;
 const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
+const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
 
 const useHandleMenuClick = (
 	setState: Updater<State>,
 	navigate: NavigateFunction
 ) =>
 	useCallback(
-		(menuItemInfo: MenuInfo) =>
-			match(menuItemInfo.key as MenuItemKey)
-				.with('auth', () => {
-					// Do nothing for now
-				})
-				.otherwise((key) => {
-					navigate(`/market-tracker/${key}`);
-					setState((draft) => {
-						draft.selected = key;
-					});
-				}),
+		(menuItemInfo: MenuInfo) => {
+			pipe(
+				captureMenuKeyParts(menuItemInfo.key),
+				Option.map((keyParts) =>
+					match(keyParts)
+						.with({ prefix: 'auth' }, () => {
+							// Do nothing for now
+						})
+						.with({ prefix: 'page', action: select() }, (_) => {
+							console.log('Page', _);
+						})
+						.with({ prefix: 'time', action: select() }, (_) => {
+							console.log('Time', _);
+						})
+						.run()
+				)
+			)
+
+			// match(menuItemInfo.key as MenuItemKey)
+			// 	.with('auth', () => {
+			// 		// Do nothing for now
+			// 	})
+			// 	.otherwise((key) => {
+			// 		navigate(`/market-tracker/${key}`);
+			// 		setState((draft) => {
+			// 			draft.selected = key;
+			// 		});
+			// 	});
+		},
 		[setState, navigate]
 	);
 
