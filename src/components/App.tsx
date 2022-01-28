@@ -6,6 +6,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
+import { ConfigProvider } from 'antd';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -13,16 +14,20 @@ const createScreenContextValue = (
 	breakpoints
 });
 
+const nonce = '**CSP_NONCE**';
+
 export const App = () => {
 	const breakpoints = useBreakpoint();
 	const screenContextValue = createScreenContextValue(breakpoints);
 	return (
-		<ScreenContext.Provider value={screenContextValue}>
-			<Provider store={store}>
-				<BrowserRouter basename="/">
-					<RootLayout />
-				</BrowserRouter>
-			</Provider>
-		</ScreenContext.Provider>
+		<ConfigProvider csp={{ nonce }}>
+			<ScreenContext.Provider value={screenContextValue}>
+				<Provider store={store}>
+					<BrowserRouter basename="/">
+						<RootLayout />
+					</BrowserRouter>
+				</Provider>
+			</ScreenContext.Provider>
+		</ConfigProvider>
 	);
 };
