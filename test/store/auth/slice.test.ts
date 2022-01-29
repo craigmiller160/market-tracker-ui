@@ -17,4 +17,15 @@ describe('auth slice', () => {
 			userData: Option.some(authUser)
 		});
 	});
+
+	it('reset', () => {
+		const result = authSlice.reducer(
+			{
+				userData: Option.some(authUser),
+				hasChecked: true
+			},
+			authSlice.actions.reset()
+		);
+		expect(result).toEqual(authSlice.getInitialState());
+	});
 });

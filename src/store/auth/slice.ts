@@ -21,10 +21,16 @@ const setUserData = (
 	draft.hasChecked = true;
 };
 
+const reset = (draft: Draft<StateType>) => {
+	draft.userData = O.none;
+	draft.hasChecked = false;
+};
+
 export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-		setUserData
+		setUserData,
+		reset
 	}
 });
