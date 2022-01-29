@@ -13,14 +13,13 @@ import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
-import { MenuItemPageKey, MenuItemTimeKey } from './MenuItemKey';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { timeSlice } from '../../store/time/timeSlice';
 import { timeMenuKeySelector } from '../../store/time/selectors';
 
 interface State {
-	readonly selectedPageKey: MenuItemPageKey;
+	readonly selectedPageKey: string;
 }
 
 const initState: State = {
@@ -59,16 +58,13 @@ const useHandleMenuClick = (
 						.with({ prefix: 'page', action: select() }, (page) => {
 							navigate(`/market-tracker/${page}`);
 							setState((draft) => {
-								draft.selectedPageKey =
-									menuItemInfo.key as MenuItemPageKey; // TODO guard to avoid casting
+								draft.selectedPageKey = menuItemInfo.key;
 							});
 						})
 						.with({ prefix: 'time' }, () => {
 							dispatch(
-								timeSlice.actions.setTime(
-									menuItemInfo.key as MenuItemTimeKey
-								)
-							); // TODO guard to avoid casting
+								timeSlice.actions.setTime(menuItemInfo.key)
+							);
 						})
 						.run()
 				)
@@ -88,8 +84,7 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 				Option.filter((_) => isMenuPageKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {
-						draft.selectedPageKey =
-							`page.${groups.key}` as MenuItemPageKey; // TODO guard to avoid casting
+						draft.selectedPageKey = `page.${groups.key}`;
 					});
 					return groups;
 				})
