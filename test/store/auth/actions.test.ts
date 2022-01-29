@@ -8,6 +8,7 @@ import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import * as Option from 'fp-ts/es6/Option';
 import { authSlice } from '../../../src/store/auth/slice';
 import { AuthUser } from '../../../src/types/auth';
+import { defaultState } from '../../testutils/mockStoreUtils';
 
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
 
@@ -16,17 +17,9 @@ const authUser: AuthUser = {
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
-const mockStore = createMockStore<RootState, DispatchExts>([thunk])({
-	auth: {
-		hasChecked: false,
-		userData: Option.none
-	},
-	alert: {
-		show: false,
-		type: 'success',
-		message: ''
-	}
-});
+const mockStore = createMockStore<RootState, DispatchExts>([thunk])(
+	defaultState
+);
 
 describe('auth actions', () => {
 	beforeEach(() => {

@@ -1,29 +1,17 @@
 import { isAuthorizedSelector } from '../../../src/store/auth/selectors';
-import { RootState } from '../../../src/store';
 import * as Option from 'fp-ts/es6/Option';
 import produce from 'immer';
 import { AuthUser } from '../../../src/types/auth';
+import { defaultState } from '../../testutils/mockStoreUtils';
 
 const authUser: AuthUser = {
 	userId: 1
 };
 
-const baseState: RootState = {
-	auth: {
-		hasChecked: false,
-		userData: Option.none
-	},
-	alert: {
-		show: false,
-		message: '',
-		type: 'success'
-	}
-};
-
 describe('selectors', () => {
 	describe('isAuthorizedSelector', () => {
 		it('is authorized', () => {
-			const state = produce(baseState, (draft) => {
+			const state = produce(defaultState, (draft) => {
 				draft.auth.userData = Option.some(authUser);
 			});
 			const result = isAuthorizedSelector(state);
@@ -31,7 +19,7 @@ describe('selectors', () => {
 		});
 
 		it('is not authorized', () => {
-			const result = isAuthorizedSelector(baseState);
+			const result = isAuthorizedSelector(defaultState);
 			expect(result).toEqual(false);
 		});
 	});
