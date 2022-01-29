@@ -34,7 +34,6 @@ const hide = (draft: Draft<StateType>) => {
 	draft.show = false;
 };
 
-// TODO delete if unnecessary
 const reset = (draft: Draft<StateType>) => {
 	draft.show = initialState.show;
 	draft.type = initialState.type;
