@@ -162,4 +162,28 @@ describe('Navbar', () => {
 		});
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 	});
+
+	it('selects 1 Week', async () => {
+		throw new Error();
+	});
+
+	it('selects 1 Month', async () => {
+		throw new Error();
+	});
+
+	it('selects 1 Day', async () => {
+		throw new Error();
+	});
+
+	it('selects 3 Months', async () => {
+		throw new Error();
+	});
+
+	it('selects 1 Year', async () => {
+		throw new Error();
+	});
+
+	it('selects 5 Years', async () => {
+		throw new Error();
+	});
 });
