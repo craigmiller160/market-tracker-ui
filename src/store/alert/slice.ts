@@ -34,12 +34,20 @@ const hide = (draft: Draft<StateType>) => {
 	draft.show = false;
 };
 
+// TODO delete if unnecessary
+const reset = (draft: Draft<StateType>) => {
+	draft.show = initialState.show;
+	draft.type = initialState.type;
+	draft.message = initialState.message;
+};
+
 export const alertSlice = createSlice({
 	name: 'alert',
 	initialState,
 	reducers: {
 		showSuccess,
 		showError,
-		hide
+		hide,
+		reset
 	}
 });
