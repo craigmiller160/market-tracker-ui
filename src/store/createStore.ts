@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { authSlice } from './auth/slice';
 import { configureStore } from '@reduxjs/toolkit';
 import { alertSlice } from './alert/slice';
-import { timeSlice } from './time/timeSlice';
+import { timeSlice } from './time/slice';
 
 export const rootReducer = combineReducers({
 	auth: authSlice.reducer,

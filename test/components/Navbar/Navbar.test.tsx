@@ -8,7 +8,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
-import { timeSlice } from '../../../src/store/time/timeSlice';
+import { timeSlice } from '../../../src/store/time/slice';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'

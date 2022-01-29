@@ -1,4 +1,4 @@
-import { timeSlice } from '../../../src/store/time/timeSlice';
+import { timeSlice } from '../../../src/store/time/slice';
 
 describe('time slice', () => {
 	it('setTime', () => {
@@ -10,5 +10,16 @@ describe('time slice', () => {
 			menuKey: 'time.fiveYears',
 			value: 'fiveYears'
 		});
+	});
+
+	it('reset', () => {
+		const result = timeSlice.reducer(
+			{
+				menuKey: 'abc',
+				value: 'def'
+			},
+			timeSlice.actions.reset()
+		);
+		expect(result).toEqual(timeSlice.getInitialState());
 	});
 });

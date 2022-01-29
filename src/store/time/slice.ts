@@ -16,10 +16,16 @@ const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	draft.value = Text.split('.')(action.payload)[1];
 };
 
+const reset = (draft: Draft<StateType>) => {
+	draft.menuKey = initialState.menuKey;
+	draft.value = initialState.value;
+};
+
 export const timeSlice = createSlice({
 	name: 'time',
 	initialState,
 	reducers: {
-		setTime
+		setTime,
+		reset
 	}
 });

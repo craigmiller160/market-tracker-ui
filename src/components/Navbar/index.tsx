@@ -14,7 +14,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { timeSlice } from '../../store/time/timeSlice';
+import { timeSlice } from '../../store/time/slice';
 import { timeMenuKeySelector } from '../../store/time/selectors';
 
 interface State {
