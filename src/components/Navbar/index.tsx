@@ -47,28 +47,32 @@ const useHandleMenuClick = (
 ) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
-			// TODO add better null handling
-			pipe(
+			const keyParts = pipe(
 				captureMenuKeyParts(menuItemInfo.key),
-				Option.map((keyParts) =>
-					match(keyParts)
-						.with({ prefix: 'auth' }, () => {
-							// Do nothing for now
-						})
-						.with({ prefix: 'page', action: select() }, (page) => {
-							navigate(`/market-tracker/${page}`);
-							setState((draft) => {
-								draft.selectedPageKey = menuItemInfo.key;
-							});
-						})
-						.with({ prefix: 'time' }, () => {
-							dispatch(
-								timeSlice.actions.setTime(menuItemInfo.key)
-							);
-						})
-						.run()
-				)
+				Option.getOrElse(() => ({
+					prefix: '',
+					action: ''
+				}))
 			);
+
+			match(keyParts)
+				.with({ prefix: 'auth' }, () => {
+					// Do nothing for now
+				})
+				.with({ prefix: 'page', action: select() }, (page) => {
+					navigate(`/market-tracker/${page}`);
+					setState((draft) => {
+						// TODO I probably don't need this
+						draft.selectedPageKey = menuItemInfo.key;
+					});
+				})
+				.with({ prefix: 'time' }, () => {
+					dispatch(timeSlice.actions.setTime(menuItemInfo.key));
+				})
+				.otherwise(() => {
+					console.error('Invalid MenuInfo keyParts', keyParts);
+					navigate('/market-tracker/');
+				});
 		},
 		[setState, navigate, dispatch]
 	);
