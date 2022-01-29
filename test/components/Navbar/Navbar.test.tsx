@@ -66,6 +66,21 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
+		expect(screen.queryByText('1 Day')).toBeInTheDocument();
+		expect(screen.queryByText('1 Week')).toBeInTheDocument();
+		expect(screen.queryByText('1 Month')).toBeInTheDocument();
+		expect(screen.queryByText('3 Months')).toBeInTheDocument();
+		expect(screen.queryByText('1 Year')).toBeInTheDocument();
+		expect(screen.queryByText('5 Years')).toBeInTheDocument();
+
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+
+		expect(screen.getByText('1 Day').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
