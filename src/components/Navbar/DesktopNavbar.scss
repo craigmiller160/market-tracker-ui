@@ -12,6 +12,11 @@
   }
 
   .AuthItem {
-    margin-left: 2rem;
+    &.IsAuth {
+      margin-left: 2rem;
+    }
+    &:not(.IsAuth) {
+      margin-left: auto;
+    }
   }
 }
