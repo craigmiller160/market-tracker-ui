@@ -20,6 +20,18 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
 
+const menuItemIsSelected = (text: string) => {
+	expect(screen.getByText(text).closest('li')?.className).toEqual(
+		expect.stringContaining(SELECTED_CLASS)
+	);
+};
+
+const menuItemIsNotSelected = (text: string) => {
+	expect(screen.getByText(text).closest('li')?.className).not.toEqual(
+		expect.stringContaining(SELECTED_CLASS)
+	);
+};
+
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
@@ -73,13 +85,8 @@ describe('Navbar', () => {
 		expect(screen.queryByText('1 Year')).toBeInTheDocument();
 		expect(screen.queryByText('5 Years')).toBeInTheDocument();
 
-		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
-
-		expect(screen.getByText('1 Day').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
+		menuItemIsSelected('Portfolios');
+		menuItemIsSelected('1 Day');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
@@ -164,11 +171,21 @@ describe('Navbar', () => {
 	});
 
 	it('selects 1 Week', async () => {
-		throw new Error();
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Week'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Week');
 	});
 
 	it('selects 1 Month', async () => {
-		throw new Error();
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Month'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Month');
 	});
 
 	it('selects 1 Day', async () => {
