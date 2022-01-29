@@ -40,11 +40,7 @@ const MENU_KEY_PARTS_REGEX = /^(?<prefix>.*)\.(?<action>.*)$/;
 const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
 const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
 
-const useHandleMenuClick = (
-	setState: Updater<State>,
-	navigate: NavigateFunction,
-	dispatch: Dispatch
-) =>
+const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
 			const keyParts = pipe(
@@ -61,10 +57,6 @@ const useHandleMenuClick = (
 				})
 				.with({ prefix: 'page', action: select() }, (page) => {
 					navigate(`/market-tracker/${page}`);
-					setState((draft) => {
-						// TODO I probably don't need this
-						draft.selectedPageKey = menuItemInfo.key;
-					});
 				})
 				.with({ prefix: 'time' }, () => {
 					dispatch(timeSlice.actions.setTime(menuItemInfo.key));
@@ -74,7 +66,7 @@ const useHandleMenuClick = (
 					navigate('/market-tracker/');
 				});
 		},
-		[setState, navigate, dispatch]
+		[navigate, dispatch]
 	);
 
 const isMenuPageKey: PredicateT<string> = (key) =>
@@ -106,7 +98,7 @@ export const Navbar: FC<object> = () => {
 		useNavbarAuthCheck();
 	const selectedTimeKey = useSelector(timeMenuKeySelector);
 
-	const handleMenuClick = useHandleMenuClick(setState, navigate, dispatch);
+	const handleMenuClick = useHandleMenuClick(navigate, dispatch);
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
