@@ -7,6 +7,7 @@ import { useNavbarItems } from './useNavbarItems';
 export const MobileNavbar: FC<NavbarProps> = (props) => {
 	const {
 		selectedPageKey,
+		selectedTimeKey,
 		handleMenuClick,
 		isAuthorized,
 		hasChecked,
@@ -35,7 +36,7 @@ export const MobileNavbar: FC<NavbarProps> = (props) => {
 			<Menu
 				theme="dark"
 				mode="inline"
-				selectedKeys={[selectedPageKey]}
+				selectedKeys={[selectedPageKey, selectedTimeKey]}
 				onClick={handleMenuClick}
 			>
 				{NavbarItems}

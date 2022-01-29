@@ -7,6 +7,7 @@ import { useNavbarItems } from './useNavbarItems';
 export const DesktopNavbar: FC<NavbarProps> = (props) => {
 	const {
 		selectedPageKey,
+		selectedTimeKey,
 		handleMenuClick,
 		isAuthorized,
 		hasChecked,
@@ -30,7 +31,7 @@ export const DesktopNavbar: FC<NavbarProps> = (props) => {
 				onClick={handleMenuClick}
 				theme="dark"
 				mode="horizontal"
-				selectedKeys={[selectedPageKey]}
+				selectedKeys={[selectedPageKey, selectedTimeKey]}
 			>
 				{NavbarItems}
 			</Menu>

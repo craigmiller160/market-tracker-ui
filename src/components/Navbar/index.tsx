@@ -13,7 +13,11 @@ import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
-import { MenuItemPageKey } from './MenuItemKey';
+import { MenuItemPageKey, MenuItemTimeKey } from './MenuItemKey';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
+import { timeSlice } from '../../store/time/timeSlice';
+import { timeMenuKeySelector } from '../../store/time/selectors';
 
 interface State {
 	readonly selectedPageKey: MenuItemPageKey;
@@ -39,7 +43,8 @@ const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
 
 const useHandleMenuClick = (
 	setState: Updater<State>,
-	navigate: NavigateFunction
+	navigate: NavigateFunction,
+	dispatch: Dispatch
 ) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
@@ -58,14 +63,18 @@ const useHandleMenuClick = (
 									menuItemInfo.key as MenuItemPageKey; // TODO guard to avoid casting
 							});
 						})
-						.with({ prefix: 'time', action: select() }, (_) => {
-							console.log('Time', _);
+						.with({ prefix: 'time' }, () => {
+							dispatch(
+								timeSlice.actions.setTime(
+									menuItemInfo.key as MenuItemTimeKey
+								)
+							); // TODO guard to avoid casting
 						})
 						.run()
 				)
 			);
 		},
-		[setState, navigate]
+		[setState, navigate, dispatch]
 	);
 
 const isMenuPageKey: PredicateT<string> = (key) =>
@@ -91,12 +100,14 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 export const Navbar: FC<object> = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
+	const selectedTimeKey = useSelector(timeMenuKeySelector);
 
-	const handleMenuClick = useHandleMenuClick(setState, navigate);
+	const handleMenuClick = useHandleMenuClick(setState, navigate, dispatch);
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
@@ -105,6 +116,7 @@ export const Navbar: FC<object> = () => {
 
 	const props: NavbarProps = {
 		selectedPageKey: state.selectedPageKey,
+		selectedTimeKey,
 		handleMenuClick,
 		isAuthorized,
 		hasChecked,
