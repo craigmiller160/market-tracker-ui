@@ -13,6 +13,8 @@ import { AuthUser } from '../../src/types/auth';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { timeSlice } from '../../src/store/time/slice';
+import { alertSlice } from '../../src/store/alert/slice';
+import { authSlice } from '../../src/store/auth/slice';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -35,6 +37,8 @@ const mockUserAuthFailure = (mockApi: MockAdapter) =>
 
 const resetStore = () => {
 	store.dispatch(timeSlice.actions.reset());
+	store.dispatch(alertSlice.actions.reset());
+	store.dispatch(authSlice.actions.reset());
 };
 
 export const createRenderApp =
