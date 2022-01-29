@@ -1,6 +1,7 @@
 import { Menu } from 'antd';
 import { ReactNode } from 'react';
 import { match } from 'ts-pattern';
+import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 
 const MainNavItems = (
 	<>
@@ -28,15 +29,9 @@ const createAuthNavItem = (authBtnAction: () => void, authBtnTxt: string) => (
 	</Menu.Item>
 );
 
-interface NavbarItemConfig {
-	readonly isAuthorized: boolean;
-	readonly hasChecked: boolean;
-	readonly authBtnAction: () => void;
-	readonly authBtnTxt: string;
-}
-
-export const useNavbarItems = (config: NavbarItemConfig): ReactNode => {
-	const { isAuthorized, hasChecked, authBtnAction, authBtnTxt } = config;
+export const useNavbarItems = (): ReactNode => {
+	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
+		useNavbarAuthCheck();
 
 	const AuthNavItem = createAuthNavItem(authBtnAction, authBtnTxt);
 

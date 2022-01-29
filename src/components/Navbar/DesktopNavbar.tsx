@@ -5,22 +5,8 @@ import { NavbarProps } from './NavbarProps';
 import { useNavbarItems } from './useNavbarItems';
 
 export const DesktopNavbar: FC<NavbarProps> = (props) => {
-	const {
-		selectedPageKey,
-		selectedTimeKey,
-		handleMenuClick,
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
-	} = props;
-
-	const NavbarItems = useNavbarItems({
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
-	});
+	const { selectedPageKey, selectedTimeKey, handleMenuClick } = props;
+	const NavbarItems = useNavbarItems();
 
 	return (
 		<Layout.Header className="DesktopNavbar" data-testid="desktop-navbar">

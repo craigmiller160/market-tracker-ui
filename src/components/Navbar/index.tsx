@@ -7,7 +7,6 @@ import { MenuInfo } from 'rc-menu/lib/interface';
 import { FC, useCallback, useContext, useEffect } from 'react';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
-import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
@@ -94,8 +93,7 @@ export const Navbar: FC<object> = () => {
 	const dispatch = useDispatch();
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
-	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
-		useNavbarAuthCheck();
+
 	const selectedTimeKey = useSelector(timeMenuKeySelector);
 
 	const handleMenuClick = useHandleMenuClick(navigate, dispatch);
@@ -108,11 +106,7 @@ export const Navbar: FC<object> = () => {
 	const props: NavbarProps = {
 		selectedPageKey: state.selectedPageKey,
 		selectedTimeKey,
-		handleMenuClick,
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
+		handleMenuClick
 	};
 
 	return match(breakpoints)

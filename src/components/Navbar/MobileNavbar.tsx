@@ -5,22 +5,9 @@ import './MobileNavbar.scss';
 import { useNavbarItems } from './useNavbarItems';
 
 export const MobileNavbar: FC<NavbarProps> = (props) => {
-	const {
-		selectedPageKey,
-		selectedTimeKey,
-		handleMenuClick,
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
-	} = props;
+	const { selectedPageKey, selectedTimeKey, handleMenuClick } = props;
 
-	const NavbarItems = useNavbarItems({
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
-	});
+	const NavbarItems = useNavbarItems();
 
 	return (
 		<Layout.Sider
