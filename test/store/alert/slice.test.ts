@@ -44,4 +44,16 @@ describe('alertSlice', () => {
 			message: ''
 		});
 	});
+
+	it('reset', () => {
+		const result = alertSlice.reducer(
+			{
+				show: true,
+				type: 'error',
+				message: 'foo'
+			},
+			alertSlice.actions.reset()
+		);
+		expect(result).toEqual(alertSlice.getInitialState());
+	});
 });

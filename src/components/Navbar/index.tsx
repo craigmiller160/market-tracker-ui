@@ -1,62 +1,85 @@
 import { isDesktop } from '../utils/Breakpoints';
-import { match, when } from 'ts-pattern';
+import { match, select, when } from 'ts-pattern';
 import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { FC, useCallback, useContext, useEffect } from 'react';
-import { isMenuItemKey, MenuItemKey } from './MenuItemKey';
 import { NavbarProps } from './NavbarProps';
 import { ScreenContext } from '../ScreenContext';
-import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
+import { timeSlice } from '../../store/time/slice';
+import { timeMenuKeySelector } from '../../store/time/selectors';
 
 interface State {
-	selected: MenuItemKey;
+	readonly selectedPageKey: string;
 }
 
 const initState: State = {
-	selected: 'portfolios'
+	selectedPageKey: 'page.portfolios'
 };
 
 interface PathRegexGroups {
-	key: string;
+	readonly key: string;
+}
+
+interface MenuKeyParts {
+	readonly prefix: string;
+	readonly action: string;
 }
 
 const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+const MENU_KEY_PARTS_REGEX = /^(?<prefix>.*)\.(?<action>.*)$/;
 const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
+const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
 
-const useHandleMenuClick = (
-	setState: Updater<State>,
-	navigate: NavigateFunction
-) =>
+const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 	useCallback(
-		(menuItemInfo: MenuInfo) =>
-			match(menuItemInfo.key as MenuItemKey)
-				.with('auth', () => {
+		(menuItemInfo: MenuInfo) => {
+			const keyParts = pipe(
+				captureMenuKeyParts(menuItemInfo.key),
+				Option.getOrElse(() => ({
+					prefix: '',
+					action: ''
+				}))
+			);
+
+			match(keyParts)
+				.with({ prefix: 'auth' }, () => {
 					// Do nothing for now
 				})
-				.otherwise((key) => {
-					navigate(`/market-tracker/${key}`);
-					setState((draft) => {
-						draft.selected = key;
-					});
-				}),
-		[setState, navigate]
+				.with({ prefix: 'page', action: select() }, (page) => {
+					navigate(`/market-tracker/${page}`);
+				})
+				.with({ prefix: 'time' }, () => {
+					dispatch(timeSlice.actions.setTime(menuItemInfo.key));
+				})
+				.otherwise(() => {
+					console.error('Invalid MenuInfo keyParts', keyParts);
+					navigate('/market-tracker/');
+				});
+		},
+		[navigate, dispatch]
 	);
+
+const isMenuPageKey: PredicateT<string> = (key) =>
+	['portfolios', 'watchlists'].includes(key);
 
 const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
 		(pathname: string) =>
 			pipe(
 				capturePathKey(pathname),
-				Option.filter((_) => isMenuItemKey(_.key)),
+				Option.filter((_) => isMenuPageKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {
-						draft.selected = groups.key as MenuItemKey;
+						draft.selectedPageKey = `page.${groups.key}`;
 					});
 					return groups;
 				})
@@ -67,12 +90,13 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 export const Navbar: FC<object> = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
-	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
-		useNavbarAuthCheck();
 
-	const handleMenuClick = useHandleMenuClick(setState, navigate);
+	const selectedTimeKey = useSelector(timeMenuKeySelector);
+
+	const handleMenuClick = useHandleMenuClick(navigate, dispatch);
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
 
 	useEffect(() => {
@@ -80,12 +104,9 @@ export const Navbar: FC<object> = () => {
 	}, [location.pathname, setSelectedFromLocation]);
 
 	const props: NavbarProps = {
-		selected: state.selected,
-		handleMenuClick,
-		isAuthorized,
-		hasChecked,
-		authBtnTxt,
-		authBtnAction
+		selectedPageKey: state.selectedPageKey,
+		selectedTimeKey,
+		handleMenuClick
 	};
 
 	return match(breakpoints)

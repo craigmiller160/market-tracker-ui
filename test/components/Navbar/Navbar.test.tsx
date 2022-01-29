@@ -8,6 +8,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
+import { timeSlice } from '../../../src/store/time/slice';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -19,6 +20,18 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 
 const renderApp = createRenderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
+
+const menuItemIsSelected = (text: string) => {
+	expect(screen.getByText(text).closest('li')?.className).toEqual(
+		expect.stringContaining(SELECTED_CLASS)
+	);
+};
+
+const menuItemIsNotSelected = (text: string) => {
+	expect(screen.getByText(text).closest('li')?.className).not.toEqual(
+		expect.stringContaining(SELECTED_CLASS)
+	);
+};
 
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
@@ -65,6 +78,16 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
+
+		expect(screen.queryByText('1 Day')).toBeInTheDocument();
+		expect(screen.queryByText('1 Week')).toBeInTheDocument();
+		expect(screen.queryByText('1 Month')).toBeInTheDocument();
+		expect(screen.queryByText('3 Months')).toBeInTheDocument();
+		expect(screen.queryByText('1 Year')).toBeInTheDocument();
+		expect(screen.queryByText('5 Years')).toBeInTheDocument();
+
+		menuItemIsSelected('Portfolios');
+		menuItemIsSelected('1 Day');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
@@ -146,5 +169,61 @@ describe('Navbar', () => {
 			await sleep100();
 		});
 		expect(screen.queryByText('Login')).toBeInTheDocument();
+	});
+
+	it('selects 1 Week', async () => {
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Week'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Week');
+	});
+
+	it('selects 1 Month', async () => {
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Month'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Month');
+	});
+
+	it('selects 1 Day', async () => {
+		const { store } = await renderApp();
+		store.dispatch(timeSlice.actions.setTime('time.oneWeek'));
+		menuItemIsSelected('1 Week');
+		menuItemIsNotSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Day'));
+		menuItemIsNotSelected('1 Week');
+		menuItemIsSelected('1 Day');
+	});
+
+	it('selects 3 Months', async () => {
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('3 Months'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('3 Months');
+	});
+
+	it('selects 1 Year', async () => {
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Year'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Year');
+	});
+
+	it('selects 5 Years', async () => {
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('5 Years'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('5 Years');
 	});
 });

@@ -7,7 +7,16 @@
     }
   }
 
-  .AuthItem {
+  .OneDayItem {
     margin-left: auto;
+  }
+
+  .AuthItem {
+    &.IsAuth {
+      margin-left: 2rem;
+    }
+    &:not(.IsAuth) {
+      margin-left: auto;
+    }
   }
 }

@@ -12,6 +12,9 @@ import { RootLayout } from '../../src/components/RootLayout';
 import { AuthUser } from '../../src/types/auth';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
+import { timeSlice } from '../../src/store/time/slice';
+import { alertSlice } from '../../src/store/alert/slice';
+import { authSlice } from '../../src/store/auth/slice';
 
 const authUser: AuthUser = {
 	userId: 1
@@ -32,6 +35,12 @@ const mockUserAuthSuccess = (mockApi: MockAdapter) =>
 const mockUserAuthFailure = (mockApi: MockAdapter) =>
 	mockApi.onGet('/oauth/user').reply(401);
 
+const resetStore = () => {
+	store.dispatch(timeSlice.actions.reset());
+	store.dispatch(alertSlice.actions.reset());
+	store.dispatch(authSlice.actions.reset());
+};
+
 export const createRenderApp =
 	(mockApi: MockAdapter) =>
 	async (renderConfig?: Partial<RenderConfig>): Promise<RenderResult> => {
@@ -46,6 +55,8 @@ export const createRenderApp =
 		match(renderConfig?.isAuthorized)
 			.with(false, () => mockUserAuthFailure(mockApi))
 			.otherwise(() => mockUserAuthSuccess(mockApi));
+
+		resetStore();
 
 		await waitFor(() =>
 			render(
