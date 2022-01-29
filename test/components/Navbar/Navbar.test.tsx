@@ -8,6 +8,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
+import { timeSlice } from '../../../src/store/time/timeSlice';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -189,18 +190,40 @@ describe('Navbar', () => {
 	});
 
 	it('selects 1 Day', async () => {
-		throw new Error();
+		const { store } = await renderApp();
+		store.dispatch(timeSlice.actions.setTime('time.oneWeek'));
+		menuItemIsSelected('1 Week');
+		menuItemIsNotSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Day'));
+		menuItemIsNotSelected('1 Week');
+		menuItemIsSelected('1 Day');
 	});
 
 	it('selects 3 Months', async () => {
-		throw new Error();
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('3 Months'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('3 Months');
 	});
 
 	it('selects 1 Year', async () => {
-		throw new Error();
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('1 Year'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('1 Year');
 	});
 
 	it('selects 5 Years', async () => {
-		throw new Error();
+		await renderApp();
+		menuItemIsSelected('1 Day');
+
+		userEvent.click(screen.getByText('5 Years'));
+		menuItemIsNotSelected('1 Day');
+		menuItemIsSelected('5 Years');
 	});
 });
