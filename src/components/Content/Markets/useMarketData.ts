@@ -13,6 +13,7 @@ import { castDraft } from 'immer';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
+import { MarketData } from './MarketData';
 
 interface MarketInfo {
 	readonly symbol: string;
@@ -28,14 +29,6 @@ const MARKET_INFO: ReadonlyArray<MarketInfo> = [
 	}
 ];
 const MARKET_SYMBOLS = MARKET_INFO.map((_) => _.symbol);
-
-interface MarketData {
-	readonly symbol: string;
-	readonly name: string;
-	readonly currentPrice: number;
-	readonly isInternational: boolean;
-	readonly history: ReadonlyArray<HistoryDate>;
-}
 
 interface AllMarketData {
 	readonly usMarketData: ReadonlyArray<MarketData>;
