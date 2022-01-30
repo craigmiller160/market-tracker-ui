@@ -60,7 +60,7 @@ export const getHistoryQuote = (
 			RArray.map(
 				(_): HistoryDates => ({
 					date: _.day,
-					close: _.close
+					price: _.close
 				})
 			)
 		)
