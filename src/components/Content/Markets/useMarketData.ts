@@ -34,8 +34,8 @@ interface DataLoadedResult {
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryDate>>;
 
-const getHistoryFn = (timeValue: string): HistoryFn =>
-	match(timeValue)
+const useHistoryFn = (timeValue: string): HistoryFn => {
+	const historyFn = match(timeValue)
 		.with('oneDay', () => () => TaskEither.right([]))
 		.with('oneWeek', () => tradierService.getOneWeekHistory)
 		.with('oneMonth', () => tradierService.getOneMonthHistory)
@@ -43,6 +43,9 @@ const getHistoryFn = (timeValue: string): HistoryFn =>
 		.with('oneYear', () => tradierService.getOneYearHistory)
 		.with('fiveYears', () => tradierService.getFiveYearHistory)
 		.run();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	return useCallback((s: string) => historyFn(s), [timeValue]);
+};
 
 const handleLoadMarketDataError =
 	(dispatch: Dispatch) =>
@@ -103,7 +106,7 @@ export const useMarketData = () => {
 	});
 
 	const timeValue = useSelector(timeValueSelector);
-	const historyFn = getHistoryFn(timeValue);
+	const historyFn = useHistoryFn(timeValue);
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
 	useEffect(() => {
