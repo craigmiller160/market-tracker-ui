@@ -21,7 +21,7 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 		children: match(rules)
 			.with({ isAuthorized: true, hasChecked: true }, () => [
 				{
-					path: 'marekts',
+					path: 'markets',
 					element: <Markets />
 				},
 				{
