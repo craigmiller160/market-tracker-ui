@@ -6,7 +6,11 @@ interface Props {
 }
 
 export const MarketCard = ({ data }: Props) => {
-	const title = `${data.name} (${data.symbol})`;
+	const title = (
+		<h3>
+			<strong>{`${data.name} (${data.symbol})`}</strong>
+		</h3>
+	);
 	return (
 		<Card title={title} className="MarketCard">
 			<p>The Content</p>
