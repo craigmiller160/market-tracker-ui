@@ -92,8 +92,8 @@ const handleLoadMarketDataSuccess =
 			RArray.spanLeft((data) => data.isInternational)
 		);
 		setState((draft) => {
-			draft.usMarketData = castDraft(init);
-			draft.internationalMarketData = castDraft(rest);
+			draft.usMarketData = castDraft(rest);
+			draft.internationalMarketData = castDraft(init);
 		});
 	};
 
