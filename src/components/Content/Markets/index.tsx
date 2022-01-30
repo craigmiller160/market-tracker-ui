@@ -18,18 +18,20 @@ interface State {
 	readonly marketData: ReadonlyArray<MarketData>;
 }
 
+// TODO need error handling here
 const useLoadMarketData = (setState: Updater<State>) =>
 	useCallback(
-		pipe(
-			tradierService.getQuotes(['VTI']),
-			TaskEither.bindTo('quotes'),
-			TaskEither.bind('history', () =>
-				// TODO figure out a better solution for selecting the time range function
-				TaskEither.sequenceArray([
-					tradierService.getOneWeekHistory('VTI')
-				])
-			)
-		),
+		() =>
+			pipe(
+				tradierService.getQuotes(['VTI']),
+				TaskEither.bindTo('quotes'),
+				TaskEither.bind('history', () =>
+					// TODO figure out a better solution for selecting the time range function
+					TaskEither.sequenceArray([
+						tradierService.getOneWeekHistory('VTI')
+					])
+				)
+			)(),
 		[setState]
 	);
 
