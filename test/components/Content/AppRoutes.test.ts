@@ -61,4 +61,26 @@ describe('AppRoutes', () => {
 		);
 		expect(screen.queryByText('Watchlists Page'));
 	});
+
+	it('will not render portfolios route in prod', async () => {
+		process.env.NODE_ENV = 'production';
+		await renderApp({
+			initialPath: '/market-tracker/portfolios'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/markets'
+		);
+		expect(screen.queryByText('Markets Page'));
+	});
+
+	it('will not render watchlists route in prod', async () => {
+		process.env.NODE_ENV = 'production';
+		await renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/markets'
+		);
+		expect(screen.queryByText('Markets Page'));
+	});
 });
