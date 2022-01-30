@@ -2,6 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin-top: 3rem;
+  margin: 3rem auto;
+  width: 50%; // TODO this should only apply to desktop
 }

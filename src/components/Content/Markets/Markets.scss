@@ -1,5 +1,17 @@
 @import "../../../styles/page";
 
 .GlobalMarkets {
-  @include PageRoot
+  @include PageRoot;
+
+  .MarketSection {
+    margin: 2rem auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .MarketCard {
+      width: 100%;
+    }
+  }
 }
