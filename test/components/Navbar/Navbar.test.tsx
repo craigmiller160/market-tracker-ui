@@ -150,6 +150,34 @@ describe('Navbar', () => {
 		);
 	});
 
+	it('starts on portfolios page due to route, then navigates to markets page', async () => {
+		await renderApp({
+			initialPath: '/market-tracker/portfolios'
+		});
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+		expect(
+			screen.getByText('Markets').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+
+		userEvent.click(screen.getByText('Markets'));
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/markets'
+		);
+		expect(
+			screen.getByText('Portfolios').closest('li')?.className
+		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
+		expect(screen.getByText('Markets').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+	});
+
 	it('sends login request', async () => {
 		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
 		await renderApp({
