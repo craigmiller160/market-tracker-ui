@@ -6,6 +6,8 @@ import { HistoryDate } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as tradierService from '../../../services/TradierService';
+import { TaskTryT } from '@craigmiller160/ts-functions/types';
+import { match } from 'ts-pattern';
 
 interface MarketData {
 	readonly symbol: string;
@@ -18,29 +20,39 @@ interface State {
 	readonly marketData: ReadonlyArray<MarketData>;
 }
 
+type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryDate>>;
+
 // TODO need error handling here
-const useLoadMarketData = (setState: Updater<State>) =>
+const useLoadMarketData = (setState: Updater<State>, historyFn: HistoryFn) =>
 	useCallback(
 		() =>
 			pipe(
 				tradierService.getQuotes(['VTI']),
 				TaskEither.bindTo('quotes'),
 				TaskEither.bind('history', () =>
-					// TODO figure out a better solution for selecting the time range function
-					TaskEither.sequenceArray([
-						tradierService.getOneWeekHistory('VTI')
-					])
+					TaskEither.sequenceArray([historyFn('VTI')])
 				)
 			)(),
-		[setState]
+		[setState, historyFn]
 	);
+
+const getHistoryFn = (timeValue: string): HistoryFn =>
+	match(timeValue)
+		.with('oneDay', () => () => TaskEither.right([]))
+		.with('oneWeek', () => tradierService.getOneWeekHistory)
+		.with('oneMonth', () => tradierService.getOneMonthHistory)
+		.with('threeMonths', () => tradierService.getThreeMonthHistory)
+		.with('oneYear', () => tradierService.getOneYearHistory)
+		.with('fiveYears', () => tradierService.getFiveYearHistory)
+		.run();
 
 export const Markets = () => {
 	const [state, setState] = useImmer<State>({
 		marketData: []
 	});
 	const timeValue = useSelector(timeValueSelector);
-	const loadMarketData = useLoadMarketData(setState);
+	const historyFn = getHistoryFn(timeValue);
+	const loadMarketData = useLoadMarketData(setState, historyFn);
 
 	useEffect(() => {
 		loadMarketData();
