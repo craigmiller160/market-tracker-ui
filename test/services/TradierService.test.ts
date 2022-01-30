@@ -3,10 +3,11 @@ import MockAdapter from 'axios-mock-adapter';
 import { TradierQuote } from '../../src/types/tradier/quotes';
 import { getQuotes } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
+import { Quote } from '../../src/types/quote';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const createQuote = (symbol: string): TradierQuote => ({
+const createTradierQuote = (symbol: string): TradierQuote => ({
 	symbol,
 	description: '',
 	open: 0,
@@ -18,6 +19,11 @@ const createQuote = (symbol: string): TradierQuote => ({
 	last: 6
 });
 
+const createQuote = (symbol: string): Quote => ({
+	symbol,
+	price: 6
+});
+
 describe('TradierService', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -26,7 +32,7 @@ describe('TradierService', () => {
 	it('get single quote', async () => {
 		mockApi.onGet('/tradier/markets/quotes?symbols=VTI').reply(200, {
 			quotes: {
-				quote: createQuote('VTI')
+				quote: createTradierQuote('VTI')
 			}
 		});
 		const result = await getQuotes(['VTI'])();
@@ -36,7 +42,7 @@ describe('TradierService', () => {
 	it('get multiple quotes', async () => {
 		mockApi.onGet('/tradier/markets/quotes?symbols=VTI,VOO').reply(200, {
 			quotes: {
-				quote: [createQuote('VTI'), createQuote('VOO')]
+				quote: [createTradierQuote('VTI'), createTradierQuote('VOO')]
 			}
 		});
 		const result = await getQuotes(['VTI', 'VOO'])();
