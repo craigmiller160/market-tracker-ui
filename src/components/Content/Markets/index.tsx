@@ -1,1 +1,1 @@
-export const Markets = () => <h1>Markets</h1>;
+export const Markets = () => <h1>Markets Page</h1>;

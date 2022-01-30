@@ -67,6 +67,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 
+		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
 		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
@@ -75,6 +76,7 @@ describe('Navbar', () => {
 	it('shows correct items for authenticated user', async () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
+		expect(screen.queryByText('Markets')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
@@ -86,7 +88,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('1 Year')).toBeInTheDocument();
 		expect(screen.queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Portfolios');
+		menuItemIsSelected('Markets');
 		menuItemIsSelected('1 Day');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
