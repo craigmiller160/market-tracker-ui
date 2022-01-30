@@ -27,9 +27,19 @@ describe('AppRoutes', () => {
 	it('shows correct initial route for authenticated user', async () => {
 		await renderApp();
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
+			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Portfolios Page'));
+		expect(screen.queryByText('Markets Page'));
+	});
+
+	it('renders markets route', async () => {
+		await renderApp({
+			initialPath: '/market-tracker/markets'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/markets'
+		);
+		expect(screen.queryByText('Markets Page'));
 	});
 
 	it('renders portfolios route', async () => {

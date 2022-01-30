@@ -4,6 +4,7 @@ import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';
 import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists/Watchlists';
+import { Markets } from '../components/Content/Markets';
 
 export interface RouteRules {
 	isAuthorized: boolean;
@@ -20,6 +21,10 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 		children: match(rules)
 			.with({ isAuthorized: true, hasChecked: true }, () => [
 				{
+					path: 'markets',
+					element: <Markets />
+				},
+				{
 					path: 'portfolios',
 					element: <Portfolios />
 				},
@@ -29,11 +34,11 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 				},
 				{
 					path: '',
-					element: <Navigate to="portfolios" />
+					element: <Navigate to="markets" />
 				},
 				{
 					path: '*',
-					element: <Navigate to="portfolios" />
+					element: <Navigate to="markets" />
 				}
 			])
 			.with({ isAuthorized: false, hasChecked: true }, () => [
