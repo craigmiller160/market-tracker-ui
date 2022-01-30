@@ -4,11 +4,10 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
 
-// TODO make this an array
-export const getQuotes = (symbols: string): TaskTryT<any> =>
+export const getQuotes = (symbols: ReadonlyArray<string>): TaskTryT<any> =>
 	pipe(
 		ajaxApi.get({
-			uri: `/tradier/markets/quotes?symbols=${symbols}`
+			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map((_) => _.data)
 	);
