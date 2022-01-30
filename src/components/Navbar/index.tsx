@@ -11,7 +11,6 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { timeSlice } from '../../store/time/slice';
@@ -68,15 +67,11 @@ const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 		[navigate, dispatch]
 	);
 
-const isMenuPageKey: PredicateT<string> = (key) =>
-	['markets', 'portfolios', 'watchlists'].includes(key);
-
 const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
 		(pathname: string) =>
 			pipe(
 				capturePathKey(pathname),
-				Option.filter((_) => isMenuPageKey(_.key)),
 				Option.map((groups) => {
 					setState((draft) => {
 						draft.selectedPageKey = `page.${groups.key}`;
