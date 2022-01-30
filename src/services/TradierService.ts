@@ -1,5 +1,5 @@
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { ajaxApi } from './AjaxApi';
+import { ajaxApi, getResponseData } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
@@ -9,7 +9,7 @@ import { instanceOf, match } from 'ts-pattern';
 
 // TODO refactor response into standardized form
 
-const formatQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> =>
+const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> =>
 	match(quotes.quotes.quote)
 		.with(
 			instanceOf(Array),
@@ -24,7 +24,8 @@ export const getQuotes = (
 		ajaxApi.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
-		TaskEither.map((_) => formatQuotes(_.data))
+		TaskEither.map(getResponseData),
+		TaskEither.map(formatTradierQuotes)
 	);
 
 // TODO delete this
@@ -42,7 +43,8 @@ export const getHistoryQuote = (
 		ajaxApi.get<TradierHistory>({
 			uri: `/tradier/markets/history?${queryString}`
 		}),
-		TaskEither.map((_) => _.data.history.day)
+		TaskEither.map(getResponseData),
+		TaskEither.map((_) => _.history.day)
 	);
 };
 
