@@ -22,7 +22,7 @@ interface State {
 }
 
 const initState: State = {
-	selectedPageKey: 'page.portfolios'
+	selectedPageKey: 'page.markets'
 };
 
 interface PathRegexGroups {
@@ -69,7 +69,7 @@ const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 	);
 
 const isMenuPageKey: PredicateT<string> = (key) =>
-	['portfolios', 'watchlists'].includes(key);
+	['markets', 'portfolios', 'watchlists'].includes(key);
 
 const useSetSelectedFromLocation = (setState: Updater<State>) =>
 	useCallback(
