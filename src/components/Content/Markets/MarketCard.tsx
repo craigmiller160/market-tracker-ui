@@ -1,5 +1,6 @@
 import { MarketData } from './MarketData';
 import { Card } from 'antd';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
 interface Props {
 	readonly data: MarketData;
@@ -19,6 +20,7 @@ const createTitle = (data: MarketData) => {
 		2
 	)}%`;
 	const priceClassName = priceChange >= 0 ? 'up' : 'down';
+	const ChangeIcon = priceChange >= 0 ? <UpOutlined /> : <DownOutlined />;
 
 	return (
 		<>
@@ -26,6 +28,7 @@ const createTitle = (data: MarketData) => {
 				<strong>{`${data.name} (${data.symbol})`}</strong>
 			</h3>
 			<p className={priceClassName}>
+				<span className="Icon">{ChangeIcon}</span>
 				{formattedPrice} ({formattedPriceChange},{' '}
 				{formattedPercentChange})
 			</p>
@@ -33,8 +36,6 @@ const createTitle = (data: MarketData) => {
 	);
 };
 
-// TODO add arrow for increase/decrease
-// TODO color price for increase/decrease
 export const MarketCard = ({ data }: Props) => {
 	const title = createTitle(data);
 	return (
