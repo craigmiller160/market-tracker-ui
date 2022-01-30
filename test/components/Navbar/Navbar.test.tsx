@@ -73,6 +73,10 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
 	});
 
+	it('shows correct items for authenticated user in prod', async () => {
+		throw new Error();
+	});
+
 	it('shows correct items for authenticated user', async () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();

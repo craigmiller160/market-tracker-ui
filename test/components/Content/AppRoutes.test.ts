@@ -61,4 +61,12 @@ describe('AppRoutes', () => {
 		);
 		expect(screen.queryByText('Watchlists Page'));
 	});
+
+	it('will not render portfolios route in prod', async () => {
+		throw new Error();
+	});
+
+	it('will not render watchlists route in prod', async () => {
+		throw new Error();
+	});
 });
