@@ -14,6 +14,14 @@
       width: 100%;
       p {
         margin: 0;
+        &.up {
+          color: green;
+          font-weight: bold;
+        }
+        &.down {
+          color: red;
+          font-weight: bold;
+        }
       }
     }
   }

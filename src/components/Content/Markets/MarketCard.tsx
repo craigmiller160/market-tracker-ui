@@ -18,13 +18,14 @@ const createTitle = (data: MarketData) => {
 	const formattedPercentChange = `${priceChangeOperator}${percentChange.toFixed(
 		2
 	)}%`;
+	const priceClassName = priceChange >= 0 ? 'up' : 'down';
 
 	return (
 		<>
 			<h3>
 				<strong>{`${data.name} (${data.symbol})`}</strong>
 			</h3>
-			<p>
+			<p className={priceClassName}>
 				{formattedPrice} ({formattedPriceChange},{' '}
 				{formattedPercentChange})
 			</p>
