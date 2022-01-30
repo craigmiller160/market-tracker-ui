@@ -10,7 +10,7 @@ import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { alertSlice } from '../../../store/alert/slice';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
-import { Draft } from 'immer';
+import { castDraft } from 'immer';
 
 interface MarketData {
 	readonly symbol: string;
@@ -60,8 +60,8 @@ const useLoadMarketData = (setState: Updater<State>, historyFn: HistoryFn) => {
 								})
 							)
 						);
-						setState((draft: Draft<State>) => {
-							draft.marketData = marketData;
+						setState((draft) => {
+							draft.marketData = castDraft(marketData);
 						});
 					}
 			)
