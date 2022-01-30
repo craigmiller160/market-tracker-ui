@@ -41,7 +41,7 @@ const createTradierHistory = (): TradierHistory => ({
 	history: {
 		day: [
 			{
-				day: '1',
+				date: '1',
 				open: 2,
 				high: 3,
 				low: 4,

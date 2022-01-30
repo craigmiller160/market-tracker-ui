@@ -40,7 +40,7 @@ const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryDate> =>
 	RArray.map((_: TradierHistoryDay) => ({
-		date: _.day,
+		date: _.date,
 		price: _.close
 	}))(history.history.day);
 

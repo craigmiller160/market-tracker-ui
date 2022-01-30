@@ -1,5 +1,5 @@
 export interface TradierHistoryDay {
-	readonly day: string;
+	readonly date: string;
 	readonly open: number;
 	readonly high: number;
 	readonly low: number;
