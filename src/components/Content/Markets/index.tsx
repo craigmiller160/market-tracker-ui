@@ -7,10 +7,10 @@ export const Markets = () => {
     // TODO delete this temporary logic
 	useEffect(() => {
 		pipe(
-			tradierService.getQuotes('VTI,VOO'),
+			tradierService.getHistoryQuote('VTI'),
 			TaskEither.fold(
 				(ex) => async () => console.error(ex),
-				(data) => async () => console.log(data)
+				(data) => async () => console.log(JSON.stringify(data))
 			)
 		)();
 	}, []);
