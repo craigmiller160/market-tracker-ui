@@ -4,22 +4,22 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
 import { HistoryDay, TradierHistory } from '../types/tradier/history';
-import { Quote, TradierQuotes } from '../types/tradier/quotes';
+import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 
 // TODO refactor response into standardized form
 
-const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> =>
+const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<TradierQuote> =>
 	match(quotes.quotes.quote)
 		.with(
 			instanceOf(Array),
-			() => quotes.quotes.quote as ReadonlyArray<Quote>
+			() => quotes.quotes.quote as ReadonlyArray<TradierQuote>
 		)
-		.otherwise(() => [quotes.quotes.quote as Quote]);
+		.otherwise(() => [quotes.quotes.quote as TradierQuote]);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> =>
+): TaskTryT<ReadonlyArray<TradierQuote>> =>
 	pipe(
 		ajaxApi.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`

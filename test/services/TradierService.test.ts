@@ -1,12 +1,12 @@
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import { Quote } from '../../src/types/tradier/quotes';
+import { TradierQuote } from '../../src/types/tradier/quotes';
 import { getQuotes } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const createQuote = (symbol: string): Quote => ({
+const createQuote = (symbol: string): TradierQuote => ({
 	symbol,
 	description: '',
 	open: 0,

@@ -1,4 +1,4 @@
-export interface Quote {
+export interface TradierQuote {
 	readonly symbol: string;
 	readonly description: string;
 	readonly open: number;
@@ -12,6 +12,6 @@ export interface Quote {
 
 export interface TradierQuotes {
 	readonly quotes: {
-		readonly quote: Quote | ReadonlyArray<Quote>;
+		readonly quote: TradierQuote | ReadonlyArray<TradierQuote>;
 	};
 }
