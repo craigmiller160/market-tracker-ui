@@ -3,13 +3,16 @@ import { ajaxApi, getResponseData } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
-import { HistoryDay, TradierHistory } from '../types/tradier/history';
+import { TradierHistoryDay, TradierHistory } from '../types/tradier/history';
 import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
+import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import { Quote } from '../types/quote';
+import { HistoryDates } from '../types/history';
 
-// TODO refactor response into standardized form
-
-const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<TradierQuote> =>
+const formatTradierQuotes = (
+	quotes: TradierQuotes
+): ReadonlyArray<TradierQuote> =>
 	match(quotes.quotes.quote)
 		.with(
 			instanceOf(Array),
@@ -19,19 +22,27 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<TradierQuote>
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<TradierQuote>> =>
+): TaskTryT<ReadonlyArray<Quote>> =>
 	pipe(
 		ajaxApi.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map(formatTradierQuotes)
+		TaskEither.map(formatTradierQuotes),
+		TaskEither.map(
+			RArray.map(
+				(_): Quote => ({
+					symbol: _.symbol,
+					price: _.last
+				})
+			)
+		)
 	);
 
 // TODO delete this
 export const getHistoryQuote = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<HistoryDates>> => {
 	const queryString = qs.stringify({
 		symbol,
 		interval: 'monthly',
@@ -44,36 +55,44 @@ export const getHistoryQuote = (
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map((_) => _.history.day)
+		TaskEither.map((_) => _.history.day),
+		TaskEither.map(
+			RArray.map(
+				(_): HistoryDates => ({
+					date: _.day,
+					close: _.close
+				})
+			)
+		)
 	);
 };
 
 export const getOneWeekHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
 	throw new Error();
 };
 
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
 	throw new Error();
 };
 
 export const getThreeMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
 	throw new Error();
 };
 
 export const getOneYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
 	throw new Error();
 };
 
 export const getFiveYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDay>> => {
+): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
 	throw new Error();
 };

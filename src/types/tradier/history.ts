@@ -1,4 +1,4 @@
-export interface HistoryDay {
+export interface TradierHistoryDay {
 	readonly day: string;
 	readonly open: number;
 	readonly high: number;
@@ -8,6 +8,6 @@ export interface HistoryDay {
 
 export interface TradierHistory {
 	readonly history: {
-		readonly day: ReadonlyArray<HistoryDay>;
+		readonly day: ReadonlyArray<TradierHistoryDay>;
 	};
 }
