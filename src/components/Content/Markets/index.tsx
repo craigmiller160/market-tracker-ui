@@ -1,10 +1,12 @@
+import { Typography } from 'antd';
 import { useMarketData } from './useMarketData';
+import './Markets.scss';
 
 export const Markets = () => {
 	const marketData = useMarketData();
 	return (
-		<div>
-			<h1>Markets Page</h1>
+		<div className="GlobalMarkets">
+			<Typography.Title>Global Markets</Typography.Title>
 			<p>{JSON.stringify(marketData)}</p>
 		</div>
 	);
