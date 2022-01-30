@@ -62,7 +62,7 @@ const useLoadMarketData = (setState: Updater<State>, historyFn: HistoryFn) => {
 						);
 						setState((draft: Draft<State>) => {
 							draft.marketData = marketData;
-						})
+						});
 					}
 			)
 		)();
