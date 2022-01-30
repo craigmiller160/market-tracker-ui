@@ -26,7 +26,7 @@ const createMainNavItems = () => {
 const TimeRangeNavItems = (
 	<>
 		<Menu.Item className="OneDayItem" key="time.oneDay">
-			1 Day
+			Today
 		</Menu.Item>
 		<Menu.Item key="time.oneWeek">1 Week</Menu.Item>
 		<Menu.Item key="time.oneMonth">1 Month</Menu.Item>
