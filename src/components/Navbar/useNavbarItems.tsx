@@ -6,6 +6,7 @@ import { identity } from 'fp-ts/es6/function';
 
 const MainNavItems = (
 	<>
+		<Menu.Item key="page.markets">Markets</Menu.Item>
 		<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
 		<Menu.Item key="page.watchlists">Watchlists</Menu.Item>
 	</>
