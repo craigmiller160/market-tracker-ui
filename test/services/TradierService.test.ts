@@ -14,7 +14,8 @@ const createQuote = (symbol: string): Quote => ({
 	low: 2,
 	bid: 3,
 	ask: 4,
-	close: 5
+	close: 5,
+	last: 6
 });
 
 describe('TradierService', () => {

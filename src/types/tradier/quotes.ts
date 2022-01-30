@@ -7,6 +7,7 @@ export interface Quote {
 	readonly bid: number;
 	readonly ask: number;
 	readonly close: number;
+	readonly last: number;
 }
 
 export interface TradierQuotes {
