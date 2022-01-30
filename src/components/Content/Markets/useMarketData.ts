@@ -14,12 +14,15 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 
-const MARKET_SYMBOLS = ['VTI'];
+const MARKET_SYMBOLS: ReadonlyArray<string> = ['VTI'];
+const MARKET_NAMES: ReadonlyArray<string> = ['US Total Market'];
+const IS_INT: ReadonlyArray<boolean> = [false];
 
 interface MarketData {
 	readonly symbol: string;
 	readonly name: string;
 	readonly currentPrice: number;
+	readonly isInternational: boolean;
 	readonly history: ReadonlyArray<HistoryDate>;
 }
 
@@ -68,8 +71,9 @@ const handleLoadMarketDataSuccess =
 			RArray.mapWithIndex(
 				(index, quote): MarketData => ({
 					symbol: quote.symbol,
-					name: '', // TODO figure this one out
+					name: MARKET_NAMES[index],
 					currentPrice: quote.price,
+					isInternational: IS_INT[index],
 					history: history[index]
 				})
 			)
