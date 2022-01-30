@@ -8,17 +8,30 @@ import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { Quote } from '../types/quote';
-import { HistoryDates } from '../types/history';
+import { HistoryDate } from '../types/history';
 
-const formatTradierQuotes = (
-	quotes: TradierQuotes
-): ReadonlyArray<TradierQuote> =>
-	match(quotes.quotes.quote)
+const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
+	const tradierQuotes = match(quotes.quotes.quote)
 		.with(
 			instanceOf(Array),
 			() => quotes.quotes.quote as ReadonlyArray<TradierQuote>
 		)
 		.otherwise(() => [quotes.quotes.quote as TradierQuote]);
+	return RArray.map(
+		(_: TradierQuote): Quote => ({
+			symbol: _.symbol,
+			price: _.last
+		})
+	)(tradierQuotes);
+};
+
+const formatTradierHistory = (
+	history: TradierHistory
+): ReadonlyArray<HistoryDate> =>
+	RArray.map((_: TradierHistoryDay) => ({
+		date: _.day,
+		price: _.close
+	}))(history.history.day);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
@@ -28,21 +41,13 @@ export const getQuotes = (
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map(formatTradierQuotes),
-		TaskEither.map(
-			RArray.map(
-				(_): Quote => ({
-					symbol: _.symbol,
-					price: _.last
-				})
-			)
-		)
+		TaskEither.map(formatTradierQuotes)
 	);
 
 // TODO delete this
 export const getHistoryQuote = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDates>> => {
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
 	const queryString = qs.stringify({
 		symbol,
 		interval: 'monthly',
@@ -55,15 +60,7 @@ export const getHistoryQuote = (
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map((_) => _.history.day),
-		TaskEither.map(
-			RArray.map(
-				(_): HistoryDates => ({
-					date: _.day,
-					price: _.close
-				})
-			)
-		)
+		TaskEither.map(formatTradierHistory)
 	);
 };
 
