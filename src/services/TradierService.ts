@@ -3,16 +3,31 @@ import { ajaxApi } from './AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
+import { HistoryDay, TradierHistory } from '../types/tradier/history';
+import { Quote, TradierQuotes } from '../types/tradier/quotes';
+import { instanceOf, match } from 'ts-pattern';
 
-export const getQuotes = (symbols: ReadonlyArray<string>): TaskTryT<any> =>
+const formatQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> =>
+	match(quotes.quotes.quote)
+		.with(
+			instanceOf(Array),
+			() => quotes.quotes.quote as ReadonlyArray<Quote>
+		)
+		.otherwise(() => [quotes.quotes.quote as Quote]);
+
+export const getQuotes = (
+	symbols: ReadonlyArray<string>
+): TaskTryT<ReadonlyArray<Quote>> =>
 	pipe(
-		ajaxApi.get({
+		ajaxApi.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
-		TaskEither.map((_) => _.data)
+		TaskEither.map((_) => formatQuotes(_.data))
 	);
 
-export const getHistoryQuote = (symbol: string): TaskTryT<any> => {
+export const getHistoryQuote = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
 	const queryString = qs.stringify({
 		symbol,
 		interval: 'monthly',
@@ -21,9 +36,9 @@ export const getHistoryQuote = (symbol: string): TaskTryT<any> => {
 	});
 
 	return pipe(
-		ajaxApi.get({
+		ajaxApi.get<TradierHistory>({
 			uri: `/tradier/markets/history?${queryString}`
 		}),
-		TaskEither.map((_) => _.data)
+		TaskEither.map((_) => _.data.history.day)
 	);
 };
