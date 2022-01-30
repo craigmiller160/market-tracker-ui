@@ -7,6 +7,8 @@ import { HistoryDay, TradierHistory } from '../types/tradier/history';
 import { Quote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 
+// TODO refactor response into standardized form
+
 const formatQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> =>
 	match(quotes.quotes.quote)
 		.with(
@@ -25,6 +27,7 @@ export const getQuotes = (
 		TaskEither.map((_) => formatQuotes(_.data))
 	);
 
+// TODO delete this
 export const getHistoryQuote = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDay>> => {
@@ -41,4 +44,34 @@ export const getHistoryQuote = (
 		}),
 		TaskEither.map((_) => _.data.history.day)
 	);
+};
+
+export const getOneWeekHistory = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
+	throw new Error();
+};
+
+export const getOneMonthHistory = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
+	throw new Error();
+};
+
+export const getThreeMonthHistory = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
+	throw new Error();
+};
+
+export const getOneYearHistory = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
+	throw new Error();
+};
+
+export const getFiveYearHistory = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryDay>> => {
+	throw new Error();
 };
