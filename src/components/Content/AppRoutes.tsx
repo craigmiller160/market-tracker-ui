@@ -12,7 +12,8 @@ export const AppRoutes = () => {
 	return useRoutes(
 		routes({
 			isAuthorized,
-			hasChecked
+			hasChecked,
+			env: process.env.NODE_ENV
 		})
 	);
 };
