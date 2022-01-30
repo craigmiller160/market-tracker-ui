@@ -75,7 +75,24 @@ describe('Navbar', () => {
 
 	it('shows correct items for authenticated user in prod', async () => {
 		process.env.NODE_ENV = 'production';
-		throw new Error();
+		await renderApp();
+		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
+		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		expect(screen.queryByText('Logout')).toBeInTheDocument();
+
+		expect(screen.queryByText('1 Day')).toBeInTheDocument();
+		expect(screen.queryByText('1 Week')).toBeInTheDocument();
+		expect(screen.queryByText('1 Month')).toBeInTheDocument();
+		expect(screen.queryByText('3 Months')).toBeInTheDocument();
+		expect(screen.queryByText('1 Year')).toBeInTheDocument();
+		expect(screen.queryByText('5 Years')).toBeInTheDocument();
+
+		menuItemIsSelected('Markets');
+		menuItemIsSelected('1 Day');
+
+		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
+		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
+		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
 	it('shows correct items for authenticated user', async () => {
