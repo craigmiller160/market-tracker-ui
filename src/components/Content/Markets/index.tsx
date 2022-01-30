@@ -3,7 +3,7 @@ import { useMarketData } from './useMarketData';
 import './Markets.scss';
 
 export const Markets = () => {
-	const marketData = useMarketData();
+	const { usMarketData, internationalMarketData } = useMarketData();
 	return (
 		<div className="GlobalMarkets">
 			<Typography.Title>All Global Markets</Typography.Title>
@@ -14,7 +14,9 @@ export const Markets = () => {
 				</Card>
 			</section>
 			<section className="MarketSection">
-				<Typography.Title level={3}>International Markets</Typography.Title>
+				<Typography.Title level={3}>
+					International Markets
+				</Typography.Title>
 			</section>
 		</div>
 	);
