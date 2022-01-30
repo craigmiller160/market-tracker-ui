@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Space, Spin, Typography } from 'antd';
 import { useMarketData } from './useMarketData';
 import './Markets.scss';
 import { MarketCard } from './MarketCard';
@@ -19,10 +19,14 @@ const getPageSizeClass = (breakpoints: Breakpoints): string =>
 		.with({ xxl: false, xl: false, lg: true }, () => 'LG')
 		.otherwise(() => '');
 
-// TODO add spinners
+const Spinner = (
+	<Space size="middle" className="Spinner">
+		<Spin size="large" />
+	</Space>
+);
 
 export const Markets = () => {
-	const { usMarketData, internationalMarketData } = useMarketData();
+	const { loading, usMarketData, internationalMarketData } = useMarketData();
 	const UsMarketCards = usMarketData.map(marketDataToCard);
 	const IntMarketCards = internationalMarketData.map(marketDataToCard);
 	const { breakpoints } = useContext(ScreenContext);
@@ -34,13 +38,13 @@ export const Markets = () => {
 			<Typography.Title>All Global Markets</Typography.Title>
 			<section className="MarketSection">
 				<Typography.Title level={3}>US Markets</Typography.Title>
-				{UsMarketCards}
+				{loading ? Spinner : UsMarketCards}
 			</section>
 			<section className="MarketSection">
 				<Typography.Title level={3}>
 					International Markets
 				</Typography.Title>
-				{IntMarketCards}
+				{loading ? Spinner : IntMarketCards}
 			</section>
 		</div>
 	);

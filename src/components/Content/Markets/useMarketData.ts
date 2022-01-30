@@ -31,6 +31,7 @@ const MARKET_INFO: ReadonlyArray<MarketInfo> = [
 const MARKET_SYMBOLS = MARKET_INFO.map((_) => _.symbol);
 
 interface AllMarketData {
+	readonly loading: boolean;
 	readonly usMarketData: ReadonlyArray<MarketData>;
 	readonly internationalMarketData: ReadonlyArray<MarketData>;
 }
@@ -56,9 +57,14 @@ const useHistoryFn = (timeValue: string): HistoryFn => {
 };
 
 const handleLoadMarketDataError =
-	(dispatch: Dispatch) =>
+	(setState: Updater<AllMarketData>, dispatch: Dispatch) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
+		setState((draft) => {
+			draft.loading = false;
+			draft.usMarketData = [];
+			draft.internationalMarketData = [];
+		});
 		console.error('Error loading market data', ex);
 		dispatch(
 			alertSlice.actions.showError(
@@ -85,6 +91,7 @@ const handleLoadMarketDataSuccess =
 			RArray.spanLeft((data) => data.isInternational)
 		);
 		setState((draft) => {
+			draft.loading = false;
 			draft.usMarketData = castDraft(rest);
 			draft.internationalMarketData = castDraft(init);
 		});
@@ -96,6 +103,9 @@ const useLoadMarketData = (
 	dispatch: Dispatch
 ) =>
 	useCallback(() => {
+		setState((draft) => {
+			draft.loading = true;
+		});
 		const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
 		return pipe(
 			tradierService.getQuotes(MARKET_SYMBOLS),
@@ -104,7 +114,7 @@ const useLoadMarketData = (
 				TaskEither.sequenceArray(marketHistoryFns)
 			),
 			TaskEither.fold(
-				handleLoadMarketDataError(dispatch),
+				handleLoadMarketDataError(setState, dispatch),
 				handleLoadMarketDataSuccess(setState)
 			)
 		)();
@@ -113,6 +123,7 @@ const useLoadMarketData = (
 export const useMarketData = (): AllMarketData => {
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<AllMarketData>({
+		loading: true,
 		usMarketData: [],
 		internationalMarketData: []
 	});
