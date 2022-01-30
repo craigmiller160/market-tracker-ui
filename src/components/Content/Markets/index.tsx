@@ -6,7 +6,7 @@ import { HistoryDate } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as tradierService from '../../../services/TradierService';
-import { TaskTryT } from '@craigmiller160/ts-functions/types';
+import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 
 interface MarketData {
