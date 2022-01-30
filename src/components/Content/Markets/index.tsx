@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { useEffect } from 'react';
-import { Updater } from 'use-immer';
+import { Updater, useImmer } from 'use-immer';
 import { HistoryDate } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -27,8 +27,14 @@ const createLoadMarketData = (setState: Updater<State>) =>
 	);
 
 export const Markets = () => {
+	const [state, setState] = useImmer<State>({
+		marketData: []
+	});
 	const timeValue = useSelector(timeValueSelector);
-	useEffect(() => {}, []);
+	const loadMarketData = createLoadMarketData(setState);
+	useEffect(() => {
+		loadMarketData();
+	}, [loadMarketData]);
 
 	return <h1>Markets Page</h1>;
 };
