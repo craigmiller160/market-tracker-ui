@@ -89,23 +89,47 @@ export const getOneWeekHistory = (
 export const getOneMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
-	throw new Error();
+	const today = new Date();
+	return getHistoryQuote({
+		symbol,
+		start: getHistoryStartDate(today, Time.subMonths(1)),
+		end: formatHistoryDate(today),
+		interval: 'weekly'
+	});
 };
 
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
-	throw new Error();
+	const today = new Date();
+	return getHistoryQuote({
+		symbol,
+		start: getHistoryStartDate(today, Time.subMonths(3)),
+		end: formatHistoryDate(today),
+		interval: 'weekly'
+	});
 };
 
 export const getOneYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
-	throw new Error();
+	const today = new Date();
+	return getHistoryQuote({
+		symbol,
+		start: getHistoryStartDate(today, Time.subYears(1)),
+		end: formatHistoryDate(today),
+		interval: 'monthly'
+	});
 };
 
 export const getFiveYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
-	throw new Error();
+	const today = new Date();
+	return getHistoryQuote({
+		symbol,
+		start: getHistoryStartDate(today, Time.subYears(5)),
+		end: formatHistoryDate(today),
+		interval: 'yearly'
+	});
 };
