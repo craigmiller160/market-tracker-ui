@@ -1,7 +1,5 @@
-.GlobalMarkets {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+@import "../../../styles/page";
 
-  margin-top: 3rem;
+.GlobalMarkets {
+  @include PageRoot
 }
