@@ -14,7 +14,7 @@ import * as Time from '@craigmiller160/ts-functions/es/Time';
 const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
 const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 
-interface HistoryQuery {
+export interface HistoryQuery {
 	readonly symbol: string;
 	readonly interval: string;
 	readonly start: string;
@@ -60,7 +60,6 @@ export const getQuotes = (
 		TaskEither.map(formatTradierQuotes)
 	);
 
-// TODO delete this
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
