@@ -4,13 +4,24 @@ import { match } from 'ts-pattern';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { identity } from 'fp-ts/es6/function';
 
-const MainNavItems = (
-	<>
-		<Menu.Item key="page.markets">Markets</Menu.Item>
-		<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
-		<Menu.Item key="page.watchlists">Watchlists</Menu.Item>
-	</>
-);
+const createMainNavItems = () => {
+	const AlwaysShowItems = <Menu.Item key="page.markets">Markets</Menu.Item>;
+	const NonProdItems = match(process.env.NODE_ENV)
+		.with('production', () => <></>)
+		.otherwise(() => (
+			<>
+				<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
+				<Menu.Item key="page.watchlists">Watchlists</Menu.Item>
+			</>
+		));
+
+	return (
+		<>
+			{AlwaysShowItems}
+			{NonProdItems}
+		</>
+	);
+};
 
 const TimeRangeNavItems = (
 	<>
@@ -53,6 +64,7 @@ export const useNavbarItems = (): ReactNode => {
 		authBtnAction,
 		authBtnTxt
 	);
+	const MainNavItems = createMainNavItems();
 
 	return match({ isAuthorized, hasChecked })
 		.with({ isAuthorized: true, hasChecked: true }, () => (
