@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Updater, useImmer } from 'use-immer';
 import { HistoryDate } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
@@ -18,12 +18,19 @@ interface State {
 	readonly marketData: ReadonlyArray<MarketData>;
 }
 
-const createLoadMarketData = (setState: Updater<State>) =>
-	pipe(
-		TaskEither.sequenceArray([
+const useLoadMarketData = (setState: Updater<State>) =>
+	useCallback(
+		pipe(
 			tradierService.getQuotes(['VTI']),
-			tradierService.getOneWeekHistory('VTI')
-		])
+			TaskEither.bindTo('quotes'),
+			TaskEither.bind('history', () =>
+				// TODO figure out a better solution for selecting the time range function
+				TaskEither.sequenceArray([
+					tradierService.getOneWeekHistory('VTI')
+				])
+			)
+		),
+		[setState]
 	);
 
 export const Markets = () => {
@@ -31,7 +38,8 @@ export const Markets = () => {
 		marketData: []
 	});
 	const timeValue = useSelector(timeValueSelector);
-	const loadMarketData = createLoadMarketData(setState);
+	const loadMarketData = useLoadMarketData(setState);
+
 	useEffect(() => {
 		loadMarketData();
 	}, [loadMarketData]);
