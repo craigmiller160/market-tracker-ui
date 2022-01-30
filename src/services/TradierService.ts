@@ -9,6 +9,17 @@ import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { Quote } from '../types/quote';
 import { HistoryDate } from '../types/history';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
+const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
+
+interface HistoryQuery {
+	readonly symbol: string;
+	readonly interval: string;
+	readonly start: string;
+	readonly end: string;
+}
 
 const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 	const tradierQuotes = match(quotes.quotes.quote)
@@ -33,6 +44,11 @@ const formatTradierHistory = (
 		price: _.close
 	}))(history.history.day);
 
+const getHistoryStartDate = (
+	today: Date,
+	intervalFn: (d: Date) => Date
+): string => pipe(today, intervalFn, formatHistoryDate);
+
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
@@ -45,16 +61,10 @@ export const getQuotes = (
 	);
 
 // TODO delete this
-export const getHistoryQuote = (
-	symbol: string
+const getHistoryQuote = (
+	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
-	const queryString = qs.stringify({
-		symbol,
-		interval: 'monthly',
-		start: '2021-01-01',
-		end: '2022-01-31'
-	});
-
+	const queryString = qs.stringify(historyQuery);
 	return pipe(
 		ajaxApi.get<TradierHistory>({
 			uri: `/tradier/markets/history?${queryString}`
@@ -66,30 +76,36 @@ export const getHistoryQuote = (
 
 export const getOneWeekHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
-	throw new Error();
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
+	const today = new Date();
+	return getHistoryQuote({
+		symbol,
+		start: getHistoryStartDate(today, Time.subWeeks(1)),
+		end: formatHistoryDate(today),
+		interval: 'daily'
+	});
 };
 
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
 	throw new Error();
 };
 
 export const getThreeMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
 	throw new Error();
 };
 
 export const getOneYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
 	throw new Error();
 };
 
 export const getFiveYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierHistoryDay>> => {
+): TaskTryT<ReadonlyArray<HistoryDate>> => {
 	throw new Error();
 };
