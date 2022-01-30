@@ -1,6 +1,6 @@
 import { MarketData } from './MarketData';
 import { Card } from 'antd';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 
 interface Props {
 	readonly data: MarketData;
@@ -20,7 +20,8 @@ const createTitle = (data: MarketData) => {
 		2
 	)}%`;
 	const priceClassName = priceChange >= 0 ? 'up' : 'down';
-	const ChangeIcon = priceChange >= 0 ? <UpOutlined /> : <DownOutlined />;
+	const ChangeIcon =
+		priceChange >= 0 ? <CaretUpFilled /> : <CaretDownFilled />;
 
 	return (
 		<>
@@ -37,9 +38,9 @@ const createTitle = (data: MarketData) => {
 };
 
 export const MarketCard = ({ data }: Props) => {
-	const title = createTitle(data);
+	const Title = createTitle(data);
 	return (
-		<Card title={title} className="MarketCard">
+		<Card title={Title} className="MarketCard">
 			<p>Chart Goes Here</p>
 		</Card>
 	);
