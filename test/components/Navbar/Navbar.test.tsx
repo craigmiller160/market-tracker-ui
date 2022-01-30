@@ -74,6 +74,7 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for authenticated user in prod', async () => {
+		process.env.NODE_ENV = 'production';
 		throw new Error();
 	});
 
