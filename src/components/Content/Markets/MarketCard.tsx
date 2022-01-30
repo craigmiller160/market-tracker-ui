@@ -5,20 +5,40 @@ interface Props {
 	readonly data: MarketData;
 }
 
-const createTitle = (data: MarketData) => (
-	<>
-		<h3>
-			<strong>{`${data.name} (${data.symbol})`}</strong>
-		</h3>
-		<p>${data.currentPrice}</p>
-	</>
-);
+const createTitle = (data: MarketData) => {
+	const oldestPrice = data.history[0]?.price ?? 0;
+	const priceChange = data.currentPrice - oldestPrice;
 
+	const formattedPrice = `$${data.currentPrice.toFixed(2)}`;
+	const priceChangeOperator = priceChange >= 0 ? '+' : '-';
+	const formattedPriceChange = `${priceChangeOperator}$${Math.abs(
+		priceChange
+	).toFixed(2)}`;
+	const percentChange = (Math.abs(priceChange) / data.currentPrice) * 100;
+	const formattedPercentChange = `${priceChangeOperator}${percentChange.toFixed(
+		2
+	)}%`;
+
+	return (
+		<>
+			<h3>
+				<strong>{`${data.name} (${data.symbol})`}</strong>
+			</h3>
+			<p>
+				{formattedPrice} ({formattedPriceChange},{' '}
+				{formattedPercentChange})
+			</p>
+		</>
+	);
+};
+
+// TODO add arrow for increase/decrease
+// TODO color price for increase/decrease
 export const MarketCard = ({ data }: Props) => {
 	const title = createTitle(data);
 	return (
 		<Card title={title} className="MarketCard">
-			<p>The Content</p>
+			<p>Chart Goes Here</p>
 		</Card>
 	);
 };
