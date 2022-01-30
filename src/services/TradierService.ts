@@ -94,7 +94,7 @@ export const getOneMonthHistory = (
 		symbol,
 		start: getHistoryStartDate(today, Time.subMonths(1)),
 		end: formatHistoryDate(today),
-		interval: 'weekly'
+		interval: 'daily'
 	});
 };
 
@@ -106,7 +106,7 @@ export const getThreeMonthHistory = (
 		symbol,
 		start: getHistoryStartDate(today, Time.subMonths(3)),
 		end: formatHistoryDate(today),
-		interval: 'weekly'
+		interval: 'daily'
 	});
 };
 
@@ -118,7 +118,7 @@ export const getOneYearHistory = (
 		symbol,
 		start: getHistoryStartDate(today, Time.subYears(1)),
 		end: formatHistoryDate(today),
-		interval: 'monthly'
+		interval: 'weekly'
 	});
 };
 
@@ -130,6 +130,6 @@ export const getFiveYearHistory = (
 		symbol,
 		start: getHistoryStartDate(today, Time.subYears(5)),
 		end: formatHistoryDate(today),
-		interval: 'yearly'
+		interval: 'monthly'
 	});
 };
