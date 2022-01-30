@@ -10,5 +10,7 @@ export interface Quote {
 }
 
 export interface TradierQuotes {
-	readonly quotes: Quote | ReadonlyArray<Quote>;
+	readonly quotes: {
+		readonly quote: Quote | ReadonlyArray<Quote>;
+	};
 }
