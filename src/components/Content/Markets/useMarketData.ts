@@ -30,10 +30,14 @@ const MARKET_INFO: ReadonlyArray<MarketInfo> = [
 ];
 const MARKET_SYMBOLS = MARKET_INFO.map((_) => _.symbol);
 
-interface AllMarketData {
+interface State {
 	readonly loading: boolean;
 	readonly usMarketData: ReadonlyArray<MarketData>;
 	readonly internationalMarketData: ReadonlyArray<MarketData>;
+}
+
+export interface AllMarketData extends State {
+	readonly timeValue: string;
 }
 
 interface DataLoadedResult {
@@ -57,7 +61,7 @@ const useHistoryFn = (timeValue: string): HistoryFn => {
 };
 
 const handleLoadMarketDataError =
-	(setState: Updater<AllMarketData>, dispatch: Dispatch) =>
+	(setState: Updater<State>, dispatch: Dispatch) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
 		setState((draft) => {
@@ -74,7 +78,7 @@ const handleLoadMarketDataError =
 	};
 
 const handleLoadMarketDataSuccess =
-	(setState: Updater<AllMarketData>) =>
+	(setState: Updater<State>) =>
 	({ quotes, history }: DataLoadedResult): TaskT<void> =>
 	async () => {
 		const { init, rest } = pipe(
@@ -98,7 +102,7 @@ const handleLoadMarketDataSuccess =
 	};
 
 const useLoadMarketData = (
-	setState: Updater<AllMarketData>,
+	setState: Updater<State>,
 	historyFn: HistoryFn,
 	dispatch: Dispatch
 ) =>
@@ -122,7 +126,7 @@ const useLoadMarketData = (
 
 export const useMarketData = (): AllMarketData => {
 	const dispatch = useDispatch();
-	const [state, setState] = useImmer<AllMarketData>({
+	const [state, setState] = useImmer<State>({
 		loading: true,
 		usMarketData: [],
 		internationalMarketData: []
@@ -136,5 +140,8 @@ export const useMarketData = (): AllMarketData => {
 		loadMarketData();
 	}, [loadMarketData, timeValue]);
 
-	return state;
+	return {
+		...state,
+		timeValue
+	};
 };

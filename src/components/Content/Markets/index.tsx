@@ -8,9 +8,9 @@ import { ScreenContext } from '../../ScreenContext';
 import { Breakpoints } from '../../utils/Breakpoints';
 import { match } from 'ts-pattern';
 
-const marketDataToCard = (data: MarketData) => (
-	<MarketCard key={data.symbol} data={data} />
-);
+// eslint-disable-next-line react/display-name
+const createMarketDataToCard = (timeValue: string) => (data: MarketData) =>
+	<MarketCard key={data.symbol} data={data} time={timeValue} />;
 
 const getPageSizeClass = (breakpoints: Breakpoints): string =>
 	match(breakpoints)
@@ -26,7 +26,9 @@ const Spinner = (
 );
 
 export const Markets = () => {
-	const { loading, usMarketData, internationalMarketData } = useMarketData();
+	const { loading, usMarketData, internationalMarketData, timeValue } =
+		useMarketData();
+	const marketDataToCard = createMarketDataToCard(timeValue);
 	const UsMarketCards = usMarketData.map(marketDataToCard);
 	const IntMarketCards = internationalMarketData.map(marketDataToCard);
 	const { breakpoints } = useContext(ScreenContext);

@@ -4,6 +4,7 @@ import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 
 interface Props {
 	readonly data: MarketData;
+	readonly time: string;
 }
 
 const createTitle = (data: MarketData) => {
