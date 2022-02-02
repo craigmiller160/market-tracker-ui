@@ -30,6 +30,8 @@ const ajaxErrorHandler = createAjaxErrorHandler({
 		store.dispatch(authSlice.actions.setUserData(O.none))
 });
 
+export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
+
 export const ajaxApi = createApi({
 	baseURL: '/market-tracker/api',
 	useCsrf: false,

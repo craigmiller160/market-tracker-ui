@@ -104,7 +104,8 @@ export const Navbar: FC<object> = () => {
 		handleMenuClick
 	};
 
-	return match(breakpoints)
+	const NavbarComp = match(breakpoints)
 		.with(when(isDesktop), () => <DesktopNavbar {...props} />)
 		.otherwise(() => <MobileNavbar {...props} />);
+	return <div data-testid="navbar">{NavbarComp}</div>;
 };
