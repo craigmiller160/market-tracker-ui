@@ -64,7 +64,6 @@ const testMarketCards = (
 	marketCards: ReadonlyArray<HTMLElement>,
 	config: TestMarketCardsConfig
 ) => {
-	const today = getTodayHistoryStartDate();
 	expect(marketCards).toHaveLength(1);
 	const vtiCard = marketCards[0];
 	expect(
@@ -72,7 +71,7 @@ const testMarketCards = (
 	).toBeInTheDocument();
 	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
 	expect(
-		within(vtiCard).queryByText(`${config.startDate} to ${today}`)
+		within(vtiCard).queryByText(`Since ${config.startDate}`)
 	).toBeInTheDocument();
 	const amountItem = within(vtiCard).queryByText(/\$100\.00/);
 	expect(amountItem?.textContent).toEqual(
