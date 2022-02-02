@@ -131,7 +131,6 @@ describe('Markets', () => {
 		menuItemIsSelected('1 Week');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		screen.debug(marketsPage); // TODO delete this
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Week',
