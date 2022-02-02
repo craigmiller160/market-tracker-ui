@@ -1,6 +1,7 @@
 import {
 	formatDisplayDate,
 	formatHistoryDate,
+	formatTimesalesDate,
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
 	getOneMonthDisplayStartDate,
@@ -12,7 +13,9 @@ import {
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
 	getTodayDisplayDate,
-	getTodayHistoryDate
+	getTodayHistoryDate,
+	getTodayTimesalesDate,
+	getTomorrowTimesalesDate
 } from '../../src/utils/timeUtils';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
@@ -127,6 +130,18 @@ describe('timeUtils', () => {
 			formatDisplayDate
 		);
 		const actual = getFiveYearDisplayStartDate();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTodayTimesalesDate', () => {
+		const expected = formatTimesalesDate(new Date());
+		const actual = getTodayTimesalesDate();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTomorrowTimesalesDate', () => {
+		const expected = pipe(new Date(), Time.addDays(1), formatTimesalesDate);
+		const actual = getTomorrowTimesalesDate();
 		expect(actual).toEqual(expected);
 	});
 });

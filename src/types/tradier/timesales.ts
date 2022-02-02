@@ -10,7 +10,7 @@ export interface TradierSeriesData {
 	readonly vwap: number;
 }
 
-export interface SeriesWrapper {
+export interface TradierSeries {
 	readonly series: {
 		readonly data: ReadonlyArray<TradierSeriesData>;
 	};

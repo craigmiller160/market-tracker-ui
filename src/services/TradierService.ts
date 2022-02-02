@@ -15,8 +15,11 @@ import {
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate
+	getThreeMonthHistoryStartDate,
+	getTodayTimesalesDate,
+	getTomorrowTimesalesDate
 } from '../utils/timeUtils';
+import { TradierSeriesData, TradierSeries } from '../types/tradier/timesales';
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -60,6 +63,20 @@ const formatTradierHistory = (
 			]
 		)
 	);
+
+export const getTimesales = (
+	symbol: string
+): TaskTryT<ReadonlyArray<TradierSeriesData>> => {
+	const start = getTodayTimesalesDate();
+	const end = getTomorrowTimesalesDate();
+	return pipe(
+		ajaxApi.get<TradierSeries>({
+			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=5min`
+		}),
+		TaskEither.map(getResponseData),
+		TaskEither.map((_) => _.series.data)
+	);
+};
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
