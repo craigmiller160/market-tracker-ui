@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
@@ -36,6 +36,10 @@ describe('Markets', () => {
 			.reply(200, mockQuote);
 		await renderApp();
 		menuItemIsSelected('Today');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		expect(marketCards).toHaveLength(1);
 	});
 
 	it('renders for 1 week', async () => {

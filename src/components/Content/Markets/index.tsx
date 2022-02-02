@@ -36,7 +36,7 @@ export const Markets = () => {
 	const className = `GlobalMarkets ${pageSizeClass}`;
 
 	return (
-		<div className={className}>
+		<div className={className} data-testid="markets-page">
 			<Typography.Title>All Global Markets</Typography.Title>
 			<section className="MarketSection">
 				<Typography.Title level={3}>US Markets</Typography.Title>

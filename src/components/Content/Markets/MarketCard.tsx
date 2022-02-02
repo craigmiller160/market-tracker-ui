@@ -56,7 +56,12 @@ export const MarketCard = ({ data, time }: Props) => {
 	const Title = createTitle(data);
 	const Time = createTime(time);
 	return (
-		<Card title={Title} className="MarketCard" extra={Time}>
+		<Card
+			title={Title}
+			className="MarketCard"
+			extra={Time}
+			data-testid="market-card"
+		>
 			<p>Chart Goes Here</p>
 		</Card>
 	);
