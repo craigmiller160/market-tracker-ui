@@ -49,7 +49,7 @@ type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
 const useHistoryFn = (timeValue: string): HistoryFn => {
 	const historyFn = match(timeValue)
-		.with('oneDay', () => () => TaskEither.right([]))
+		.with('oneDay', () => tradierService.getTimesales)
 		.with('oneWeek', () => tradierService.getOneWeekHistory)
 		.with('oneMonth', () => tradierService.getOneMonthHistory)
 		.with('threeMonths', () => tradierService.getThreeMonthHistory)
