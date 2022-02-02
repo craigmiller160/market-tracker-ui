@@ -91,14 +91,14 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 week', async () => {
-		const oneWeekAgo = pipe(new Date(), Time.subWeeks(1), formatDate);
+		const start = pipe(new Date(), Time.subWeeks(1), formatDate);
 
 		mockApi
 			.onGet('/tradier/markets/quotes?symbols=VTI')
 			.reply(200, mockQuote);
 		mockApi
 			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${oneWeekAgo}&end=${today}&interval=daily`
+				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
 			)
 			.reply(200, mockHistory);
 
@@ -120,18 +120,118 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 month', async () => {
-		throw new Error();
+		const start = pipe(new Date(), Time.subMonths(1), formatDate);
+
+		mockApi
+			.onGet('/tradier/markets/quotes?symbols=VTI')
+			.reply(200, mockQuote);
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
+			)
+			.reply(200, mockHistory);
+
+		await renderApp();
+
+		await act(async () => {
+			await userEvent.click(screen.getByText('1 Month'));
+		});
+
+		menuItemIsSelected('1 Month');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: '1 Month',
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+50.00%'
+		});
 	});
 
 	it('renders for 3 months', async () => {
-		throw new Error();
+		const start = pipe(new Date(), Time.subMonths(3), formatDate);
+
+		mockApi
+			.onGet('/tradier/markets/quotes?symbols=VTI')
+			.reply(200, mockQuote);
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
+			)
+			.reply(200, mockHistory);
+
+		await renderApp();
+
+		await act(async () => {
+			await userEvent.click(screen.getByText('3 Months'));
+		});
+
+		menuItemIsSelected('3 Months');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: '3 Months',
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+50.00%'
+		});
 	});
 
 	it('renders for 1 year', async () => {
-		throw new Error();
+		const start = pipe(new Date(), Time.subYears(1), formatDate);
+
+		mockApi
+			.onGet('/tradier/markets/quotes?symbols=VTI')
+			.reply(200, mockQuote);
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=weekly`
+			)
+			.reply(200, mockHistory);
+
+		await renderApp();
+
+		await act(async () => {
+			await userEvent.click(screen.getByText('1 Year'));
+		});
+
+		menuItemIsSelected('1 Year');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: '1 Year',
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+50.00%'
+		});
 	});
 
 	it('renders for 5 years', async () => {
-		throw new Error();
+		const start = pipe(new Date(), Time.subYears(5), formatDate);
+
+		mockApi
+			.onGet('/tradier/markets/quotes?symbols=VTI')
+			.reply(200, mockQuote);
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=monthly`
+			)
+			.reply(200, mockHistory);
+
+		await renderApp();
+
+		await act(async () => {
+			await userEvent.click(screen.getByText('5 Years'));
+		});
+
+		menuItemIsSelected('5 Years');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: '5 Years',
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+50.00%'
+		});
 	});
 });
