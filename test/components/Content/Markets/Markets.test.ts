@@ -75,15 +75,30 @@ const testPageHeaders = () => {
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
 };
 
+const mockQueries = (
+	symbols: ReadonlyArray<string>,
+	start = '',
+	interval = ''
+) => {
+	mockApi
+		.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
+		.reply(200, mockQuote);
+	symbols.forEach((symbol) => {
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${today}&interval=${interval}`
+			)
+			.reply(200, mockHistory);
+	});
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
 	});
 
 	it('renders for today', async () => {
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
+		mockQueries(['VTI']);
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
@@ -99,15 +114,7 @@ describe('Markets', () => {
 
 	it('renders for 1 week', async () => {
 		const start = pipe(new Date(), Time.subWeeks(1), formatDate);
-
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
-			)
-			.reply(200, mockHistory);
+		mockQueries(['VTI'], start, 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -129,15 +136,7 @@ describe('Markets', () => {
 
 	it('renders for 1 month', async () => {
 		const start = pipe(new Date(), Time.subMonths(1), formatDate);
-
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
-			)
-			.reply(200, mockHistory);
+		mockQueries(['VTI'], start, 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -159,15 +158,7 @@ describe('Markets', () => {
 
 	it('renders for 3 months', async () => {
 		const start = pipe(new Date(), Time.subMonths(3), formatDate);
-
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=daily`
-			)
-			.reply(200, mockHistory);
+		mockQueries(['VTI'], start, 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -189,15 +180,7 @@ describe('Markets', () => {
 
 	it('renders for 1 year', async () => {
 		const start = pipe(new Date(), Time.subYears(1), formatDate);
-
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=weekly`
-			)
-			.reply(200, mockHistory);
+		mockQueries(['VTI'], start, 'weekly');
 
 		await renderApp();
 		testPageHeaders();
@@ -219,15 +202,7 @@ describe('Markets', () => {
 
 	it('renders for 5 years', async () => {
 		const start = pipe(new Date(), Time.subYears(5), formatDate);
-
-		mockApi
-			.onGet('/tradier/markets/quotes?symbols=VTI')
-			.reply(200, mockQuote);
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=VTI&start=${start}&end=${today}&interval=monthly`
-			)
-			.reply(200, mockHistory);
+		mockQueries(['VTI'], start, 'monthly');
 
 		await renderApp();
 		testPageHeaders();
