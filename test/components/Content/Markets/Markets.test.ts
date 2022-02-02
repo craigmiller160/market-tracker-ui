@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
@@ -98,13 +98,17 @@ describe('Markets', () => {
 
 		await renderApp();
 
-		// menuItemIsSelected('Today');
-		//
-		// const marketsPage = screen.getByTestId('markets-page');
-		// const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		// testMarketCards(marketCards, {
-		// 	time: 'Today'
-		// });
+		await act(async () => {
+			await userEvent.click(screen.getByText('1 Week'));
+		});
+
+		menuItemIsSelected('1 Week');
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: '1 Week'
+		});
 	});
 
 	it('renders for 1 month', async () => {
