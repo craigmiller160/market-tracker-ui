@@ -7,8 +7,14 @@ import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { pipe } from 'fp-ts/es6/function';
 import { TradierHistory } from '../../../../src/types/tradier/history';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
+} from '../../../../src/utils/timeUtils';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -37,10 +43,10 @@ const mockHistory: TradierHistory = {
 		day: [
 			{
 				date: '',
-				open: 0,
+				open: 50,
 				high: 0,
 				low: 0,
-				close: 50
+				close: 0
 			}
 		]
 	}
@@ -113,8 +119,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 week', async () => {
-		const start = pipe(new Date(), Time.subWeeks(1), formatDate);
-		mockQueries(['VTI'], start, 'daily');
+		mockQueries(['VTI'], getOneWeekHistoryStartDate(), 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -126,6 +131,7 @@ describe('Markets', () => {
 		menuItemIsSelected('1 Week');
 
 		const marketsPage = screen.getByTestId('markets-page');
+		screen.debug(marketsPage); // TODO delete this
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Week',
@@ -135,8 +141,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 month', async () => {
-		const start = pipe(new Date(), Time.subMonths(1), formatDate);
-		mockQueries(['VTI'], start, 'daily');
+		mockQueries(['VTI'], getOneMonthHistoryStartDate(), 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -157,8 +162,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for 3 months', async () => {
-		const start = pipe(new Date(), Time.subMonths(3), formatDate);
-		mockQueries(['VTI'], start, 'daily');
+		mockQueries(['VTI'], getThreeMonthHistoryStartDate(), 'daily');
 
 		await renderApp();
 		testPageHeaders();
@@ -179,8 +183,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 year', async () => {
-		const start = pipe(new Date(), Time.subYears(1), formatDate);
-		mockQueries(['VTI'], start, 'weekly');
+		mockQueries(['VTI'], getOneYearHistoryStartDate(), 'weekly');
 
 		await renderApp();
 		testPageHeaders();
@@ -201,8 +204,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for 5 years', async () => {
-		const start = pipe(new Date(), Time.subYears(5), formatDate);
-		mockQueries(['VTI'], start, 'monthly');
+		mockQueries(['VTI'], getFiveYearHistoryStartDate(), 'monthly');
 
 		await renderApp();
 		testPageHeaders();
