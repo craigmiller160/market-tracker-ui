@@ -21,11 +21,13 @@ export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
+// TODO refactor this
 export const getTodayTimesalesDate = (): string =>
-	formatTimesalesDate(new Date());
+	formatHistoryDate(new Date());
 
+// TODO refactor this
 export const getTomorrowTimesalesDate = (): string =>
-	pipe(new Date(), Time.addDays(1), formatTimesalesDate);
+	pipe(new Date(), Time.addDays(1), formatHistoryDate);
 
 export const getOneWeekHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subWeeks(1));
