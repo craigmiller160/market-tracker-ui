@@ -257,4 +257,19 @@ describe('TradierService', () => {
 		const result = await getTimesales('VTI')();
 		expect(result).toEqualRight(createTimesaleHistory());
 	});
+
+	it('gets timesales for today with null response', async () => {
+		const start = getTodayTimesalesDate();
+		const end = getTomorrowTimesalesDate();
+		mockApi
+			.onGet(
+				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=5min`
+			)
+			.reply(200, {
+				series: null
+			});
+
+		const result = await getTimesales('VTI')();
+		expect(result).toEqualRight([]);
+	});
 });

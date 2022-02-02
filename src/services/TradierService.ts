@@ -3,10 +3,11 @@ import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
-import { TradierHistoryDay, TradierHistory } from '../types/tradier/history';
+import { TradierHistory, TradierHistoryDay } from '../types/tradier/history';
 import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { HistoryRecord } from '../types/history';
 import {
@@ -19,7 +20,7 @@ import {
 	getTodayTimesalesDate,
 	getTomorrowTimesalesDate
 } from '../utils/timeUtils';
-import { TradierSeriesData, TradierSeries } from '../types/tradier/timesales';
+import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 export interface HistoryQuery {
@@ -65,8 +66,6 @@ const formatTradierHistory = (
 		)
 	);
 
-// TODO 2022-02-02T14:15:00
-
 const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
 
 const getTimesaleDate: (timestamp: string) => string = flow(
@@ -83,14 +82,18 @@ const formatTimesales = (
 	timesales: TradierSeries
 ): ReadonlyArray<HistoryRecord> =>
 	pipe(
-		timesales.series.data,
-		RArray.map(
-			(_: TradierSeriesData): HistoryRecord => ({
-				date: getTimesaleDate(_.time),
-				time: getTimesaleTime(_.time),
-				price: _.price
-			})
-		)
+		Option.fromNullable(timesales.series),
+		Option.map((_) => _.data),
+		Option.map(
+			RArray.map(
+				(_: TradierSeriesData): HistoryRecord => ({
+					date: getTimesaleDate(_.time),
+					time: getTimesaleTime(_.time),
+					price: _.price
+				})
+			)
+		),
+		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
 	);
 
 export const getTimesales = (
