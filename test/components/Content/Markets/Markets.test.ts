@@ -48,6 +48,8 @@ const mockHistory: TradierHistory = {
 
 interface TestMarketCardsConfig {
 	readonly time: string;
+	readonly amountDiff: string;
+	readonly amountDiffPercent: string;
 }
 
 const testMarketCards = (
@@ -61,7 +63,9 @@ const testMarketCards = (
 	).toBeInTheDocument();
 	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
 	const amountItem = within(vtiCard).queryByText(/\$100\.00/);
-	expect(amountItem?.textContent).toEqual('$100.00 (+$100.00, +100.00%)');
+	expect(amountItem?.textContent).toEqual(
+		`$100.00 (${config.amountDiff}, ${config.amountDiffPercent})`
+	);
 	expect(within(vtiCard).queryByText('Chart Goes Here')).toBeInTheDocument();
 };
 
@@ -80,7 +84,9 @@ describe('Markets', () => {
 		const marketsPage = screen.getByTestId('markets-page');
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
-			time: 'Today'
+			time: 'Today',
+			amountDiff: '+$100.00',
+			amountDiffPercent: '+100.00%'
 		});
 	});
 
@@ -107,7 +113,9 @@ describe('Markets', () => {
 		const marketsPage = screen.getByTestId('markets-page');
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
-			time: '1 Week'
+			time: '1 Week',
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+50.00%'
 		});
 	});
 
