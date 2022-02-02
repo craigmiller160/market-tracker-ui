@@ -107,9 +107,5 @@ export const Navbar: FC<object> = () => {
 	const NavbarComp = match(breakpoints)
 		.with(when(isDesktop), () => <DesktopNavbar {...props} />)
 		.otherwise(() => <MobileNavbar {...props} />);
-	return (
-		<div data-testid="navbar">
-			{NavbarComp}
-		</div>
-	)
+	return <div data-testid="navbar">{NavbarComp}</div>;
 };

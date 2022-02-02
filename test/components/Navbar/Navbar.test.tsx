@@ -9,7 +9,10 @@ import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
 import { timeSlice } from '../../../src/store/time/slice';
-import { menuItemIsNotSelected, menuItemIsSelected } from '../../testutils/menuUtils';
+import {
+	menuItemIsNotSelected,
+	menuItemIsSelected
+} from '../../testutils/menuUtils';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
