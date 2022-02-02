@@ -7,6 +7,9 @@ export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 const getHistoryStartDate = (intervalFn: (d: Date) => Date): string =>
 	pipe(new Date(), intervalFn, formatHistoryDate);
 
+export const getTodayHistoryStartDate = (): string =>
+	formatHistoryDate(new Date());
+
 export const getOneWeekHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subDays(6));
 

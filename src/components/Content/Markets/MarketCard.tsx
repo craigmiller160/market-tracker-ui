@@ -3,6 +3,14 @@ import { Card } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import { match } from 'ts-pattern';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate,
+	getTodayHistoryStartDate
+} from '../../../utils/timeUtils';
 
 interface Props {
 	readonly data: MarketData;
@@ -40,19 +48,63 @@ const createTitle = (data: MarketData): ReactNode => {
 	);
 };
 
+interface TimeInfo {
+	readonly label: string;
+	readonly sinceDate: string;
+}
+
 const createTime = (time: string): ReactNode => {
-	const timeLabel = match(time)
-		.with('oneDay', () => 'Today')
-		.with('oneWeek', () => '1 Week')
-		.with('oneMonth', () => '1 Month')
-		.with('threeMonths', () => '3 Months')
-		.with('oneYear', () => '1 Year')
-		.with('fiveYears', () => '5 Years')
+	const today = getTodayHistoryStartDate();
+	const timeInfo: TimeInfo = match(time)
+		.with(
+			'oneDay',
+			(): TimeInfo => ({
+				label: 'Today',
+				sinceDate: getTodayHistoryStartDate()
+			})
+		)
+		.with(
+			'oneWeek',
+			(): TimeInfo => ({
+				label: '1 Week',
+				sinceDate: getOneWeekHistoryStartDate()
+			})
+		)
+		.with(
+			'oneMonth',
+			(): TimeInfo => ({
+				label: '1 Month',
+				sinceDate: getOneMonthHistoryStartDate()
+			})
+		)
+		.with(
+			'threeMonths',
+			(): TimeInfo => ({
+				label: '3 Months',
+				sinceDate: getThreeMonthHistoryStartDate()
+			})
+		)
+		.with(
+			'oneYear',
+			(): TimeInfo => ({
+				label: '1 Year',
+				sinceDate: getOneYearHistoryStartDate()
+			})
+		)
+		.with(
+			'fiveYears',
+			(): TimeInfo => ({
+				label: '5 Years',
+				sinceDate: getFiveYearHistoryStartDate()
+			})
+		)
 		.run();
 	return (
 		<div className="Time">
-			<h3>{timeLabel}</h3>
-			<h3>Since 2022-01-01</h3>
+			<h3>{timeInfo.label}</h3>
+			<h3>
+				{timeInfo.sinceDate} to {today}
+			</h3>
 		</div>
 	);
 };
