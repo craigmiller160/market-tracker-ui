@@ -17,6 +17,12 @@ import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { HistoryDate } from '../../src/types/history';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
+} from '../../src/utils/timeUtils';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -129,7 +135,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subMonths(1), formatDate),
+			start: getOneMonthHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'daily'
 		};
@@ -146,7 +152,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subMonths(3), formatDate),
+			start: getThreeMonthHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'daily'
 		};
@@ -163,7 +169,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subYears(1), formatDate),
+			start: getOneYearHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'weekly'
 		};
@@ -180,7 +186,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subYears(5), formatDate),
+			start: getFiveYearHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'monthly'
 		};
