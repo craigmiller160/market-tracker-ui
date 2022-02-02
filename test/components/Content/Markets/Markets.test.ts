@@ -11,6 +11,7 @@ import { TradierHistory } from '../../../../src/types/tradier/history';
 import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
+	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
@@ -70,11 +71,10 @@ const testMarketCards = (
 		within(vtiCard).queryByText('US Total Market (VTI)')
 	).toBeInTheDocument();
 	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
-	expect(
-		within(vtiCard).queryByText(`Since ${config.startDate}`)
-	).toBeInTheDocument();
-	const amountItem = within(vtiCard).queryByText(/\$100\.00/);
-	expect(amountItem?.textContent).toEqual(
+	expect(within(vtiCard).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
+		`Since ${config.startDate}`
+	);
+	expect(within(vtiCard).queryByText(/\$100\.00/)).toHaveTextContent(
 		`$100.00 (${config.amountDiff}, ${config.amountDiffPercent})`
 	);
 	expect(within(vtiCard).queryByText('Chart Goes Here')).toBeInTheDocument();
@@ -140,7 +140,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Week',
-			startDate: getOneWeekHistoryStartDate(),
+			startDate: getOneWeekDisplayStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
