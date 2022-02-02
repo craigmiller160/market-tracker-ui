@@ -5,6 +5,13 @@ import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
+import userEvent from '@testing-library/user-event';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { pipe } from 'fp-ts/es6/function';
+import { TradierHistory } from '../../../../src/types/tradier/history';
+
+const formatDate = Time.format('yyyy-MM-dd');
+const today = formatDate(new Date());
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -25,6 +32,39 @@ const mockQuote: TradierQuotes = {
 	}
 };
 
+const mockHistory: TradierHistory = {
+	history: {
+		day: [
+			{
+				date: '',
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 50
+			}
+		]
+	}
+};
+
+interface TestMarketCardsConfig {
+	readonly time: string;
+}
+
+const testMarketCards = (
+	marketCards: ReadonlyArray<HTMLElement>,
+	config: TestMarketCardsConfig
+) => {
+	expect(marketCards).toHaveLength(1);
+	const vtiCard = marketCards[0];
+	expect(
+		within(vtiCard).queryByText('US Total Market (VTI)')
+	).toBeInTheDocument();
+	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
+	const amountItem = within(vtiCard).queryByText(/\$100\.00/);
+	expect(amountItem?.textContent).toEqual('$100.00 (+$100.00, +100.00%)');
+	expect(within(vtiCard).queryByText('Chart Goes Here')).toBeInTheDocument();
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -39,22 +79,32 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		expect(marketCards).toHaveLength(1);
-
-		const vtiCard = marketCards[0];
-		expect(
-			within(vtiCard).queryByText('US Total Market (VTI)')
-		).toBeInTheDocument();
-		expect(within(vtiCard).queryByText('Today')).toBeInTheDocument();
-		const amountItem = within(vtiCard).queryByText(/\$100\.00/);
-		expect(amountItem?.textContent).toEqual('$100.00 (+$100.00, +100.00%)');
-		expect(
-			within(vtiCard).queryByText('Chart Goes Here')
-		).toBeInTheDocument();
+		testMarketCards(marketCards, {
+			time: 'Today'
+		});
 	});
 
 	it('renders for 1 week', async () => {
-		throw new Error();
+		const oneWeekAgo = pipe(new Date(), Time.subWeeks(1), formatDate);
+
+		mockApi
+			.onGet('/tradier/markets/quotes?symbols=VTI')
+			.reply(200, mockQuote);
+		mockApi
+			.onGet(
+				`/tradier/markets/history?symbol=VTI&start=${oneWeekAgo}&end=${today}&interval=daily`
+			)
+			.reply(200, mockHistory);
+
+		await renderApp();
+
+		// menuItemIsSelected('Today');
+		//
+		// const marketsPage = screen.getByTestId('markets-page');
+		// const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		// testMarketCards(marketCards, {
+		// 	time: 'Today'
+		// });
 	});
 
 	it('renders for 1 month', async () => {
