@@ -9,11 +9,15 @@ import userEvent from '@testing-library/user-event';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { TradierHistory } from '../../../../src/types/tradier/history';
 import {
+	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
+	getOneMonthDisplayStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
+	getOneYearDisplayStartDate,
 	getOneYearHistoryStartDate,
+	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
@@ -162,7 +166,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Month',
-			startDate: getOneMonthHistoryStartDate(),
+			startDate: getOneMonthDisplayStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -184,7 +188,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '3 Months',
-			startDate: getThreeMonthHistoryStartDate(),
+			startDate: getThreeMonthDisplayStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -206,7 +210,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Year',
-			startDate: getOneYearHistoryStartDate(),
+			startDate: getOneYearDisplayStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -228,7 +232,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '5 Years',
-			startDate: getFiveYearHistoryStartDate(),
+			startDate: getFiveYearDisplayStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
