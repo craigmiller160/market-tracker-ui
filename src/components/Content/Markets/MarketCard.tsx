@@ -49,7 +49,12 @@ const createTime = (time: string): ReactNode => {
 		.with('oneYear', () => '1 Year')
 		.with('fiveYears', () => '5 Years')
 		.run();
-	return <h3>{timeLabel}</h3>;
+	return (
+		<div className="Time">
+			<h3>{timeLabel}</h3>
+			<h3>Since 2022-01-01</h3>
+		</div>
+	);
 };
 
 export const MarketCard = ({ data, time }: Props) => {

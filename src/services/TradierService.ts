@@ -9,10 +9,14 @@ import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { Quote } from '../types/quote';
 import { HistoryDate } from '../types/history';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
-
-const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
-const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
+import {
+	formatHistoryDate,
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
+} from '../utils/timeUtils';
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -58,11 +62,6 @@ const formatTradierHistory = (
 		RArray.flatten
 	);
 
-const getHistoryStartDate = (
-	today: Date,
-	intervalFn: (d: Date) => Date
-): string => pipe(today, intervalFn, formatHistoryDate);
-
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
@@ -93,7 +92,7 @@ export const getOneWeekHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subDays(6)),
+		start: getOneWeekHistoryStartDate(),
 		end: formatHistoryDate(today),
 		interval: 'daily'
 	});
@@ -106,7 +105,7 @@ export const getOneMonthHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subMonths(1)),
+		start: getOneMonthHistoryStartDate(),
 		end: formatHistoryDate(today),
 		interval: 'daily'
 	});
@@ -119,7 +118,7 @@ export const getThreeMonthHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subMonths(3)),
+		start: getThreeMonthHistoryStartDate(),
 		end: formatHistoryDate(today),
 		interval: 'daily'
 	});
@@ -132,7 +131,7 @@ export const getOneYearHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subYears(1)),
+		start: getOneYearHistoryStartDate(),
 		end: formatHistoryDate(today),
 		interval: 'weekly'
 	});
@@ -145,7 +144,7 @@ export const getFiveYearHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subYears(5)),
+		start: getFiveYearHistoryStartDate(),
 		end: formatHistoryDate(today),
 		interval: 'monthly'
 	});

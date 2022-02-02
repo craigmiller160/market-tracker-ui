@@ -31,6 +31,16 @@
           margin-right: 0.5rem;
         }
       }
+
+      .Time {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        >h3 {
+          margin: 0;
+        }
+      }
     }
   }
 }
