@@ -52,12 +52,12 @@ const formatTradierHistory = (
 			(_: TradierHistoryDay): ReadonlyArray<HistoryDate> => [
 				{
 					date: _.date,
-					type: 'open',
+					time: '00:00:00',
 					price: _.open
 				},
 				{
 					date: _.date,
-					type: 'close',
+					time: '23:59:59',
 					price: _.close
 				}
 			]
@@ -78,7 +78,6 @@ export const getTimesales = (
 	);
 };
 
-// TODO only call this for non-Today options
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>

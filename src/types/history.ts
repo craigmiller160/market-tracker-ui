@@ -1,5 +1,5 @@
 export interface HistoryDate {
 	readonly date: string;
-	readonly type: 'open' | 'close';
+	readonly time: string;
 	readonly price: number;
 }
