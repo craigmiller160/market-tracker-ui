@@ -69,6 +69,12 @@ const testMarketCards = (
 	expect(within(vtiCard).queryByText('Chart Goes Here')).toBeInTheDocument();
 };
 
+const testPageHeaders = () => {
+	expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
+	expect(screen.queryByText('US Markets')).toBeInTheDocument();
+	expect(screen.queryByText('International Markets')).toBeInTheDocument();
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -80,10 +86,7 @@ describe('Markets', () => {
 			.reply(200, mockQuote);
 		await renderApp();
 		menuItemIsSelected('Today');
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		const marketsPage = screen.getByTestId('markets-page');
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
@@ -107,10 +110,7 @@ describe('Markets', () => {
 			.reply(200, mockHistory);
 
 		await renderApp();
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		await act(async () => {
 			await userEvent.click(screen.getByText('1 Week'));
@@ -140,10 +140,7 @@ describe('Markets', () => {
 			.reply(200, mockHistory);
 
 		await renderApp();
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		await act(async () => {
 			await userEvent.click(screen.getByText('1 Month'));
@@ -173,10 +170,7 @@ describe('Markets', () => {
 			.reply(200, mockHistory);
 
 		await renderApp();
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		await act(async () => {
 			await userEvent.click(screen.getByText('3 Months'));
@@ -206,10 +200,7 @@ describe('Markets', () => {
 			.reply(200, mockHistory);
 
 		await renderApp();
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		await act(async () => {
 			await userEvent.click(screen.getByText('1 Year'));
@@ -239,10 +230,7 @@ describe('Markets', () => {
 			.reply(200, mockHistory);
 
 		await renderApp();
-
-		expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
-		expect(screen.queryByText('US Markets')).toBeInTheDocument();
-		expect(screen.queryByText('International Markets')).toBeInTheDocument();
+		testPageHeaders();
 
 		await act(async () => {
 			await userEvent.click(screen.getByText('5 Years'));
