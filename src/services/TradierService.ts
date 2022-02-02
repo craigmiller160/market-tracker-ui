@@ -45,7 +45,7 @@ const formatTradierHistory = (
 ): ReadonlyArray<HistoryDate> =>
 	pipe(
 		history.history.day,
-		RArray.map(
+		RArray.chain(
 			(_: TradierHistoryDay): ReadonlyArray<HistoryDate> => [
 				{
 					date: _.date,
@@ -58,8 +58,7 @@ const formatTradierHistory = (
 					price: _.close
 				}
 			]
-		),
-		RArray.flatten
+		)
 	);
 
 export const getQuotes = (
