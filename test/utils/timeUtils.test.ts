@@ -12,10 +12,10 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
+	getTimesalesEnd,
+	getTimesalesStart,
 	getTodayDisplayDate,
-	getTodayHistoryDate,
-	getTodayTimesalesDate,
-	getTomorrowTimesalesDate
+	getTodayHistoryDate
 } from '../../src/utils/timeUtils';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
@@ -133,15 +133,34 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
-	it('getTodayTimesalesDate', () => {
-		const expected = formatTimesalesDate(new Date());
-		const actual = getTodayTimesalesDate();
+	it('getTimesalesStart', () => {
+		const expected = pipe(
+			new Date(),
+			Time.subDays(1),
+			Time.set({
+				hours: 18,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
+			}),
+			formatTimesalesDate
+		);
+		const actual = getTimesalesStart();
 		expect(actual).toEqual(expected);
 	});
 
-	it('getTomorrowTimesalesDate', () => {
-		const expected = pipe(new Date(), Time.addDays(1), formatTimesalesDate);
-		const actual = getTomorrowTimesalesDate();
+	it('getTimesalesEnd', () => {
+		const expected = pipe(
+			new Date(),
+			Time.set({
+				hours: 18,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
+			}),
+			formatTimesalesDate
+		);
+		const actual = getTimesalesEnd();
 		expect(actual).toEqual(expected);
 	});
 });

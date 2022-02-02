@@ -2,11 +2,17 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
-const TIMESALES_FORMAT = 'yyyy-MM-dd HH:mm';
+const TIMESALES_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DISPLAY_DATE_FORMAT = 'MMM dd, yyyy';
 export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 export const formatTimesalesDate = Time.format(TIMESALES_FORMAT);
+export const setTimesalesEndTime = Time.set({
+	hours: 18,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
 
 const getStartDate = (intervalFn: (d: Date) => Date): Date =>
 	pipe(new Date(), intervalFn, Time.addDays(1));
@@ -21,13 +27,11 @@ export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
-// TODO refactor this
-export const getTodayTimesalesDate = (): string =>
-	formatHistoryDate(new Date());
+export const getTimesalesStart = (): string =>
+	pipe(new Date(), Time.subDays(1), setTimesalesEndTime, formatTimesalesDate);
 
-// TODO refactor this
-export const getTomorrowTimesalesDate = (): string =>
-	pipe(new Date(), Time.addDays(1), formatHistoryDate);
+export const getTimesalesEnd = (): string =>
+	pipe(new Date(), setTimesalesEndTime, formatTimesalesDate);
 
 export const getOneWeekHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subWeeks(1));

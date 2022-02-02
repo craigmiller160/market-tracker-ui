@@ -17,8 +17,8 @@ import {
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayTimesalesDate,
-	getTomorrowTimesalesDate
+	getTimesalesEnd,
+	getTimesalesStart
 } from '../utils/timeUtils';
 import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
@@ -99,8 +99,8 @@ const formatTimesales = (
 export const getTimesales = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
-	const start = getTodayTimesalesDate();
-	const end = getTomorrowTimesalesDate();
+	const start = getTimesalesStart();
+	const end = getTimesalesEnd();
 	return pipe(
 		ajaxApi.get<TradierSeries>({
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=5min`
