@@ -46,6 +46,13 @@ const createTradierHistory = (): TradierHistory => ({
 				high: 3,
 				low: 4,
 				close: 5
+			},
+			{
+				date: '2',
+				open: 6,
+				high: 7,
+				low: 8,
+				close: 9
 			}
 		]
 	}
@@ -54,7 +61,23 @@ const createTradierHistory = (): TradierHistory => ({
 const createHistory = (): ReadonlyArray<HistoryDate> => [
 	{
 		date: '1',
+		type: 'open',
+		price: 2
+	},
+	{
+		date: '1',
+		type: 'close',
 		price: 5
+	},
+	{
+		date: '2',
+		type: 'open',
+		price: 6
+	},
+	{
+		date: '2',
+		type: 'close',
+		price: 9
 	}
 ];
 
@@ -89,7 +112,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subWeeks(1), formatDate),
+			start: pipe(today, Time.subDays(6), formatDate),
 			end: formatDate(today),
 			interval: 'daily'
 		};

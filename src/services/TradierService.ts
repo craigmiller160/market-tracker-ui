@@ -39,10 +39,24 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryDate> =>
-	RArray.map((_: TradierHistoryDay) => ({
-		date: _.date,
-		price: _.close
-	}))(history.history.day);
+	pipe(
+		history.history.day,
+		RArray.map(
+			(_: TradierHistoryDay): ReadonlyArray<HistoryDate> => [
+				{
+					date: _.date,
+					type: 'open',
+					price: _.open
+				},
+				{
+					date: _.date,
+					type: 'close',
+					price: _.close
+				}
+			]
+		),
+		RArray.flatten
+	);
 
 const getHistoryStartDate = (
 	today: Date,
@@ -79,12 +93,13 @@ export const getOneWeekHistory = (
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
-		start: getHistoryStartDate(today, Time.subWeeks(1)),
+		start: getHistoryStartDate(today, Time.subDays(6)),
 		end: formatHistoryDate(today),
 		interval: 'daily'
 	});
 };
 
+// TODO double check time range here
 export const getOneMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -97,6 +112,7 @@ export const getOneMonthHistory = (
 	});
 };
 
+// TODO double check time range here
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -109,6 +125,7 @@ export const getThreeMonthHistory = (
 	});
 };
 
+// TODO double check time range here
 export const getOneYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -121,6 +138,7 @@ export const getOneYearHistory = (
 	});
 };
 
+// TODO double check time range here
 export const getFiveYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
