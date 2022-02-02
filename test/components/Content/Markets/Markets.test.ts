@@ -40,6 +40,14 @@ describe('Markets', () => {
 		const marketsPage = screen.getByTestId('markets-page');
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		expect(marketCards).toHaveLength(1);
+
+		const vtiCard = marketCards[0];
+		expect(
+			within(vtiCard).queryByText('US Total Market (VTI)')
+		).toBeInTheDocument();
+		expect(
+			within(vtiCard).queryByText('$100.00 (+$100.00, +100.00%)')
+		).toBeInTheDocument();
 	});
 
 	it('renders for 1 week', async () => {
