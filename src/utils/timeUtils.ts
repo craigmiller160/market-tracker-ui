@@ -1,17 +1,29 @@
-import { flow, pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
+const DISPLAY_DATE_FORMAT = 'MMM dd, yyyy';
 export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
+export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
+
+const getStartDate = (intervalFn: (d: Date) => Date): Date =>
+	pipe(new Date(), intervalFn, Time.addDays(1));
 
 const getHistoryStartDate = (intervalFn: (d: Date) => Date): string =>
-	pipe(new Date(), flow(intervalFn, Time.addDays(1)), formatHistoryDate);
+	pipe(getStartDate(intervalFn), formatHistoryDate);
 
-export const getTodayHistoryStartDate = (): string =>
-	formatHistoryDate(new Date());
+const getDisplayStartDate = (intervalFn: (d: Date) => Date): string =>
+	pipe(getStartDate(intervalFn), formatDisplayDate);
+
+export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
+
+export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
 export const getOneWeekHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subWeeks(1));
+
+export const getOneWeekDisplayStartDate = (): string =>
+	getDisplayStartDate(Time.subWeeks(1));
 
 export const getOneMonthHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subMonths(1));

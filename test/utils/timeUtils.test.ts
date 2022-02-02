@@ -5,16 +5,20 @@ import {
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayHistoryStartDate
+	getTodayHistoryDate
 } from '../../src/utils/timeUtils';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 describe('timeUtils', () => {
-	it('getTodayHistoryStartDate', () => {
+	it('getTodayHistoryDate', () => {
 		const expected = formatHistoryDate(new Date());
-		const actual = getTodayHistoryStartDate();
+		const actual = getTodayHistoryDate();
 		expect(actual).toEqual(expected);
+	});
+
+	it('getTodayDisplayDate', () => {
+		throw new Error();
 	});
 
 	it('getOneWeekHistoryStartDate', () => {
@@ -27,6 +31,10 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	it('getOneWeekDisplayStartDate', () => {
+		throw new Error();
+	});
+
 	it('getOneMonthHistoryStartDate', () => {
 		const expected = pipe(
 			new Date(),
@@ -35,6 +43,10 @@ describe('timeUtils', () => {
 		);
 		const actual = getOneMonthHistoryStartDate();
 		expect(actual).toEqual(expected);
+	});
+
+	it('getOneMonthDisplayStartDate', () => {
+		throw new Error();
 	});
 
 	it('getThreeMonthHistoryStartDate', () => {
@@ -47,6 +59,10 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	it('getThreeMonthDisplayStartDate', () => {
+		throw new Error();
+	});
+
 	it('getOneYearHistoryStartDate', () => {
 		const expected = pipe(
 			new Date(),
@@ -57,6 +73,10 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	it('getOneYearDisplayStartDate', () => {
+		throw new Error();
+	});
+
 	it('getFiveYearHistoryStartDate', () => {
 		const expected = pipe(
 			new Date(),
@@ -65,5 +85,9 @@ describe('timeUtils', () => {
 		);
 		const actual = getFiveYearHistoryStartDate();
 		expect(actual).toEqual(expected);
+	});
+
+	it('getFiveYearDisplayStartDate', () => {
+		throw new Error();
 	});
 });

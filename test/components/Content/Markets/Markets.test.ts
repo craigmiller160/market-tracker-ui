@@ -14,7 +14,7 @@ import {
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayHistoryStartDate
+	getTodayHistoryDate
 } from '../../../../src/utils/timeUtils';
 
 const formatDate = Time.format('yyyy-MM-dd');
@@ -118,7 +118,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: 'Today',
-			startDate: getTodayHistoryStartDate(),
+			startDate: getTodayHistoryDate(),
 			amountDiff: '+$100.00',
 			amountDiffPercent: '+100.00%'
 		});

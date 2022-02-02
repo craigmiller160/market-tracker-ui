@@ -9,7 +9,7 @@ import {
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayHistoryStartDate
+	getTodayHistoryDate
 } from '../../../utils/timeUtils';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
@@ -64,7 +64,7 @@ const createTime = (time: string): ReactNode => {
 			'oneDay',
 			(): TimeInfo => ({
 				label: 'Today',
-				sinceDate: getTodayHistoryStartDate()
+				sinceDate: getTodayHistoryDate()
 			})
 		)
 		.with(
