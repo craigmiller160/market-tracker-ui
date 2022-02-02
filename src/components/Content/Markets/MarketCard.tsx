@@ -102,9 +102,10 @@ const createTime = (time: string): ReactNode => {
 	return (
 		<div className="Time">
 			<h3>{timeInfo.label}</h3>
-			<h3>
-				{timeInfo.sinceDate} to {today}
-			</h3>
+			<p>
+				<strong>{timeInfo.sinceDate}</strong> to{' '}
+				<strong>{today}</strong>
+			</p>
 		</div>
 	);
 };
