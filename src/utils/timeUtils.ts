@@ -28,11 +28,23 @@ export const getOneWeekDisplayStartDate = (): string =>
 export const getOneMonthHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subMonths(1));
 
+export const getOneMonthDisplayStartDate = (): string =>
+	getDisplayStartDate(Time.subMonths(1));
+
 export const getThreeMonthHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subMonths(3));
+
+export const getThreeMonthDisplayStartDate = (): string =>
+	getDisplayStartDate(Time.subMonths(3));
 
 export const getOneYearHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subYears(1));
 
+export const getOneYearDisplayStartDate = (): string =>
+	getDisplayStartDate(Time.subYears(1));
+
 export const getFiveYearHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subYears(5));
+
+export const getFiveYearDisplayStartDate = (): string =>
+	getDisplayStartDate(Time.subYears(5));
