@@ -78,6 +78,7 @@ export const getTimesales = (
 	);
 };
 
+// TODO only call this for non-Today options
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
