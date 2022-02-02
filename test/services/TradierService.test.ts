@@ -16,7 +16,7 @@ import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
 import { TradierHistory } from '../../src/types/tradier/history';
-import { HistoryDate } from '../../src/types/history';
+import { HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
@@ -64,7 +64,7 @@ const createTradierHistory = (): TradierHistory => ({
 	}
 });
 
-const createHistory = (): ReadonlyArray<HistoryDate> => [
+const createHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '1',
 		time: '00:00:00',

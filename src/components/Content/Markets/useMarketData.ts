@@ -2,7 +2,7 @@ import { match } from 'ts-pattern';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as tradierService from '../../../services/TradierService';
 import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { HistoryDate } from '../../../types/history';
+import { HistoryRecord } from '../../../types/history';
 import { Updater, useImmer } from 'use-immer';
 import { Dispatch } from 'redux';
 import { alertSlice } from '../../../store/alert/slice';
@@ -42,10 +42,10 @@ export interface AllMarketData extends State {
 
 interface DataLoadedResult {
 	readonly quotes: ReadonlyArray<Quote>;
-	readonly history: ReadonlyArray<ReadonlyArray<HistoryDate>>;
+	readonly history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
 }
 
-type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryDate>>;
+type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
 const useHistoryFn = (timeValue: string): HistoryFn => {
 	const historyFn = match(timeValue)
