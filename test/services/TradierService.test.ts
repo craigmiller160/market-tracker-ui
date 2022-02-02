@@ -8,6 +8,7 @@ import {
 	getOneYearHistory,
 	getQuotes,
 	getThreeMonthHistory,
+	getTimesales,
 	HistoryQuery
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
@@ -21,8 +22,11 @@ import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate
+	getThreeMonthHistoryStartDate,
+	getTodayTimesalesDate,
+	getTomorrowTimesalesDate
 } from '../../src/utils/timeUtils';
+import { TradierSeries } from '../../src/types/tradier/timesales';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -64,6 +68,35 @@ const createTradierHistory = (): TradierHistory => ({
 	}
 });
 
+const createTimesale = (): TradierSeries => ({
+	series: {
+		data: [
+			{
+				time: '2022-01-01T01:01:01',
+				timestamp: 0,
+				price: 2,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			},
+			{
+				time: '2022-01-01T02:02:02',
+				timestamp: 0,
+				price: 5,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			}
+		]
+	}
+});
+
 const createHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '1',
@@ -84,6 +117,19 @@ const createHistory = (): ReadonlyArray<HistoryRecord> => [
 		date: '2',
 		time: '23:59:59',
 		price: 9
+	}
+];
+
+const createTimesaleHistory = (): ReadonlyArray<HistoryRecord> => [
+	{
+		date: '2022-01-01',
+		time: '01:01:01',
+		price: 2
+	},
+	{
+		date: '2022-01-01',
+		time: '02:02:02',
+		price: 5
 	}
 ];
 
@@ -200,6 +246,15 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today', async () => {
-		throw new Error();
+		const start = getTodayTimesalesDate();
+		const end = getTomorrowTimesalesDate();
+		mockApi
+			.onGet(
+				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=5min`
+			)
+			.reply(200, createTimesale());
+
+		const result = await getTimesales('VTI')();
+		expect(result).toEqualRight(createTimesaleHistory());
 	});
 });
