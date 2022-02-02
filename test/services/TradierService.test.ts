@@ -67,22 +67,22 @@ const createTradierHistory = (): TradierHistory => ({
 const createHistory = (): ReadonlyArray<HistoryDate> => [
 	{
 		date: '1',
-		type: 'open',
+		time: '00:00:00',
 		price: 2
 	},
 	{
 		date: '1',
-		type: 'close',
+		time: '23:59:59',
 		price: 5
 	},
 	{
 		date: '2',
-		type: 'open',
+		time: '00:00:00',
 		price: 6
 	},
 	{
 		date: '2',
-		type: 'close',
+		time: '23:59:59',
 		price: 9
 	}
 ];
