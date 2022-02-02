@@ -19,8 +19,8 @@ const mockQuote: TradierQuotes = {
 			low: 0,
 			bid: 0,
 			ask: 0,
-			close: 100,
-			last: 0
+			close: 0,
+			last: 100
 		}
 	}
 };
@@ -45,8 +45,11 @@ describe('Markets', () => {
 		expect(
 			within(vtiCard).queryByText('US Total Market (VTI)')
 		).toBeInTheDocument();
+		expect(within(vtiCard).queryByText('Today')).toBeInTheDocument();
+		const amountItem = within(vtiCard).queryByText(/\$100\.00/);
+		expect(amountItem?.textContent).toEqual('$100.00 (+$100.00, +100.00%)');
 		expect(
-			within(vtiCard).queryByText('$100.00 (+$100.00, +100.00%)')
+			within(vtiCard).queryByText('Chart Goes Here')
 		).toBeInTheDocument();
 	});
 
