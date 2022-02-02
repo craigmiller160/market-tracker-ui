@@ -9,6 +9,7 @@ import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
 import { timeSlice } from '../../../src/store/time/slice';
+import { menuItemIsNotSelected, menuItemIsSelected } from '../../testutils/menuUtils';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -20,18 +21,6 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 
 const renderApp = createRenderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
-
-const menuItemIsSelected = (text: string) => {
-	expect(screen.getByText(text).closest('li')?.className).toEqual(
-		expect.stringContaining(SELECTED_CLASS)
-	);
-};
-
-const menuItemIsNotSelected = (text: string) => {
-	expect(screen.getByText(text).closest('li')?.className).not.toEqual(
-		expect.stringContaining(SELECTED_CLASS)
-	);
-};
 
 describe('Navbar', () => {
 	let location: Option.Option<Location> = Option.none;
