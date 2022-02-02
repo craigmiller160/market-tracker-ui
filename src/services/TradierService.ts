@@ -97,7 +97,6 @@ export const getOneWeekHistory = (
 	});
 };
 
-// TODO double check time range here
 export const getOneMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -110,7 +109,6 @@ export const getOneMonthHistory = (
 	});
 };
 
-// TODO double check time range here
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -123,7 +121,6 @@ export const getThreeMonthHistory = (
 	});
 };
 
-// TODO double check time range here
 export const getOneYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
@@ -136,7 +133,6 @@ export const getOneYearHistory = (
 	});
 };
 
-// TODO double check time range here
 export const getFiveYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryDate>> => {
