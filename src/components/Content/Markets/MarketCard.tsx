@@ -4,18 +4,13 @@ import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import { match } from 'ts-pattern';
 import {
-	getFiveYearHistoryStartDate,
-	getOneMonthHistoryStartDate,
-	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate,
-	getTodayHistoryDate
+	getFiveYearDisplayStartDate,
+	getOneMonthDisplayStartDate,
+	getOneWeekDisplayStartDate,
+	getOneYearDisplayStartDate,
+	getThreeMonthDisplayStartDate,
+	getTodayDisplayDate
 } from '../../../utils/timeUtils';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { pipe } from 'fp-ts/es6/function';
-
-const parseDate = Time.parse('yyyy-MM-dd');
-const formatDate = Time.format('MMMM dd, yyyy');
 
 interface Props {
 	readonly data: MarketData;
@@ -64,52 +59,50 @@ const createTime = (time: string): ReactNode => {
 			'oneDay',
 			(): TimeInfo => ({
 				label: 'Today',
-				sinceDate: getTodayHistoryDate()
+				sinceDate: getTodayDisplayDate()
 			})
 		)
 		.with(
 			'oneWeek',
 			(): TimeInfo => ({
 				label: '1 Week',
-				sinceDate: getOneWeekHistoryStartDate()
+				sinceDate: getOneWeekDisplayStartDate()
 			})
 		)
 		.with(
 			'oneMonth',
 			(): TimeInfo => ({
 				label: '1 Month',
-				sinceDate: getOneMonthHistoryStartDate()
+				sinceDate: getOneMonthDisplayStartDate()
 			})
 		)
 		.with(
 			'threeMonths',
 			(): TimeInfo => ({
 				label: '3 Months',
-				sinceDate: getThreeMonthHistoryStartDate()
+				sinceDate: getThreeMonthDisplayStartDate()
 			})
 		)
 		.with(
 			'oneYear',
 			(): TimeInfo => ({
 				label: '1 Year',
-				sinceDate: getOneYearHistoryStartDate()
+				sinceDate: getOneYearDisplayStartDate()
 			})
 		)
 		.with(
 			'fiveYears',
 			(): TimeInfo => ({
 				label: '5 Years',
-				sinceDate: getFiveYearHistoryStartDate()
+				sinceDate: getFiveYearDisplayStartDate()
 			})
 		)
 		.run();
 
-	const since = pipe(parseDate(timeInfo.sinceDate), formatDate);
-
 	return (
 		<div className="Time">
 			<h3>{timeInfo.label}</h3>
-			<p>Since {since}</p>
+			<p>Since {timeInfo.sinceDate}</p>
 		</div>
 	);
 };
