@@ -1,6 +1,6 @@
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApi, getResponseData } from './AjaxApi';
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
 import { TradierHistoryDay, TradierHistory } from '../types/tradier/history';
@@ -20,6 +20,7 @@ import {
 	getTomorrowTimesalesDate
 } from '../utils/timeUtils';
 import { TradierSeriesData, TradierSeries } from '../types/tradier/timesales';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -64,13 +65,37 @@ const formatTradierHistory = (
 		)
 	);
 
-const formatTimesales = (timesales: TradierSeriesData): ReadonlyArray<HistoryRecord> => {
-	throw new Error()
-}
+// TODO 2022-02-02T14:15:00
+
+const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
+
+const getTimesaleDate: (timestamp: string) => string = flow(
+	parseTimesaleTimestamp,
+	Time.format('yyyy-MM-dd')
+);
+
+const getTimesaleTime: (timestamp: string) => string = flow(
+	parseTimesaleTimestamp,
+	Time.format('HH:mm:ss')
+);
+
+const formatTimesales = (
+	timesales: TradierSeries
+): ReadonlyArray<HistoryRecord> =>
+	pipe(
+		timesales.series.data,
+		RArray.map(
+			(_: TradierSeriesData): HistoryRecord => ({
+				date: getTimesaleDate(_.time),
+				time: getTimesaleTime(_.time),
+				price: _.price
+			})
+		)
+	);
 
 export const getTimesales = (
 	symbol: string
-): TaskTryT<ReadonlyArray<TradierSeriesData>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const start = getTodayTimesalesDate();
 	const end = getTomorrowTimesalesDate();
 	return pipe(
@@ -78,7 +103,7 @@ export const getTimesales = (
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=5min`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map((_) => _.series.data)
+		TaskEither.map(formatTimesales)
 	);
 };
 
