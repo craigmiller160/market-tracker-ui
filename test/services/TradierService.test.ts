@@ -198,4 +198,8 @@ describe('TradierService', () => {
 		const result = await getFiveYearHistory('VTI')();
 		expect(result).toEqualRight(createHistory());
 	});
+
+	it('gets timesales for today', async () => {
+		throw new Error();
+	});
 });
