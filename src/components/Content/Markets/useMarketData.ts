@@ -47,6 +47,7 @@ interface DataLoadedResult {
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
+// TODO update oneDay in tests
 const useHistoryFn = (timeValue: string): HistoryFn => {
 	const historyFn = match(timeValue)
 		.with('oneDay', () => tradierService.getTimesales)
