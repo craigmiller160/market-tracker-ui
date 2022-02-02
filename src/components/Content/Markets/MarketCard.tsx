@@ -11,6 +11,11 @@ import {
 	getThreeMonthHistoryStartDate,
 	getTodayHistoryStartDate
 } from '../../../utils/timeUtils';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { pipe } from 'fp-ts/es6/function';
+
+const parseDate = Time.parse('yyyy-MM-dd');
+const formatDate = Time.format('MMMM dd, yyyy');
 
 interface Props {
 	readonly data: MarketData;
@@ -54,7 +59,6 @@ interface TimeInfo {
 }
 
 const createTime = (time: string): ReactNode => {
-	const today = getTodayHistoryStartDate();
 	const timeInfo: TimeInfo = match(time)
 		.with(
 			'oneDay',
@@ -99,13 +103,13 @@ const createTime = (time: string): ReactNode => {
 			})
 		)
 		.run();
+
+	const since = pipe(parseDate(timeInfo.sinceDate), formatDate);
+
 	return (
 		<div className="Time">
 			<h3>{timeInfo.label}</h3>
-			<p>
-				<strong>{timeInfo.sinceDate}</strong> to{' '}
-				<strong>{today}</strong>
-			</p>
+			<p>Since {since}</p>
 		</div>
 	);
 };
