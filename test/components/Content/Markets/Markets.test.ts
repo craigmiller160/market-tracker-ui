@@ -13,7 +13,8 @@ import {
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate
+	getThreeMonthHistoryStartDate,
+	getTodayHistoryStartDate
 } from '../../../../src/utils/timeUtils';
 
 const formatDate = Time.format('yyyy-MM-dd');
@@ -55,6 +56,7 @@ const mockHistory: TradierHistory = {
 interface TestMarketCardsConfig {
 	readonly time: string;
 	readonly amountDiff: string;
+	readonly startDate: string;
 	readonly amountDiffPercent: string;
 }
 
@@ -62,12 +64,16 @@ const testMarketCards = (
 	marketCards: ReadonlyArray<HTMLElement>,
 	config: TestMarketCardsConfig
 ) => {
+	const today = getTodayHistoryStartDate();
 	expect(marketCards).toHaveLength(1);
 	const vtiCard = marketCards[0];
 	expect(
 		within(vtiCard).queryByText('US Total Market (VTI)')
 	).toBeInTheDocument();
 	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
+	expect(
+		within(vtiCard).queryByText(`${config.startDate} to ${today}`)
+	).toBeInTheDocument();
 	const amountItem = within(vtiCard).queryByText(/\$100\.00/);
 	expect(amountItem?.textContent).toEqual(
 		`$100.00 (${config.amountDiff}, ${config.amountDiffPercent})`
@@ -113,6 +119,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: 'Today',
+			startDate: getTodayHistoryStartDate(),
 			amountDiff: '+$100.00',
 			amountDiffPercent: '+100.00%'
 		});
@@ -134,6 +141,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Week',
+			startDate: getOneWeekHistoryStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -155,6 +163,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Month',
+			startDate: getOneMonthHistoryStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -176,6 +185,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '3 Months',
+			startDate: getThreeMonthHistoryStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -197,6 +207,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '1 Year',
+			startDate: getOneYearHistoryStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
@@ -218,6 +229,7 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: '5 Years',
+			startDate: getFiveYearHistoryStartDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
