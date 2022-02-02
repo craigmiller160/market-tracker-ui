@@ -19,11 +19,16 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
+	getTimesalesEnd,
+	getTimesalesStart,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
+import { TradierSeries } from '../../../../src/types/tradier/timesales';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
+const timesalesStart = getTimesalesStart();
+const timesalesEnd = getTimesalesEnd();
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -57,6 +62,24 @@ const mockHistory: TradierHistory = {
 		]
 	}
 };
+
+const createTimesale = (): TradierSeries => ({
+	series: {
+		data: [
+			{
+				time: '2022-01-01T01:01:01',
+				timestamp: 0,
+				price: 2,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			}
+		]
+	}
+});
 
 interface TestMarketCardsConfig {
 	readonly time: string;
@@ -104,6 +127,11 @@ const mockQueries = (
 				`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${today}&interval=${interval}`
 			)
 			.reply(200, mockHistory);
+		mockApi
+			.onGet(
+				`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
+			)
+			.reply(200, createTimesale());
 	});
 };
 
@@ -123,8 +151,8 @@ describe('Markets', () => {
 		testMarketCards(marketCards, {
 			time: 'Today',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$100.00',
-			amountDiffPercent: '+100.00%'
+			amountDiff: '+$98.00',
+			amountDiffPercent: '+98.00%'
 		});
 	});
 
