@@ -111,6 +111,9 @@ const useLoadMarketData = (
 			draft.loading = true;
 		});
 		const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
+
+		// TODO first get history, then compare millis
+
 		return pipe(
 			tradierService.getQuotes(MARKET_SYMBOLS),
 			TaskEither.bindTo('quotes'),
