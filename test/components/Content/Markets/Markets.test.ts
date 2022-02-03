@@ -148,7 +148,6 @@ const verifyApiCalls = (
 		.with('history', () => /\/tradier\/markets\/history/)
 		.run();
 
-	// TODO multiply this by number of symbols
 	const apiCallCount = match({ historyApiType, useQuote })
 		.with({ historyApiType: 'timesale', useQuote: false }, () => 2)
 		.with({ historyApiType: 'timesale', useQuote: true }, () => 3)
@@ -158,19 +157,21 @@ const verifyApiCalls = (
 	expect(mockApi.history.get).toHaveLength(apiCallCount);
 
 	// TODO fix the index number
-	expect(mockApi.history.get[2].url).toEqual(
+	const historyApiIndex = apiCallCount - 1;
+	expect(mockApi.history.get[historyApiIndex].url).toEqual(
 		expect.stringMatching(historyApiRegex)
 	);
 	symbols.forEach((symbol) => {
-		expect(mockApi.history.get[2].url).toEqual(
+		expect(mockApi.history.get[historyApiIndex].url).toEqual(
 			expect.stringMatching(`symbol=${symbol}`)
 		);
 	});
 
 	// TODO fix the index number
 	if (useQuote) {
+		const quoteApiIndex = apiCallCount - 2;
 		symbols.forEach((symbol) => {
-			expect(mockApi.history.get[1].url).toEqual(
+			expect(mockApi.history.get[quoteApiIndex].url).toEqual(
 				expect.stringMatching(
 					`/tradier/markets/quotes\\?symbols=${symbol}`
 				)
