@@ -96,6 +96,7 @@ const formatTimesales = (
 		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
 	);
 
+// TODO ensure that this request is in the correct timezone
 export const getTimesales = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
