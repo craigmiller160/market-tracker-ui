@@ -55,11 +55,13 @@ const formatTradierHistory = (
 				{
 					date: _.date,
 					time: '00:00:00',
+					unixTimestampMillis: 0,
 					price: _.open
 				},
 				{
 					date: _.date,
 					time: '23:59:59',
+					unixTimestampMillis: 0,
 					price: _.close
 				}
 			]
@@ -89,6 +91,7 @@ const formatTimesales = (
 				(_: TradierSeriesData): HistoryRecord => ({
 					date: getTimesaleDate(_.time),
 					time: getTimesaleTime(_.time),
+					unixTimestampMillis: _.timestamp,
 					price: _.price
 				})
 			)
