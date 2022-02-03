@@ -91,7 +91,7 @@ const formatTimesales = (
 				(_: TradierSeriesData): HistoryRecord => ({
 					date: getTimesaleDate(_.time),
 					time: getTimesaleTime(_.time),
-					unixTimestampMillis: _.timestamp,
+					unixTimestampMillis: _.timestamp * 1000,
 					price: _.price
 				})
 			)
