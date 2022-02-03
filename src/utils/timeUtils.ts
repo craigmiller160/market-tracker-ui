@@ -8,16 +8,14 @@ export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 const formatInEST = Time.formatTZ('America/New_York');
 export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
-// TODO this is what I want it to be, HOWEVER this is not timezone safe
-export const setTimesalesStartTime = Time.set({
-	hours: 16,
+export const setTimesalesStartTime = Time.setUtc({
+	hours: 21,
 	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
 });
-// TODO this is what I want it to be, HOWEVER this is not timezone safe
-export const setTimesalesEndTime = Time.set({
-	hours: 18,
+export const setTimesalesEndTime = Time.setUtc({
+	hours: 23,
 	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
