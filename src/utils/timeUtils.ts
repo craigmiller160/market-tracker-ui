@@ -6,7 +6,8 @@ const TIMESALES_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DISPLAY_DATE_FORMAT = 'MMM dd, yyyy';
 export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
-export const formatTimesalesDate = Time.format(TIMESALES_FORMAT);
+const formatInEST = Time.formatTZ('America/New_York');
+export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
 export const setTimesalesEndTime = Time.set({
 	hours: 19,
 	minutes: 50,
