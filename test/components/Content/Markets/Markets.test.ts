@@ -70,9 +70,20 @@ const createTimesale = (timestamp = 0): TradierSeries => ({
 	series: {
 		data: [
 			{
+				time: '2022-01-01T01:00:00',
+				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
+				price: 2,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			},
+			{
 				time: '2022-01-01T01:01:01',
 				timestamp,
-				price: 2,
+				price: 100,
 				open: 0,
 				high: 0,
 				low: 0,
