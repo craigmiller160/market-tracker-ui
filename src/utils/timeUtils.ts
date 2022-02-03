@@ -8,8 +8,8 @@ export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 export const formatTimesalesDate = Time.format(TIMESALES_FORMAT);
 export const setTimesalesEndTime = Time.set({
-	hours: 18,
-	minutes: 0,
+	hours: 19,
+	minutes: 50,
 	seconds: 0,
 	milliseconds: 0
 });
