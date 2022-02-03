@@ -9,8 +9,8 @@ export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 const formatInEST = Time.formatTZ('America/New_York');
 export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
 export const setTimesalesEndTime = Time.set({
-	hours: 19,
-	minutes: 50,
+	hours: 18,
+	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
 });
