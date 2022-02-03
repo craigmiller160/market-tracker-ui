@@ -7,13 +7,14 @@ import { Updater, useImmer } from 'use-immer';
 import { Dispatch } from 'redux';
 import { alertSlice } from '../../../store/alert/slice';
 import { Quote } from '../../../types/quote';
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { castDraft } from 'immer';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from './MarketData';
+import * as Option from 'fp-ts/es6/Option';
 
 interface MarketInfo {
 	readonly symbol: string;
@@ -101,6 +102,19 @@ const handleLoadMarketDataSuccess =
 		});
 	};
 
+const shouldGetQuote: (arg: {
+	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
+}) => boolean = flow(
+	({ history }) => history,
+	RArray.head,
+	Option.chain(RArray.last),
+	Option.filter((item) => item.unixTimestampMillis <= new Date().getTime()),
+	Option.fold(
+		() => false,
+		() => true
+	)
+);
+
 const useLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
@@ -112,13 +126,18 @@ const useLoadMarketData = (
 		});
 		const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
 
-		// TODO first get history, then compare millis
-
 		return pipe(
-			tradierService.getQuotes(MARKET_SYMBOLS),
-			TaskEither.bindTo('quotes'),
-			TaskEither.bind('history', () =>
-				TaskEither.sequenceArray(marketHistoryFns)
+			TaskEither.sequenceArray(marketHistoryFns),
+			TaskEither.bindTo('history'),
+			TaskEither.bind('shouldGetQuote', (_) =>
+				TaskEither.of(shouldGetQuote(_))
+			),
+			TaskEither.bind('quotes', (_) =>
+				match(_)
+					.with({ shouldGetQuote: true }, () =>
+						tradierService.getQuotes(MARKET_SYMBOLS)
+					)
+					.otherwise(() => TaskEither.of([]))
 			),
 			TaskEither.fold(
 				handleLoadMarketDataError(setState, dispatch),
