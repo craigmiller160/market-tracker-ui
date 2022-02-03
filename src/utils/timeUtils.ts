@@ -8,12 +8,14 @@ export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 const formatInEST = Time.formatTZ('America/New_York');
 export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
+// TODO much better but won't handle daylight savings time changes
 export const setTimesalesStartTime = Time.setUtc({
 	hours: 21,
 	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
 });
+// TODO much better but won't handle daylight savings time changes
 export const setTimesalesEndTime = Time.setUtc({
 	hours: 23,
 	minutes: 0,
