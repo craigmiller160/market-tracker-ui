@@ -68,12 +68,15 @@ const createTradierHistory = (): TradierHistory => ({
 	}
 });
 
+const unix1 = Math.floor(new Date().getTime() / 1000);
+const unix2 = unix1 + 10;
+
 const createTimesale = (): TradierSeries => ({
 	series: {
 		data: [
 			{
 				time: '2022-01-01T01:01:01',
-				timestamp: 0,
+				timestamp: unix1,
 				price: 2,
 				open: 0,
 				high: 0,
@@ -84,7 +87,7 @@ const createTimesale = (): TradierSeries => ({
 			},
 			{
 				time: '2022-01-01T02:02:02',
-				timestamp: 0,
+				timestamp: unix2,
 				price: 5,
 				open: 0,
 				high: 0,
@@ -101,21 +104,25 @@ const createHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '1',
 		time: '00:00:00',
+		unixTimestampMillis: 0,
 		price: 2
 	},
 	{
 		date: '1',
 		time: '23:59:59',
+		unixTimestampMillis: 0,
 		price: 5
 	},
 	{
 		date: '2',
 		time: '00:00:00',
+		unixTimestampMillis: 0,
 		price: 6
 	},
 	{
 		date: '2',
 		time: '23:59:59',
+		unixTimestampMillis: 0,
 		price: 9
 	}
 ];
@@ -124,11 +131,13 @@ const createTimesaleHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '2022-01-01',
 		time: '01:01:01',
+		unixTimestampMillis: unix1,
 		price: 2
 	},
 	{
 		date: '2022-01-01',
 		time: '02:02:02',
+		unixTimestampMillis: unix2,
 		price: 5
 	}
 ];
