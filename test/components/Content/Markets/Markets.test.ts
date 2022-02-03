@@ -24,6 +24,9 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
+import { match } from 'ts-pattern';
+
+type HistoryApiType = 'timesale' | 'history';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -135,6 +138,42 @@ const mockQueries = (
 	});
 };
 
+const verifyApiCalls = (
+	symbols: ReadonlyArray<string>,
+	historyApiType: HistoryApiType,
+	useQuote: boolean
+) => {
+	// TODO multiply this by number of symbols
+	const apiCallCount = useQuote ? 3 : 2;
+	expect(mockApi.history.get).toHaveLength(apiCallCount);
+
+	const historyApiRegex = match(historyApiType)
+		.with('timesale', () => /\/tradier\/markets\/timesales/)
+		.with('history', () => /\/tradier\/markets\/history/)
+		.run();
+
+	// TODO change this to API 1
+	expect(mockApi.history.get[2].url).toEqual(
+		expect.stringMatching(historyApiRegex)
+	);
+	symbols.forEach((symbol) => {
+		expect(mockApi.history.get[2].url).toEqual(
+			expect.stringMatching(`symbol=${symbol}`)
+		);
+	});
+
+	// TODO change this to API 2
+	if (useQuote) {
+		symbols.forEach((symbol) => {
+			expect(mockApi.history.get[1].url).toEqual(
+				expect.stringMatching(
+					`/tradier/markets/quotes\\?symbols=${symbol}`
+				)
+			);
+		});
+	}
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -154,6 +193,12 @@ describe('Markets', () => {
 			amountDiff: '+$98.00',
 			amountDiffPercent: '+98.00%'
 		});
+		verifyApiCalls(['VTI'], 'timesale', true);
+	});
+
+	it('renders for today when history has higher millis than current time', async () => {
+		verifyApiCalls(['VTI'], 'timesale', false);
+		throw new Error();
 	});
 
 	it('renders for 1 week', async () => {
@@ -176,6 +221,7 @@ describe('Markets', () => {
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
+		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 1 month', async () => {
@@ -198,6 +244,7 @@ describe('Markets', () => {
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
+		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 3 months', async () => {
@@ -220,6 +267,7 @@ describe('Markets', () => {
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
+		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 1 year', async () => {
@@ -242,6 +290,7 @@ describe('Markets', () => {
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
+		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 5 years', async () => {
@@ -264,5 +313,6 @@ describe('Markets', () => {
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+50.00%'
 		});
+		verifyApiCalls(['VTI'], 'history', true);
 	});
 });
