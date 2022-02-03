@@ -158,6 +158,12 @@ const mockQueries = (config: MockQueriesConfig) => {
 	});
 };
 
+interface ApiCallCount {
+	readonly apiCallCount: number;
+	readonly historyApiIndex: number;
+	readonly quoteApiIndex: number;
+}
+
 const verifyApiCalls = (
 	symbols: ReadonlyArray<string>,
 	historyApiType: HistoryApiType,
@@ -168,15 +174,27 @@ const verifyApiCalls = (
 		.with('history', () => /\/tradier\/markets\/history/)
 		.run();
 
-	const apiCallCount = match({ historyApiType, useQuote })
-		.with({ historyApiType: 'timesale', useQuote: false }, () => 2)
-		.with({ historyApiType: 'timesale', useQuote: true }, () => 3)
-		.with({ historyApiType: 'history' }, () => 5)
-		.run();
+	const { apiCallCount, historyApiIndex, quoteApiIndex }: ApiCallCount =
+		match({ historyApiType, useQuote })
+			.with({ historyApiType: 'timesale', useQuote: false }, () => ({
+				apiCallCount: 2,
+				historyApiIndex: 1,
+				quoteApiIndex: -1
+			}))
+			.with({ historyApiType: 'timesale', useQuote: true }, () => ({
+				apiCallCount: 3,
+				historyApiIndex: 1,
+				quoteApiIndex: 2
+			}))
+			.with({ historyApiType: 'history' }, () => ({
+				apiCallCount: 5,
+				historyApiIndex: 3,
+				quoteApiIndex: 4
+			}))
+			.run();
 
 	expect(mockApi.history.get).toHaveLength(apiCallCount);
 
-	const historyApiIndex = apiCallCount - 2;
 	expect(mockApi.history.get[historyApiIndex].url).toEqual(
 		expect.stringMatching(historyApiRegex)
 	);
@@ -187,7 +205,6 @@ const verifyApiCalls = (
 	});
 
 	if (useQuote) {
-		const quoteApiIndex = apiCallCount - 1;
 		symbols.forEach((symbol) => {
 			expect(mockApi.history.get[quoteApiIndex].url).toEqual(
 				expect.stringMatching(
