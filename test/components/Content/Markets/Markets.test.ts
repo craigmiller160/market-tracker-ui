@@ -66,12 +66,12 @@ const mockHistory: TradierHistory = {
 	}
 };
 
-const createTimesale = (): TradierSeries => ({
+const createTimesale = (timestamp = 0): TradierSeries => ({
 	series: {
 		data: [
 			{
 				time: '2022-01-01T01:01:01',
-				timestamp: 0,
+				timestamp,
 				price: 2,
 				open: 0,
 				high: 0,
@@ -116,11 +116,20 @@ const testPageHeaders = () => {
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
 };
 
-const mockQueries = (
-	symbols: ReadonlyArray<string>,
-	start = '',
-	interval = ''
-) => {
+interface MockQueriesConfig {
+	readonly symbols: ReadonlyArray<string>;
+	readonly start?: string;
+	readonly interval?: string;
+	readonly timesaleTimestamp?: number;
+}
+
+const mockQueries = (config: MockQueriesConfig) => {
+	const {
+		symbols,
+		start = '',
+		interval = '',
+		timesaleTimestamp = 0
+	} = config;
 	mockApi
 		.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
 		.reply(200, mockQuote);
@@ -134,7 +143,7 @@ const mockQueries = (
 			.onGet(
 				`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
 			)
-			.reply(200, createTimesale());
+			.reply(200, createTimesale(timesaleTimestamp));
 	});
 };
 
@@ -184,7 +193,9 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries(['VTI']);
+		mockQueries({
+			symbols: ['VTI']
+		});
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
@@ -201,12 +212,31 @@ describe('Markets', () => {
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
+		mockQueries({
+			symbols: ['VTI'],
+			timesaleTimestamp: new Date().getTime() + 1000
+		});
+		await renderApp();
+		menuItemIsSelected('Today');
+		testPageHeaders();
+
+		const marketsPage = screen.getByTestId('markets-page');
+		const marketCards = within(marketsPage).queryAllByTestId('market-card');
+		testMarketCards(marketCards, {
+			time: 'Today',
+			startDate: getTodayDisplayDate(),
+			amountDiff: '+$98.00',
+			amountDiffPercent: '+98.00%'
+		});
 		verifyApiCalls(['VTI'], 'timesale', false);
-		throw new Error();
 	});
 
 	it('renders for 1 week', async () => {
-		mockQueries(['VTI'], getOneWeekHistoryStartDate(), 'daily');
+		mockQueries({
+			symbols: ['VTI'],
+			start: getOneWeekHistoryStartDate(),
+			interval: 'daily'
+		});
 
 		await renderApp();
 		testPageHeaders();
@@ -229,7 +259,11 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 month', async () => {
-		mockQueries(['VTI'], getOneMonthHistoryStartDate(), 'daily');
+		mockQueries({
+			symbols: ['VTI'],
+			start: getOneMonthHistoryStartDate(),
+			interval: 'daily'
+		});
 
 		await renderApp();
 		testPageHeaders();
@@ -252,7 +286,11 @@ describe('Markets', () => {
 	});
 
 	it('renders for 3 months', async () => {
-		mockQueries(['VTI'], getThreeMonthHistoryStartDate(), 'daily');
+		mockQueries({
+			symbols: ['VTI'],
+			start: getThreeMonthHistoryStartDate(),
+			interval: 'daily'
+		});
 
 		await renderApp();
 		testPageHeaders();
@@ -275,7 +313,11 @@ describe('Markets', () => {
 	});
 
 	it('renders for 1 year', async () => {
-		mockQueries(['VTI'], getOneYearHistoryStartDate(), 'weekly');
+		mockQueries({
+			symbols: ['VTI'],
+			start: getOneYearHistoryStartDate(),
+			interval: 'weekly'
+		});
 
 		await renderApp();
 		testPageHeaders();
@@ -298,7 +340,11 @@ describe('Markets', () => {
 	});
 
 	it('renders for 5 years', async () => {
-		mockQueries(['VTI'], getFiveYearHistoryStartDate(), 'monthly');
+		mockQueries({
+			symbols: ['VTI'],
+			start: getFiveYearHistoryStartDate(),
+			interval: 'monthly'
+		});
 
 		await renderApp();
 		testPageHeaders();
