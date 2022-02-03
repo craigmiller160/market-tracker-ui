@@ -78,17 +78,33 @@ const handleLoadMarketDataError =
 		);
 	};
 
+const getCurrentPrice = (
+	quotes: ReadonlyArray<Quote>,
+	history: ReadonlyArray<HistoryRecord>
+): number =>
+	pipe(
+		RArray.head(quotes),
+		Option.map((_) => _.price),
+		Option.getOrElse(() =>
+			pipe(
+				RArray.last(history),
+				Option.map((_) => _.price),
+				Option.getOrElse(() => 0)
+			)
+		)
+	);
+
 const handleLoadMarketDataSuccess =
 	(setState: Updater<State>) =>
 	({ quotes, history }: DataLoadedResult): TaskT<void> =>
 	async () => {
 		const { init, rest } = pipe(
-			quotes,
+			MARKET_SYMBOLS,
 			RArray.mapWithIndex(
-				(index, quote): MarketData => ({
-					symbol: quote.symbol,
+				(index, symbol): MarketData => ({
+					symbol,
 					name: MARKET_INFO[index].name,
-					currentPrice: quote.price,
+					currentPrice: getCurrentPrice(quotes, history[index]),
 					isInternational: MARKET_INFO[index].isInternational,
 					history: history[index]
 				})
