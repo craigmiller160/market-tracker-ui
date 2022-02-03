@@ -131,13 +131,13 @@ const createTimesaleHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '2022-01-01',
 		time: '01:01:01',
-		unixTimestampMillis: unix1,
+		unixTimestampMillis: unix1 * 1000,
 		price: 2
 	},
 	{
 		date: '2022-01-01',
 		time: '02:02:02',
-		unixTimestampMillis: unix2,
+		unixTimestampMillis: unix2 * 1000,
 		price: 5
 	}
 ];
