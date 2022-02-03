@@ -1,5 +1,6 @@
-export interface HistoryDate {
+export interface HistoryRecord {
 	readonly date: string;
-	readonly type: 'open' | 'close';
+	readonly unixTimestampMillis: number;
+	readonly time: string;
 	readonly price: number;
 }

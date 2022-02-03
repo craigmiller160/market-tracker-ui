@@ -1,22 +1,27 @@
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApi, getResponseData } from './AjaxApi';
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
-import { TradierHistoryDay, TradierHistory } from '../types/tradier/history';
+import { TradierHistory, TradierHistoryDay } from '../types/tradier/history';
 import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
-import { HistoryDate } from '../types/history';
+import { HistoryRecord } from '../types/history';
 import {
 	formatHistoryDate,
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate
+	getThreeMonthHistoryStartDate,
+	getTimesalesEnd,
+	getTimesalesStart
 } from '../utils/timeUtils';
+import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -42,24 +47,71 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 
 const formatTradierHistory = (
 	history: TradierHistory
-): ReadonlyArray<HistoryDate> =>
+): ReadonlyArray<HistoryRecord> =>
 	pipe(
 		history.history.day,
 		RArray.chain(
-			(_: TradierHistoryDay): ReadonlyArray<HistoryDate> => [
+			(_: TradierHistoryDay): ReadonlyArray<HistoryRecord> => [
 				{
 					date: _.date,
-					type: 'open',
+					time: '00:00:00',
+					unixTimestampMillis: 0,
 					price: _.open
 				},
 				{
 					date: _.date,
-					type: 'close',
+					time: '23:59:59',
+					unixTimestampMillis: 0,
 					price: _.close
 				}
 			]
 		)
 	);
+
+const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
+
+const getTimesaleDate: (timestamp: string) => string = flow(
+	parseTimesaleTimestamp,
+	Time.format('yyyy-MM-dd')
+);
+
+const getTimesaleTime: (timestamp: string) => string = flow(
+	parseTimesaleTimestamp,
+	Time.format('HH:mm:ss')
+);
+
+const formatTimesales = (
+	timesales: TradierSeries
+): ReadonlyArray<HistoryRecord> =>
+	pipe(
+		Option.fromNullable(timesales.series),
+		Option.map((_) => _.data),
+		Option.map(
+			RArray.map(
+				(_: TradierSeriesData): HistoryRecord => ({
+					date: getTimesaleDate(_.time),
+					time: getTimesaleTime(_.time),
+					unixTimestampMillis: _.timestamp * 1000,
+					price: _.price
+				})
+			)
+		),
+		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
+	);
+
+export const getTimesales = (
+	symbol: string
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	const start = getTimesalesStart();
+	const end = getTimesalesEnd();
+	return pipe(
+		ajaxApi.get<TradierSeries>({
+			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=5min`
+		}),
+		TaskEither.map(getResponseData),
+		TaskEither.map(formatTimesales)
+	);
+};
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
@@ -74,7 +126,7 @@ export const getQuotes = (
 
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const queryString = qs.stringify(historyQuery);
 	return pipe(
 		ajaxApi.get<TradierHistory>({
@@ -87,7 +139,7 @@ const getHistoryQuote = (
 
 export const getOneWeekHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -99,7 +151,7 @@ export const getOneWeekHistory = (
 
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -111,7 +163,7 @@ export const getOneMonthHistory = (
 
 export const getThreeMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -123,7 +175,7 @@ export const getThreeMonthHistory = (
 
 export const getOneYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -135,7 +187,7 @@ export const getOneYearHistory = (
 
 export const getFiveYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryDate>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,

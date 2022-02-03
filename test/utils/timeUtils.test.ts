@@ -1,6 +1,7 @@
 import {
 	formatDisplayDate,
 	formatHistoryDate,
+	formatTimesalesDate,
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
 	getOneMonthDisplayStartDate,
@@ -11,6 +12,8 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
+	getTimesalesEnd,
+	getTimesalesStart,
 	getTodayDisplayDate,
 	getTodayHistoryDate
 } from '../../src/utils/timeUtils';
@@ -127,6 +130,37 @@ describe('timeUtils', () => {
 			formatDisplayDate
 		);
 		const actual = getFiveYearDisplayStartDate();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTimesalesStart', () => {
+		const expected = pipe(
+			new Date(),
+			Time.subDays(1),
+			Time.set({
+				hours: 16,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
+			}),
+			formatTimesalesDate
+		);
+		const actual = getTimesalesStart();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTimesalesEnd', () => {
+		const expected = pipe(
+			new Date(),
+			Time.set({
+				hours: 18,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
+			}),
+			formatTimesalesDate
+		);
+		const actual = getTimesalesEnd();
 		expect(actual).toEqual(expected);
 	});
 });

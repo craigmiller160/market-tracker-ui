@@ -2,9 +2,26 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
+const TIMESALES_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DISPLAY_DATE_FORMAT = 'MMM dd, yyyy';
 export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
+const formatInEST = Time.formatTZ('America/New_York');
+export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
+// TODO much better but won't handle daylight savings time changes
+export const setTimesalesStartTime = Time.setUtc({
+	hours: 21,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
+// TODO much better but won't handle daylight savings time changes
+export const setTimesalesEndTime = Time.setUtc({
+	hours: 23,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
 
 const getStartDate = (intervalFn: (d: Date) => Date): Date =>
 	pipe(new Date(), intervalFn, Time.addDays(1));
@@ -18,6 +35,17 @@ const getDisplayStartDate = (intervalFn: (d: Date) => Date): string =>
 export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
+
+export const getTimesalesStart = (): string =>
+	pipe(
+		new Date(),
+		Time.subDays(1),
+		setTimesalesStartTime,
+		formatTimesalesDate
+	);
+
+export const getTimesalesEnd = (): string =>
+	pipe(new Date(), setTimesalesEndTime, formatTimesalesDate);
 
 export const getOneWeekHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subWeeks(1));

@@ -2,18 +2,19 @@ import { match } from 'ts-pattern';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as tradierService from '../../../services/TradierService';
 import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { HistoryDate } from '../../../types/history';
+import { HistoryRecord } from '../../../types/history';
 import { Updater, useImmer } from 'use-immer';
 import { Dispatch } from 'redux';
 import { alertSlice } from '../../../store/alert/slice';
 import { Quote } from '../../../types/quote';
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { castDraft } from 'immer';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from './MarketData';
+import * as Option from 'fp-ts/es6/Option';
 
 interface MarketInfo {
 	readonly symbol: string;
@@ -42,14 +43,14 @@ export interface AllMarketData extends State {
 
 interface DataLoadedResult {
 	readonly quotes: ReadonlyArray<Quote>;
-	readonly history: ReadonlyArray<ReadonlyArray<HistoryDate>>;
+	readonly history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
 }
 
-type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryDate>>;
+type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
 const useHistoryFn = (timeValue: string): HistoryFn => {
 	const historyFn = match(timeValue)
-		.with('oneDay', () => () => TaskEither.right([]))
+		.with('oneDay', () => tradierService.getTimesales)
 		.with('oneWeek', () => tradierService.getOneWeekHistory)
 		.with('oneMonth', () => tradierService.getOneMonthHistory)
 		.with('threeMonths', () => tradierService.getThreeMonthHistory)
@@ -77,17 +78,33 @@ const handleLoadMarketDataError =
 		);
 	};
 
+const getCurrentPrice = (
+	quotes: ReadonlyArray<Quote>,
+	history: ReadonlyArray<HistoryRecord>
+): number =>
+	pipe(
+		RArray.head(quotes),
+		Option.map((_) => _.price),
+		Option.getOrElse(() =>
+			pipe(
+				RArray.last(history),
+				Option.map((_) => _.price),
+				Option.getOrElse(() => 0)
+			)
+		)
+	);
+
 const handleLoadMarketDataSuccess =
 	(setState: Updater<State>) =>
 	({ quotes, history }: DataLoadedResult): TaskT<void> =>
 	async () => {
 		const { init, rest } = pipe(
-			quotes,
+			MARKET_SYMBOLS,
 			RArray.mapWithIndex(
-				(index, quote): MarketData => ({
-					symbol: quote.symbol,
+				(index, symbol): MarketData => ({
+					symbol,
 					name: MARKET_INFO[index].name,
-					currentPrice: quote.price,
+					currentPrice: getCurrentPrice(quotes, history[index]),
 					isInternational: MARKET_INFO[index].isInternational,
 					history: history[index]
 				})
@@ -101,6 +118,19 @@ const handleLoadMarketDataSuccess =
 		});
 	};
 
+const shouldGetQuote: (arg: {
+	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
+}) => boolean = flow(
+	({ history }) => history,
+	RArray.head,
+	Option.chain(RArray.last),
+	Option.filter((item) => item.unixTimestampMillis <= new Date().getTime()),
+	Option.fold(
+		() => false,
+		() => true
+	)
+);
+
 const useLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
@@ -111,11 +141,19 @@ const useLoadMarketData = (
 			draft.loading = true;
 		});
 		const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
+
 		return pipe(
-			tradierService.getQuotes(MARKET_SYMBOLS),
-			TaskEither.bindTo('quotes'),
-			TaskEither.bind('history', () =>
-				TaskEither.sequenceArray(marketHistoryFns)
+			TaskEither.sequenceArray(marketHistoryFns),
+			TaskEither.bindTo('history'),
+			TaskEither.bind('shouldGetQuote', (_) =>
+				TaskEither.of(shouldGetQuote(_))
+			),
+			TaskEither.bind('quotes', (_) =>
+				match(_)
+					.with({ shouldGetQuote: true }, () =>
+						tradierService.getQuotes(MARKET_SYMBOLS)
+					)
+					.otherwise(() => TaskEither.of([]))
 			),
 			TaskEither.fold(
 				handleLoadMarketDataError(setState, dispatch),
