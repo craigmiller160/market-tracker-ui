@@ -156,8 +156,7 @@ const verifyApiCalls = (
 
 	expect(mockApi.history.get).toHaveLength(apiCallCount);
 
-	// TODO fix the index number
-	const historyApiIndex = apiCallCount - 1;
+	const historyApiIndex = apiCallCount - 2;
 	expect(mockApi.history.get[historyApiIndex].url).toEqual(
 		expect.stringMatching(historyApiRegex)
 	);
@@ -167,9 +166,8 @@ const verifyApiCalls = (
 		);
 	});
 
-	// TODO fix the index number
 	if (useQuote) {
-		const quoteApiIndex = apiCallCount - 2;
+		const quoteApiIndex = apiCallCount - 1;
 		symbols.forEach((symbol) => {
 			expect(mockApi.history.get[quoteApiIndex].url).toEqual(
 				expect.stringMatching(
