@@ -138,7 +138,7 @@ describe('timeUtils', () => {
 			new Date(),
 			Time.subDays(1),
 			Time.set({
-				hours: 18,
+				hours: 16,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
