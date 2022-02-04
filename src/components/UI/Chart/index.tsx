@@ -1,4 +1,4 @@
-import { Line, LineConfig } from '@ant-design/charts';
+import { Line } from '@ant-design/charts';
 import { MarketData } from '../../../types/MarketData';
 import { useMemo } from 'react';
 import { HistoryRecord } from '../../../types/history';
@@ -22,7 +22,7 @@ const getLastPrice = (
 			when<number>((_) => _ >= 0),
 			() => history[index].price
 		)
-		.otherwise(() => 0);
+		.otherwise(() => history[index + 1].price);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): Record<string, any>[] => [
