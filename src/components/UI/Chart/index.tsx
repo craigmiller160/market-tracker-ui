@@ -27,7 +27,7 @@ const getLastPrice = (
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): Record<string, any>[] => [
 	...data.history.map((record, index, array) => ({
-		date: record.date,
+		date: `${record.date} ${record.time}`,
 		change: record.price - getLastPrice(array, index - 1)
 	})),
 	{
