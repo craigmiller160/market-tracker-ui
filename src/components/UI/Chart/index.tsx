@@ -6,6 +6,7 @@ import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { HistoryRecord } from '../../../types/history';
+import { castDraft } from 'immer';
 
 // TODO move all data handling logic into custom hook that can be tested separately because of difficulty doing integration tests
 
@@ -14,6 +15,11 @@ const formatTableDate = Time.format("M/d/yy'\n'HH:mm");
 
 interface Props {
 	readonly data: MarketData;
+}
+
+interface ChartRecord {
+	readonly date: string;
+	readonly change: number;
 }
 
 // TODO figure out if it's possible to have dedicated data format type
@@ -30,7 +36,7 @@ const getFirstPrice: (history: ReadonlyArray<HistoryRecord>) => number = flow(
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const formatData = (data: MarketData): ReadonlyArray<Record<string, any>> => {
+const formatData = (data: MarketData): ReadonlyArray<ChartRecord> => {
 	const firstPrice = getFirstPrice(data.history);
 	return pipe(
 		data.history,
@@ -50,8 +56,6 @@ export const Chart = (props: Props) => {
 	const isGain =
 		props.data.currentPrice - getFirstPrice(props.data.history) >= 0;
 
-	// TODO fix casting
-
 	return (
 		<div>
 			<Line
@@ -59,7 +63,7 @@ export const Chart = (props: Props) => {
 				padding="auto"
 				xField="date"
 				yField="change"
-				data={data as Record<string, any>[]} // eslint-disable-line
+				data={castDraft(data)}
 				color={isGain ? 'green' : 'red'}
 			/>
 		</div>
