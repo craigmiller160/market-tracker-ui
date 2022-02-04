@@ -24,6 +24,8 @@ const getLastPrice = (
 		)
 		.otherwise(() => history[index + 1].price);
 
+// TODO need to make everything based on the change from the start, not the change from the last
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): Record<string, any>[] => [
 	...data.history.map((record, index, array) => ({
