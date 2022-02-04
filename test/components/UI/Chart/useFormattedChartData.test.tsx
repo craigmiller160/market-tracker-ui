@@ -1,5 +1,9 @@
 import { MarketData } from '../../../../src/types/MarketData';
-import { useFormattedChartData } from '../../../../src/components/UI/Chart/useFormattedChartData';
+import { render } from '@testing-library/react';
+import {
+	ChartRecord,
+	useFormattedChartData
+} from '../../../../src/components/UI/Chart/useFormattedChartData';
 
 const marketData: MarketData = {
 	symbol: 'VTI',
@@ -40,9 +44,25 @@ const marketData: MarketData = {
 	]
 };
 
+interface Props {
+	readonly data: MarketData;
+	readonly callback: (result: ReadonlyArray<ChartRecord>) => void;
+}
+
+const TestComp = (props: Props) => {
+	const result = useFormattedChartData(props.data);
+	props.callback(result);
+
+	return <div />;
+};
+
 describe('useFormattedChartData', () => {
 	it('formats the chart data', () => {
-		const result = useFormattedChartData(marketData);
+		let result: ReadonlyArray<ChartRecord> = [];
+		const callback = (r: ReadonlyArray<ChartRecord>) => {
+			result = r;
+		};
+		render(<TestComp data={marketData} callback={callback} />);
 		expect(result).toEqual([]);
 	});
 });
