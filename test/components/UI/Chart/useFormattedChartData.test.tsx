@@ -8,7 +8,7 @@ import {
 const marketData: MarketData = {
 	symbol: 'VTI',
 	name: 'Total Index Fund',
-	currentPrice: 100,
+	currentPrice: 50,
 	isInternational: false,
 	history: [
 		{
@@ -63,6 +63,31 @@ describe('useFormattedChartData', () => {
 			result = r;
 		};
 		render(<TestComp data={marketData} callback={callback} />);
-		expect(result).toEqual([]);
+		expect(result).toEqual([
+			{
+				date: '1/1/22\n00:00',
+				change: 0
+			},
+			{
+				date: '1/1/22\n23:59',
+				change: 5
+			},
+			{
+				date: '1/2/22\n00:00',
+				change: 11
+			},
+			{
+				date: '1/2/22\n23:59',
+				change: 7
+			},
+			{
+				date: '1/3/22\n00:00',
+				change: 18
+			},
+			{
+				date: 'Now',
+				change: 40
+			}
+		]);
 	});
 });
