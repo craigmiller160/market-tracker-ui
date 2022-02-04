@@ -13,10 +13,8 @@ interface Props {
 	readonly data: MarketData;
 }
 
-// TODO xField changes from date to time
 // TODO color changes based on balance being up or down
 // TODO figure out if it's possible to have dedicated data format type
-// TODO need to factor in the time for the timesales setup
 
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
