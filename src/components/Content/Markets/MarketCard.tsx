@@ -27,7 +27,7 @@ const createTitle = (data: MarketData): ReactNode => {
 	const formattedPriceChange = `${priceChangeOperator}$${Math.abs(
 		priceChange
 	).toFixed(2)}`;
-	const percentChange = (Math.abs(priceChange) / data.currentPrice) * 100;
+	const percentChange = (Math.abs(priceChange) / oldestPrice) * 100;
 	const formattedPercentChange = `${priceChangeOperator}${percentChange.toFixed(
 		2
 	)}%`;
