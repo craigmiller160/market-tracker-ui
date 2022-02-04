@@ -1866,9 +1866,6 @@
     "@typescript-eslint/eslint-plugin" "^5.8.1"
     "@typescript-eslint/parser" "^5.8.1"
 
-"@craigmiller160/jest-config-ignore-patterns@file:.yalc/@craigmiller160/jest-config-ignore-patterns":
-  version "1.0.0-beta"
-
 "@craigmiller160/jest-config-ts@^1.0.0-beta.2":
   version "1.0.0-beta.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config-ts/-/jest-config-ts-1.0.0-beta.2.tgz#3ece5b038f6aad12911a59f77dc572b8bdc519dd"
