@@ -1,4 +1,4 @@
-import { Line } from '@ant-design/charts';
+import { Line, LineConfig } from '@ant-design/charts';
 import { MarketData } from '../../../types/MarketData';
 import { useMemo } from 'react';
 
@@ -9,6 +9,7 @@ interface Props {
 // TODO xField changes from date to time
 // TODO color changes based on balance being up or down
 // TODO figure out if it's possible to have dedicated data format type
+// TODO need to factor in the time for the timesales setup
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): Record<string, any>[] => [
