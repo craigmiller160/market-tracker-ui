@@ -15,6 +15,9 @@ module.exports = {
 	...config,
 	transformIgnorePatterns: [
 		...config.transformIgnorePatterns.slice(1),
-		createCombinedPattern(libPatterns)
+		createCombinedPattern([
+			...libPatterns,
+			'@antv\/xflow-core' // eslint-disable-line
+		])
 	]
 };
