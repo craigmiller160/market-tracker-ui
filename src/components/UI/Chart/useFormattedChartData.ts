@@ -31,8 +31,6 @@ const formatData = (data: MarketData): ReadonlyArray<ChartRecord> => {
 	);
 };
 
-// TODO write tests
-
 export const useFormattedChartData = (
 	data: MarketData
 ): ReadonlyArray<ChartRecord> => useMemo(() => formatData(data), [data]);
