@@ -7,7 +7,7 @@ import * as Option from 'fp-ts/es6/Option';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const parseTableDate = Time.parse('yyyy-MM-dd HH:mm:ss');
-const formatTableDate = Time.format("M/d/yy'\n'HH:m");
+const formatTableDate = Time.format("M/d/yy'\n'HH:mm");
 
 interface Props {
 	readonly data: MarketData;
