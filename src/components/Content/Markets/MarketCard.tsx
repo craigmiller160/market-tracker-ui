@@ -11,6 +11,7 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../utils/timeUtils';
+import { Chart } from '../../UI/Chart';
 
 interface Props {
 	readonly data: MarketData;
@@ -117,7 +118,7 @@ export const MarketCard = ({ data, time }: Props) => {
 			extra={Time}
 			data-testid="market-card"
 		>
-			<p>Chart Goes Here</p>
+			<Chart data={data} />
 		</Card>
 	);
 };
