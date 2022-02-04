@@ -4,6 +4,10 @@ import { useMemo } from 'react';
 import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const parseTableDate = Time.parse('yyyy-MM-dd HH:mm:ss');
+const formatTableDate = Time.format("M/d/yy'\n'HH:m");
 
 interface Props {
 	readonly data: MarketData;
@@ -13,6 +17,9 @@ interface Props {
 // TODO color changes based on balance being up or down
 // TODO figure out if it's possible to have dedicated data format type
 // TODO need to factor in the time for the timesales setup
+
+const formatHistoryDate = (tableDate: string): string =>
+	pipe(parseTableDate(tableDate), formatTableDate);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): ReadonlyArray<Record<string, any>> => {
@@ -26,7 +33,7 @@ const formatData = (data: MarketData): ReadonlyArray<Record<string, any>> => {
 	return pipe(
 		data.history,
 		RArray.map((record) => ({
-			date: `${record.date} ${record.time}`,
+			date: formatHistoryDate(`${record.date} ${record.time}`),
 			change: record.price - firstPrice
 		})),
 		RArray.append({
