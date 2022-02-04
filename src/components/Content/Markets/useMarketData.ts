@@ -136,31 +136,34 @@ const useLoadMarketData = (
 	historyFn: HistoryFn,
 	dispatch: Dispatch
 ) =>
-	useCallback(() => {
-		setState((draft) => {
-			draft.loading = true;
-		});
-		const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
+	useCallback(
+		(showLoading = false) => {
+			setState((draft) => {
+				draft.loading = showLoading;
+			});
+			const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
 
-		return pipe(
-			TaskEither.sequenceArray(marketHistoryFns),
-			TaskEither.bindTo('history'),
-			TaskEither.bind('shouldGetQuote', (_) =>
-				TaskEither.of(shouldGetQuote(_))
-			),
-			TaskEither.bind('quotes', (_) =>
-				match(_)
-					.with({ shouldGetQuote: true }, () =>
-						tradierService.getQuotes(MARKET_SYMBOLS)
-					)
-					.otherwise(() => TaskEither.of([]))
-			),
-			TaskEither.fold(
-				handleLoadMarketDataError(setState, dispatch),
-				handleLoadMarketDataSuccess(setState)
-			)
-		)();
-	}, [setState, historyFn, dispatch]);
+			return pipe(
+				TaskEither.sequenceArray(marketHistoryFns),
+				TaskEither.bindTo('history'),
+				TaskEither.bind('shouldGetQuote', (_) =>
+					TaskEither.of(shouldGetQuote(_))
+				),
+				TaskEither.bind('quotes', (_) =>
+					match(_)
+						.with({ shouldGetQuote: true }, () =>
+							tradierService.getQuotes(MARKET_SYMBOLS)
+						)
+						.otherwise(() => TaskEither.of([]))
+				),
+				TaskEither.fold(
+					handleLoadMarketDataError(setState, dispatch),
+					handleLoadMarketDataSuccess(setState)
+				)
+			)();
+		},
+		[setState, historyFn, dispatch]
+	);
 
 const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
 
@@ -176,13 +179,12 @@ export const useMarketData = (): AllMarketData => {
 	const historyFn = useHistoryFn(timeValue);
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
-	// TODO avoid the loading indicator when the data is refreshed
 	useEffect(() => {
-		loadMarketData();
-		const interval = setInterval(loadMarketData, 5000); // TODO set to correct interval
+		loadMarketData(true);
+		const interval = setInterval(loadMarketData, INTERVAL_5_MIN_MILLIS);
 		return () => {
 			clearInterval(interval);
-		}
+		};
 	}, [loadMarketData, timeValue]);
 
 	return {
