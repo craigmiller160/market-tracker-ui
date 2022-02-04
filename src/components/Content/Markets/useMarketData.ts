@@ -162,6 +162,8 @@ const useLoadMarketData = (
 		)();
 	}, [setState, historyFn, dispatch]);
 
+const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
+
 export const useMarketData = (): AllMarketData => {
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>({
@@ -174,8 +176,13 @@ export const useMarketData = (): AllMarketData => {
 	const historyFn = useHistoryFn(timeValue);
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
+	// TODO avoid the loading indicator when the data is refreshed
 	useEffect(() => {
 		loadMarketData();
+		const interval = setInterval(loadMarketData, 5000); // TODO set to correct interval
+		return () => {
+			clearInterval(interval);
+		}
 	}, [loadMarketData, timeValue]);
 
 	return {
