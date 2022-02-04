@@ -1,4 +1,4 @@
-import { MarketData } from './MarketData';
+import { MarketData } from '../../../types/MarketData';
 import { Card } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode } from 'react';
