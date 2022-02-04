@@ -1,6 +1,8 @@
 import { Line, LineConfig } from '@ant-design/charts';
 import { MarketData } from '../../../types/MarketData';
 import { useMemo } from 'react';
+import { HistoryRecord } from '../../../types/history';
+import { match, when } from 'ts-pattern';
 
 interface Props {
 	readonly data: MarketData;
@@ -11,15 +13,28 @@ interface Props {
 // TODO figure out if it's possible to have dedicated data format type
 // TODO need to factor in the time for the timesales setup
 
+const getLastPrice = (
+	history: ReadonlyArray<HistoryRecord>,
+	index: number
+): number =>
+	match(index)
+		.with(
+			when<number>((_) => _ >= 0),
+			() => history[index].price
+		)
+		.otherwise(() => 0);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatData = (data: MarketData): Record<string, any>[] => [
-	...data.history.map((record) => ({
+	...data.history.map((record, index, array) => ({
 		date: record.date,
-		price: record.price
+		change: record.price - getLastPrice(array, index - 1)
 	})),
 	{
 		date: 'Now',
-		price: data.currentPrice
+		change:
+			data.currentPrice -
+			getLastPrice(data.history, data.history.length - 1)
 	}
 ];
 
@@ -34,7 +49,7 @@ export const Chart = (props: Props) => {
 				height={200}
 				padding="auto"
 				xField="date"
-				yField="price"
+				yField="change"
 				data={data}
 				color="green"
 			/>
