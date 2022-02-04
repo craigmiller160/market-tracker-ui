@@ -1,4 +1,4 @@
-import { Line } from '@ant-design/plots';
+import { Line } from '@ant-design/charts';
 import { MarketData } from '../../../types/MarketData';
 import { useMemo } from 'react';
 
@@ -23,11 +23,14 @@ const formatData = (data: MarketData): Record<string, any>[] => [
 ];
 
 export const Chart = (props: Props) => {
+	console.log('BeforeData', props.data);
 	const data = useMemo(() => formatData(props.data), [props.data]);
+	console.log('AfterData', data);
 
 	return (
 		<div>
 			<Line
+				height={200}
 				padding="auto"
 				xField="date"
 				yField="price"
