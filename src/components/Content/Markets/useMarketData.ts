@@ -15,21 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
-
-interface MarketInfo {
-	readonly symbol: string;
-	readonly name: string;
-	readonly isInternational: boolean;
-}
-
-const MARKET_INFO: ReadonlyArray<MarketInfo> = [
-	{
-		symbol: 'VTI',
-		name: 'US Total Market',
-		isInternational: false
-	}
-];
-const MARKET_SYMBOLS = MARKET_INFO.map((_) => _.symbol);
+import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 
 interface State {
 	readonly loading: boolean;
