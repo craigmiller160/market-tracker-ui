@@ -80,5 +80,9 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 					element: <div />
 				}
 			])
+	},
+	{
+		path: '*',
+		element: <Navigate to="/market-tracker" />
 	}
 ];
