@@ -284,7 +284,7 @@ describe('Markets', () => {
 			time: '1 Week',
 			startDate: getOneWeekDisplayStartDate(),
 			amountDiff: '+$50.00',
-			amountDiffPercent: '+50.00%'
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'history', true);
 	});
@@ -311,7 +311,7 @@ describe('Markets', () => {
 			time: '1 Month',
 			startDate: getOneMonthDisplayStartDate(),
 			amountDiff: '+$50.00',
-			amountDiffPercent: '+50.00%'
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'history', true);
 	});
@@ -338,7 +338,7 @@ describe('Markets', () => {
 			time: '3 Months',
 			startDate: getThreeMonthDisplayStartDate(),
 			amountDiff: '+$50.00',
-			amountDiffPercent: '+50.00%'
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'history', true);
 	});
@@ -365,7 +365,7 @@ describe('Markets', () => {
 			time: '1 Year',
 			startDate: getOneYearDisplayStartDate(),
 			amountDiff: '+$50.00',
-			amountDiffPercent: '+50.00%'
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'history', true);
 	});
@@ -392,7 +392,7 @@ describe('Markets', () => {
 			time: '5 Years',
 			startDate: getFiveYearDisplayStartDate(),
 			amountDiff: '+$50.00',
-			amountDiffPercent: '+50.00%'
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'history', true);
 	});
