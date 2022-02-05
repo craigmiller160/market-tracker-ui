@@ -1,0 +1,127 @@
+import { TradierQuotes } from '../../../../src/types/tradier/quotes';
+import { TradierHistory } from '../../../../src/types/tradier/history';
+import { TradierSeries } from '../../../../src/types/tradier/timesales';
+
+export interface MockApiCallSetting {
+	readonly symbol: string;
+	readonly quotePrice: number;
+	readonly historyPrice: number;
+	readonly timesalePrice1: number;
+	readonly timesalePrice2: number;
+}
+
+export const mockApiCallSettings: ReadonlyArray<MockApiCallSetting> = [
+	{
+		symbol: 'VTI',
+		quotePrice: 100,
+		historyPrice: 50,
+		timesalePrice1: 40,
+		timesalePrice2: 45
+	},
+	{
+		symbol: 'VOO',
+		quotePrice: 101,
+		historyPrice: 51,
+		timesalePrice1: 41,
+		timesalePrice2: 46
+	},
+	{
+		symbol: 'DIA',
+		quotePrice: 102,
+		historyPrice: 52,
+		timesalePrice1: 42,
+		timesalePrice2: 47
+	},
+	{
+		symbol: 'QQQ',
+		quotePrice: 103,
+		historyPrice: 53,
+		timesalePrice1: 43,
+		timesalePrice2: 48
+	},
+	{
+		symbol: 'EWU',
+		quotePrice: 104,
+		historyPrice: 54,
+		timesalePrice1: 44,
+		timesalePrice2: 49
+	},
+	{
+		symbol: 'EWJ',
+		quotePrice: 105,
+		historyPrice: 55,
+		timesalePrice1: 45,
+		timesalePrice2: 50
+	},
+	{
+		symbol: 'MCHI',
+		quotePrice: 106,
+		historyPrice: 56,
+		timesalePrice1: 46,
+		timesalePrice2: 51
+	}
+];
+
+export const createQuotes = (
+	settings: ReadonlyArray<MockApiCallSetting>
+): TradierQuotes => ({
+	quotes: {
+		quote: settings.map((setting) => ({
+			symbol: setting.symbol,
+			description: '',
+			open: 0,
+			high: 0,
+			low: 0,
+			bid: 0,
+			ask: 0,
+			close: 0,
+			last: setting.quotePrice
+		}))
+	}
+});
+
+export const createHistory = (setting: MockApiCallSetting): TradierHistory => ({
+	history: {
+		day: [
+			{
+				date: '2022-01-01',
+				open: setting.historyPrice,
+				high: 0,
+				low: 0,
+				close: 0
+			}
+		]
+	}
+});
+
+export const createTimesale = (
+	timestamp = 0,
+	setting: MockApiCallSetting
+): TradierSeries => ({
+	series: {
+		data: [
+			{
+				time: '2022-01-01T01:00:00',
+				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
+				price: setting.timesalePrice1,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			},
+			{
+				time: '2022-01-01T01:01:01',
+				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
+				price: setting.timesalePrice2,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			}
+		]
+	}
+});

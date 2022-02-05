@@ -3,11 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
-import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { TradierHistory } from '../../../../src/types/tradier/history';
 import {
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
@@ -23,7 +21,6 @@ import {
 	getTimesalesStart,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import { match } from 'ts-pattern';
 
 type HistoryApiType = 'timesale' | 'history';
@@ -35,65 +32,6 @@ const timesalesEnd = getTimesalesEnd();
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
-
-const mockQuote: TradierQuotes = {
-	quotes: {
-		quote: {
-			symbol: 'VTI',
-			description: '',
-			open: 0,
-			high: 0,
-			low: 0,
-			bid: 0,
-			ask: 0,
-			close: 0,
-			last: 100
-		}
-	}
-};
-
-const mockHistory: TradierHistory = {
-	history: {
-		day: [
-			{
-				date: '2022-01-01',
-				open: 50,
-				high: 0,
-				low: 0,
-				close: 0
-			}
-		]
-	}
-};
-
-const createTimesale = (timestamp = 0): TradierSeries => ({
-	series: {
-		data: [
-			{
-				time: '2022-01-01T01:00:00',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 50,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			},
-			{
-				time: '2022-01-01T01:01:01',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 69,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			}
-		]
-	}
-});
 
 interface TestMarketCardsConfig {
 	readonly time: string;
