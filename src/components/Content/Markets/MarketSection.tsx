@@ -1,6 +1,7 @@
 import { Space, Spin, Typography } from 'antd';
 import { MarketData } from '../../../types/MarketData';
 import { MarketCard } from './MarketCard';
+import './MarketSection.scss';
 
 interface Props {
 	readonly title: string;

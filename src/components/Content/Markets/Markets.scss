@@ -1,27 +1,5 @@
 @import "../../../styles/page";
 
-// TODO split this up too into separate stylesheets for separate components
-
 .GlobalMarkets {
   @include PageRoot;
-
-  .MarketSection {
-    margin: 2rem auto;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .MarketCardList {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      flex-wrap: wrap;
-
-      .Spinner {
-        margin-top: 1rem;
-      }
-    }
-  }
 }
