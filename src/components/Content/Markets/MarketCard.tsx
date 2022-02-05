@@ -12,6 +12,7 @@ import {
 	getTodayDisplayDate
 } from '../../../utils/timeUtils';
 import { Chart } from '../../UI/Chart';
+import './MarketCard.scss';
 
 interface Props {
 	readonly data: MarketData;
