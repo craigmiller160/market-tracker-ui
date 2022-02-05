@@ -66,7 +66,7 @@ const testMarketsPage = (
 			: setting.historyPrice;
 		const currentPrice = isCurrentPriceQuote
 			? setting.quotePrice
-			: setting.timesalePrice1;
+			: setting.timesalePrice2;
 		const diff = currentPrice - initialPrice;
 		const expectedPrice = `$${currentPrice.toFixed(2)} (+$${diff.toFixed(
 			2
