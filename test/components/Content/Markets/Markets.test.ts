@@ -3,11 +3,8 @@ import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
-import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { TradierHistory } from '../../../../src/types/tradier/history';
 import {
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
@@ -19,108 +16,65 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
-	getTimesalesEnd,
-	getTimesalesStart,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import { TradierSeries } from '../../../../src/types/tradier/timesales';
-import { match } from 'ts-pattern';
-
-type HistoryApiType = 'timesale' | 'history';
-
-const formatDate = Time.format('yyyy-MM-dd');
-const today = formatDate(new Date());
-const timesalesStart = getTimesalesStart();
-const timesalesEnd = getTimesalesEnd();
+import { createMockQueries, testDataSettings } from './marketsTestData';
+import { MARKET_INFO } from '../../../../src/components/Content/Markets/MarketInfo';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
 
-const mockQuote: TradierQuotes = {
-	quotes: {
-		quote: {
-			symbol: 'VTI',
-			description: '',
-			open: 0,
-			high: 0,
-			low: 0,
-			bid: 0,
-			ask: 0,
-			close: 0,
-			last: 100
-		}
-	}
-};
-
-const mockHistory: TradierHistory = {
-	history: {
-		day: [
-			{
-				date: '2022-01-01',
-				open: 50,
-				high: 0,
-				low: 0,
-				close: 0
-			}
-		]
-	}
-};
-
-const createTimesale = (timestamp = 0): TradierSeries => ({
-	series: {
-		data: [
-			{
-				time: '2022-01-01T01:00:00',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 50,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			},
-			{
-				time: '2022-01-01T01:01:01',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 69,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			}
-		]
-	}
-});
-
 interface TestMarketCardsConfig {
 	readonly time: string;
-	readonly price?: string;
-	readonly amountDiff: string;
 	readonly startDate: string;
-	readonly amountDiffPercent: string;
+	readonly isTimesale?: boolean;
+	readonly isCurrentPriceQuote?: boolean;
 }
 
-const testMarketCards = (
-	marketCards: ReadonlyArray<HTMLElement>,
+const testMarketsPage = (
+	marketsPage: HTMLElement,
 	config: TestMarketCardsConfig
 ) => {
-	expect(marketCards).toHaveLength(1);
-	const vtiCard = marketCards[0];
-	expect(
-		within(vtiCard).queryByText('US Total Market (VTI)')
-	).toBeInTheDocument();
-	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
-	expect(within(vtiCard).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
-		`Since ${config.startDate}`
-	);
-	const price = config.price ?? '$100.00';
-	expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
-		`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
-	);
-	expect(within(vtiCard).queryByText('Chart is Here')).toBeInTheDocument();
+	const isTimesale = config.isTimesale ?? false;
+	const isCurrentPriceQuote = config.isCurrentPriceQuote ?? true;
+	const marketCards = within(marketsPage).queryAllByRole('listitem');
+	expect(marketCards).toHaveLength(7);
+	testDataSettings.forEach((setting) => {
+		const maybeCard = within(marketsPage).queryByTestId(
+			`market-card-${setting.symbol}`
+		);
+		expect(maybeCard).not.toBeUndefined();
+		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+
+		const name = MARKET_INFO.find(
+			(info) => info.symbol === setting.symbol
+		)?.name;
+		expect(name).not.toBeUndefined();
+		const title = within(card).queryByText(
+			RegExp(`\\(${setting.symbol}\\)`)
+		);
+		expect(title).toHaveTextContent(`${name} (${setting.symbol})`);
+
+		expect(within(card).queryByText(config.time)).toBeInTheDocument();
+		expect(
+			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
+		).toHaveTextContent(`Since ${config.startDate}`);
+
+		const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
+		const initialPrice = isTimesale
+			? setting.timesalePrice1
+			: setting.historyPrice;
+		const currentPrice = isCurrentPriceQuote
+			? setting.quotePrice
+			: setting.timesalePrice2;
+		const diff = currentPrice - initialPrice;
+		const expectedPrice = `$${currentPrice.toFixed(2)} (+$${diff.toFixed(
+			2
+		)}, +${((diff / initialPrice) * 100).toFixed(2)}%)`;
+		expect(priceLine).toHaveTextContent(expectedPrice);
+
+		expect(within(card).queryByText('Chart is Here')).toBeInTheDocument();
+	});
 };
 
 const testPageHeaders = () => {
@@ -129,93 +83,7 @@ const testPageHeaders = () => {
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
 };
 
-interface MockQueriesConfig {
-	readonly symbols: ReadonlyArray<string>;
-	readonly start?: string;
-	readonly interval?: string;
-	readonly timesaleTimestamp?: number;
-}
-
-const mockQueries = (config: MockQueriesConfig) => {
-	const {
-		symbols,
-		start = '',
-		interval = '',
-		timesaleTimestamp = 0
-	} = config;
-	mockApi
-		.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
-		.reply(200, mockQuote);
-	symbols.forEach((symbol) => {
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${today}&interval=${interval}`
-			)
-			.reply(200, mockHistory);
-		mockApi
-			.onGet(
-				`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
-			)
-			.reply(200, createTimesale(timesaleTimestamp));
-	});
-};
-
-interface ApiCallCount {
-	readonly apiCallCount: number;
-	readonly historyApiIndex: number;
-	readonly quoteApiIndex: number;
-}
-
-const verifyApiCalls = (
-	symbols: ReadonlyArray<string>,
-	historyApiType: HistoryApiType,
-	useQuote: boolean
-) => {
-	const historyApiRegex = match(historyApiType)
-		.with('timesale', () => /\/tradier\/markets\/timesales/)
-		.with('history', () => /\/tradier\/markets\/history/)
-		.run();
-
-	const { apiCallCount, historyApiIndex, quoteApiIndex }: ApiCallCount =
-		match({ historyApiType, useQuote })
-			.with({ historyApiType: 'timesale', useQuote: false }, () => ({
-				apiCallCount: 2,
-				historyApiIndex: 1,
-				quoteApiIndex: -1
-			}))
-			.with({ historyApiType: 'timesale', useQuote: true }, () => ({
-				apiCallCount: 3,
-				historyApiIndex: 1,
-				quoteApiIndex: 2
-			}))
-			.with({ historyApiType: 'history' }, () => ({
-				apiCallCount: 5,
-				historyApiIndex: 3,
-				quoteApiIndex: 4
-			}))
-			.run();
-
-	expect(mockApi.history.get).toHaveLength(apiCallCount);
-
-	expect(mockApi.history.get[historyApiIndex].url).toEqual(
-		expect.stringMatching(historyApiRegex)
-	);
-	symbols.forEach((symbol) => {
-		expect(mockApi.history.get[historyApiIndex].url).toEqual(
-			expect.stringMatching(`symbol=${symbol}`)
-		);
-	});
-
-	if (useQuote) {
-		symbols.forEach((symbol) => {
-			expect(mockApi.history.get[quoteApiIndex].url).toEqual(
-				expect.stringMatching(
-					`/tradier/markets/quotes\\?symbols=${symbol}`
-				)
-			);
-		});
-	}
-};
+const mockQueries = createMockQueries(mockApi);
 
 describe('Markets', () => {
 	beforeEach(() => {
@@ -223,27 +91,21 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries({
-			symbols: ['VTI']
-		});
+		mockQueries();
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: 'Today',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: true
 		});
-		verifyApiCalls(['VTI'], 'timesale', true);
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			timesaleTimestamp: new Date().getTime() + 1000
 		});
 		await renderApp();
@@ -251,20 +113,16 @@ describe('Markets', () => {
 		testPageHeaders();
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: 'Today',
-			price: '$69.00',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$19.00',
-			amountDiffPercent: '+38.00%'
+			isTimesale: true,
+			isCurrentPriceQuote: false
 		});
-		verifyApiCalls(['VTI'], 'timesale', false);
 	});
 
 	it('renders for 1 week', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneWeekHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -279,19 +137,15 @@ describe('Markets', () => {
 		menuItemIsSelected('1 Week');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: '1 Week',
 			startDate: getOneWeekDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: false
 		});
-		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 1 month', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneMonthHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -306,19 +160,15 @@ describe('Markets', () => {
 		menuItemIsSelected('1 Month');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: '1 Month',
 			startDate: getOneMonthDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: false
 		});
-		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 3 months', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getThreeMonthHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -333,19 +183,15 @@ describe('Markets', () => {
 		menuItemIsSelected('3 Months');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: '3 Months',
 			startDate: getThreeMonthDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: false
 		});
-		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 1 year', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneYearHistoryStartDate(),
 			interval: 'weekly'
 		});
@@ -360,19 +206,15 @@ describe('Markets', () => {
 		menuItemIsSelected('1 Year');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: '1 Year',
 			startDate: getOneYearDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: false
 		});
-		verifyApiCalls(['VTI'], 'history', true);
 	});
 
 	it('renders for 5 years', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getFiveYearHistoryStartDate(),
 			interval: 'monthly'
 		});
@@ -387,13 +229,10 @@ describe('Markets', () => {
 		menuItemIsSelected('5 Years');
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: '5 Years',
 			startDate: getFiveYearDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: false
 		});
-		verifyApiCalls(['VTI'], 'history', true);
 	});
 });

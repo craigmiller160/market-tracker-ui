@@ -15,21 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
-
-interface MarketInfo {
-	readonly symbol: string;
-	readonly name: string;
-	readonly isInternational: boolean;
-}
-
-const MARKET_INFO: ReadonlyArray<MarketInfo> = [
-	{
-		symbol: 'VTI',
-		name: 'US Total Market',
-		isInternational: false
-	}
-];
-const MARKET_SYMBOLS = MARKET_INFO.map((_) => _.symbol);
+import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 
 interface State {
 	readonly loading: boolean;
@@ -80,10 +66,12 @@ const handleLoadMarketDataError =
 
 const getCurrentPrice = (
 	quotes: ReadonlyArray<Quote>,
-	history: ReadonlyArray<HistoryRecord>
+	history: ReadonlyArray<HistoryRecord>,
+	index: number
 ): number =>
 	pipe(
-		RArray.head(quotes),
+		quotes,
+		RArray.lookup(index),
 		Option.map((_) => _.price),
 		Option.getOrElse(() =>
 			pipe(
@@ -98,23 +86,27 @@ const handleLoadMarketDataSuccess =
 	(setState: Updater<State>) =>
 	({ quotes, history }: DataLoadedResult): TaskT<void> =>
 	async () => {
-		const { init, rest } = pipe(
+		const { left: usa, right: international } = pipe(
 			MARKET_SYMBOLS,
 			RArray.mapWithIndex(
 				(index, symbol): MarketData => ({
 					symbol,
 					name: MARKET_INFO[index].name,
-					currentPrice: getCurrentPrice(quotes, history[index]),
+					currentPrice: getCurrentPrice(
+						quotes,
+						history[index],
+						index
+					),
 					isInternational: MARKET_INFO[index].isInternational,
 					history: history[index]
 				})
 			),
-			RArray.spanLeft((data) => data.isInternational)
+			RArray.partition((data): boolean => data.isInternational)
 		);
 		setState((draft) => {
 			draft.loading = false;
-			draft.usMarketData = castDraft(rest);
-			draft.internationalMarketData = castDraft(init);
+			draft.usMarketData = castDraft(usa);
+			draft.internationalMarketData = castDraft(international);
 		});
 	};
 
