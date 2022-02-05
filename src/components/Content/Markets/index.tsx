@@ -16,6 +16,7 @@ export const Markets = () => {
 				data={usMarketData}
 				timeValue={timeValue}
 			/>
+			<hr />
 			<MarketSection
 				title="International Markets"
 				loading={loading}
