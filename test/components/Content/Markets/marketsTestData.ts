@@ -151,7 +151,7 @@ export const createMockQueries =
 			.map((setting) => setting.symbol)
 			.join(',');
 		mockApi
-			.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
+			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
 			.reply(200, createQuotes(mockApiCallSettings));
 
 		mockApiCallSettings.forEach((setting) => {
@@ -162,7 +162,7 @@ export const createMockQueries =
 				.reply(200, createHistory(setting));
 			mockApi
 				.onGet(
-					`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
+					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
 				)
 				.reply(200, createTimesale(timesaleTimestamp, setting));
 		});
