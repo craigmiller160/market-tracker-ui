@@ -1,5 +1,19 @@
 .MarketCard {
-  width: 20%;
+  &.xxl {
+    width: 30%;
+  }
+
+  &.xl, &.lg {
+    width: 45%;
+  }
+
+  &.md, &.sm {
+    width: 90%;
+  }
+
+  &.xs {
+    width: 100%;
+  }
 
   p {
     margin: 0;

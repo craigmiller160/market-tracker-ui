@@ -1,7 +1,7 @@
 import { MarketData } from '../../../types/MarketData';
 import { Card } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { match } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -13,6 +13,8 @@ import {
 } from '../../../utils/timeUtils';
 import { Chart } from '../../UI/Chart';
 import './MarketCard.scss';
+import { ScreenContext } from '../../ScreenContext';
+import { getBreakpointName } from '../../utils/Breakpoints';
 
 interface Props {
 	readonly data: MarketData;
@@ -112,10 +114,13 @@ const createTime = (time: string): ReactNode => {
 export const MarketCard = ({ data, time }: Props) => {
 	const Title = createTitle(data);
 	const Time = createTime(time);
+	const { breakpoints } = useContext(ScreenContext);
+	const breakpointName = getBreakpointName(breakpoints);
+
 	return (
 		<Card
 			title={Title}
-			className="MarketCard"
+			className={`MarketCard ${breakpointName}`}
 			extra={Time}
 			role="listitem"
 			data-testid={`market-card-${data.symbol}`}
