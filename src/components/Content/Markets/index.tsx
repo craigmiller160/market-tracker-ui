@@ -25,6 +25,7 @@ const Spinner = (
 	</Space>
 );
 
+// TODO split into multiple components
 export const Markets = () => {
 	const { loading, usMarketData, internationalMarketData, timeValue } =
 		useMarketData();
@@ -40,13 +41,17 @@ export const Markets = () => {
 			<Typography.Title>All Global Markets</Typography.Title>
 			<section className="MarketSection">
 				<Typography.Title level={3}>US Markets</Typography.Title>
-				{loading ? Spinner : UsMarketCards}
+				<div className="MarketCardList" role="list">
+					{loading ? Spinner : UsMarketCards}
+				</div>
 			</section>
 			<section className="MarketSection">
 				<Typography.Title level={3}>
 					International Markets
 				</Typography.Title>
-				{loading ? Spinner : IntMarketCards}
+				<div className="MarketCardList" role="list">
+					{loading ? Spinner : IntMarketCards}
+				</div>
 			</section>
 		</div>
 	);

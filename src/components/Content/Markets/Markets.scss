@@ -10,35 +10,44 @@
     flex-direction: column;
     align-items: center;
 
-    .Spinner {
-      margin-top: 1rem;
-    }
-
-    .MarketCard {
+    .MarketCardList {
       width: 100%;
-      p {
-        margin: 0;
-        &.up {
-          color: green;
-          font-weight: bold;
-        }
-        &.down {
-          color: red;
-          font-weight: bold;
-        }
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
 
-        >.Icon {
-          margin-right: 0.5rem;
-        }
+      .Spinner {
+        margin-top: 1rem;
       }
 
-      .Time {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-
-        >h3 {
+      .MarketCard {
+        width: 45%;
+        margin: 1rem;
+        p {
           margin: 0;
+          &.up {
+            color: green;
+            font-weight: bold;
+          }
+          &.down {
+            color: red;
+            font-weight: bold;
+          }
+
+          >.Icon {
+            margin-right: 0.5rem;
+          }
+        }
+
+        .Time {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+
+          >h3 {
+            margin: 0;
+          }
         }
       }
     }
