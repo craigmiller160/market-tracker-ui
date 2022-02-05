@@ -6,10 +6,15 @@ import '@testing-library/jest-dom/extend-expect';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
 import {
+	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
+	getOneMonthDisplayStartDate,
 	getOneMonthHistoryStartDate,
+	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
+	getOneYearDisplayStartDate,
 	getOneYearHistoryStartDate,
+	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
@@ -132,15 +137,12 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Week');
 
-		// const marketsPage = screen.getByTestId('markets-page');
-		// testMarketsPage(marketsPage, {
-		// 	time: '1 Week',
-		// 	startDate: getOneWeekDisplayStartDate(),
-		// 	amountDiff: '+$50.00',
-		// 	amountDiffPercent: '+100.00%'
-		// });
-		// verifyApiCalls(['VTI'], 'history', true);
-		throw new Error();
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: '1 Week',
+			startDate: getOneWeekDisplayStartDate(),
+			isTimesale: false
+		});
 	});
 
 	it('renders for 1 month', async () => {
@@ -158,15 +160,12 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Month');
 
-		// const marketsPage = screen.getByTestId('markets-page');
-		// testMarketsPage(marketsPage, {
-		// 	time: '1 Month',
-		// 	startDate: getOneMonthDisplayStartDate(),
-		// 	amountDiff: '+$50.00',
-		// 	amountDiffPercent: '+100.00%'
-		// });
-		// verifyApiCalls(['VTI'], 'history', true);
-		throw new Error();
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: '1 Month',
+			startDate: getOneMonthDisplayStartDate(),
+			isTimesale: false
+		});
 	});
 
 	it('renders for 3 months', async () => {
@@ -184,15 +183,12 @@ describe('Markets', () => {
 
 		menuItemIsSelected('3 Months');
 
-		// const marketsPage = screen.getByTestId('markets-page');
-		// testMarketsPage(marketsPage, {
-		// 	time: '3 Months',
-		// 	startDate: getThreeMonthDisplayStartDate(),
-		// 	amountDiff: '+$50.00',
-		// 	amountDiffPercent: '+100.00%'
-		// });
-		// verifyApiCalls(['VTI'], 'history', true);
-		throw new Error();
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: '3 Months',
+			startDate: getThreeMonthDisplayStartDate(),
+			isTimesale: false
+		});
 	});
 
 	it('renders for 1 year', async () => {
@@ -210,15 +206,12 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Year');
 
-		// const marketsPage = screen.getByTestId('markets-page');
-		// testMarketsPage(marketsPage, {
-		// 	time: '1 Year',
-		// 	startDate: getOneYearDisplayStartDate(),
-		// 	amountDiff: '+$50.00',
-		// 	amountDiffPercent: '+100.00%'
-		// });
-		// verifyApiCalls(['VTI'], 'history', true);
-		throw new Error();
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: '1 Year',
+			startDate: getOneYearDisplayStartDate(),
+			isTimesale: false
+		});
 	});
 
 	it('renders for 5 years', async () => {
@@ -236,14 +229,11 @@ describe('Markets', () => {
 
 		menuItemIsSelected('5 Years');
 
-		// const marketsPage = screen.getByTestId('markets-page');
-		// testMarketsPage(marketsPage, {
-		// 	time: '5 Years',
-		// 	startDate: getFiveYearDisplayStartDate(),
-		// 	amountDiff: '+$50.00',
-		// 	amountDiffPercent: '+100.00%'
-		// });
-		// verifyApiCalls(['VTI'], 'history', true);
-		throw new Error();
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: '5 Years',
+			startDate: getFiveYearDisplayStartDate(),
+			isTimesale: false
+		});
 	});
 });
