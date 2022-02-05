@@ -19,7 +19,8 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { match } from 'ts-pattern';
-import { createMockQueries } from './marketsTestData';
+import { createMockQueries, testDataSettings } from './marketsTestData';
+import { MARKET_INFO } from '../../../../src/components/Content/Markets/MarketInfo';
 
 type HistoryApiType = 'timesale' | 'history';
 
@@ -28,30 +29,44 @@ const renderApp = createRenderApp(mockApi);
 
 interface TestMarketCardsConfig {
 	readonly time: string;
-	readonly price?: string;
-	readonly amountDiff: string;
+	readonly price?: string; // TODO delete this
+	readonly amountDiff: string; // TODO delete this
 	readonly startDate: string;
-	readonly amountDiffPercent: string;
+	readonly amountDiffPercent: string; // TODO delete this
 }
 
-const testMarketCards = (
-	marketCards: ReadonlyArray<HTMLElement>,
+const testMarketsPage = (
+	marketsPage: HTMLElement,
 	config: TestMarketCardsConfig
 ) => {
-	expect(marketCards).toHaveLength(1);
-	const vtiCard = marketCards[0];
-	expect(
-		within(vtiCard).queryByText('US Total Market (VTI)')
-	).toBeInTheDocument();
-	expect(within(vtiCard).queryByText(config.time)).toBeInTheDocument();
-	expect(within(vtiCard).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
-		`Since ${config.startDate}`
-	);
-	const price = config.price ?? '$100.00';
-	expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
-		`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
-	);
-	expect(within(vtiCard).queryByText('Chart is Here')).toBeInTheDocument();
+	const marketCards = within(marketsPage).queryAllByRole('market-card');
+	expect(marketCards).toHaveLength(7);
+	testDataSettings.forEach((setting) => {
+		const maybeCard = within(marketsPage).queryByTestId(`market-card-${setting.symbol}`)
+		expect(maybeCard).not.toBeUndefined();
+		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+
+		const name = MARKET_INFO.find((info) => info.symbol === setting.symbol)?.name;
+		expect(name).not.toBeUndefined();
+		const title = within(card).queryByText(RegExp(`\\(${setting.symbol}\\)`));
+		expect(title).toHaveTextContent(`${name} (${setting.symbol})`);
+
+		expect(within(card).queryByText(config.time)).toBeInTheDocument();
+		expect(within(card).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
+			`Since ${config.startDate}`
+		);
+		const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
+		const expectedPrice = `${setting.quotePrice} `;
+		console.log(priceLine?.textContent);
+
+		expect(within(card).queryByText('Chart is Here')).toBeInTheDocument();
+	});
+
+	// const price = config.price ?? '$100.00';
+	// expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
+	// 	`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
+	// );
+
 };
 
 const testPageHeaders = () => {
@@ -131,14 +146,14 @@ describe('Markets', () => {
 		testPageHeaders();
 
 		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
+		testMarketsPage(marketsPage, {
 			time: 'Today',
 			startDate: getTodayDisplayDate(),
 			amountDiff: '+$50.00',
 			amountDiffPercent: '+100.00%'
 		});
-		verifyApiCalls(['VTI'], 'timesale', true);
+		// verifyApiCalls(['VTI'], 'timesale', true);
+		// TODO restore verification
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
@@ -149,16 +164,16 @@ describe('Markets', () => {
 		menuItemIsSelected('Today');
 		testPageHeaders();
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: 'Today',
-			price: '$69.00',
-			startDate: getTodayDisplayDate(),
-			amountDiff: '+$19.00',
-			amountDiffPercent: '+38.00%'
-		});
-		verifyApiCalls(['VTI'], 'timesale', false);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: 'Today',
+		// 	price: '$69.00',
+		// 	startDate: getTodayDisplayDate(),
+		// 	amountDiff: '+$19.00',
+		// 	amountDiffPercent: '+38.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'timesale', false);
+		throw new Error();
 	});
 
 	it('renders for 1 week', async () => {
@@ -176,15 +191,15 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Week');
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: '1 Week',
-			startDate: getOneWeekDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
-		});
-		verifyApiCalls(['VTI'], 'history', true);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: '1 Week',
+		// 	startDate: getOneWeekDisplayStartDate(),
+		// 	amountDiff: '+$50.00',
+		// 	amountDiffPercent: '+100.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'history', true);
+		throw new Error();
 	});
 
 	it('renders for 1 month', async () => {
@@ -202,15 +217,15 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Month');
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: '1 Month',
-			startDate: getOneMonthDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
-		});
-		verifyApiCalls(['VTI'], 'history', true);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: '1 Month',
+		// 	startDate: getOneMonthDisplayStartDate(),
+		// 	amountDiff: '+$50.00',
+		// 	amountDiffPercent: '+100.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'history', true);
+		throw new Error();
 	});
 
 	it('renders for 3 months', async () => {
@@ -228,15 +243,15 @@ describe('Markets', () => {
 
 		menuItemIsSelected('3 Months');
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: '3 Months',
-			startDate: getThreeMonthDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
-		});
-		verifyApiCalls(['VTI'], 'history', true);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: '3 Months',
+		// 	startDate: getThreeMonthDisplayStartDate(),
+		// 	amountDiff: '+$50.00',
+		// 	amountDiffPercent: '+100.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'history', true);
+		throw new Error();
 	});
 
 	it('renders for 1 year', async () => {
@@ -254,15 +269,15 @@ describe('Markets', () => {
 
 		menuItemIsSelected('1 Year');
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: '1 Year',
-			startDate: getOneYearDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
-		});
-		verifyApiCalls(['VTI'], 'history', true);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: '1 Year',
+		// 	startDate: getOneYearDisplayStartDate(),
+		// 	amountDiff: '+$50.00',
+		// 	amountDiffPercent: '+100.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'history', true);
+		throw new Error();
 	});
 
 	it('renders for 5 years', async () => {
@@ -280,14 +295,14 @@ describe('Markets', () => {
 
 		menuItemIsSelected('5 Years');
 
-		const marketsPage = screen.getByTestId('markets-page');
-		const marketCards = within(marketsPage).queryAllByTestId('market-card');
-		testMarketCards(marketCards, {
-			time: '5 Years',
-			startDate: getFiveYearDisplayStartDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
-		});
-		verifyApiCalls(['VTI'], 'history', true);
+		// const marketsPage = screen.getByTestId('markets-page');
+		// testMarketsPage(marketsPage, {
+		// 	time: '5 Years',
+		// 	startDate: getFiveYearDisplayStartDate(),
+		// 	amountDiff: '+$50.00',
+		// 	amountDiffPercent: '+100.00%'
+		// });
+		// verifyApiCalls(['VTI'], 'history', true);
+		throw new Error();
 	});
 });

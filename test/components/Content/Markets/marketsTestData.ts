@@ -13,7 +13,7 @@ const today = formatDate(new Date());
 const timesalesStart = getTimesalesStart();
 const timesalesEnd = getTimesalesEnd();
 
-export interface MockApiCallSetting {
+export interface TestDataSetting {
 	readonly symbol: string;
 	readonly quotePrice: number;
 	readonly historyPrice: number;
@@ -21,7 +21,7 @@ export interface MockApiCallSetting {
 	readonly timesalePrice2: number;
 }
 
-export const mockApiCallSettings: ReadonlyArray<MockApiCallSetting> = [
+export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 	{
 		symbol: 'VTI',
 		quotePrice: 100,
@@ -74,7 +74,7 @@ export const mockApiCallSettings: ReadonlyArray<MockApiCallSetting> = [
 ];
 
 export const createQuotes = (
-	settings: ReadonlyArray<MockApiCallSetting>
+	settings: ReadonlyArray<TestDataSetting>
 ): TradierQuotes => ({
 	quotes: {
 		quote: settings.map((setting) => ({
@@ -91,7 +91,7 @@ export const createQuotes = (
 	}
 });
 
-export const createHistory = (setting: MockApiCallSetting): TradierHistory => ({
+export const createHistory = (setting: TestDataSetting): TradierHistory => ({
 	history: {
 		day: [
 			{
@@ -107,7 +107,7 @@ export const createHistory = (setting: MockApiCallSetting): TradierHistory => ({
 
 export const createTimesale = (
 	timestamp = 0,
-	setting: MockApiCallSetting
+	setting: TestDataSetting
 ): TradierSeries => ({
 	series: {
 		data: [
@@ -147,14 +147,14 @@ export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
 		const { start, interval, timesaleTimestamp } = config;
-		const symbols = mockApiCallSettings
+		const symbols = testDataSettings
 			.map((setting) => setting.symbol)
 			.join(',');
 		mockApi
 			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
-			.reply(200, createQuotes(mockApiCallSettings));
+			.reply(200, createQuotes(testDataSettings));
 
-		mockApiCallSettings.forEach((setting) => {
+		testDataSettings.forEach((setting) => {
 			mockApi
 				.onGet(
 					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${interval}`
