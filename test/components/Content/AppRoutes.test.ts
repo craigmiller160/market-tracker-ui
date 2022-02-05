@@ -32,6 +32,16 @@ describe('AppRoutes', () => {
 		expect(screen.queryByText('Markets Page'));
 	});
 
+	it('correctly redirects for totally wrong route', async () => {
+		await renderApp({
+			initialPath: '/auth-management/'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/markets'
+		);
+		expect(screen.queryByText('Markets Page'));
+	});
+
 	it('renders markets route', async () => {
 		await renderApp({
 			initialPath: '/market-tracker/markets'
