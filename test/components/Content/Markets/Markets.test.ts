@@ -29,10 +29,8 @@ const renderApp = createRenderApp(mockApi);
 
 interface TestMarketCardsConfig {
 	readonly time: string;
-	readonly price?: string; // TODO delete this
-	readonly amountDiff: string; // TODO delete this
 	readonly startDate: string;
-	readonly amountDiffPercent: string; // TODO delete this
+	readonly isTimesale: boolean;
 }
 
 const testMarketsPage = (
@@ -42,22 +40,37 @@ const testMarketsPage = (
 	const marketCards = within(marketsPage).queryAllByRole('market-card');
 	expect(marketCards).toHaveLength(7);
 	testDataSettings.forEach((setting) => {
-		const maybeCard = within(marketsPage).queryByTestId(`market-card-${setting.symbol}`)
+		const maybeCard = within(marketsPage).queryByTestId(
+			`market-card-${setting.symbol}`
+		);
 		expect(maybeCard).not.toBeUndefined();
 		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-		const name = MARKET_INFO.find((info) => info.symbol === setting.symbol)?.name;
+		const name = MARKET_INFO.find(
+			(info) => info.symbol === setting.symbol
+		)?.name;
 		expect(name).not.toBeUndefined();
-		const title = within(card).queryByText(RegExp(`\\(${setting.symbol}\\)`));
+		const title = within(card).queryByText(
+			RegExp(`\\(${setting.symbol}\\)`)
+		);
 		expect(title).toHaveTextContent(`${name} (${setting.symbol})`);
 
 		expect(within(card).queryByText(config.time)).toBeInTheDocument();
-		expect(within(card).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
-			`Since ${config.startDate}`
-		);
+		expect(
+			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
+		).toHaveTextContent(`Since ${config.startDate}`);
+
 		const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-		const expectedPrice = `${setting.quotePrice} `;
-		console.log(priceLine?.textContent);
+		const initialPrice = config.isTimesale
+			? setting.timesalePrice1
+			: setting.historyPrice;
+		const diff = setting.quotePrice - initialPrice;
+		const expectedPrice = `$${setting.quotePrice.toFixed(
+			2
+		)} (+$${diff.toFixed(2)}, +${((diff / initialPrice) * 100).toFixed(
+			2
+		)}%)`;
+		expect(priceLine).toHaveTextContent(expectedPrice);
 
 		expect(within(card).queryByText('Chart is Here')).toBeInTheDocument();
 	});
@@ -66,7 +79,6 @@ const testMarketsPage = (
 	// expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
 	// 	`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
 	// );
-
 };
 
 const testPageHeaders = () => {
@@ -149,8 +161,7 @@ describe('Markets', () => {
 		testMarketsPage(marketsPage, {
 			time: 'Today',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$50.00',
-			amountDiffPercent: '+100.00%'
+			isTimesale: true
 		});
 		// verifyApiCalls(['VTI'], 'timesale', true);
 		// TODO restore verification
