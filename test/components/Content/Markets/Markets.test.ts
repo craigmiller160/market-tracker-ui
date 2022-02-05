@@ -56,7 +56,7 @@ const mockHistory: TradierHistory = {
 	history: {
 		day: [
 			{
-				date: '',
+				date: '2022-01-01',
 				open: 50,
 				high: 0,
 				low: 0,
