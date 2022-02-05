@@ -66,10 +66,12 @@ const handleLoadMarketDataError =
 
 const getCurrentPrice = (
 	quotes: ReadonlyArray<Quote>,
-	history: ReadonlyArray<HistoryRecord>
+	history: ReadonlyArray<HistoryRecord>,
+	index: number
 ): number =>
 	pipe(
-		RArray.head(quotes),
+		quotes,
+		RArray.lookup(index),
 		Option.map((_) => _.price),
 		Option.getOrElse(() =>
 			pipe(
@@ -90,7 +92,11 @@ const handleLoadMarketDataSuccess =
 				(index, symbol): MarketData => ({
 					symbol,
 					name: MARKET_INFO[index].name,
-					currentPrice: getCurrentPrice(quotes, history[index]),
+					currentPrice: getCurrentPrice(
+						quotes,
+						history[index],
+						index
+					),
 					isInternational: MARKET_INFO[index].isInternational,
 					history: history[index]
 				})
