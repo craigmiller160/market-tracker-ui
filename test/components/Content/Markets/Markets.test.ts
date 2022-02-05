@@ -82,7 +82,7 @@ const createTimesale = (timestamp = 0): TradierSeries => ({
 			},
 			{
 				time: '2022-01-01T01:01:01',
-				timestamp,
+				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
 				price: 69,
 				open: 0,
 				high: 0,
@@ -97,6 +97,7 @@ const createTimesale = (timestamp = 0): TradierSeries => ({
 
 interface TestMarketCardsConfig {
 	readonly time: string;
+	readonly price?: string;
 	readonly amountDiff: string;
 	readonly startDate: string;
 	readonly amountDiffPercent: string;
@@ -115,8 +116,9 @@ const testMarketCards = (
 	expect(within(vtiCard).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
 		`Since ${config.startDate}`
 	);
-	expect(within(vtiCard).queryByText(/\$100\.00/)).toHaveTextContent(
-		`$100.00 (${config.amountDiff}, ${config.amountDiffPercent})`
+	const price = config.price ?? '$100.00';
+	expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
+		`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
 	);
 	expect(within(vtiCard).queryByText('Chart is Here')).toBeInTheDocument();
 };
@@ -252,9 +254,10 @@ describe('Markets', () => {
 		const marketCards = within(marketsPage).queryAllByTestId('market-card');
 		testMarketCards(marketCards, {
 			time: 'Today',
+			price: '$69.00',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$98.00',
-			amountDiffPercent: '+98.00%'
+			amountDiff: '+$19.00',
+			amountDiffPercent: '+38.00%'
 		});
 		verifyApiCalls(['VTI'], 'timesale', false);
 	});
