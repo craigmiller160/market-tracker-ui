@@ -102,8 +102,6 @@ describe('Markets', () => {
 			startDate: getTodayDisplayDate(),
 			isTimesale: true
 		});
-		// verifyApiCalls(['VTI'], 'timesale', true);
-		// TODO restore verification
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
