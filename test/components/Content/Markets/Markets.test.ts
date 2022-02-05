@@ -78,7 +78,7 @@ const testMarketsPage = (
 };
 
 const testPageHeaders = () => {
-	expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
+	expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	expect(screen.queryByText('US Markets')).toBeInTheDocument();
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
 };
