@@ -116,7 +116,7 @@ export const MarketCard = ({ data, time }: Props) => {
 			title={Title}
 			className="MarketCard"
 			extra={Time}
-			role="market-card"
+			role="listitem"
 			data-testid={`market-card-${data.symbol}`}
 		>
 			<Chart data={data} />

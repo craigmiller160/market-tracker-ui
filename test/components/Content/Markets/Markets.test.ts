@@ -6,23 +6,15 @@ import '@testing-library/jest-dom/extend-expect';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
 import {
-	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
-	getOneMonthDisplayStartDate,
 	getOneMonthHistoryStartDate,
-	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
-	getOneYearDisplayStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import { match } from 'ts-pattern';
 import { createMockQueries, testDataSettings } from './marketsTestData';
 import { MARKET_INFO } from '../../../../src/components/Content/Markets/MarketInfo';
-
-type HistoryApiType = 'timesale' | 'history';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -37,7 +29,7 @@ const testMarketsPage = (
 	marketsPage: HTMLElement,
 	config: TestMarketCardsConfig
 ) => {
-	const marketCards = within(marketsPage).queryAllByRole('market-card');
+	const marketCards = within(marketsPage).queryAllByRole('listitem');
 	expect(marketCards).toHaveLength(7);
 	testDataSettings.forEach((setting) => {
 		const maybeCard = within(marketsPage).queryByTestId(
@@ -74,74 +66,12 @@ const testMarketsPage = (
 
 		expect(within(card).queryByText('Chart is Here')).toBeInTheDocument();
 	});
-
-	// const price = config.price ?? '$100.00';
-	// expect(within(vtiCard).queryByText(/\([+|-]\$.*\)/)).toHaveTextContent(
-	// 	`${price} (${config.amountDiff}, ${config.amountDiffPercent})`
-	// );
 };
 
 const testPageHeaders = () => {
 	expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
 	expect(screen.queryByText('US Markets')).toBeInTheDocument();
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
-};
-
-interface ApiCallCount {
-	readonly apiCallCount: number;
-	readonly historyApiIndex: number;
-	readonly quoteApiIndex: number;
-}
-
-const verifyApiCalls = (
-	symbols: ReadonlyArray<string>,
-	historyApiType: HistoryApiType,
-	useQuote: boolean
-) => {
-	const historyApiRegex = match(historyApiType)
-		.with('timesale', () => /\/tradier\/markets\/timesales/)
-		.with('history', () => /\/tradier\/markets\/history/)
-		.run();
-
-	const { apiCallCount, historyApiIndex, quoteApiIndex }: ApiCallCount =
-		match({ historyApiType, useQuote })
-			.with({ historyApiType: 'timesale', useQuote: false }, () => ({
-				apiCallCount: 2,
-				historyApiIndex: 1,
-				quoteApiIndex: -1
-			}))
-			.with({ historyApiType: 'timesale', useQuote: true }, () => ({
-				apiCallCount: 3,
-				historyApiIndex: 1,
-				quoteApiIndex: 2
-			}))
-			.with({ historyApiType: 'history' }, () => ({
-				apiCallCount: 5,
-				historyApiIndex: 3,
-				quoteApiIndex: 4
-			}))
-			.run();
-
-	expect(mockApi.history.get).toHaveLength(apiCallCount);
-
-	expect(mockApi.history.get[historyApiIndex].url).toEqual(
-		expect.stringMatching(historyApiRegex)
-	);
-	symbols.forEach((symbol) => {
-		expect(mockApi.history.get[historyApiIndex].url).toEqual(
-			expect.stringMatching(`symbol=${symbol}`)
-		);
-	});
-
-	if (useQuote) {
-		symbols.forEach((symbol) => {
-			expect(mockApi.history.get[quoteApiIndex].url).toEqual(
-				expect.stringMatching(
-					`/tradier/markets/quotes\\?symbols=${symbol}`
-				)
-			);
-		});
-	}
 };
 
 const mockQueries = createMockQueries(mockApi);
