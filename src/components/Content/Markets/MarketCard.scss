@@ -1,0 +1,45 @@
+.MarketCard {
+  margin-bottom: 1rem;
+
+  &.xxl {
+    width: 30%;
+  }
+
+  &.xl, &.lg {
+    width: 45%;
+  }
+
+  &.md, &.sm {
+    width: 90%;
+  }
+
+  &.xs {
+    width: 100%;
+  }
+
+  p {
+    margin: 0;
+    &.up {
+      color: green;
+      font-weight: bold;
+    }
+    &.down {
+      color: red;
+      font-weight: bold;
+    }
+
+    >.Icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .Time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    >h3 {
+      margin: 0;
+    }
+  }
+}

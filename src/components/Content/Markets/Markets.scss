@@ -2,45 +2,4 @@
 
 .GlobalMarkets {
   @include PageRoot;
-
-  .MarketSection {
-    margin: 2rem auto;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .Spinner {
-      margin-top: 1rem;
-    }
-
-    .MarketCard {
-      width: 100%;
-      p {
-        margin: 0;
-        &.up {
-          color: green;
-          font-weight: bold;
-        }
-        &.down {
-          color: red;
-          font-weight: bold;
-        }
-
-        >.Icon {
-          margin-right: 0.5rem;
-        }
-      }
-
-      .Time {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-
-        >h3 {
-          margin: 0;
-        }
-      }
-    }
-  }
 }
