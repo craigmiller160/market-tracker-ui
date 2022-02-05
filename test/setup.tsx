@@ -1,5 +1,4 @@
-// TODO confirm this is doing something
-import 'jest-canvas-mock';
+export {};
 
 jest.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
