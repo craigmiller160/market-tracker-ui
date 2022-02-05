@@ -1,4 +1,4 @@
-import { HistoryRecord } from '../../../types/history';
+import { HistoryRecord } from './history';
 
 export interface MarketData {
 	readonly symbol: string;

@@ -13,7 +13,7 @@ import { castDraft } from 'immer';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
-import { MarketData } from './MarketData';
+import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
 
 interface MarketInfo {

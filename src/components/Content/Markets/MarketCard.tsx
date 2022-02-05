@@ -1,4 +1,4 @@
-import { MarketData } from './MarketData';
+import { MarketData } from '../../../types/MarketData';
 import { Card } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode } from 'react';
@@ -11,6 +11,7 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../utils/timeUtils';
+import { Chart } from '../../UI/Chart';
 
 interface Props {
 	readonly data: MarketData;
@@ -26,7 +27,7 @@ const createTitle = (data: MarketData): ReactNode => {
 	const formattedPriceChange = `${priceChangeOperator}$${Math.abs(
 		priceChange
 	).toFixed(2)}`;
-	const percentChange = (Math.abs(priceChange) / data.currentPrice) * 100;
+	const percentChange = (Math.abs(priceChange) / oldestPrice) * 100;
 	const formattedPercentChange = `${priceChangeOperator}${percentChange.toFixed(
 		2
 	)}%`;
@@ -117,7 +118,7 @@ export const MarketCard = ({ data, time }: Props) => {
 			extra={Time}
 			data-testid="market-card"
 		>
-			<p>Chart Goes Here</p>
+			<Chart data={data} />
 		</Card>
 	);
 };

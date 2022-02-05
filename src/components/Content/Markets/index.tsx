@@ -2,7 +2,7 @@ import { Space, Spin, Typography } from 'antd';
 import { useMarketData } from './useMarketData';
 import './Markets.scss';
 import { MarketCard } from './MarketCard';
-import { MarketData } from './MarketData';
+import { MarketData } from '../../../types/MarketData';
 import { useContext } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { Breakpoints } from '../../utils/Breakpoints';
