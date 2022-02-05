@@ -72,7 +72,7 @@ const createTimesale = (timestamp = 0): TradierSeries => ({
 			{
 				time: '2022-01-01T01:00:00',
 				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 2,
+				price: 50,
 				open: 0,
 				high: 0,
 				low: 0,
@@ -83,7 +83,7 @@ const createTimesale = (timestamp = 0): TradierSeries => ({
 			{
 				time: '2022-01-01T01:01:01',
 				timestamp,
-				price: 100,
+				price: 69,
 				open: 0,
 				high: 0,
 				low: 0,
@@ -118,7 +118,7 @@ const testMarketCards = (
 	expect(within(vtiCard).queryByText(/\$100\.00/)).toHaveTextContent(
 		`$100.00 (${config.amountDiff}, ${config.amountDiffPercent})`
 	);
-	expect(within(vtiCard).queryByText('Chart Goes Here')).toBeInTheDocument();
+	expect(within(vtiCard).queryByText('Chart is Here')).toBeInTheDocument();
 };
 
 const testPageHeaders = () => {
@@ -233,8 +233,8 @@ describe('Markets', () => {
 		testMarketCards(marketCards, {
 			time: 'Today',
 			startDate: getTodayDisplayDate(),
-			amountDiff: '+$98.00',
-			amountDiffPercent: '+98.00%'
+			amountDiff: '+$50.00',
+			amountDiffPercent: '+100.00%'
 		});
 		verifyApiCalls(['VTI'], 'timesale', true);
 	});
