@@ -84,7 +84,7 @@ const handleLoadMarketDataSuccess =
 	(setState: Updater<State>) =>
 	({ quotes, history }: DataLoadedResult): TaskT<void> =>
 	async () => {
-		const { init, rest } = pipe(
+		const { left: usa, right: international } = pipe(
 			MARKET_SYMBOLS,
 			RArray.mapWithIndex(
 				(index, symbol): MarketData => ({
@@ -95,12 +95,12 @@ const handleLoadMarketDataSuccess =
 					history: history[index]
 				})
 			),
-			RArray.spanLeft((data) => data.isInternational)
+			RArray.partition((data): boolean => data.isInternational)
 		);
 		setState((draft) => {
 			draft.loading = false;
-			draft.usMarketData = castDraft(rest);
-			draft.internationalMarketData = castDraft(init);
+			draft.usMarketData = castDraft(usa);
+			draft.internationalMarketData = castDraft(international);
 		});
 	};
 
