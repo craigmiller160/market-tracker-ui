@@ -5,7 +5,6 @@ import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
 import {
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
@@ -17,18 +16,12 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
-	getTimesalesEnd,
-	getTimesalesStart,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { match } from 'ts-pattern';
+import { createMockQueries } from './marketsTestData';
 
 type HistoryApiType = 'timesale' | 'history';
-
-const formatDate = Time.format('yyyy-MM-dd');
-const today = formatDate(new Date());
-const timesalesStart = getTimesalesStart();
-const timesalesEnd = getTimesalesEnd();
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -65,37 +58,6 @@ const testPageHeaders = () => {
 	expect(screen.queryByText('All Global Markets')).toBeInTheDocument();
 	expect(screen.queryByText('US Markets')).toBeInTheDocument();
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
-};
-
-interface MockQueriesConfig {
-	readonly symbols: ReadonlyArray<string>;
-	readonly start?: string;
-	readonly interval?: string;
-	readonly timesaleTimestamp?: number;
-}
-
-const mockQueries = (config: MockQueriesConfig) => {
-	const {
-		symbols,
-		start = '',
-		interval = '',
-		timesaleTimestamp = 0
-	} = config;
-	mockApi
-		.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
-		.reply(200, mockQuote);
-	symbols.forEach((symbol) => {
-		mockApi
-			.onGet(
-				`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${today}&interval=${interval}`
-			)
-			.reply(200, mockHistory);
-		mockApi
-			.onGet(
-				`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
-			)
-			.reply(200, createTimesale(timesaleTimestamp));
-	});
 };
 
 interface ApiCallCount {
@@ -155,15 +117,15 @@ const verifyApiCalls = (
 	}
 };
 
+const mockQueries = createMockQueries(mockApi);
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
 	});
 
 	it('renders for today', async () => {
-		mockQueries({
-			symbols: ['VTI']
-		});
+		mockQueries();
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
@@ -181,7 +143,6 @@ describe('Markets', () => {
 
 	it('renders for today when history has higher millis than current time', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			timesaleTimestamp: new Date().getTime() + 1000
 		});
 		await renderApp();
@@ -202,7 +163,6 @@ describe('Markets', () => {
 
 	it('renders for 1 week', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneWeekHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -229,7 +189,6 @@ describe('Markets', () => {
 
 	it('renders for 1 month', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneMonthHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -256,7 +215,6 @@ describe('Markets', () => {
 
 	it('renders for 3 months', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getThreeMonthHistoryStartDate(),
 			interval: 'daily'
 		});
@@ -283,7 +241,6 @@ describe('Markets', () => {
 
 	it('renders for 1 year', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getOneYearHistoryStartDate(),
 			interval: 'weekly'
 		});
@@ -310,7 +267,6 @@ describe('Markets', () => {
 
 	it('renders for 5 years', async () => {
 		mockQueries({
-			symbols: ['VTI'],
 			start: getFiveYearHistoryStartDate(),
 			interval: 'monthly'
 		});

@@ -1,6 +1,17 @@
 import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
+import MockAdapter from 'axios-mock-adapter';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+import {
+	getTimesalesEnd,
+	getTimesalesStart
+} from '../../../../src/utils/timeUtils';
+
+const formatDate = Time.format('yyyy-MM-dd');
+const today = formatDate(new Date());
+const timesalesStart = getTimesalesStart();
+const timesalesEnd = getTimesalesEnd();
 
 export interface MockApiCallSetting {
 	readonly symbol: string;
@@ -125,3 +136,34 @@ export const createTimesale = (
 		]
 	}
 });
+
+export interface MockQueriesConfig {
+	readonly start?: string;
+	readonly interval?: string;
+	readonly timesaleTimestamp?: number;
+}
+
+export const createMockQueries =
+	(mockApi: MockAdapter) =>
+	(config: MockQueriesConfig = {}) => {
+		const { start, interval, timesaleTimestamp } = config;
+		const symbols = mockApiCallSettings
+			.map((setting) => setting.symbol)
+			.join(',');
+		mockApi
+			.onGet(`/tradier/markets/quotes?symbols=${symbols.join(',')}`)
+			.reply(200, createQuotes(mockApiCallSettings));
+
+		mockApiCallSettings.forEach((setting) => {
+			mockApi
+				.onGet(
+					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${interval}`
+				)
+				.reply(200, createHistory(setting));
+			mockApi
+				.onGet(
+					`/tradier/markets/timesales?symbol=${symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
+				)
+				.reply(200, createTimesale(timesaleTimestamp, setting));
+		});
+	};
