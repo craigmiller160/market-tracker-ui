@@ -1,4 +1,5 @@
-export {};
+// TODO confirm this is doing something
+import 'jest-canvas-mock';
 
 window.URL.createObjectURL = () => '';
 
