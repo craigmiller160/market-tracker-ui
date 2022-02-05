@@ -23,7 +23,7 @@ export const Markets = () => {
 
 	return (
 		<div className="GlobalMarkets" data-testid="markets-page">
-			<Typography.Title>All Global Markets</Typography.Title>
+			<Typography.Title>All Markets</Typography.Title>
 			<MarketSection
 				title="US Markets"
 				loading={loading}
