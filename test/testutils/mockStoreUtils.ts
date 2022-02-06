@@ -6,13 +6,11 @@ export const defaultState: RootState = {
 		hasChecked: false,
 		userData: Option.none
 	},
-	alert: {
-		show: false,
-		type: 'success',
-		message: ''
-	},
 	time: {
 		menuKey: 'time.oneDay',
 		value: 'oneDay'
+	},
+	notification: {
+		notifications: []
 	}
 };
