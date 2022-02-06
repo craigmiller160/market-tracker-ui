@@ -129,7 +129,7 @@ const doLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
 	dispatch: Dispatch
-): TaskT<void> =>
+): TaskT<boolean> =>
 	pipe(
 		TaskEither.sequenceArray(MARKET_SYMBOLS.map((_) => historyFn(_))),
 		TaskEither.bindTo('history'),
@@ -146,7 +146,8 @@ const doLoadMarketData = (
 		TaskEither.fold(
 			handleLoadMarketDataError(setState, dispatch),
 			handleLoadMarketDataSuccess(setState)
-		)
+		),
+		Task.map(() => true)
 	);
 
 const useLoadMarketData = (
