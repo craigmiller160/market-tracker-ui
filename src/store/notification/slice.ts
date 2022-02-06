@@ -70,6 +70,10 @@ const hide = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	draft.notifications = castDraft(notifications);
 };
 
+const reset = (draft: Draft<StateType>) => {
+	draft.notifications = [];
+};
+
 export const notificationSlice = createSlice({
 	name: 'notification',
 	initialState,
@@ -77,6 +81,7 @@ export const notificationSlice = createSlice({
 		addSuccess,
 		addError,
 		hide,
-		markShown
+		markShown,
+		reset
 	}
 });
