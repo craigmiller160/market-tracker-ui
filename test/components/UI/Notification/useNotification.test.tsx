@@ -10,16 +10,13 @@ const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
 
 const getCloseBtn = (): Element => {
-	const wrapper = screen.getByTestId('alert-wrapper');
-	const closeBtn = wrapper.querySelector('button.ant-alert-close-icon');
-	expect(closeBtn).not.toBeNull();
-	return closeBtn!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+	return document.querySelector('.ant-notification-notice-close')!;
 };
 
 describe('Notification', () => {
 	it('shows success notification, and hides on click of X', async () => {
 		const { store } = await renderApp();
-		await act(() => {
+		await act(async () => {
 			store.dispatch(notificationSlice.actions.reset());
 			store.dispatch(notificationSlice.actions.addSuccess('Hello World'));
 		});
@@ -28,7 +25,10 @@ describe('Notification', () => {
 		expect(screen.queryByText('Hello World')).toBeInTheDocument();
 
 		const closeBtn = getCloseBtn();
-		userEvent.click(closeBtn);
+		await act(async () => {
+			userEvent.click(closeBtn);
+		});
+		console.log(store.getState().notification.notifications);
 
 		expect(screen.queryByText('Success')).not.toBeInTheDocument();
 		expect(screen.queryByText('Hello World')).not.toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('Notification', () => {
 
 	it('shows error notification, and hides on click of X', async () => {
 		const { store } = await renderApp();
-		await act(() => {
+		await act(async () => {
 			store.dispatch(notificationSlice.actions.reset());
 			store.dispatch(notificationSlice.actions.addError('Hello World'));
 		});
