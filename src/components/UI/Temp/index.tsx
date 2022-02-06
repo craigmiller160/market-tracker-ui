@@ -4,33 +4,36 @@ import { match } from 'ts-pattern';
 import { useEffect } from 'react';
 import { alertSlice } from '../../../store/alert/slice';
 import { notification } from 'antd';
+import { notificationSlice } from '../../../store/notification/slice';
+import { notificationsSelector } from '../../../store/notification/selectors';
 
 // TODO delete this
 
 export const Temp = () => {
 	const dispatch = useDispatch();
-	const { show, type, message } = useSelector(alertSelector, shallowEqual);
-	const topMessage = match(type)
-		.with('success', () => 'Success')
-		.with('error', () => 'Error')
-		.run();
+	const notifications = useSelector(notificationsSelector, shallowEqual);
 
 	useEffect(() => {
-		if (show) {
-			notification[type]({
-				message: topMessage,
-				description: message,
-				onClose: () => {
-					dispatch(alertSlice.actions.hide());
-				}
-			});
-		}
-	}, [show]);
+
+	}, [notifications.length]);
+
+
+	// useEffect(() => {
+	// 	if (show) {
+	// 		notification[type]({
+	// 			message: topMessage,
+	// 			description: message,
+	// 			onClose: () => {
+	// 				dispatch(notificationSlice.actions.hide());
+	// 			}
+	// 		});
+	// 	}
+	// }, [show]);
 	return (
 		<div>
 			<button
 				onClick={() =>
-					dispatch(alertSlice.actions.showError('Hello World'))
+					dispatch(notificationSlice.actions.showError('Hello World'))
 				}
 			>
 				Show Notification
