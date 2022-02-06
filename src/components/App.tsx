@@ -1,7 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../store';
-import './App.scss';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
