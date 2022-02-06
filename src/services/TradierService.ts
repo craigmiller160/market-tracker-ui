@@ -205,5 +205,7 @@ export const isMarketClosed = (): TaskTryT<MarketStatus> =>
 			uri: '/tradier/markets/clock'
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.map((_) => _.clock.state === 'closed' ? MarketStatus.CLOSED : MarketStatus.OPEN)
+		TaskEither.map((_) =>
+			_.clock.state === 'closed' ? MarketStatus.CLOSED : MarketStatus.OPEN
+		)
 	);

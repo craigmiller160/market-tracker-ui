@@ -19,6 +19,8 @@ import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 import { notificationSlice } from '../../../store/notification/slice';
 import { MarketStatus } from '../../../types/MarketStatus';
 
+// TODO once tests are working for changes, heavily refactor all of this
+
 interface State {
 	readonly loading: boolean;
 	readonly isMarketOpen: boolean;
@@ -108,6 +110,7 @@ const handleLoadMarketDataSuccess =
 		);
 		setState((draft) => {
 			draft.loading = false;
+			draft.isMarketOpen = true;
 			draft.usMarketData = castDraft(usa);
 			draft.internationalMarketData = castDraft(international);
 		});
@@ -126,73 +129,79 @@ const shouldGetQuote: (arg: {
 	)
 );
 
-const doLoadMarketData = (
-	setState: Updater<State>,
-	historyFn: HistoryFn,
-	dispatch: Dispatch
-): TaskT<MarketStatus> =>
-	pipe(
-		TaskEither.sequenceArray(MARKET_SYMBOLS.map((_) => historyFn(_))),
-		TaskEither.bindTo('history'),
-		TaskEither.bind('shouldGetQuote', (_) =>
-			TaskEither.of(shouldGetQuote(_))
-		),
-		TaskEither.bind('quotes', (_) =>
-			match(_)
-				.with({ shouldGetQuote: true }, () =>
-					tradierService.getQuotes(MARKET_SYMBOLS)
-				)
-				.otherwise(() => TaskEither.of([]))
-		),
-		TaskEither.fold(
-			handleLoadMarketDataError(setState, dispatch),
-			handleLoadMarketDataSuccess(setState)
-		),
-		Task.map(() => MarketStatus.OPEN)
-	);
+const createDoLoadMarketData =
+	(setState: Updater<State>, historyFn: HistoryFn, dispatch: Dispatch) =>
+	(): TaskT<MarketStatus> =>
+		pipe(
+			TaskEither.sequenceArray(MARKET_SYMBOLS.map((_) => historyFn(_))),
+			TaskEither.bindTo('history'),
+			TaskEither.bind('shouldGetQuote', (_) =>
+				TaskEither.of(shouldGetQuote(_))
+			),
+			TaskEither.bind('quotes', (_) =>
+				match(_)
+					.with({ shouldGetQuote: true }, () =>
+						tradierService.getQuotes(MARKET_SYMBOLS)
+					)
+					.otherwise(() => TaskEither.of([]))
+			),
+			TaskEither.fold(
+				handleLoadMarketDataError(setState, dispatch),
+				handleLoadMarketDataSuccess(setState)
+			),
+			Task.map(() => MarketStatus.OPEN)
+		);
+
+const createLoadMarketDataIfOpen =
+	(setState: Updater<State>, dispatch: Dispatch, historyFn: HistoryFn) =>
+	(status: MarketStatus): TaskT<MarketStatus> => {
+		const doLoadMarketData = createDoLoadMarketData(
+			setState,
+			historyFn,
+			dispatch
+		);
+		return match(status)
+			.with(MarketStatus.OPEN, () => doLoadMarketData())
+			.otherwise(() => async () => MarketStatus.CLOSED);
+	};
 
 const useLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
 	dispatch: Dispatch
-) =>
-	useCallback(
-		(timeValue: string, showLoading = false) => {
+) => {
+	const loadMarketDataIfOpen = createLoadMarketDataIfOpen(
+		setState,
+		dispatch,
+		historyFn
+	);
+	const doLoadMarketData = createDoLoadMarketData(
+		setState,
+		historyFn,
+		dispatch
+	);
+	return useCallback(
+		(timeValue: string, showLoading = false): TaskT<MarketStatus> => {
 			setState((draft) => {
 				draft.loading = showLoading;
 			});
 
 			return match(timeValue)
-				.with(
-					'oneDay',
+				.with('oneDay', () =>
 					pipe(
 						tradierService.isMarketClosed(),
 						TaskEither.fold(
 							() => async () => MarketStatus.CLOSED,
 							(_) => async () => _
 						),
-						Task.chain((_) =>
-							match(_)
-								.with(MarketStatus.OPEN, () =>
-									doLoadMarketData(
-										setState,
-										historyFn,
-										dispatch
-									)
-								)
-								.otherwise(() => async () => {
-									setState((draft) => {
-										draft.isMarketOpen = false;
-									});
-									return MarketStatus.CLOSED;
-								})
-						)
+						Task.chain(loadMarketDataIfOpen)
 					)
 				)
-				.otherwise(doLoadMarketData(setState, historyFn, dispatch));
+				.otherwise(() => doLoadMarketData());
 		},
-		[setState, historyFn, dispatch]
+		[setState, historyFn, dispatch] // eslint-disable-line react-hooks/exhaustive-deps
 	);
+};
 
 const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
 
@@ -210,13 +219,28 @@ export const useMarketData = (): AllMarketData => {
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
 	useEffect(() => {
-		loadMarketData(timeValue, true);
-		// TODO do not want interval when market is closed
-		const interval = setInterval(loadMarketData, INTERVAL_5_MIN_MILLIS);
+		const interval = pipe(
+			loadMarketData(timeValue, true),
+			Task.map((status) =>
+				match(status)
+					.with(MarketStatus.CLOSED, () => {
+						setState((draft) => {
+							draft.usMarketData = [];
+							draft.internationalMarketData = [];
+							draft.loading = false;
+							draft.isMarketOpen = false;
+						});
+						return 1;
+					})
+					.otherwise(() =>
+						setInterval(loadMarketData, INTERVAL_5_MIN_MILLIS)
+					)
+			)
+		)();
 		return () => {
-			clearInterval(interval);
+			interval.then((_) => clearInterval(_));
 		};
-	}, [loadMarketData, timeValue]);
+	}, [loadMarketData, timeValue, setState]);
 
 	return {
 		...state,
