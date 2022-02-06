@@ -13,7 +13,7 @@ export interface Notification {
 	readonly description: string;
 }
 
-interface StateType {
+export interface StateType {
 	readonly notifications: ReadonlyArray<Notification>;
 }
 

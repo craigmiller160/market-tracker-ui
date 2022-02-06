@@ -1,4 +1,22 @@
-import { notificationSlice } from '../../../src/store/notification/slice';
+import {
+	notificationSlice,
+	Notification,
+	StateType
+} from '../../../src/store/notification/slice';
+import { nanoid } from '@reduxjs/toolkit';
+
+const notifications: ReadonlyArray<Notification> = [
+	{
+		id: nanoid(),
+		isShown: false,
+		type: 'success',
+		message: 'Success',
+		description: 'Hello World'
+	}
+];
+const state: StateType = {
+	notifications
+};
 
 describe('notification slice', () => {
 	it('addSuccess', () => {
@@ -39,21 +57,46 @@ describe('notification slice', () => {
 
 	describe('markShown', () => {
 		it('finds match', () => {
-			throw new Error();
+			const result = notificationSlice.reducer(
+				state,
+				notificationSlice.actions.markShown(notifications[0].id)
+			);
+			expect(result).toEqual({
+				notifications: [
+					{
+						...notifications[0],
+						isShown: true
+					}
+				]
+			});
 		});
 
 		it('cannot find match', () => {
-			throw new Error();
+			const result = notificationSlice.reducer(
+				state,
+				notificationSlice.actions.markShown(nanoid())
+			);
+			expect(result).toEqual(state);
 		});
 	});
 
 	describe('hide', () => {
 		it('finds match', () => {
-			throw new Error();
+			const result = notificationSlice.reducer(
+				state,
+				notificationSlice.actions.hide(notifications[0].id)
+			);
+			expect(result).toEqual({
+				notifications: []
+			});
 		});
 
 		it('cannot find match', () => {
-			throw new Error();
+			const result = notificationSlice.reducer(
+				state,
+				notificationSlice.actions.hide(nanoid())
+			);
+			expect(result).toEqual(state);
 		});
 	});
 });
