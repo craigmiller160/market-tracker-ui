@@ -18,10 +18,17 @@ import { getBreakpointName } from '../../utils/Breakpoints';
 
 interface Props {
 	readonly data: MarketData;
+	readonly isMarketOpen: boolean;
 	readonly time: string;
 }
 
-const createTitle = (data: MarketData): ReactNode => {
+const createTitle = (data: MarketData): ReactNode => (
+	<h3>
+		<strong>{`${data.name} (${data.symbol})`}</strong>
+	</h3>
+);
+
+const createPrice = (data: MarketData) => {
 	const oldestPrice = data.history[0]?.price ?? 0;
 	const priceChange = data.currentPrice - oldestPrice;
 
@@ -39,18 +46,14 @@ const createTitle = (data: MarketData): ReactNode => {
 		priceChange >= 0 ? <CaretUpFilled /> : <CaretDownFilled />;
 
 	return (
-		<>
-			<h3>
-				<strong>{`${data.name} (${data.symbol})`}</strong>
-			</h3>
-			<p className={priceClassName}>
-				<span className="Icon">{ChangeIcon}</span>
-				{formattedPrice} ({formattedPriceChange},{' '}
-				{formattedPercentChange})
-			</p>
-		</>
+		<p className={priceClassName}>
+			<span className="Icon">{ChangeIcon}</span>
+			{formattedPrice} ({formattedPriceChange}, {formattedPercentChange})
+		</p>
 	);
 };
+
+const MarketClosed = <p>Market Closed</p>;
 
 interface TimeInfo {
 	readonly label: string;
@@ -111,15 +114,25 @@ const createTime = (time: string): ReactNode => {
 	);
 };
 
-export const MarketCard = ({ data, time }: Props) => {
+export const MarketCard = ({ isMarketOpen, data, time }: Props) => {
 	const Title = createTitle(data);
+	const Price = match(isMarketOpen)
+		.with(true, () => createPrice(data))
+		.otherwise(() => MarketClosed);
 	const Time = createTime(time);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 
+	const FullTitle = (
+		<>
+			{Title}
+			{Price}
+		</>
+	);
+
 	return (
 		<Card
-			title={Title}
+			title={FullTitle}
 			className={`MarketCard ${breakpointName}`}
 			extra={Time}
 			role="listitem"

@@ -1,9 +1,11 @@
+/* eslint-disable react/display-name */
 import { Space, Spin, Typography } from 'antd';
 import { MarketData } from '../../../types/MarketData';
 import { MarketCard } from './MarketCard';
 import './MarketSection.scss';
 
 interface Props {
+	readonly isMarketOpen: boolean;
 	readonly title: string;
 	readonly loading: boolean;
 	readonly data: ReadonlyArray<MarketData>;
@@ -16,13 +18,20 @@ const Spinner = (
 	</Space>
 );
 
-// eslint-disable-next-line react/display-name
-const createMarketDataToCard = (timeValue: string) => (data: MarketData) =>
-	<MarketCard key={data.symbol} data={data} time={timeValue} />;
+const createMarketDataToCard =
+	(isMarketOpen: boolean, timeValue: string) => (data: MarketData) =>
+		(
+			<MarketCard
+				key={data.symbol}
+				data={data}
+				time={timeValue}
+				isMarketOpen={isMarketOpen}
+			/>
+		);
 
 export const MarketSection = (props: Props) => {
-	const { title, loading, data, timeValue } = props;
-	const marketDataToCard = createMarketDataToCard(timeValue);
+	const { title, loading, data, timeValue, isMarketOpen } = props;
+	const marketDataToCard = createMarketDataToCard(isMarketOpen, timeValue);
 	const MarketCards = data.map(marketDataToCard);
 
 	return (
