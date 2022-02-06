@@ -9,7 +9,8 @@ import {
 	getQuotes,
 	getThreeMonthHistory,
 	getTimesales,
-	HistoryQuery
+	HistoryQuery,
+	isMarketClosed
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
@@ -27,6 +28,7 @@ import {
 	getTimesalesStart
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
+import { TradierClock } from '../../src/types/tradier/clock';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -280,5 +282,31 @@ describe('TradierService', () => {
 
 		const result = await getTimesales('VTI')();
 		expect(result).toEqualRight([]);
+	});
+
+	describe('isMarketClosed', () => {
+		it('is closed', async () => {
+			const clock: TradierClock = {
+				clock: {
+					date: '',
+					state: 'closed'
+				}
+			};
+			mockApi.onGet('/tradier/markets/clock').reply(200, clock);
+			const result = await isMarketClosed()();
+			expect(result).toEqualRight(true);
+		});
+
+		it('is not closed', async () => {
+			const clock: TradierClock = {
+				clock: {
+					date: '',
+					state: 'open'
+				}
+			};
+			mockApi.onGet('/tradier/markets/clock').reply(200, clock);
+			const result = await isMarketClosed()();
+			expect(result).toEqualRight(false);
+		});
 	});
 });

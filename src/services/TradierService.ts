@@ -22,6 +22,7 @@ import {
 } from '../utils/timeUtils';
 import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { TradierClock } from '../types/tradier/clock';
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -196,3 +197,12 @@ export const getFiveYearHistory = (
 		interval: 'monthly'
 	});
 };
+
+export const isMarketClosed = (): TaskTryT<boolean> =>
+	pipe(
+		ajaxApi.get<TradierClock>({
+			uri: '/tradier/markets/clock'
+		}),
+		TaskEither.map(getResponseData),
+		TaskEither.map((_) => _.clock.state === 'closed')
+	);
