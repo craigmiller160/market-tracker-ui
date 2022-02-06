@@ -1,6 +1,6 @@
 import { createSlice, Draft, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { match } from 'ts-pattern';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import * as RArrayExt from '@craigmiller160/ts-functions/es/ReadonlyArrayExt';
 import { castDraft } from 'immer';
 
 // TODO if this works, delete all the Alert stuff
@@ -56,16 +56,8 @@ const showError = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	addNotification(draft, 'error', action.payload);
 };
 
-// TODO move to functions lib if it works
-const dropFirstMatch =
-	<T>(predicate: PredicateT<T>) =>
-	(arr: ReadonlyArray<T>): ReadonlyArray<T> => {
-		const index = arr.findIndex(predicate);
-		return arr.slice(0, index).concat(arr.slice(index + 1));
-	};
-
 const hide = (draft: Draft<StateType>, action: PayloadAction<string>) => {
-	const notifications = dropFirstMatch<Notification>(
+	const notifications = RArrayExt.dropFirstMatch<Notification>(
 		(_) => _.id === action.payload
 	)(draft.notifications);
 	draft.notifications = castDraft(notifications);
