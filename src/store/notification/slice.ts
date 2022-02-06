@@ -10,6 +10,7 @@ type NotificationType = 'success' | 'error';
 
 interface Notification {
 	readonly id: string;
+	readonly isShown: boolean;
 	readonly type: NotificationType;
 	readonly message: string;
 	readonly description: string;
@@ -38,6 +39,7 @@ const addNotification = (
 		...draft.notifications,
 		{
 			id: nanoid(),
+			isShown: false,
 			type,
 			message: getMessage(type),
 			description
@@ -45,15 +47,23 @@ const addNotification = (
 	];
 };
 
-const showSuccess = (
-	draft: Draft<StateType>,
-	action: PayloadAction<string>
-) => {
+const addSuccess = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	addNotification(draft, 'success', action.payload);
 };
 
-const showError = (draft: Draft<StateType>, action: PayloadAction<string>) => {
+const addError = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	addNotification(draft, 'error', action.payload);
+};
+
+const markShown = (draft: Draft<StateType>, action: PayloadAction<string>) => {
+	const notifications = RArrayExt.updateFirstMatch<Notification>(
+		(_) => _.id === action.payload,
+		(_) => ({
+			..._,
+			isShown: true
+		})
+	)(draft.notifications);
+	draft.notifications = castDraft(notifications);
 };
 
 const hide = (draft: Draft<StateType>, action: PayloadAction<string>) => {
@@ -67,8 +77,9 @@ export const notificationSlice = createSlice({
 	name: 'notification',
 	initialState,
 	reducers: {
-		showSuccess,
-		showError,
-		hide
+		addSuccess,
+		addError,
+		hide,
+		markShown
 	}
 });
