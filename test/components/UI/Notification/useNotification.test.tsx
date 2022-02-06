@@ -46,7 +46,11 @@ describe('Notification', () => {
 
 	it('shows error notification, and hides on click of X', async () => {
 		const { store } = await renderApp();
-		store.dispatch(notificationSlice.actions.addError('Hello World'));
+		await act(() => {
+			store.dispatch(notificationSlice.actions.reset());
+			store.dispatch(notificationSlice.actions.addError('Hello World'));
+		});
+
 		expect(screen.queryByText('Error')).toBeInTheDocument();
 		expect(screen.queryByText('Hello World')).toBeInTheDocument();
 
