@@ -4,10 +4,11 @@ import { loadAuthUser } from '../../store/auth/actions';
 import { Layout } from 'antd';
 import { AppRoutes } from './AppRoutes';
 import { Alert } from '../UI/Alert';
-import { Temp } from '../UI/Temp';
+import { useNotification } from '../UI/Notification/useNotification';
 
 export const Content = () => {
 	const dispatch = useDispatch();
+	useNotification();
 
 	useEffect(() => {
 		dispatch(loadAuthUser());
@@ -16,7 +17,6 @@ export const Content = () => {
 	return (
 		<Layout.Content className="MainContent">
 			<Alert />
-			<Temp />
 			<AppRoutes />
 		</Layout.Content>
 	);

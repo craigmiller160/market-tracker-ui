@@ -16,6 +16,7 @@ const useHandleShowingNotifications = (dispatch: Dispatch) =>
 					antNotification[notification.type]({
 						message: notification.message,
 						description: notification.description,
+						duration: null,
 						onClose: () => {
 							dispatch(
 								notificationSlice.actions.hide(notification.id)
@@ -29,6 +30,10 @@ const useHandleShowingNotifications = (dispatch: Dispatch) =>
 			}),
 		[dispatch]
 	);
+
+antNotification.config({
+	maxCount: 10
+});
 
 export const useNotification = () => {
 	const dispatch = useDispatch();
