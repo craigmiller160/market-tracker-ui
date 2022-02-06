@@ -160,7 +160,7 @@ const useLoadMarketData = (
 				draft.loading = showLoading;
 			});
 
-			match(timeValue)
+			return match(timeValue)
 				.with(
 					'oneDay',
 					pipe(
@@ -172,21 +172,30 @@ const useLoadMarketData = (
 						Task.chain((_) =>
 							match(_)
 								.with(false, () =>
-									doLoadMarketData(
-										setState,
-										historyFn,
-										dispatch
+									pipe(
+										doLoadMarketData(
+											setState,
+											historyFn,
+											dispatch
+										),
+										Task.map(() => true)
 									)
 								)
 								.otherwise(() => async () => {
 									setState((draft) => {
 										draft.isMarketOpen = false;
 									});
+									return false;
 								})
 						)
 					)
 				)
-				.otherwise(doLoadMarketData(setState, historyFn, dispatch));
+				.otherwise(
+					pipe(
+						doLoadMarketData(setState, historyFn, dispatch),
+						Task.map(() => true)
+					)
+				);
 		},
 		[setState, historyFn, dispatch]
 	);
