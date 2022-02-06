@@ -3,9 +3,6 @@ import { match } from 'ts-pattern';
 import * as RArrayExt from '@craigmiller160/ts-functions/es/ReadonlyArrayExt';
 import { castDraft } from 'immer';
 
-// TODO if this works, delete all the Alert stuff
-// TODO write tests for this
-
 export type NotificationType = 'success' | 'error';
 
 export interface Notification {
