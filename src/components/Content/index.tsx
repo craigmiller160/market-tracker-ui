@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { loadAuthUser } from '../../store/auth/actions';
 import { Layout } from 'antd';
 import { AppRoutes } from './AppRoutes';
-import { Alert } from '../UI/Alert';
 import { useNotification } from '../UI/Notification/useNotification';
 
 export const Content = () => {
@@ -16,7 +15,6 @@ export const Content = () => {
 
 	return (
 		<Layout.Content className="MainContent">
-			<Alert />
 			<AppRoutes />
 		</Layout.Content>
 	);
