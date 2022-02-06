@@ -19,6 +19,7 @@ import { notificationSlice } from '../../../store/notification/slice';
 
 interface State {
 	readonly loading: boolean;
+	readonly isMarketOpen: boolean;
 	readonly usMarketData: ReadonlyArray<MarketData>;
 	readonly internationalMarketData: ReadonlyArray<MarketData>;
 }
@@ -163,6 +164,7 @@ export const useMarketData = (): AllMarketData => {
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>({
 		loading: true,
+		isMarketOpen: true,
 		usMarketData: [],
 		internationalMarketData: []
 	});
