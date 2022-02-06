@@ -3,8 +3,8 @@ import { store } from '../store';
 import createAjaxErrorHandler from '@craigmiller160/ajax-error-handler';
 import { AxiosResponse } from 'axios';
 import { authSlice } from '../store/auth/slice';
-import * as O from 'fp-ts/es6/Option';
-import { alertSlice } from '../store/alert/slice';
+import * as Option from 'fp-ts/es6/Option';
+import { notificationSlice } from '../store/notification/slice';
 
 interface ErrorResponse {
 	status: number;
@@ -24,10 +24,10 @@ const ajaxErrorHandler = createAjaxErrorHandler({
 		return '';
 	},
 	errorMessageHandler: (message: string) => {
-		store.dispatch(alertSlice.actions.showError(message));
+		store.dispatch(notificationSlice.actions.addError(message));
 	},
 	unauthorizedHandler: () =>
-		store.dispatch(authSlice.actions.setUserData(O.none))
+		store.dispatch(authSlice.actions.setUserData(Option.none))
 });
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;

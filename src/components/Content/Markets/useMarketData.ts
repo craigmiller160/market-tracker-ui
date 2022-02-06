@@ -5,7 +5,6 @@ import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../../../types/history';
 import { Updater, useImmer } from 'use-immer';
 import { Dispatch } from 'redux';
-import { alertSlice } from '../../../store/alert/slice';
 import { Quote } from '../../../types/quote';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
@@ -16,6 +15,7 @@ import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
 import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
+import { notificationSlice } from '../../../store/notification/slice';
 
 interface State {
 	readonly loading: boolean;
@@ -58,7 +58,7 @@ const handleLoadMarketDataError =
 		});
 		console.error('Error loading market data', ex);
 		dispatch(
-			alertSlice.actions.showError(
+			notificationSlice.actions.addError(
 				`Error loading market data: ${ex.message}`
 			)
 		);
