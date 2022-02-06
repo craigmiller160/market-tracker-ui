@@ -17,6 +17,7 @@ import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
 import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 import { notificationSlice } from '../../../store/notification/slice';
+import { MarketStatus } from '../../../types/MarketStatus';
 
 interface State {
 	readonly loading: boolean;
@@ -129,7 +130,7 @@ const doLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
 	dispatch: Dispatch
-): TaskT<boolean> =>
+): TaskT<MarketStatus> =>
 	pipe(
 		TaskEither.sequenceArray(MARKET_SYMBOLS.map((_) => historyFn(_))),
 		TaskEither.bindTo('history'),
@@ -147,7 +148,7 @@ const doLoadMarketData = (
 			handleLoadMarketDataError(setState, dispatch),
 			handleLoadMarketDataSuccess(setState)
 		),
-		Task.map(() => true)
+		Task.map(() => MarketStatus.OPEN)
 	);
 
 const useLoadMarketData = (
@@ -167,36 +168,28 @@ const useLoadMarketData = (
 					pipe(
 						tradierService.isMarketClosed(),
 						TaskEither.fold(
-							() => async () => true,
+							() => async () => MarketStatus.CLOSED,
 							(_) => async () => _
 						),
 						Task.chain((_) =>
 							match(_)
-								.with(false, () =>
-									pipe(
-										doLoadMarketData(
-											setState,
-											historyFn,
-											dispatch
-										),
-										Task.map(() => true)
+								.with(MarketStatus.OPEN, () =>
+									doLoadMarketData(
+										setState,
+										historyFn,
+										dispatch
 									)
 								)
 								.otherwise(() => async () => {
 									setState((draft) => {
 										draft.isMarketOpen = false;
 									});
-									return false;
+									return MarketStatus.CLOSED;
 								})
 						)
 					)
 				)
-				.otherwise(
-					pipe(
-						doLoadMarketData(setState, historyFn, dispatch),
-						Task.map(() => true)
-					)
-				);
+				.otherwise(doLoadMarketData(setState, historyFn, dispatch));
 		},
 		[setState, historyFn, dispatch]
 	);
