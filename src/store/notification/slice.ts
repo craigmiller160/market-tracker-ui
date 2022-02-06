@@ -6,9 +6,9 @@ import { castDraft } from 'immer';
 // TODO if this works, delete all the Alert stuff
 // TODO write tests for this
 
-type NotificationType = 'success' | 'error';
+export type NotificationType = 'success' | 'error';
 
-interface Notification {
+export interface Notification {
 	readonly id: string;
 	readonly isShown: boolean;
 	readonly type: NotificationType;
