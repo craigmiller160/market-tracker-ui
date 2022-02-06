@@ -1,4 +1,5 @@
 import { match } from 'ts-pattern';
+import * as Task from 'fp-ts/es6/Task';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as tradierService from '../../../services/TradierService';
 import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
@@ -124,36 +125,68 @@ const shouldGetQuote: (arg: {
 	)
 );
 
+const doLoadMarketData = (
+	setState: Updater<State>,
+	historyFn: HistoryFn,
+	dispatch: Dispatch
+): TaskT<void> =>
+	pipe(
+		TaskEither.sequenceArray(MARKET_SYMBOLS.map((_) => historyFn(_))),
+		TaskEither.bindTo('history'),
+		TaskEither.bind('shouldGetQuote', (_) =>
+			TaskEither.of(shouldGetQuote(_))
+		),
+		TaskEither.bind('quotes', (_) =>
+			match(_)
+				.with({ shouldGetQuote: true }, () =>
+					tradierService.getQuotes(MARKET_SYMBOLS)
+				)
+				.otherwise(() => TaskEither.of([]))
+		),
+		TaskEither.fold(
+			handleLoadMarketDataError(setState, dispatch),
+			handleLoadMarketDataSuccess(setState)
+		)
+	);
+
 const useLoadMarketData = (
 	setState: Updater<State>,
 	historyFn: HistoryFn,
 	dispatch: Dispatch
 ) =>
 	useCallback(
-		(showLoading = false) => {
+		(timeValue: string, showLoading = false) => {
 			setState((draft) => {
 				draft.loading = showLoading;
 			});
-			const marketHistoryFns = MARKET_SYMBOLS.map((_) => historyFn(_));
 
-			return pipe(
-				TaskEither.sequenceArray(marketHistoryFns),
-				TaskEither.bindTo('history'),
-				TaskEither.bind('shouldGetQuote', (_) =>
-					TaskEither.of(shouldGetQuote(_))
-				),
-				TaskEither.bind('quotes', (_) =>
-					match(_)
-						.with({ shouldGetQuote: true }, () =>
-							tradierService.getQuotes(MARKET_SYMBOLS)
+			match(timeValue)
+				.with(
+					'oneDay',
+					pipe(
+						tradierService.isMarketClosed(),
+						TaskEither.fold(
+							() => async () => true,
+							(_) => async () => _
+						),
+						Task.chain((_) =>
+							match(_)
+								.with(false, () =>
+									doLoadMarketData(
+										setState,
+										historyFn,
+										dispatch
+									)
+								)
+								.otherwise(() => async () => {
+									setState((draft) => {
+										draft.isMarketOpen = false;
+									});
+								})
 						)
-						.otherwise(() => TaskEither.of([]))
-				),
-				TaskEither.fold(
-					handleLoadMarketDataError(setState, dispatch),
-					handleLoadMarketDataSuccess(setState)
+					)
 				)
-			)();
+				.otherwise(doLoadMarketData(setState, historyFn, dispatch));
 		},
 		[setState, historyFn, dispatch]
 	);
@@ -174,7 +207,8 @@ export const useMarketData = (): AllMarketData => {
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
 	useEffect(() => {
-		loadMarketData(true);
+		loadMarketData(timeValue, true);
+		// TODO do not want interval when market is closed
 		const interval = setInterval(loadMarketData, INTERVAL_5_MIN_MILLIS);
 		return () => {
 			clearInterval(interval);

@@ -121,6 +121,10 @@ describe('Markets', () => {
 		});
 	});
 
+	it('renders for today with market closed', async () => {
+		throw new Error();
+	});
+
 	it('renders for 1 week', async () => {
 		mockQueries({
 			start: getOneWeekHistoryStartDate(),
