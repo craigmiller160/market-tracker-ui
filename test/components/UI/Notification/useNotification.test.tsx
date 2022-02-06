@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
@@ -19,7 +19,11 @@ const getCloseBtn = (): Element => {
 describe('Notification', () => {
 	it('shows success notification, and hides on click of X', async () => {
 		const { store } = await renderApp();
-		store.dispatch(notificationSlice.actions.addSuccess('Hello World'));
+		await act(() => {
+			store.dispatch(notificationSlice.actions.reset());
+			store.dispatch(notificationSlice.actions.addSuccess('Hello World'));
+		});
+
 		expect(screen.queryByText('Success')).toBeInTheDocument();
 		expect(screen.queryByText('Hello World')).toBeInTheDocument();
 
