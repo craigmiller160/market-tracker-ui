@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { MarketDataGroup } from '../../../types/MarketDataGroup';
-import { useImmer } from 'use-immer';
+import { Updater, useImmer } from 'use-immer';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { pipe } from 'fp-ts/es6/function';
 import { loadMarketData } from '../../../services/MarketDataService';
@@ -10,6 +10,8 @@ import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 import { MarketTime } from '../../../types/MarketTime';
+import { Dispatch } from 'redux';
+import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
 // TODO add repeat
 
@@ -25,18 +27,11 @@ const defaultMarketDataGroup: MarketDataGroup = {
 	data: []
 };
 
-export const useMarketData = (): State => {
-	const dispatch = useDispatch();
-	const timeValue = useSelector(timeValueSelector);
-	const [state, setState] = useImmer<State>({
-		loading: true,
-		usMarketData: defaultMarketDataGroup,
-		intMarketData: defaultMarketDataGroup
-	});
-
-	useEffect(() => {
+const createMarketDataLoader =
+	(setState: Updater<State>, dispatch: Dispatch) =>
+	(time: MarketTime): TaskT<void> =>
 		pipe(
-			loadMarketData(timeValue),
+			loadMarketData(time),
 			TaskEither.fold(
 				(ex) => async () => {
 					console.error(ex);
@@ -58,8 +53,26 @@ export const useMarketData = (): State => {
 						});
 					}
 			)
-		)();
-	}, [timeValue, dispatch, setState]);
+		);
+
+export const useMarketData = (): State => {
+	const dispatch = useDispatch();
+	const timeValue = useSelector(timeValueSelector);
+	const [state, setState] = useImmer<State>({
+		loading: true,
+		usMarketData: defaultMarketDataGroup,
+		intMarketData: defaultMarketDataGroup
+	});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const marketDataLoader = useCallback(
+		createMarketDataLoader(setState, dispatch),
+		[]
+	);
+
+	useEffect(() => {
+		// TODO set loading when timeValue changes
+		marketDataLoader(timeValue)();
+	}, [timeValue, marketDataLoader]);
 
 	return state;
 };
