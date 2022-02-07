@@ -12,6 +12,7 @@
     "start": "craig-webpack-dev",
     "build": "yarn lint && yarn test && yarn forceBuild",
     "forceBuild": "craig-webpack",
+    "analyzeBuild": "ANALYZE=true craig-webpack",
     "lint": "craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
