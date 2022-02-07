@@ -15,17 +15,14 @@ import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
+import { MarketDataGroup } from '../types/MarketDataGroup';
+
+type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
 
 interface DataLoadedResult {
 	readonly marketStatus: MarketStatus;
 	readonly quotes: ReadonlyArray<Quote>;
 	readonly history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
-}
-
-export interface GlobalMarketData {
-	readonly marketStatus: MarketStatus;
-	readonly usMarketData: ReadonlyArray<MarketData>;
-	readonly intMarketData: ReadonlyArray<MarketData>;
 }
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
@@ -134,11 +131,16 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 		),
 		RArray.partition((_): boolean => _.isInternational)
 	);
-	return {
-		marketStatus: data.marketStatus,
-		usMarketData: usa,
-		intMarketData: international
-	};
+	return [
+		{
+			marketStatus: data.marketStatus,
+			data: usa
+		},
+		{
+			marketStatus: data.marketStatus,
+			data: international
+		}
+	];
 };
 
 export const loadMarketData = (
