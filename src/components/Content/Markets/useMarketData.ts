@@ -88,7 +88,10 @@ export const useMarketData = (): State => {
 	useEffect(() => {
 		let interval: NodeJS.Timer | undefined = undefined;
 		if (!state.loading && MarketTime.ONE_DAY === timeValue) {
-			interval = setInterval(() => marketDataLoader(timeValue)(), 1000);
+			interval = setInterval(
+				() => marketDataLoader(timeValue)(),
+				INTERVAL_5_MIN_MILLIS
+			);
 		}
 		return () => {
 			if (!interval) {
