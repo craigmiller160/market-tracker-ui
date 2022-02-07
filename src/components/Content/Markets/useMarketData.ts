@@ -1,15 +1,21 @@
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketTime } from '../../../types/MarketTime';
-import { match } from 'ts-pattern';
+import { match, when } from 'ts-pattern';
 import * as tradierService from '../../../services/TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { MarketStatus } from '../../../types/MarketStatus';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import {
+	OptionT,
+	PredicateT,
+	TaskTryT
+} from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import { MARKET_SYMBOLS } from './MarketInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Option from 'fp-ts/es6/Option';
+import { Quote } from '../../../types/quote';
 
 /*
 1) Check if market open
@@ -61,6 +67,31 @@ const getHistory = (
 			)
 		);
 
+const getMostRecentHistoryRecord = (
+	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
+): OptionT<HistoryRecord> =>
+	pipe(RArray.head(history), Option.chain(RArray.last));
+
+const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
+	Option.fold(
+		() => false,
+		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
+	)(mostRecentRecord);
+
+const getQuotes = (
+	status: MarketStatus,
+	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
+): TaskTryT<ReadonlyArray<Quote>> =>
+	match({
+		status,
+		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+	})
+		.with({ status: MarketStatus.CLOSED }, () => TaskEither.right([]))
+		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
+			TaskEither.right([])
+		)
+		.otherwise(() => tradierService.getQuotes(MARKET_SYMBOLS));
+
 // TODO wrap all this in useMemo based on timeValue
 export const useMarketData = () => {
 	const timeValue = useSelector(timeValueSelector);
@@ -70,6 +101,9 @@ export const useMarketData = () => {
 		TaskEither.bindTo('marketStatus'),
 		TaskEither.bind('history', ({ marketStatus }) =>
 			getHistory(marketStatus, timeValue)
+		),
+		TaskEither.bind('quotes', ({ marketStatus, history }) =>
+			getQuotes(marketStatus, history)
 		)
 	);
 };
