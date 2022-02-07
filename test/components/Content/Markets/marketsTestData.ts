@@ -62,6 +62,13 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		timesalePrice2: 49
 	},
 	{
+		symbol: 'SPEU',
+		quotePrice: 107,
+		historyPrice: 57,
+		timesalePrice1: 47,
+		timesalePrice2: 52
+	},
+	{
 		symbol: 'EWJ',
 		quotePrice: 105,
 		historyPrice: 55,
