@@ -1,4 +1,4 @@
-import { act, screen } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
@@ -72,12 +72,14 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Markets')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
-		expect(screen.queryByText('Today')).toBeInTheDocument();
-		expect(screen.queryByText('1 Week')).toBeInTheDocument();
-		expect(screen.queryByText('1 Month')).toBeInTheDocument();
-		expect(screen.queryByText('3 Months')).toBeInTheDocument();
-		expect(screen.queryByText('1 Year')).toBeInTheDocument();
-		expect(screen.queryByText('5 Years')).toBeInTheDocument();
+		const navbar = screen.getByTestId('desktop-navbar');
+
+		expect(within(navbar).queryByText('Today')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Week')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Month')).toBeInTheDocument();
+		expect(within(navbar).queryByText('3 Months')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
+		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
 		menuItemIsSelected('Markets');
 		menuItemIsSelected('Today');
@@ -95,12 +97,14 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
-		expect(screen.queryByText('Today')).toBeInTheDocument();
-		expect(screen.queryByText('1 Week')).toBeInTheDocument();
-		expect(screen.queryByText('1 Month')).toBeInTheDocument();
-		expect(screen.queryByText('3 Months')).toBeInTheDocument();
-		expect(screen.queryByText('1 Year')).toBeInTheDocument();
-		expect(screen.queryByText('5 Years')).toBeInTheDocument();
+		const navbar = screen.getByTestId('desktop-navbar');
+
+		expect(within(navbar).queryByText('Today')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Week')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Month')).toBeInTheDocument();
+		expect(within(navbar).queryByText('3 Months')).toBeInTheDocument();
+		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
+		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
 		menuItemIsSelected('Markets');
 		menuItemIsSelected('Today');

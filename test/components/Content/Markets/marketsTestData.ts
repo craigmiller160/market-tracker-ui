@@ -7,6 +7,10 @@ import {
 	getTimesalesEnd,
 	getTimesalesStart
 } from '../../../../src/utils/timeUtils';
+import {
+	TradierCalendar,
+	TradierCalendarStatus
+} from '../../../../src/types/tradier/calendar';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -141,12 +145,41 @@ export interface MockQueriesConfig {
 	readonly start?: string;
 	readonly interval?: string;
 	readonly timesaleTimestamp?: number;
+	readonly isMarketClosed?: boolean;
 }
+
+export const createMockCalendar = (
+	date: string,
+	status: TradierCalendarStatus
+): TradierCalendar => ({
+	calendar: {
+		month: 0,
+		year: 0,
+		days: {
+			day: [
+				{
+					date,
+					status
+				}
+			]
+		}
+	}
+});
 
 export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
-		const { start, interval, timesaleTimestamp } = config;
+		const { start, interval, timesaleTimestamp, isMarketClosed } = config;
+
+		const calendarToday = new Date();
+		const calendarDate = Time.format('yyyy-MM-dd')(calendarToday);
+		const month = Time.format('MM')(calendarToday);
+		const year = Time.format('yyyy')(calendarToday);
+		const status = isMarketClosed ?? false ? 'closed' : 'open';
+		mockApi
+			.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+			.reply(200, createMockCalendar(calendarDate, status));
+
 		const symbols = testDataSettings
 			.map((setting) => setting.symbol)
 			.join(',');

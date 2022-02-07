@@ -22,6 +22,16 @@ import {
 } from '../utils/timeUtils';
 import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { MarketStatus } from '../types/MarketStatus';
+import {
+	toMarketStatus,
+	TradierCalendar,
+	TradierCalendarStatus
+} from '../types/tradier/calendar';
+
+const formatCalendarYear = Time.format('yyyy');
+const formatCalendarMonth = Time.format('MM');
+const formatCalendarDate = Time.format('yyyy-MM-dd');
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -195,4 +205,29 @@ export const getFiveYearHistory = (
 		end: formatHistoryDate(today),
 		interval: 'monthly'
 	});
+};
+
+export const isMarketClosed = (): TaskTryT<MarketStatus> => {
+	const today = new Date();
+	const year = formatCalendarYear(today);
+	const month = formatCalendarMonth(today);
+	const calendarDate = formatCalendarDate(today);
+	return pipe(
+		ajaxApi.get<TradierCalendar>({
+			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
+		}),
+		TaskEither.map(getResponseData),
+		TaskEither.map((_) => _.calendar.days.day),
+		TaskEither.map(
+			flow(
+				RArray.findFirst((_) => _.date === calendarDate),
+				Option.map((_) => _.status),
+				Option.getOrElse((): TradierCalendarStatus => {
+					console.error('Could not find matching calendar date');
+					return 'closed';
+				})
+			)
+		),
+		TaskEither.map(toMarketStatus)
+	);
 };

@@ -9,7 +9,8 @@ import {
 	getQuotes,
 	getThreeMonthHistory,
 	getTimesales,
-	HistoryQuery
+	HistoryQuery,
+	isMarketClosed
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
@@ -27,6 +28,12 @@ import {
 	getTimesalesStart
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
+import { MarketStatus } from '../../src/types/MarketStatus';
+import { TradierCalendar } from '../../src/types/tradier/calendar';
+
+const formatCalendarYear = Time.format('yyyy');
+const formatCalendarMonth = Time.format('MM');
+const formatCalendarDate = Time.format('yyyy-MM-dd');
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -280,5 +287,78 @@ describe('TradierService', () => {
 
 		const result = await getTimesales('VTI')();
 		expect(result).toEqualRight([]);
+	});
+
+	describe('isMarketClosed', () => {
+		const today = new Date();
+		const year = formatCalendarYear(today);
+		const month = formatCalendarMonth(today);
+		const dateString = formatCalendarDate(today);
+
+		it('is closed', async () => {
+			const calendar: TradierCalendar = {
+				calendar: {
+					month: 1,
+					year: 2022,
+					days: {
+						day: [
+							{
+								date: dateString,
+								status: 'closed'
+							}
+						]
+					}
+				}
+			};
+			mockApi
+				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+				.reply(200, calendar);
+			const result = await isMarketClosed()();
+			expect(result).toEqualRight(MarketStatus.CLOSED);
+		});
+
+		it('is not closed', async () => {
+			const calendar: TradierCalendar = {
+				calendar: {
+					month: 1,
+					year: 2022,
+					days: {
+						day: [
+							{
+								date: dateString,
+								status: 'open'
+							}
+						]
+					}
+				}
+			};
+			mockApi
+				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+				.reply(200, calendar);
+			const result = await isMarketClosed()();
+			expect(result).toEqualRight(MarketStatus.OPEN);
+		});
+
+		it('no matching date', async () => {
+			const calendar: TradierCalendar = {
+				calendar: {
+					month: 1,
+					year: 2022,
+					days: {
+						day: [
+							{
+								date: '2000-01-01',
+								status: 'open'
+							}
+						]
+					}
+				}
+			};
+			mockApi
+				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+				.reply(200, calendar);
+			const result = await isMarketClosed()();
+			expect(result).toEqualRight(MarketStatus.CLOSED);
+		});
 	});
 });

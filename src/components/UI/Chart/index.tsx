@@ -16,7 +16,7 @@ export const Chart = (props: Props) => {
 	return (
 		<div>
 			<Line
-				height={200}
+				height={100}
 				padding="auto"
 				xField="date"
 				yField="change"
