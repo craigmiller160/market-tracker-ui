@@ -12,10 +12,11 @@ import {
 } from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../../../types/history';
 import { pipe } from 'fp-ts/es6/function';
-import { MARKET_SYMBOLS } from './MarketInfo';
+import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../../../types/quote';
+import { MarketData } from '../../../types/MarketData';
 
 /*
 1) Check if market open
@@ -32,6 +33,18 @@ import { Quote } from '../../../types/quote';
 	c) If market open and history timestamp higher than current timestamp, do a no-op
 
  */
+
+interface DataLoadedResult {
+	readonly marketStatus: MarketStatus;
+	readonly quotes: ReadonlyArray<Quote>;
+	readonly history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
+}
+
+export interface GlobalMarketData {
+	readonly marketStatus: MarketStatus;
+	readonly usMarketData: ReadonlyArray<MarketData>;
+	readonly intMarketData: ReadonlyArray<MarketData>;
+}
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
@@ -92,7 +105,28 @@ const getQuotes = (
 		)
 		.otherwise(() => tradierService.getQuotes(MARKET_SYMBOLS));
 
-// TODO wrap all this in useMemo based on timeValue
+const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
+	const { left: usa, right: international } = pipe(
+		MARKET_SYMBOLS,
+		RArray.mapWithIndex(
+			(index, symbol): MarketData => ({
+				symbol,
+				name: MARKET_INFO[index].name,
+				currentPrice: 0, // TODO fix this
+				isInternational: MARKET_INFO[index].isInternational,
+				history: [] // TODO fix this
+			})
+		),
+		RArray.partition((_): boolean => _.isInternational)
+	);
+	return {
+		marketStatus: data.marketStatus,
+		usMarketData: usa,
+		intMarketData: international
+	};
+};
+
+// TODO make this whole thing into a service instead, pass timeValue in as an argument
 export const useMarketData = () => {
 	const timeValue = useSelector(timeValueSelector);
 
@@ -104,6 +138,7 @@ export const useMarketData = () => {
 		),
 		TaskEither.bind('quotes', ({ marketStatus, history }) =>
 			getQuotes(marketStatus, history)
-		)
+		),
+		TaskEither.map(handleMarketData)
 	);
 };
