@@ -85,5 +85,9 @@ export const useMarketData = (): State => {
 		marketDataLoader(timeValue)();
 	}, [timeValue, marketDataLoader, setState]);
 
+	useEffect(() => {
+		// TODO this is where we should somehow control repetition
+	}, [state.loading]);
+
 	return state;
 };
