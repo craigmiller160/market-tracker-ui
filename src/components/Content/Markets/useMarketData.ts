@@ -128,7 +128,9 @@ const getMarketDataCurrentPrice = (
 				Option.map((_) => _.price),
 				Option.getOrElse(() =>
 					pipe(
-						RArray.last(history),
+						history,
+						RArray.lookup(index),
+						Option.chain(RArray.last),
 						Option.map((_) => _.price),
 						Option.getOrElse(() => 0)
 					)
