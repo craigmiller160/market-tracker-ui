@@ -9,7 +9,7 @@ export const defaultState: RootState = {
 	},
 	time: {
 		menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
-		value: MarketTime.ONE_DAYÏ
+		value: MarketTime.ONE_DAY
 	},
 	notification: {
 		notifications: []
