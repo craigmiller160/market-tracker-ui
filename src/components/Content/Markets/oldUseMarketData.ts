@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketData } from '../../../types/MarketData';
 import * as Option from 'fp-ts/es6/Option';
-import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
+import { MARKET_INFO, MARKET_SYMBOLS } from '../../../services/MarketInfo';
 import { notificationSlice } from '../../../store/notification/slice';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { MarketTime } from '../../../types/MarketTime';
