@@ -195,7 +195,7 @@ export const createMockQueries =
 				.reply(200, createHistory(setting));
 			mockApi
 				.onGet(
-					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=5min`
+					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=1min`
 				)
 				.reply(200, createTimesale(timesaleTimestamp, setting));
 		});

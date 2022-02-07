@@ -266,7 +266,7 @@ describe('TradierService', () => {
 		const end = getTimesalesEnd();
 		mockApi
 			.onGet(
-				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=5min`
+				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
 			)
 			.reply(200, createTimesale());
 
@@ -279,7 +279,7 @@ describe('TradierService', () => {
 		const end = getTimesalesEnd();
 		mockApi
 			.onGet(
-				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=5min`
+				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
 			)
 			.reply(200, {
 				series: null
