@@ -105,6 +105,37 @@ const getQuotes = (
 		)
 		.otherwise(() => tradierService.getQuotes(MARKET_SYMBOLS));
 
+const getMarketDataHistory = (
+	data: DataLoadedResult,
+	index: number
+): ReadonlyArray<HistoryRecord> =>
+	pipe(
+		data.history,
+		RArray.lookup(index),
+		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
+	);
+
+const getMarketDataCurrentPrice = (
+	data: DataLoadedResult,
+	index: number
+): number =>
+	match(data)
+		.with({ marketStatus: MarketStatus.CLOSED }, () => 0)
+		.otherwise(({ quotes, history }) =>
+			pipe(
+				quotes,
+				RArray.lookup(index),
+				Option.map((_) => _.price),
+				Option.getOrElse(() =>
+					pipe(
+						RArray.last(history),
+						Option.map((_) => _.price),
+						Option.getOrElse(() => 0)
+					)
+				)
+			)
+		);
+
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 	const { left: usa, right: international } = pipe(
 		MARKET_SYMBOLS,
@@ -112,9 +143,9 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 			(index, symbol): MarketData => ({
 				symbol,
 				name: MARKET_INFO[index].name,
-				currentPrice: 0, // TODO fix this
+				currentPrice: getMarketDataCurrentPrice(data, index),
 				isInternational: MARKET_INFO[index].isInternational,
-				history: [] // TODO fix this
+				history: getMarketDataHistory(data, index)
 			})
 		),
 		RArray.partition((_): boolean => _.isInternational)
