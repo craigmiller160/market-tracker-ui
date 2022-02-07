@@ -20,6 +20,7 @@ import { MarketDataGroup } from '../types/MarketDataGroup';
 export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
 
 interface DataLoadedResult {
+	readonly time: MarketTime;
 	readonly marketStatus: MarketStatus;
 	readonly quotes: ReadonlyArray<Quote>;
 	readonly history: ReadonlyArray<ReadonlyArray<HistoryRecord>>;
@@ -133,10 +134,12 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 	);
 	return [
 		{
+			time: data.time,
 			marketStatus: data.marketStatus,
 			data: usa
 		},
 		{
+			time: data.time,
 			marketStatus: data.marketStatus,
 			data: international
 		}
@@ -147,8 +150,9 @@ export const loadMarketData = (
 	timeValue: MarketTime
 ): TaskTryT<GlobalMarketData> =>
 	pipe(
-		checkMarketStatus(timeValue),
-		TaskEither.bindTo('marketStatus'),
+		TaskEither.right(timeValue),
+		TaskEither.bindTo('time'),
+		TaskEither.bind('marketStatus', ({ time }) => checkMarketStatus(time)),
 		TaskEither.bind('history', ({ marketStatus }) =>
 			getHistory(marketStatus, timeValue)
 		),
