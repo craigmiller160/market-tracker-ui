@@ -205,6 +205,27 @@ const useLoadMarketData = (
 
 const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
 
+const getEmptyUsMarketData = () =>
+	MARKET_INFO.filter((_) => !_.isInternational).map(
+		(_): MarketData => ({
+			symbol: _.symbol,
+			name: _.name,
+			currentPrice: 0,
+			isInternational: _.isInternational,
+			history: []
+		})
+	);
+const getEmptyIntMarketData = () =>
+	MARKET_INFO.filter((_) => _.isInternational).map(
+		(_): MarketData => ({
+			symbol: _.symbol,
+			name: _.name,
+			currentPrice: 0,
+			isInternational: _.isInternational,
+			history: []
+		})
+	);
+
 export const useMarketData = (): AllMarketData => {
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>({
@@ -225,8 +246,12 @@ export const useMarketData = (): AllMarketData => {
 				match(status)
 					.with(MarketStatus.CLOSED, () => {
 						setState((draft) => {
-							draft.usMarketData = [];
-							draft.internationalMarketData = [];
+							draft.usMarketData = castDraft(
+								getEmptyUsMarketData()
+							);
+							draft.internationalMarketData = castDraft(
+								getEmptyIntMarketData()
+							);
 							draft.loading = false;
 							draft.isMarketOpen = false;
 						});

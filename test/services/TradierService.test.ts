@@ -29,6 +29,7 @@ import {
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
 import { TradierClock } from '../../src/types/tradier/clock';
+import { MarketStatus } from '../../src/types/MarketStatus';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -294,7 +295,7 @@ describe('TradierService', () => {
 			};
 			mockApi.onGet('/tradier/markets/clock').reply(200, clock);
 			const result = await isMarketClosed()();
-			expect(result).toEqualRight(true);
+			expect(result).toEqualRight(MarketStatus.CLOSED);
 		});
 
 		it('is not closed', async () => {
@@ -306,7 +307,7 @@ describe('TradierService', () => {
 			};
 			mockApi.onGet('/tradier/markets/clock').reply(200, clock);
 			const result = await isMarketClosed()();
-			expect(result).toEqualRight(false);
+			expect(result).toEqualRight(MarketStatus.OPEN);
 		});
 	});
 });
