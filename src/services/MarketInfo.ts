@@ -33,12 +33,11 @@ export const MARKET_INFO: ReadonlyArray<MarketInfo> = [
 		name: 'United Kingdom',
 		isInternational: true
 	},
-	// TODO VGX is not in Tradier, figure out what alternatives there are
-	// {
-	// 	symbol: 'VGX',
-	// 	name: 'Europe',
-	// 	isInternational: true
-	// },
+	{
+		symbol: 'SPEU',
+		name: 'Europe',
+		isInternational: true
+	},
 	{
 		symbol: 'EWJ',
 		name: 'Japan',
