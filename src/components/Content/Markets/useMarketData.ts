@@ -10,6 +10,8 @@ import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 
+// TODO add repeat
+
 interface State {
 	readonly loading: boolean;
 	readonly usMarketData: MarketDataGroup;
