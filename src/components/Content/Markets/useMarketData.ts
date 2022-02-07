@@ -9,6 +9,7 @@ import { loadMarketData } from '../../../services/MarketDataService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
+import { MarketTime } from '../../../types/MarketTime';
 
 // TODO add repeat
 
@@ -19,6 +20,7 @@ interface State {
 }
 
 const defaultMarketDataGroup: MarketDataGroup = {
+	time: MarketTime.ONE_DAY,
 	marketStatus: MarketStatus.OPEN,
 	data: []
 };

@@ -16,11 +16,12 @@ import './MarketCard.scss';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
 import { MarketTime } from '../../../types/MarketTime';
+import { MarketStatus } from '../../../types/MarketStatus';
 
 interface Props {
 	readonly data: MarketData;
-	readonly isMarketOpen: boolean;
-	readonly time: string;
+	readonly marketStatus: MarketStatus;
+	readonly time: MarketTime;
 }
 
 const createTitle = (data: MarketData): ReactNode => (
@@ -115,14 +116,14 @@ const createTime = (time: string): ReactNode => {
 	);
 };
 
-export const MarketCard = ({ isMarketOpen, data, time }: Props) => {
+export const MarketCard = ({ marketStatus, data, time }: Props) => {
 	const Title = createTitle(data);
 	const Time = createTime(time);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 
-	const { Price, Chart } = match(isMarketOpen)
-		.with(true, () => ({
+	const { Price, Chart } = match(marketStatus)
+		.with(MarketStatus.OPEN, () => ({
 			Price: createPrice(data),
 			Chart: <ChartComp data={data} />
 		}))
