@@ -11,7 +11,7 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../utils/timeUtils';
-import { Chart } from '../../UI/Chart';
+import { Chart as ChartComp } from '../../UI/Chart';
 import './MarketCard.scss';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
@@ -116,12 +116,19 @@ const createTime = (time: string): ReactNode => {
 
 export const MarketCard = ({ isMarketOpen, data, time }: Props) => {
 	const Title = createTitle(data);
-	const Price = match(isMarketOpen)
-		.with(true, () => createPrice(data))
-		.otherwise(() => MarketClosed);
 	const Time = createTime(time);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
+
+	const { Price, Chart } = match(isMarketOpen)
+		.with(true, () => ({
+			Price: createPrice(data),
+			Chart: <ChartComp data={data} />
+		}))
+		.otherwise(() => ({
+			Price: MarketClosed,
+			Chart: <div />
+		}));
 
 	const FullTitle = (
 		<>
@@ -138,7 +145,7 @@ export const MarketCard = ({ isMarketOpen, data, time }: Props) => {
 			role="listitem"
 			data-testid={`market-card-${data.symbol}`}
 		>
-			<Chart data={data} />
+			{Chart}
 		</Card>
 	);
 };
