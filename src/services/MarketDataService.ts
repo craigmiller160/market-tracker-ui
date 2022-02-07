@@ -17,7 +17,7 @@ import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
 
-type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
+export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
 
 interface DataLoadedResult {
 	readonly marketStatus: MarketStatus;
