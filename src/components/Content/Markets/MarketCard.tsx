@@ -15,6 +15,7 @@ import { Chart as ChartComp } from '../../UI/Chart';
 import './MarketCard.scss';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
+import { MarketTime } from '../../../types/MarketTime';
 
 interface Props {
 	readonly data: MarketData;
@@ -63,42 +64,42 @@ interface TimeInfo {
 const createTime = (time: string): ReactNode => {
 	const timeInfo: TimeInfo = match(time)
 		.with(
-			'oneDay',
+			MarketTime.ONE_DAY,
 			(): TimeInfo => ({
 				label: 'Today',
 				sinceDate: getTodayDisplayDate()
 			})
 		)
 		.with(
-			'oneWeek',
+			MarketTime.ONE_WEEK,
 			(): TimeInfo => ({
 				label: '1 Week',
 				sinceDate: getOneWeekDisplayStartDate()
 			})
 		)
 		.with(
-			'oneMonth',
+			MarketTime.ONE_MONTH,
 			(): TimeInfo => ({
 				label: '1 Month',
 				sinceDate: getOneMonthDisplayStartDate()
 			})
 		)
 		.with(
-			'threeMonths',
+			MarketTime.THREE_MONTHS,
 			(): TimeInfo => ({
 				label: '3 Months',
 				sinceDate: getThreeMonthDisplayStartDate()
 			})
 		)
 		.with(
-			'oneYear',
+			MarketTime.ONE_YEAR,
 			(): TimeInfo => ({
 				label: '1 Year',
 				sinceDate: getOneYearDisplayStartDate()
 			})
 		)
 		.with(
-			'fiveYears',
+			MarketTime.FIVE_YEARS,
 			(): TimeInfo => ({
 				label: '5 Years',
 				sinceDate: getFiveYearDisplayStartDate()

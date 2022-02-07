@@ -1,5 +1,6 @@
 import { RootState } from '../../src/store';
 import * as Option from 'fp-ts/es6/Option';
+import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
 
 export const defaultState: RootState = {
 	auth: {
@@ -7,8 +8,8 @@ export const defaultState: RootState = {
 		userData: Option.none
 	},
 	time: {
-		menuKey: 'time.oneDay',
-		value: 'oneDay'
+		menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
+		value: MarketTime.ONE_DAY
 	},
 	notification: {
 		notifications: []

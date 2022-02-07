@@ -18,6 +18,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
 import { notificationSlice } from '../../../store/notification/slice';
 import { MarketStatus } from '../../../types/MarketStatus';
+import { MarketTime } from '../../../types/MarketTime';
 
 // TODO once tests are working for changes, heavily refactor all of this
 
@@ -39,14 +40,17 @@ interface DataLoadedResult {
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
-const useHistoryFn = (timeValue: string): HistoryFn => {
+const useHistoryFn = (timeValue: MarketTime): HistoryFn => {
 	const historyFn = match(timeValue)
-		.with('oneDay', () => tradierService.getTimesales)
-		.with('oneWeek', () => tradierService.getOneWeekHistory)
-		.with('oneMonth', () => tradierService.getOneMonthHistory)
-		.with('threeMonths', () => tradierService.getThreeMonthHistory)
-		.with('oneYear', () => tradierService.getOneYearHistory)
-		.with('fiveYears', () => tradierService.getFiveYearHistory)
+		.with(MarketTime.ONE_DAY, () => tradierService.getTimesales)
+		.with(MarketTime.ONE_WEEK, () => tradierService.getOneWeekHistory)
+		.with(MarketTime.ONE_MONTH, () => tradierService.getOneMonthHistory)
+		.with(
+			MarketTime.THREE_MONTHS,
+			() => tradierService.getThreeMonthHistory
+		)
+		.with(MarketTime.ONE_YEAR, () => tradierService.getOneYearHistory)
+		.with(MarketTime.FIVE_YEARS, () => tradierService.getFiveYearHistory)
 		.run();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	return useCallback((s: string) => historyFn(s), [timeValue]);
@@ -187,7 +191,7 @@ const useLoadMarketData = (
 			});
 
 			return match(timeValue)
-				.with('oneDay', () =>
+				.with(MarketTime.ONE_DAY, () =>
 					pipe(
 						tradierService.isMarketClosed(),
 						TaskEither.fold(
