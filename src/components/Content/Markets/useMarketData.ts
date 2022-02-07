@@ -14,6 +14,7 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
 const INTERVAL_1_MIN_MILLIS = 1000 * 60;
+// TODO when repeating, the old call may still exist and needs to be aborted before setting the values
 
 interface State {
 	readonly loading: boolean;
