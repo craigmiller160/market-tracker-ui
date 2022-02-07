@@ -13,7 +13,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
-// TODO add repeat
+const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
 
 interface State {
 	readonly loading: boolean;
@@ -86,8 +86,16 @@ export const useMarketData = (): State => {
 	}, [timeValue, marketDataLoader, setState]);
 
 	useEffect(() => {
-		// TODO this is where we should somehow control repetition
-	}, [state.loading]);
+		let interval: NodeJS.Timer | undefined = undefined;
+		if (!state.loading) {
+			interval = setInterval(() => marketDataLoader(timeValue)(), 1000);
+		}
+		return () => {
+			if (!interval) {
+				clearInterval(interval);
+			}
+		};
+	}, [state.loading, timeValue, marketDataLoader]);
 
 	return state;
 };
