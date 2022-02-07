@@ -14,10 +14,10 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
 const INTERVAL_1_MIN_MILLIS = 1000 * 60;
-// TODO when repeating, the old call may still exist and needs to be aborted before setting the values
 
 interface State {
 	readonly loading: boolean;
+	readonly time: MarketTime;
 	readonly usMarketData: MarketDataGroup;
 	readonly intMarketData: MarketDataGroup;
 }
@@ -48,9 +48,11 @@ const handleLoadSuccess =
 	([us, int]: [MarketDataGroup, MarketDataGroup]) =>
 	async () => {
 		setState((draft) => {
-			draft.loading = false;
-			draft.usMarketData = castDraft(us);
-			draft.intMarketData = castDraft(int);
+			if (draft.time === us.time) {
+				draft.loading = false;
+				draft.usMarketData = castDraft(us);
+				draft.intMarketData = castDraft(int);
+			}
 		});
 	};
 
@@ -70,6 +72,7 @@ export const useMarketData = (): State => {
 	const timeValue = useSelector(timeValueSelector);
 	const [state, setState] = useImmer<State>({
 		loading: true,
+		time: MarketTime.ONE_DAY,
 		usMarketData: defaultMarketDataGroup,
 		intMarketData: defaultMarketDataGroup
 	});
@@ -81,6 +84,7 @@ export const useMarketData = (): State => {
 
 	useEffect(() => {
 		setState((draft) => {
+			draft.time = timeValue;
 			draft.loading = true;
 		});
 		marketDataLoader(timeValue)();
