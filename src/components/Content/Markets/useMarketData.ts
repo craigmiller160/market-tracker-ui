@@ -13,7 +13,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
-const INTERVAL_5_MIN_MILLIS = 1000 * 60 * 5;
+const INTERVAL_1_MIN_MILLIS = 1000 * 60;
 
 interface State {
 	readonly loading: boolean;
@@ -90,7 +90,7 @@ export const useMarketData = (): State => {
 		if (!state.loading && MarketTime.ONE_DAY === timeValue) {
 			interval = setInterval(
 				() => marketDataLoader(timeValue)(),
-				INTERVAL_5_MIN_MILLIS
+				INTERVAL_1_MIN_MILLIS
 			);
 		}
 		return () => {

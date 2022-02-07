@@ -116,7 +116,7 @@ export const getTimesales = (
 	const end = getTimesalesEnd();
 	return pipe(
 		ajaxApi.get<TradierSeries>({
-			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=5min`
+			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.map(formatTimesales)
