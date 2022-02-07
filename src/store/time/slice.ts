@@ -1,19 +1,23 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import * as Text from '@craigmiller160/ts-functions/es/Text';
+import {
+	MarketTime,
+	marketTimeToMenuKey,
+	menuKeyToMarketTime
+} from '../../types/MarketTime';
 
 interface StateType {
 	readonly menuKey: string;
-	readonly value: string;
+	readonly value: MarketTime;
 }
 
 const initialState: StateType = {
-	menuKey: 'time.oneDay',
-	value: 'oneDay'
+	menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
+	value: MarketTime.ONE_DAY
 };
 
 const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	draft.menuKey = action.payload;
-	draft.value = Text.split('.')(action.payload)[1];
+	draft.value = menuKeyToMarketTime(action.payload);
 };
 
 const reset = (draft: Draft<StateType>) => {

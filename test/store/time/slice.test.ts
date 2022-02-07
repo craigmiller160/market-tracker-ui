@@ -1,4 +1,5 @@
 import { timeSlice } from '../../../src/store/time/slice';
+import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 
 describe('time slice', () => {
 	it('setTime', () => {
@@ -15,8 +16,8 @@ describe('time slice', () => {
 	it('reset', () => {
 		const result = timeSlice.reducer(
 			{
-				menuKey: 'abc',
-				value: 'def'
+				menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
+				value: MarketTime.FIVE_YEARS
 			},
 			timeSlice.actions.reset()
 		);
