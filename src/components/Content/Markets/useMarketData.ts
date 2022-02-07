@@ -79,9 +79,11 @@ export const useMarketData = (): State => {
 	);
 
 	useEffect(() => {
-		// TODO set loading when timeValue changes
+		setState((draft) => {
+			draft.loading = true;
+		});
 		marketDataLoader(timeValue)();
-	}, [timeValue, marketDataLoader]);
+	}, [timeValue, marketDataLoader, setState]);
 
 	return state;
 };
