@@ -207,8 +207,7 @@ export const getFiveYearHistory = (
 	});
 };
 
-// TODO rename
-export const isMarketClosed = (): TaskTryT<MarketStatus> => {
+export const getMarketStatus = (): TaskTryT<MarketStatus> => {
 	const today = new Date();
 	const year = formatCalendarYear(today);
 	const month = formatCalendarMonth(today);

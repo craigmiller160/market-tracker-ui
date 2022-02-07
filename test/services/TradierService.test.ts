@@ -10,7 +10,7 @@ import {
 	getThreeMonthHistory,
 	getTimesales,
 	HistoryQuery,
-	isMarketClosed
+	getMarketStatus
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
@@ -289,7 +289,7 @@ describe('TradierService', () => {
 		expect(result).toEqualRight([]);
 	});
 
-	describe('isMarketClosed', () => {
+	describe('getMarketStatus', () => {
 		const today = new Date();
 		const year = formatCalendarYear(today);
 		const month = formatCalendarMonth(today);
@@ -313,7 +313,7 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await isMarketClosed()();
+			const result = await getMarketStatus()();
 			expect(result).toEqualRight(MarketStatus.CLOSED);
 		});
 
@@ -335,7 +335,7 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await isMarketClosed()();
+			const result = await getMarketStatus()();
 			expect(result).toEqualRight(MarketStatus.OPEN);
 		});
 
@@ -357,7 +357,7 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await isMarketClosed()();
+			const result = await getMarketStatus()();
 			expect(result).toEqualRight(MarketStatus.CLOSED);
 		});
 	});

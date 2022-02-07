@@ -30,7 +30,7 @@ type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 
 const checkMarketStatus = (timeValue: MarketTime): TaskTryT<MarketStatus> =>
 	match(timeValue)
-		.with(MarketTime.ONE_DAY, () => tradierService.isMarketClosed())
+		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
 		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
 
 const getHistoryFn = (time: MarketTime): HistoryFn =>
