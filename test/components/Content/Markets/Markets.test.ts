@@ -19,7 +19,7 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { createMockQueries, testDataSettings } from './marketsTestData';
-import { MARKET_INFO } from '../../../../src/components/Content/Markets/MarketInfo';
+import { MARKET_INFO } from '../../../../src/services/MarketInfo';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);

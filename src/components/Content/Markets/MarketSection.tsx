@@ -3,13 +3,14 @@ import { Space, Spin, Typography } from 'antd';
 import { MarketData } from '../../../types/MarketData';
 import { MarketCard } from './MarketCard';
 import './MarketSection.scss';
+import { MarketDataGroup } from '../../../types/MarketDataGroup';
+import { MarketStatus } from '../../../types/MarketStatus';
+import { MarketTime } from '../../../types/MarketTime';
 
 interface Props {
-	readonly isMarketOpen: boolean;
 	readonly title: string;
 	readonly loading: boolean;
-	readonly data: ReadonlyArray<MarketData>;
-	readonly timeValue: string;
+	readonly data: MarketDataGroup;
 }
 
 const Spinner = (
@@ -19,20 +20,23 @@ const Spinner = (
 );
 
 const createMarketDataToCard =
-	(isMarketOpen: boolean, timeValue: string) => (data: MarketData) =>
+	(marketStatus: MarketStatus, time: MarketTime) => (data: MarketData) =>
 		(
 			<MarketCard
 				key={data.symbol}
 				data={data}
-				time={timeValue}
-				isMarketOpen={isMarketOpen}
+				time={time}
+				marketStatus={marketStatus}
 			/>
 		);
 
 export const MarketSection = (props: Props) => {
-	const { title, loading, data, timeValue, isMarketOpen } = props;
-	const marketDataToCard = createMarketDataToCard(isMarketOpen, timeValue);
-	const MarketCards = data.map(marketDataToCard);
+	const { title, loading, data } = props;
+	const marketDataToCard = createMarketDataToCard(
+		data.marketStatus,
+		data.time
+	);
+	const MarketCards = data.data.map(marketDataToCard);
 
 	return (
 		<section className="MarketSection">
