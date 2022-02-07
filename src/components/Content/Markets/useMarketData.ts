@@ -27,31 +27,40 @@ const defaultMarketDataGroup: MarketDataGroup = {
 	data: []
 };
 
+const handleLoadError =
+	(setState: Updater<State>, dispatch: Dispatch) =>
+	(ex: Error) =>
+	async () => {
+		console.error(ex);
+		dispatch(
+			notificationSlice.actions.addError(
+				`Error loading market data: ${ex.message}`
+			)
+		);
+		setState((draft) => {
+			draft.loading = false;
+		});
+	};
+
+const handleLoadSuccess =
+	(setState: Updater<State>) =>
+	([us, int]: [MarketDataGroup, MarketDataGroup]) =>
+	async () => {
+		setState((draft) => {
+			draft.loading = false;
+			draft.usMarketData = castDraft(us);
+			draft.intMarketData = castDraft(int);
+		});
+	};
+
 const createMarketDataLoader =
 	(setState: Updater<State>, dispatch: Dispatch) =>
 	(time: MarketTime): TaskT<void> =>
 		pipe(
 			loadMarketData(time),
 			TaskEither.fold(
-				(ex) => async () => {
-					console.error(ex);
-					dispatch(
-						notificationSlice.actions.addError(
-							`Error loading market data: ${ex.message}`
-						)
-					);
-					setState((draft) => {
-						draft.loading = false;
-					});
-				},
-				([us, int]) =>
-					async () => {
-						setState((draft) => {
-							draft.loading = false;
-							draft.usMarketData = castDraft(us);
-							draft.intMarketData = castDraft(int);
-						});
-					}
+				handleLoadError(setState, dispatch),
+				handleLoadSuccess(setState)
 			)
 		);
 
