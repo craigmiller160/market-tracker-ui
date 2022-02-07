@@ -191,7 +191,7 @@ const useLoadMarketData = (
 			});
 
 			return match(timeValue)
-				.with('oneDay', () =>
+				.with(MarketTime.ONE_DAY, () =>
 					pipe(
 						tradierService.isMarketClosed(),
 						TaskEither.fold(
@@ -240,7 +240,7 @@ export const useMarketData = (): AllMarketData => {
 	});
 
 	const timeValue = useSelector(timeValueSelector);
-	const historyFn = useHistoryFn(timeValue as MarketTime); // TODO refactor this next
+	const historyFn = useHistoryFn(timeValue);
 	const loadMarketData = useLoadMarketData(setState, historyFn, dispatch);
 
 	useEffect(() => {

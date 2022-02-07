@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { match } from 'ts-pattern';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { identity } from 'fp-ts/es6/function';
+import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
 
 const createMainNavItems = () => {
 	const AlwaysShowItems = <Menu.Item key="page.markets">Markets</Menu.Item>;
@@ -25,14 +26,27 @@ const createMainNavItems = () => {
 
 const TimeRangeNavItems = (
 	<>
-		<Menu.Item className="OneDayItem" key="time.oneDay">
+		<Menu.Item
+			className="OneDayItem"
+			key={marketTimeToMenuKey(MarketTime.ONE_DAY)}
+		>
 			Today
 		</Menu.Item>
-		<Menu.Item key="time.oneWeek">1 Week</Menu.Item>
-		<Menu.Item key="time.oneMonth">1 Month</Menu.Item>
-		<Menu.Item key="time.threeMonths">3 Months</Menu.Item>
-		<Menu.Item key="time.oneYear">1 Year</Menu.Item>
-		<Menu.Item key="time.fiveYears">5 Years</Menu.Item>
+		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_WEEK)}>
+			1 Week
+		</Menu.Item>
+		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_MONTH)}>
+			1 Month
+		</Menu.Item>
+		<Menu.Item key={marketTimeToMenuKey(MarketTime.THREE_MONTHS)}>
+			3 Months
+		</Menu.Item>
+		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_YEAR)}>
+			1 Year
+		</Menu.Item>
+		<Menu.Item key={marketTimeToMenuKey(MarketTime.FIVE_YEARS)}>
+			5 Years
+		</Menu.Item>
 	</>
 );
 
