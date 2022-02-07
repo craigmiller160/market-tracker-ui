@@ -29,6 +29,7 @@ interface TestMarketCardsConfig {
 	readonly startDate: string;
 	readonly isTimesale?: boolean;
 	readonly isCurrentPriceQuote?: boolean;
+	readonly isMarketClosed?: boolean;
 }
 
 const testMarketsPage = (
@@ -60,20 +61,33 @@ const testMarketsPage = (
 			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
 		).toHaveTextContent(`Since ${config.startDate}`);
 
-		const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-		const initialPrice = isTimesale
-			? setting.timesalePrice1
-			: setting.historyPrice;
-		const currentPrice = isCurrentPriceQuote
-			? setting.quotePrice
-			: setting.timesalePrice2;
-		const diff = currentPrice - initialPrice;
-		const expectedPrice = `$${currentPrice.toFixed(2)} (+$${diff.toFixed(
-			2
-		)}, +${((diff / initialPrice) * 100).toFixed(2)}%)`;
-		expect(priceLine).toHaveTextContent(expectedPrice);
+		if (config.isMarketClosed) {
+			expect(
+				within(card).queryByText('Market Closed')
+			).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).not.toBeInTheDocument();
+		} else {
+			const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
+			const initialPrice = isTimesale
+				? setting.timesalePrice1
+				: setting.historyPrice;
+			const currentPrice = isCurrentPriceQuote
+				? setting.quotePrice
+				: setting.timesalePrice2;
+			const diff = currentPrice - initialPrice;
+			const expectedPrice = `$${currentPrice.toFixed(
+				2
+			)} (+$${diff.toFixed(2)}, +${((diff / initialPrice) * 100).toFixed(
+				2
+			)}%)`;
+			expect(priceLine).toHaveTextContent(expectedPrice);
 
-		expect(within(card).queryByText('Chart is Here')).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).toBeInTheDocument();
+		}
 	});
 };
 
@@ -122,7 +136,22 @@ describe('Markets', () => {
 	});
 
 	it('renders for today with market closed', async () => {
-		throw new Error();
+		mockQueries({
+			timesaleTimestamp: new Date().getTime() + 1000,
+			isMarketClosed: true
+		});
+		await renderApp();
+		menuItemIsSelected('Today');
+		testPageHeaders();
+
+		const marketsPage = screen.getByTestId('markets-page');
+		testMarketsPage(marketsPage, {
+			time: 'Today',
+			startDate: getTodayDisplayDate(),
+			isTimesale: true,
+			isCurrentPriceQuote: false,
+			isMarketClosed: true
+		});
 	});
 
 	it('renders for 1 week', async () => {
