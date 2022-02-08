@@ -1855,30 +1855,30 @@
   dependencies:
     lodash.merge "^4.6.2"
 
-"@craigmiller160/eslint-config-jest@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-jest/-/eslint-config-jest-1.0.0-beta.1.tgz#f660e092b4610853d32c6952ab272ae04559ac85"
-  integrity sha512-HelPQP/JbNoJkfiSUI8jgrXPUsxWVNXZXcrOKH0ylRtcyOCHDwwg6zb1ETcYkA9FqRFm0jOFW5NjAOllGdpRRw==
+"@craigmiller160/eslint-config-jest@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-jest/-/eslint-config-jest-1.0.0.tgz#33561582506e1c59ebb2d5c2ae1d9f57ca64adb8"
+  integrity sha512-npQpmIsabZVbTwMtc3Sj172HqOL/rcZLNRSfS61XnKez/aRyJ/Wg/lSsSryXseGiEvbX3sIQLVAQuG7qUzz4bQ==
   dependencies:
     eslint-plugin-jest "^25.3.2"
 
-"@craigmiller160/eslint-config-js@^1.0.0-beta.5":
-  version "1.0.0-beta.5"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-js/-/eslint-config-js-1.0.0-beta.5.tgz#b032edddaf1542c41bae209901429f7aad29694d"
-  integrity sha512-AE0FjF8FsaK/6k174ui3M6sroj7DGdjNViKOADLJr38gmvbMvaYfG2COTPEu94iHwuZcs/xlXMfrsxNkjWf9mQ==
+"@craigmiller160/eslint-config-js@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-js/-/eslint-config-js-1.0.0.tgz#228680c9072eb8d6bdf891bd417842a9c38a3d9f"
+  integrity sha512-svaYf4vVdeIcYQ3iwHNF5l79yf11pb05uz8QqTlNybs2NC/BNfxUKsoRoB/t4dwzCOHopg08dK5ydojwMNrNDw==
   dependencies:
     cross-spawn "^7.0.3"
     eslint "^8.5.0"
 
-"@craigmiller160/eslint-config-prettier@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-prettier/-/eslint-config-prettier-1.0.0-beta.1.tgz#a61293224ec93ec2dd4e3ed33d9eb2ce48369817"
-  integrity sha512-Sv6oklv75FVpldJg1UY8buVIcDGGMEwguD+Aod9IIq9lisv9tVCXmsVJcmW966yQz+tUf9nlqkTup4JnxixhAQ==
+"@craigmiller160/eslint-config-prettier@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-prettier/-/eslint-config-prettier-1.0.0.tgz#69094ea475b133ed9540781626aca87215b9f158"
+  integrity sha512-9TXfKZeGLH/aTgU/g0Zpf1wzXozRQtQ/dAS1+naM64UAHqOLxyBjpuUVCxEa+oFluofVUsBpT9N5wURWSlp91w==
   dependencies:
     eslint-config-prettier "^8.3.0"
     eslint-plugin-prettier "^4.0.0"
 
-"@craigmiller160/eslint-config-react@^1.0.0-beta.1":
+"@craigmiller160/eslint-config-react@^1.0.0-beta":
   version "1.0.0-beta.1"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-react/-/eslint-config-react-1.0.0-beta.1.tgz#054a54c66f698aedce3bdbd1e9d2b9979dee38ff"
   integrity sha512-BK0JzIQT07aCuEh1qQZcoS3LePlVYtyLR5lOl46sMxnBaoRz7MiPEXyDkJ7wcTo2Rr6x5GzZLfZMi4xuMkEw6Q==
@@ -1888,15 +1888,15 @@
     eslint-plugin-react "^7.28.0"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@craigmiller160/eslint-config-tree-shaking-import-restrictions@^1.0.0-beta.2":
+"@craigmiller160/eslint-config-tree-shaking-import-restrictions@^1.0.0-beta":
   version "1.0.0-beta.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-tree-shaking-import-restrictions/-/eslint-config-tree-shaking-import-restrictions-1.0.0-beta.2.tgz#59d02c24979a865f2194c5550d004cafa06ba2bf"
   integrity sha512-zl2DQvUvC2WNxlvKAQFAcYtEsTdJV6Lnhv+EghpH47vh/pf8puXxe6dvKivjkeu9wYkp/iPNuYDOjhwNOMR9Uw==
 
-"@craigmiller160/eslint-config-ts@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-ts/-/eslint-config-ts-1.0.0-beta.1.tgz#38b93ec22a346d1b4d90f174c2f15ce533939720"
-  integrity sha512-kOF+UuQKoaJBRoI24UB5MBM7lJfK6TfYjwY/MtCeO5K6a623Iz7rRz0/oaiiI90v2tLJnhlCe+xnNehUQVOhnA==
+"@craigmiller160/eslint-config-ts@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-ts/-/eslint-config-ts-1.0.0.tgz#bb9ab0e2bbf92ca7d03df2a91ca34dfafcc2b27b"
+  integrity sha512-jRM6e/Bfr+GOXX+mqpHEUjTFfLxW89MXp0BU6+PYTQ4R6tjwutJjvP8sykPtnBUxuZYIxsH+GUHwnEgAa5mpTw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.8.1"
     "@typescript-eslint/parser" "^5.8.1"
@@ -1909,10 +1909,10 @@
     "@types/jest" "^27.0.3"
     ts-jest "^27.1.2"
 
-"@craigmiller160/jest-config@^1.0.0-beta.11":
-  version "1.0.0-beta.13"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config/-/jest-config-1.0.0-beta.13.tgz#0083717c7c880777e3efa85e9e4f015fb16ee6ab"
-  integrity sha512-ptepgXE6wYHnWEEAe94wh83qklONJskxRrcOMigvLgsLBsI2PtyDbSVtUp+aRpPbJWfQjZawU08CZ+qxxolitA==
+"@craigmiller160/jest-config@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config/-/jest-config-1.0.0.tgz#583837c3967ce370fcf17f39bf3fbf61df9c07f7"
+  integrity sha512-F/qqOc+WtGNQIPX3mG0egTbeIq1qkktbqiHTzc0ZL4Ne//QFlwZWO9FJ3vzpZAiVV4GrJjtNJNIDzf2HaPV7Og==
   dependencies:
     cross-env "^7.0.3"
     cross-spawn "^7.0.3"

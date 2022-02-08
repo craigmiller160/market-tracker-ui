@@ -1,6 +1,6 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
-  "version": "0.0.1-beta",
+  "version": "1.0.0",
   "author": "craigmiller160",
   "files": [
     "build"
@@ -25,13 +25,13 @@
     "@craigmiller160/babel-config": "^1.0.0-beta.2",
     "@craigmiller160/babel-config-react": "^1.0.0-beta.1",
     "@craigmiller160/config-merge": "^1.0.0",
-    "@craigmiller160/eslint-config-jest": "^1.0.0-beta.1",
-    "@craigmiller160/eslint-config-js": "^1.0.0-beta.5",
-    "@craigmiller160/eslint-config-prettier": "^1.0.0-beta.1",
-    "@craigmiller160/eslint-config-react": "^1.0.0-beta.1",
-    "@craigmiller160/eslint-config-tree-shaking-import-restrictions": "^1.0.0-beta.2",
-    "@craigmiller160/eslint-config-ts": "^1.0.0-beta.1",
-    "@craigmiller160/jest-config": "^1.0.0-beta.11",
+    "@craigmiller160/eslint-config-jest": "1.0.0",
+    "@craigmiller160/eslint-config-js": "1.0.0",
+    "@craigmiller160/eslint-config-prettier": "1.0.0",
+    "@craigmiller160/eslint-config-react": "^1.0.0-beta",
+    "@craigmiller160/eslint-config-tree-shaking-import-restrictions": "^1.0.0-beta",
+    "@craigmiller160/eslint-config-ts": "1.0.0",
+    "@craigmiller160/jest-config": "1.0.0",
     "@craigmiller160/jest-config-ts": "^1.0.0-beta.2",
     "@craigmiller160/prettier-config": "^1.0.0-beta.1",
     "@craigmiller160/webpack-config": "^1.0.0-beta.3",
