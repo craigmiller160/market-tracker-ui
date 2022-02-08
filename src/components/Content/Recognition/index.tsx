@@ -3,6 +3,6 @@ import { Typography } from 'antd';
 
 export const Recognition = () => (
 	<div className="Recognition">
-		<Typography.Title>Recognition</Typography.Title>
+		<Typography.Title>Data Source Recognition</Typography.Title>
 	</div>
 );

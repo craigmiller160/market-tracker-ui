@@ -79,7 +79,9 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/recognition'
 		);
-		expect(screen.queryByText('Recognition')).toBeInTheDocument();
+		expect(
+			screen.queryByText('Data Source Recognition')
+		).toBeInTheDocument();
 	});
 
 	it('will not render portfolios route in prod', async () => {
