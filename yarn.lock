@@ -1837,10 +1837,10 @@
   dependencies:
     "@babel/preset-react" "^7.16.5"
 
-"@craigmiller160/babel-config@^1.0.0-beta.2":
-  version "1.0.0-beta.2"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config/-/babel-config-1.0.0-beta.2.tgz#10c52f852d3fdbc9c8e6535ed1984118afa0ecba"
-  integrity sha512-kO+pShm0uogd5HGE4czp+uEejnl3r+jDeBg50XrNkZPIA6cIqrjBSfuAR5QM0S+lGqtGsRUhZRRw9qFioSIoMA==
+"@craigmiller160/babel-config@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config/-/babel-config-1.0.0.tgz#ac2f318d331b539bc1809199793df730da8787df"
+  integrity sha512-UHWfE+CFCe02UUM1yAY4NoLh3H9G8fAOF8Qgd7aUcAOelRqdUMx2+je6CFQYboTgANcs6DHQpiYVcl0wl9oR6g==
   dependencies:
     "@babel/core" "^7.16.5"
     "@babel/plugin-transform-runtime" "^7.16.5"
@@ -1888,10 +1888,10 @@
     eslint-plugin-react "^7.28.0"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@craigmiller160/eslint-config-tree-shaking-import-restrictions@^1.0.0-beta":
-  version "1.0.0-beta.2"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-tree-shaking-import-restrictions/-/eslint-config-tree-shaking-import-restrictions-1.0.0-beta.2.tgz#59d02c24979a865f2194c5550d004cafa06ba2bf"
-  integrity sha512-zl2DQvUvC2WNxlvKAQFAcYtEsTdJV6Lnhv+EghpH47vh/pf8puXxe6dvKivjkeu9wYkp/iPNuYDOjhwNOMR9Uw==
+"@craigmiller160/eslint-config-tree-shaking-import-restrictions@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-tree-shaking-import-restrictions/-/eslint-config-tree-shaking-import-restrictions-1.0.0.tgz#3e2004bbc41cd960fd8547c4777c55e6158b2d2e"
+  integrity sha512-OxQHIQ6H92xkprkEb2ApnNdt1g6JU4au03sESxMu3ZQ9tjuTyw9asd5aSKp/G/oqZoYVpXPtxV2d2VXctKtVaA==
 
 "@craigmiller160/eslint-config-ts@1.0.0":
   version "1.0.0"
