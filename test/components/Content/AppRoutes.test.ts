@@ -72,6 +72,10 @@ describe('AppRoutes', () => {
 		expect(screen.queryByText('Watchlists Page'));
 	});
 
+	it('renders recognition route', async () => {
+		throw new Error();
+	});
+
 	it('will not render portfolios route in prod', async () => {
 		process.env.NODE_ENV = 'production';
 		await renderApp({
