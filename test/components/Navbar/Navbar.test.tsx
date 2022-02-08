@@ -62,6 +62,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
+		expect(screen.queryByText('Recognition')).not.toBeInTheDocument();
 		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
 	});
 
@@ -70,6 +71,7 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
 		const navbar = screen.getByTestId('desktop-navbar');
@@ -95,6 +97,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Markets')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
+		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
 		const navbar = screen.getByTestId('desktop-navbar');
@@ -138,6 +141,14 @@ describe('Navbar', () => {
 		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
+	});
+
+	it('starts on portfolios page due to route, then navigates to recognition page', async () => {
+		throw new Error();
+	});
+
+	it('starts on recognition page due to route, then navigates to watchlists page', async () => {
+		throw new Error();
 	});
 
 	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
