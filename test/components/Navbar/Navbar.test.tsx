@@ -144,11 +144,47 @@ describe('Navbar', () => {
 	});
 
 	it('starts on portfolios page due to route, then navigates to recognition page', async () => {
-		throw new Error();
+		await renderApp({
+			initialPath: '/market-tracker/portfolios'
+		});
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+
+		userEvent.click(screen.getByText('Recognition'));
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/recognition'
+		);
+		expect(
+			screen.getByText('Recognition').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
 	});
 
 	it('starts on recognition page due to route, then navigates to watchlists page', async () => {
-		throw new Error();
+		await renderApp({
+			initialPath: '/market-tracker/recognition'
+		});
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/recognition'
+		);
+		expect(
+			screen.getByText('Recognition').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
+
+		userEvent.click(screen.getByText('Watchlists'));
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/watchlists'
+		);
+		expect(screen.getByText('Watchlists').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
 	});
 
 	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
