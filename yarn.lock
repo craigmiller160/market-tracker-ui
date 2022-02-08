@@ -1901,10 +1901,10 @@
     "@typescript-eslint/eslint-plugin" "^5.8.1"
     "@typescript-eslint/parser" "^5.8.1"
 
-"@craigmiller160/jest-config-ts@^1.0.0-beta.2":
-  version "1.0.0-beta.2"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config-ts/-/jest-config-ts-1.0.0-beta.2.tgz#3ece5b038f6aad12911a59f77dc572b8bdc519dd"
-  integrity sha512-WhqVXh+UBhvNyEkhQJHHSwFVUKF6EelNQbPiqs8qFcFJb2XCkj6b4CKipYVAVChbaV9hsV1Z4PtbUZ5mSJANRg==
+"@craigmiller160/jest-config-ts@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/jest-config-ts/-/jest-config-ts-1.0.0.tgz#3209ec59bb3ceed83e6d95eb9e57dee0848bbbdf"
+  integrity sha512-+mtnzKZsT8pedMgsD5B52fs18I3JE4qWdVzYCtN50VS3h5D05gdkJ8VROPaf9d0QVX1x8CDxecz9BRxnW81hhQ==
   dependencies:
     "@types/jest" "^27.0.3"
     ts-jest "^27.1.2"
@@ -1930,17 +1930,17 @@
     postcss-loader "^6.2.1"
     postcss-preset-env "^7.1.0"
 
-"@craigmiller160/prettier-config@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/prettier-config/-/prettier-config-1.0.0-beta.1.tgz#f414e462f34352724b21372d50ebd62563cc3a25"
-  integrity sha512-fBHU/OmGPMitz9Oy0xgKD8VfahsvH9r+nhgrRhE3vXKBRCT+mLojhvYL6ze2MEfc7la7kL/HYNoW54oHAN+eLQ==
+"@craigmiller160/prettier-config@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/prettier-config/-/prettier-config-1.0.0.tgz#b4e4899ad3c5e1f6b92a6b032df42d8e8e97b9ff"
+  integrity sha512-X2D3uUf3azwfgcm4JT06chSxNgDGKspc+i87oNvOFHnuErGUfK8gxWmU7cdySXN6ZRGMdemQx9g/AeqbpMHo5A==
   dependencies:
     prettier "^2.5.1"
 
-"@craigmiller160/ts-functions@^1.0.0-beta.4":
-  version "1.0.0-beta.17"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.0.0-beta.17.tgz#8d9b7406d80b54557aece12ac65a99cc2670f82a"
-  integrity sha512-o2C2ZzafpeNJUTCStHjkolEUR8Qc7Z+mHwGpzJWkdHEkO5iKL5N79IEpHOMSyU1AXGovRPzxt485Hxs76O7rQA==
+"@craigmiller160/ts-functions@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.0.0.tgz#7e3e4d962b63e46296fc2893c5e4659e17d0b49f"
+  integrity sha512-5KcTxN9TEyGsq7b6T5FQ5lZxgGsuzsirannVOR64Lboz0bmUglZUv33CHyANGLdY7TQXYc5FH4R6oCuixJ56OQ==
 
 "@craigmiller160/webpack-config-sass@^1.0.0-beta.3":
   version "1.0.0-beta.3"
