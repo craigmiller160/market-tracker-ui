@@ -36,7 +36,7 @@
     "@craigmiller160/prettier-config": "1.0.0",
     "@craigmiller160/webpack-config": "1.0.0",
     "@craigmiller160/webpack-config-sass": "1.0.0",
-    "@craigmiller160/webpack-config-ts": "^1.0.0-beta.1",
+    "@craigmiller160/webpack-config-ts": "1.0.0",
     "@relmify/jest-fp-ts": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

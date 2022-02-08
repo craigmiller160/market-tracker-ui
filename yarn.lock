@@ -1930,17 +1930,6 @@
     postcss-loader "^6.2.1"
     postcss-preset-env "^7.1.0"
 
-"@craigmiller160/postcss-config@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/postcss-config/-/postcss-config-1.0.0-beta.1.tgz#be9e35a971d264b249fe5c643b58fda6c13f1173"
-  integrity sha512-JQEP2xziJB6V0/bRjLFRgXBdzrF1kE3NDtLNbRtvWc9sOgxyva5XWUruCIt5SbBaxaFbyFEsPdaUeEvLV10lzA==
-  dependencies:
-    postcss "^8.4.5"
-    postcss-flexbugs-fixes "^5.0.2"
-    postcss-import "^14.0.2"
-    postcss-loader "^6.2.1"
-    postcss-preset-env "^7.1.0"
-
 "@craigmiller160/prettier-config@1.0.0":
   version "1.0.0"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/prettier-config/-/prettier-config-1.0.0.tgz#b4e4899ad3c5e1f6b92a6b032df42d8e8e97b9ff"
@@ -1953,19 +1942,19 @@
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.0.0.tgz#7e3e4d962b63e46296fc2893c5e4659e17d0b49f"
   integrity sha512-5KcTxN9TEyGsq7b6T5FQ5lZxgGsuzsirannVOR64Lboz0bmUglZUv33CHyANGLdY7TQXYc5FH4R6oCuixJ56OQ==
 
-"@craigmiller160/webpack-config-sass@^1.0.0-beta.3":
-  version "1.0.0-beta.3"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config-sass/-/webpack-config-sass-1.0.0-beta.3.tgz#3433170ffdd7f8824c3c956fddf91b786421d276"
-  integrity sha512-OljfQ2E8f0qulr7+J11Rxwzh8Srjg9AxPy74UHmRippVa9LM5XBVlKWfMP/Be8nJzc6uVLWkLQ3guYwY5O9PLQ==
+"@craigmiller160/webpack-config-sass@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config-sass/-/webpack-config-sass-1.0.0.tgz#640285c8ba72b28bfbb8ce6733bb5dde493d0d9d"
+  integrity sha512-a6XfMB8W3qr97qJIAaqAZUFsmcw9j+s2ZhbG6SwRTl7y9qObF4LMTstD2/eE0ftSaqY8lRKoDETw2vDw83lBfw==
   dependencies:
-    "@craigmiller160/postcss-config" "^1.0.0-beta.1"
+    "@craigmiller160/postcss-config" "^1.0.0"
     sass "^1.45.2"
     sass-loader "^12.4.0"
 
-"@craigmiller160/webpack-config-ts@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config-ts/-/webpack-config-ts-1.0.0-beta.1.tgz#714053bf186b6d6de9ff20be8f1dc5a46b7a89cb"
-  integrity sha512-CN1RKsw/m+bqo223j+JGtecpMB1I79/jTh46F212ZFHmPhMjy8ROzEa/1zW2AAkVA0RQXfDXl5JGo4QDg56tCg==
+"@craigmiller160/webpack-config-ts@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config-ts/-/webpack-config-ts-1.0.0.tgz#c180c268e5b0db73213f70c6fdbddf6cb88fd3fc"
+  integrity sha512-lXrpFGt/hZh5koRfXltcXgiz7Hqa2iFnH48kyk1miucui7GUgITGoElfird6AIwe9fv1wGlDRDcDKp80I3rQjA==
   dependencies:
     ts-loader "^9.2.6"
 
