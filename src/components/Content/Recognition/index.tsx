@@ -1,7 +1,8 @@
 import './Recognition.scss';
+import { Typography } from 'antd';
 
 export const Recognition = () => (
 	<div className="Recognition">
-		<h1>Recognition Page</h1>
+		<Typography.Title>Recognition</Typography.Title>
 	</div>
 );
