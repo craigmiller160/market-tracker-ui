@@ -1830,10 +1830,10 @@
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ajax-error-handler/-/ajax-error-handler-1.0.0.tgz#6471021ba0d0dd9f5d3ec2939c0dcb03e1c8ffee"
   integrity sha512-z52oRPUYoegqGf1gvIVdMfLDDQFQRbHbMvnb4hHEaU7r8kz2JQqrK5FrYXesVZBSCilmhN9qGITmxBjQ9zt6qA==
 
-"@craigmiller160/babel-config-react@^1.0.0-beta.1":
-  version "1.0.0-beta.2"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config-react/-/babel-config-react-1.0.0-beta.2.tgz#b6a7c4cce3bd0e8deca3941579a7372bc9544829"
-  integrity sha512-jwHEBtAqpPQqa/Id18ajZm1xb/gVNeEqd2HPG7nUXhkpiEwqY4dwFuSsSHR9kd3j4ijM59xiT1+I1yN12GxSaw==
+"@craigmiller160/babel-config-react@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/babel-config-react/-/babel-config-react-1.0.0.tgz#6dc036a156e099811e5e586e2ae0fea80fb3db15"
+  integrity sha512-YnPongA6B4ByV8lts+cgxQa+qHdYUN+wOSX/wTNuZmXNIHTFQPPeikPtW/b4GGaM1FaoVrOU9xrvKp/PoL/yOA==
   dependencies:
     "@babel/preset-react" "^7.16.5"
 
@@ -1878,10 +1878,10 @@
     eslint-config-prettier "^8.3.0"
     eslint-plugin-prettier "^4.0.0"
 
-"@craigmiller160/eslint-config-react@^1.0.0-beta":
-  version "1.0.0-beta.1"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-react/-/eslint-config-react-1.0.0-beta.1.tgz#054a54c66f698aedce3bdbd1e9d2b9979dee38ff"
-  integrity sha512-BK0JzIQT07aCuEh1qQZcoS3LePlVYtyLR5lOl46sMxnBaoRz7MiPEXyDkJ7wcTo2Rr6x5GzZLfZMi4xuMkEw6Q==
+"@craigmiller160/eslint-config-react@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/eslint-config-react/-/eslint-config-react-1.0.0.tgz#50019b0ea2bf10c334762f5578eed0113c159429"
+  integrity sha512-wf38gDkPRO9nh209P+a/RxYd8UQSDnFJGemWCC9qt/46UhO5dw5doDFF1oT+j+YPmPkESsn7F+x/1wuKpMzqdQ==
   dependencies:
     "@babel/eslint-parser" "^7.16.5"
     eslint-plugin-jsx-a11y "^6.5.1"
@@ -1918,6 +1918,17 @@
     cross-spawn "^7.0.3"
     identity-obj-proxy "^3.0.0"
     jest "^27.4.5"
+
+"@craigmiller160/postcss-config@^1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/postcss-config/-/postcss-config-1.0.0.tgz#5b34d55eafe9b25495ae409a915b15e77d513af4"
+  integrity sha512-D4k12TevP4BnL63nZP1iBrug5Xa55bAmudPne6gWSMFvn3fFPRB2HcWGk4J7NDuH/LkWyAJ7yMMapKtcPj3p0A==
+  dependencies:
+    postcss "^8.4.5"
+    postcss-flexbugs-fixes "^5.0.2"
+    postcss-import "^14.0.2"
+    postcss-loader "^6.2.1"
+    postcss-preset-env "^7.1.0"
 
 "@craigmiller160/postcss-config@^1.0.0-beta.1":
   version "1.0.0-beta.1"
@@ -1958,12 +1969,12 @@
   dependencies:
     ts-loader "^9.2.6"
 
-"@craigmiller160/webpack-config@^1.0.0-beta.3":
-  version "1.0.0-beta.5"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config/-/webpack-config-1.0.0-beta.5.tgz#7f286dd09f02af34c386f18660da7cfc0b6f0ee5"
-  integrity sha512-kPmyePjSKLX/DAFmUmkqyyul9afJHTNjcEHCWWiEQAvOrYL+pygWHo3F8BLH2jnL+CR2IlZxNGq/azZIThsi1Q==
+"@craigmiller160/webpack-config@1.0.0":
+  version "1.0.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config/-/webpack-config-1.0.0.tgz#a1fd7808eefc37f5ac42a381cf73717cb0518106"
+  integrity sha512-6bCy/fAIQNDIseRdgxnmay0em1Qj3VbyMHSejsBkJjuclZjjhZceM4DSMMjUnO/21MUg1uXx9YQL84Kk2VbHjA==
   dependencies:
-    "@craigmiller160/postcss-config" "^1.0.0-beta.1"
+    "@craigmiller160/postcss-config" "^1.0.0"
     clean-webpack-plugin "^4.0.0"
     copy-webpack-plugin "^10.2.0"
     cross-env "^7.0.3"
