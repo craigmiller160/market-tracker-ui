@@ -2,6 +2,7 @@
 
 .Recognition {
   @include PageRoot;
+  text-align: center;
 
   .Source {
     display: flex;
