@@ -15,6 +15,22 @@
       width: 30%;
     }
 
+    &.xl, &.lg {
+      width: 40%;
+    }
+
+    &.md {
+      width: 50%;
+    }
+
+    &.sm {
+      width: 60%;
+    }
+
+    &.xs {
+      width: 70%;
+    }
+
     img {
       width: 100%;
       height: auto;
