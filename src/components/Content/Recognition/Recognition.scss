@@ -3,6 +3,12 @@
 .Recognition {
   @include PageRoot;
 
+  img {
+    width: 30%;
+    height: auto;
+  }
+
+  // TODO delete this below
   .Sources {
     margin-top: 3rem;
     width: 50%; // TODO adjust for screen sizes
