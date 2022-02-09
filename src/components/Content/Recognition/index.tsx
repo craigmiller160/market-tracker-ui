@@ -6,6 +6,8 @@ import { useContext } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
 
+const SHOW_CRYPTO_SOURCE = false;
+
 export const Recognition = () => {
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
@@ -18,12 +20,14 @@ export const Recognition = () => {
 					The source of all stock market data
 				</Typography.Title>
 			</div>
-			<div className={`Source ${breakpointName}`}>
-				<img src={MessariLogo} alt="Messari" />
-				<Typography.Title level={4}>
-					The source of all crypto data
-				</Typography.Title>
-			</div>
+			{SHOW_CRYPTO_SOURCE && (
+				<div className={`Source ${breakpointName}`}>
+					<img src={MessariLogo} alt="Messari" />
+					<Typography.Title level={4}>
+						The source of all crypto data
+					</Typography.Title>
+				</div>
+			)}
 		</div>
 	);
 };
