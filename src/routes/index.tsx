@@ -6,6 +6,7 @@ import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists/Watchlists';
 import { Markets } from '../components/Content/Markets';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { Recognition } from '../components/Content/Recognition';
 
 export interface RouteRules {
 	isAuthorized: boolean;
@@ -20,6 +21,10 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 		{
 			path: 'markets',
 			element: <Markets />
+		},
+		{
+			path: 'recognition',
+			element: <Recognition />
 		}
 	];
 	const fallbackRoutes = [

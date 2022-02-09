@@ -29,7 +29,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Markets Page'));
+		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
 
 	it('correctly redirects for totally wrong route', async () => {
@@ -39,7 +39,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Markets Page'));
+		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
 
 	it('renders markets route', async () => {
@@ -49,7 +49,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Markets Page'));
+		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
 
 	it('renders portfolios route', async () => {
@@ -59,7 +59,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
 		);
-		expect(screen.queryByText('Portfolios Page'));
+		expect(screen.queryByText('Portfolios Page')).toBeInTheDocument();
 	});
 
 	it('renders watchlists route', async () => {
@@ -69,7 +69,19 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
 		);
-		expect(screen.queryByText('Watchlists Page'));
+		expect(screen.queryByText('Watchlists Page')).toBeInTheDocument();
+	});
+
+	it('renders recognition route', async () => {
+		await renderApp({
+			initialPath: '/market-tracker/recognition'
+		});
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/recognition'
+		);
+		expect(
+			screen.queryByText('Data Source Recognition')
+		).toBeInTheDocument();
 	});
 
 	it('will not render portfolios route in prod', async () => {
@@ -80,7 +92,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Markets Page'));
+		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
 
 	it('will not render watchlists route in prod', async () => {
@@ -91,6 +103,6 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('Markets Page'));
+		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
 });

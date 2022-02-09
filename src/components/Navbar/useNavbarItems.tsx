@@ -6,7 +6,6 @@ import { identity } from 'fp-ts/es6/function';
 import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
 
 const createMainNavItems = () => {
-	const AlwaysShowItems = <Menu.Item key="page.markets">Markets</Menu.Item>;
 	const NonProdItems = match(process.env.NODE_ENV)
 		.with('production', () => <></>)
 		.otherwise(() => (
@@ -18,8 +17,9 @@ const createMainNavItems = () => {
 
 	return (
 		<>
-			{AlwaysShowItems}
+			<Menu.Item key="page.markets">Markets</Menu.Item>
 			{NonProdItems}
+			<Menu.Item key="page.recognition">Recognition</Menu.Item>
 		</>
 	);
 };
