@@ -2,4 +2,21 @@
 
 .Recognition {
   @include PageRoot;
+
+  .Sources {
+    margin-top: 3rem;
+    width: 50%; // TODO adjust for screen sizes
+
+    .Source {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+
+      h4 {
+        margin: 0;
+      }
+    }
+  }
 }
