@@ -3,8 +3,21 @@
 .Recognition {
   @include PageRoot;
 
-  img {
-    width: 30%;
+  .Source {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
     height: auto;
+    text-align: center;
+
+    &.xxl {
+      width: 30%;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
   }
 }
