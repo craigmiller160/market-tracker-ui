@@ -22,7 +22,7 @@ describe('CoinGeckoService', () => {
 		mockApi.reset();
 	});
 
-	it('getQuotes', async () => {
+	it('gets quotes for currencies', async () => {
 		mockApi
 			.onGet(
 				`/coingecko/simple/price?ids=${symbols.join(
@@ -44,7 +44,27 @@ describe('CoinGeckoService', () => {
 		]);
 	});
 
-	it('getHistoryQuote', async () => {
+	it('gets history for today', async () => {
+		throw new Error();
+	});
+
+	it('gets 1 week history', async () => {
+		throw new Error();
+	});
+
+	it('gets 1 month history', async () => {
+		throw new Error();
+	});
+
+	it('gets 3 months history', async () => {
+		throw new Error();
+	});
+
+	it('gets 1 year history', async () => {
+		throw new Error();
+	});
+
+	it('gets 5 years history', async () => {
 		throw new Error();
 	});
 });
