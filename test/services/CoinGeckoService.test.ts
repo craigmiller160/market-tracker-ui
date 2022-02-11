@@ -3,7 +3,12 @@ import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
 import {
+	getFiveYearHistory,
+	getOneMonthHistory,
+	getOneWeekHistory,
+	getOneYearHistory,
 	getQuotes,
+	getThreeMonthHistory,
 	getTodayHistory
 } from '../../src/services/CoinGeckoService';
 import { CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
@@ -86,22 +91,53 @@ describe('CoinGeckoService', () => {
 	});
 
 	it('gets 1 week history', async () => {
-		throw new Error();
+		mockApi
+			.onGet(
+				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=daily'
+			)
+			.reply(200, chart);
+		const result = await getOneWeekHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 
 	it('gets 1 month history', async () => {
-		throw new Error();
+		mockApi
+			.onGet(
+				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily'
+			)
+			.reply(200, chart);
+		const result = await getOneMonthHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 
 	it('gets 3 months history', async () => {
-		throw new Error();
+		mockApi
+			.onGet(
+				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily'
+			)
+			.reply(200, chart);
+		const result = await getThreeMonthHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 
 	it('gets 1 year history', async () => {
-		throw new Error();
+		mockApi
+			.onGet(
+				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily'
+			)
+			.reply(200, chart);
+		const result = await getOneYearHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 
 	it('gets 5 years history', async () => {
-		throw new Error();
+		const days = 365 * 5;
+		mockApi
+			.onGet(
+				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+			)
+			.reply(200, chart);
+		const result = await getFiveYearHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 });
