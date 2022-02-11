@@ -1,4 +1,4 @@
-import { CoinGeckoPrice } from '../../src/types/coingecko/CoinGeckoPrice';
+import { CoinGeckoPrice } from '../../src/types/coingecko/price';
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';

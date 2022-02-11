@@ -3,7 +3,7 @@ import { Quote } from '../types/quote';
 import { pipe } from 'fp-ts/es6/function';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { CoinGeckoPrice } from '../types/coingecko/CoinGeckoPrice';
+import { CoinGeckoPrice } from '../types/coingecko/price';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import * as Either from 'fp-ts/es6/Either';
