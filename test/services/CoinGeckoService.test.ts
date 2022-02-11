@@ -2,7 +2,13 @@ import { CoinGeckoPrice } from '../../src/types/coingecko/price';
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
-import { getQuotes } from '../../src/services/CoinGeckoService';
+import {
+	getQuotes,
+	getTodayHistory
+} from '../../src/services/CoinGeckoService';
+import { CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { HistoryRecord } from '../../src/types/history';
 
 const symbols: ReadonlyArray<string> = ['bitcoin', 'ethereum'];
 
@@ -14,6 +20,31 @@ const price: CoinGeckoPrice = {
 		usd: '50.75'
 	}
 };
+
+const date1 = new Date();
+const date2 = Time.addHours(1)(new Date());
+
+const chart: CoinGeckoMarketChart = {
+	prices: [
+		[date1.getTime(), 100],
+		[date2.getTime(), 200]
+	]
+};
+
+const history: ReadonlyArray<HistoryRecord> = [
+	{
+		date: Time.format('yyyy-MM-dd')(date1),
+		time: Time.format('HH:mm:ss')(date1),
+		unixTimestampMillis: date1.getTime(),
+		price: 100
+	},
+	{
+		date: Time.format('yyyy-MM-dd')(date2),
+		time: Time.format('HH:mm:ss')(date2),
+		unixTimestampMillis: date2.getTime(),
+		price: 200
+	}
+];
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -45,7 +76,13 @@ describe('CoinGeckoService', () => {
 	});
 
 	it('gets history for today', async () => {
-		throw new Error();
+		mockApi
+			.onGet(
+				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=1&interval=minutely'
+			)
+			.reply(200, chart);
+		const result = await getTodayHistory('bitcoin')();
+		expect(result).toEqualRight(history);
 	});
 
 	it('gets 1 week history', async () => {
