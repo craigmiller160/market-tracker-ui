@@ -7,6 +7,16 @@ import { CoinGeckoPrice } from '../types/coingecko/price';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import * as Either from 'fp-ts/es6/Either';
+import { HistoryRecord } from '../types/history';
+import { CoinGeckoMarketChart } from '../types/coingecko/marketchart';
+
+export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
+
+export interface HistoryQuery {
+	readonly symbol: string;
+	readonly days: HistoryInterval;
+	readonly interval: string;
+}
 
 const formatPrice =
 	(symbols: ReadonlyArray<string>) =>
@@ -43,3 +53,13 @@ export const getQuotes = (
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(formatPrice(symbols))
 	);
+
+const getHistoryQuote = (
+	historyQuery: HistoryQuery
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	pipe(
+		ajaxApi.get<CoinGeckoMarketChart>({
+			uri: `/coingecko/coins/${historyQuery.symbol}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
+		})
+	);
+};
