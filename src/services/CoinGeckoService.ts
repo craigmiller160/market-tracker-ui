@@ -54,12 +54,17 @@ export const getQuotes = (
 		TaskEither.chainEitherK(formatPrice(symbols))
 	);
 
+const formatMarketChart = (
+	chart: CoinGeckoMarketChart
+): ReadonlyArray<HistoryRecord> => {};
+
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
 			uri: `/coingecko/coins/${historyQuery.symbol}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
-		})
+		}),
+		TaskEither.map(getResponseData),
+		TaskEither.map(formatMarketChart)
 	);
-};
