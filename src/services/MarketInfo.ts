@@ -12,7 +12,7 @@ export type InvestmentType =
 export interface InvestmentInfo {
 	readonly symbol: string;
 	readonly name: string;
-	readonly type: string;
+	readonly type: InvestmentType;
 }
 
 export const INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = [

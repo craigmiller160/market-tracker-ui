@@ -103,11 +103,13 @@ const isStock: PredicateT<InvestmentType> = (type) =>
 const getInvestmentHistory = (
 	time: MarketTime,
 	investments: ReadonlyArray<InvestmentInfo>
-): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> => {
-	throw new Error();
-};
+): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
+	pipe(
+		investments,
+		RArray.map((_) => getHistoryFn(time, _.type)(_.symbol)),
+		TaskEither.sequenceArray
+	);
 
-// TODO get crypto despite market status
 const getHistory = (
 	status: MarketStatus,
 	time: MarketTime

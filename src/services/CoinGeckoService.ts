@@ -1,4 +1,4 @@
-import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskTryT, TryT, MonoidT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
 import { pipe } from 'fp-ts/es6/function';
 import { ajaxApi, getResponseData } from './AjaxApi';
@@ -11,6 +11,13 @@ import { HistoryRecord } from '../types/history';
 import { CoinGeckoMarketChart } from '../types/coingecko/marketchart';
 import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { match } from 'ts-pattern';
+import * as Monoid from 'fp-ts/es6/Monoid';
+
+const quoteSymbolMonoid: MonoidT<string> = {
+	empty: '',
+	concat: (s, s) => `${s},${s}`
+};
 
 export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
 
@@ -19,6 +26,12 @@ export interface HistoryQuery {
 	readonly days: number;
 	readonly interval: HistoryInterval;
 }
+
+const getId = (symbol: string): string =>
+	match(symbol)
+		.with('btc', () => 'bitcoin')
+		.with('eth', () => 'ethereum')
+		.run();
 
 const getMarketChartDate: (millis: number) => string = flow(
 	Time.fromMillis,
@@ -55,16 +68,21 @@ const formatPrice =
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> =>
-	pipe(
+): TaskTryT<ReadonlyArray<Quote>> => {
+	const idString = pipe(
+		symbols,
+		RArray.map(getId),
+		Monoid.concatAll(quoteSymbolMonoid)
+	);
+
+	return pipe(
 		ajaxApi.get<CoinGeckoPrice>({
-			uri: `/coingecko/simple/price?ids=${symbols.join(
-				','
-			)}&vs_currencies=usd`
+			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(formatPrice(symbols))
 	);
+};
 
 const formatMarketChart = (
 	chart: CoinGeckoMarketChart
@@ -83,14 +101,16 @@ const formatMarketChart = (
 
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
-	pipe(
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	const id = getId(historyQuery.symbol);
+	return pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${historyQuery.symbol}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
+			uri: `/coingecko/coins/${id}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.map(formatMarketChart)
 	);
+};
 
 export const getTodayHistory = (
 	symbol: string
