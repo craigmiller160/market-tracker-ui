@@ -74,3 +74,8 @@ export const CRYPTO_INFO: ReadonlyArray<CryptoInfo> = [
 		id: 'ethereum'
 	}
 ];
+
+export const CRYPTO_IDS = pipe(
+	CRYPTO_INFO,
+	RArray.map((_) => _.id)
+);
