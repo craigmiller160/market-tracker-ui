@@ -1,10 +1,17 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
 
-export interface StockInfo {
+export interface BaseInfo {
 	readonly symbol: string;
 	readonly name: string;
+}
+
+export interface StockInfo extends BaseInfo {
 	readonly isInternational: boolean;
+}
+
+export interface CryptoInfo extends BaseInfo {
+	readonly id: string;
 }
 
 export const STOCK_INFO: ReadonlyArray<StockInfo> = [
@@ -54,3 +61,16 @@ export const STOCK_SYMBOLS = pipe(
 	STOCK_INFO,
 	RArray.map((_) => _.symbol)
 );
+
+export const CRYPTO_INFO: ReadonlyArray<CryptoInfo> = [
+	{
+		symbol: 'BTC',
+		name: 'Bitcoin',
+		id: 'bitcoin'
+	},
+	{
+		symbol: 'ETH',
+		name: 'Ethereum',
+		id: 'ethereum'
+	}
+];
