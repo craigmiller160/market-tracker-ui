@@ -135,7 +135,6 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
 	)(mostRecentRecord);
 
-// TODO get crypto
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
