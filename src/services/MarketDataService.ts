@@ -21,6 +21,7 @@ import {
 	isCrypto,
 	isStock,
 	STOCK_INVESTMENT_SYMBOLS,
+	STOCK_PLACEHOLDER_HISTORY,
 	STOCK_PLACEHOLDER_QUOTES
 } from './InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
@@ -107,14 +108,23 @@ const getInvestmentHistory = (
 		TaskEither.sequenceArray
 	);
 
+const addStockPlaceholderHistory = (
+	cryptoHistory: TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>>
+): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
+	pipe(
+		cryptoHistory,
+		TaskEither.map((history) => [...STOCK_PLACEHOLDER_HISTORY, ...history])
+	);
+
 const getHistory = (
 	status: MarketStatus,
 	time: MarketTime
 ): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
 	match(status)
 		.with(MarketStatus.CLOSED, () =>
-			// TODO add placeholder history
-			getInvestmentHistory(time, CRYPTO_INVESTMENT_INFO)
+			addStockPlaceholderHistory(
+				getInvestmentHistory(time, CRYPTO_INVESTMENT_INFO)
+			)
 		)
 		.otherwise(() => getInvestmentHistory(time, INVESTMENT_INFO));
 

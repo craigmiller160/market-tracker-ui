@@ -4,6 +4,7 @@ import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
+import { HistoryRecord } from '../types/history';
 
 export const INVESTMENT_USA = 'usa';
 export const INVESTMENT_INTERNATIONAL = 'international';
@@ -117,4 +118,11 @@ export const STOCK_PLACEHOLDER_QUOTES: ReadonlyArray<Quote> = pipe(
 		symbol: '',
 		price: 0
 	}))
+);
+
+export const STOCK_PLACEHOLDER_HISTORY: ReadonlyArray<
+	ReadonlyArray<HistoryRecord>
+> = pipe(
+	STOCK_INVESTMENT_INFO,
+	RArray.map(() => [])
 );
