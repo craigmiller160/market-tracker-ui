@@ -19,7 +19,7 @@ import {
 	INVESTMENT_USA,
 	InvestmentInfo,
 	InvestmentType
-} from './MarketInfo';
+} from './InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
