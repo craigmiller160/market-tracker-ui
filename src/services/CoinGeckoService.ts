@@ -16,7 +16,7 @@ import * as Monoid from 'fp-ts/es6/Monoid';
 
 const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
-	concat: (s, s) => `${s},${s}`
+	concat: (s1, s2) => `${s1},${s2}`
 };
 
 export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
