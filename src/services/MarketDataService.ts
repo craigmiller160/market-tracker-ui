@@ -25,6 +25,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
+import * as Either from 'fp-ts/es6/Either';
 
 export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
 
@@ -138,8 +139,17 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
-): TaskTryT<ReadonlyArray<Quote>> =>
-	match({
+): TaskTryT<ReadonlyArray<Quote>> => {
+	const { left: stockSymbols, right: cryptoSymbols } = pipe(
+		INVESTMENT_INFO,
+		RArray.partitionMap((info) =>
+			match(info)
+				.with({ type: when(isStock) }, () => Either.right(info.symbol))
+				.otherwise(() => Either.left(info.symbol))
+		)
+	);
+
+	return match({
 		status,
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
@@ -147,7 +157,17 @@ const getQuotes = (
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
 			TaskEither.right([])
 		)
-		.otherwise(() => tradierService.getQuotes(INVESTMENT_SYMBOLS));
+		.otherwise(() =>
+			pipe(
+				[
+					tradierService.getQuotes(stockSymbols),
+					coinGeckoService.getQuotes(cryptoSymbols)
+				],
+				TaskEither.sequenceArray,
+				TaskEither.map(RArray.flatten)
+			)
+		);
+};
 
 const getMarketDataHistory = (
 	data: DataLoadedResult,
