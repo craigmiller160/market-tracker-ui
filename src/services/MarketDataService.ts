@@ -46,6 +46,7 @@ const getHistoryFn = (time: MarketTime): HistoryFn =>
 		.with(MarketTime.FIVE_YEARS, () => tradierService.getFiveYearHistory)
 		.run();
 
+// TODO get crypto despite market status
 const getHistory = (
 	status: MarketStatus,
 	time: MarketTime
@@ -71,6 +72,7 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
 	)(mostRecentRecord);
 
+// TODO get crypto
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
