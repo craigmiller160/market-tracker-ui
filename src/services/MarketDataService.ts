@@ -12,13 +12,12 @@ import {
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import {
-	INVESTMENT_CRYPTO,
 	INVESTMENT_INFO,
-	INVESTMENT_INTERNATIONAL,
 	INVESTMENT_SYMBOLS,
-	INVESTMENT_USA,
 	InvestmentInfo,
-	InvestmentType
+	InvestmentType,
+	isCrypto,
+	isStock
 } from './InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
@@ -94,12 +93,6 @@ const getHistoryFn = (time: MarketTime, type: InvestmentType): HistoryFn =>
 			() => coinGeckoService.getFiveYearHistory
 		)
 		.run();
-
-const isCrypto: PredicateT<InvestmentType> = (type) =>
-	type === INVESTMENT_CRYPTO;
-
-const isStock: PredicateT<InvestmentType> = (type) =>
-	type === INVESTMENT_USA || type === INVESTMENT_INTERNATIONAL;
 
 const getInvestmentHistory = (
 	time: MarketTime,

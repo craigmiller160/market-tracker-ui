@@ -1,5 +1,8 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
+import { match, when } from 'ts-pattern';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import * as Option from 'fp-ts/es6/Option';
 
 export const INVESTMENT_USA = 'usa';
 export const INVESTMENT_INTERNATIONAL = 'international';
@@ -68,8 +71,31 @@ export const INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = [
 	}
 ];
 
-// TODO probably delete this
+export const isCrypto: PredicateT<InvestmentType> = (type) =>
+	type === INVESTMENT_CRYPTO;
+
+export const isStock: PredicateT<InvestmentType> = (type) =>
+	type === INVESTMENT_USA || type === INVESTMENT_INTERNATIONAL;
+
 export const INVESTMENT_SYMBOLS = pipe(
 	INVESTMENT_INFO,
-	RArray.map((_) => _.symbol)
+	RArray.map((info) => info.symbol)
+);
+
+export const STOCK_INVESTMENT_SYMBOLS = pipe(
+	INVESTMENT_INFO,
+	RArray.filterMap((info) =>
+		match(info)
+			.with({ type: when(isStock) }, () => Option.some(info.symbol))
+			.otherwise(() => Option.none)
+	)
+);
+
+export const CRYPTO_INVESTMENT_SYMB0LS = pipe(
+	INVESTMENT_INFO,
+	RArray.filterMap((info) =>
+		match(info)
+			.with({ type: when(isCrypto) }, () => Option.some(info.symbol))
+			.otherwise(() => Option.none)
+	)
 );
