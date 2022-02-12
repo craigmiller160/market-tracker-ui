@@ -139,7 +139,7 @@ const getQuotes = (
 			coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
 		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
-			coinGeckoService.getQuotes(STOCK_INVESTMENT_SYMBOLS)
+			coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
 		)
 		.otherwise(() =>
 			pipe(
