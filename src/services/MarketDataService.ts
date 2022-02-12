@@ -139,6 +139,7 @@ const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
 ): TaskTryT<ReadonlyArray<Quote>> => {
+	// TODO prep this kind of stuff, along with padding the results for the crypto-only calls
 	const { left: stockSymbols, right: cryptoSymbols } = pipe(
 		INVESTMENT_INFO,
 		RArray.partitionMap((info) =>
