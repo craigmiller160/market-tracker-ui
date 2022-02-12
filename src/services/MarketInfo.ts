@@ -1,13 +1,13 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
 
-export interface MarketInfo {
+export interface StockInfo {
 	readonly symbol: string;
 	readonly name: string;
 	readonly isInternational: boolean;
 }
 
-export const MARKET_INFO: ReadonlyArray<MarketInfo> = [
+export const STOCK_INFO: ReadonlyArray<StockInfo> = [
 	{
 		symbol: 'VTI',
 		name: 'US Total Market',
@@ -50,7 +50,7 @@ export const MARKET_INFO: ReadonlyArray<MarketInfo> = [
 	}
 ];
 
-export const MARKET_SYMBOLS = pipe(
-	MARKET_INFO,
+export const STOCK_SYMBOLS = pipe(
+	STOCK_INFO,
 	RArray.map((_) => _.symbol)
 );

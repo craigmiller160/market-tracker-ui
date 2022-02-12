@@ -19,7 +19,7 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { createMockQueries, testDataSettings } from './marketsTestData';
-import { MARKET_INFO } from '../../../../src/services/MarketInfo';
+import { STOCK_INFO } from '../../../../src/services/MarketInfo';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -47,7 +47,7 @@ const testMarketsPage = (
 		expect(maybeCard).not.toBeUndefined();
 		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-		const name = MARKET_INFO.find(
+		const name = STOCK_INFO.find(
 			(info) => info.symbol === setting.symbol
 		)?.name;
 		expect(name).not.toBeUndefined();

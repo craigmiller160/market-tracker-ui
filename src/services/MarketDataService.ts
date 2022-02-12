@@ -10,7 +10,7 @@ import {
 } from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
-import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
+import { STOCK_INFO, STOCK_SYMBOLS } from './MarketInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -54,7 +54,7 @@ const getHistory = (
 		.with(MarketStatus.CLOSED, () => TaskEither.right([]))
 		.otherwise(() =>
 			pipe(
-				MARKET_SYMBOLS,
+				STOCK_SYMBOLS,
 				RArray.map(getHistoryFn(time)),
 				TaskEither.sequenceArray
 			)
@@ -83,7 +83,7 @@ const getQuotes = (
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
 			TaskEither.right([])
 		)
-		.otherwise(() => tradierService.getQuotes(MARKET_SYMBOLS));
+		.otherwise(() => tradierService.getQuotes(STOCK_SYMBOLS));
 
 const getMarketDataHistory = (
 	data: DataLoadedResult,
@@ -120,13 +120,13 @@ const getMarketDataCurrentPrice = (
 
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 	const { left: usa, right: international } = pipe(
-		MARKET_SYMBOLS,
+		STOCK_SYMBOLS,
 		RArray.mapWithIndex(
 			(index, symbol): MarketData => ({
 				symbol,
-				name: MARKET_INFO[index].name,
+				name: STOCK_INFO[index].name,
 				currentPrice: getMarketDataCurrentPrice(data, index),
-				isInternational: MARKET_INFO[index].isInternational,
+				isInternational: STOCK_INFO[index].isInternational,
 				history: getMarketDataHistory(data, index)
 			})
 		),
