@@ -11,7 +11,15 @@ import {
 } from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
-import { CRYPTO_IDS, INVESTMENT_INFO, INVESTMENT_SYMBOLS } from './MarketInfo';
+import {
+	INVESTMENT_CRYPTO,
+	INVESTMENT_INFO,
+	INVESTMENT_INTERNATIONAL,
+	INVESTMENT_SYMBOLS,
+	INVESTMENT_USA,
+	InvestmentInfo,
+	InvestmentType
+} from './MarketInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -34,49 +42,70 @@ const checkMarketStatus = (timeValue: MarketTime): TaskTryT<MarketStatus> =>
 		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
 		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
 
-const getStockHistoryFn = (time: MarketTime): HistoryFn =>
-	match(time)
-		.with(MarketTime.ONE_DAY, () => tradierService.getTimesales)
-		.with(MarketTime.ONE_WEEK, () => tradierService.getOneWeekHistory)
-		.with(MarketTime.ONE_MONTH, () => tradierService.getOneMonthHistory)
+const getHistoryFn = (time: MarketTime, type: InvestmentType): HistoryFn =>
+	match({ time, type })
 		.with(
-			MarketTime.THREE_MONTHS,
+			{ time: MarketTime.ONE_DAY, type: when(isStock) },
+			() => tradierService.getTimesales
+		)
+		.with(
+			{ time: MarketTime.ONE_DAY, type: when(isCrypto) },
+			() => coinGeckoService.getTodayHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_WEEK, type: when(isStock) },
+			() => tradierService.getOneWeekHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_WEEK, type: when(isCrypto) },
+			() => coinGeckoService.getOneWeekHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_MONTH, type: when(isStock) },
+			() => tradierService.getOneMonthHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_MONTH, type: when(isCrypto) },
+			() => coinGeckoService.getOneMonthHistory
+		)
+		.with(
+			{ time: MarketTime.THREE_MONTHS, type: when(isStock) },
 			() => tradierService.getThreeMonthHistory
 		)
-		.with(MarketTime.ONE_YEAR, () => tradierService.getOneYearHistory)
-		.with(MarketTime.FIVE_YEARS, () => tradierService.getFiveYearHistory)
-		.run();
-
-const getCryptoHistoryFn = (time: MarketTime): HistoryFn =>
-	match(time)
-		.with(MarketTime.ONE_DAY, () => coinGeckoService.getTodayHistory)
-		.with(MarketTime.ONE_WEEK, () => coinGeckoService.getOneWeekHistory)
-		.with(MarketTime.ONE_MONTH, () => coinGeckoService.getOneMonthHistory)
 		.with(
-			MarketTime.THREE_MONTHS,
+			{ time: MarketTime.THREE_MONTHS, type: when(isCrypto) },
 			() => coinGeckoService.getThreeMonthHistory
 		)
-		.with(MarketTime.ONE_YEAR, () => coinGeckoService.getOneYearHistory)
-		.with(MarketTime.FIVE_YEARS, () => coinGeckoService.getFiveYearHistory)
+		.with(
+			{ time: MarketTime.ONE_YEAR, type: when(isStock) },
+			() => tradierService.getOneYearHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_YEAR, type: when(isCrypto) },
+			() => coinGeckoService.getOneYearHistory
+		)
+		.with(
+			{ time: MarketTime.FIVE_YEARS, type: when(isStock) },
+			() => tradierService.getFiveYearHistory
+		)
+		.with(
+			{ time: MarketTime.FIVE_YEARS, type: when(isCrypto) },
+			() => coinGeckoService.getFiveYearHistory
+		)
 		.run();
 
-const getCryptoHistory = (
-	time: MarketTime
-): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
-	pipe(
-		CRYPTO_IDS,
-		RArray.map(getCryptoHistoryFn(time)),
-		TaskEither.sequenceArray
-	);
+const isCrypto: PredicateT<InvestmentType> = (type) =>
+	type === INVESTMENT_CRYPTO;
 
-const getStockHistory = (
-	time: MarketTime
-): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
-	pipe(
-		INVESTMENT_SYMBOLS,
-		RArray.map(getStockHistoryFn(time)),
-		TaskEither.sequenceArray
-	);
+const isStock: PredicateT<InvestmentType> = (type) =>
+	type === INVESTMENT_USA || type === INVESTMENT_INTERNATIONAL;
+
+const getInvestmentHistory = (
+	time: MarketTime,
+	investments: ReadonlyArray<InvestmentInfo>
+): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> => {
+	throw new Error();
+};
 
 // TODO get crypto despite market status
 const getHistory = (
@@ -84,8 +113,13 @@ const getHistory = (
 	time: MarketTime
 ): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
 	match(status)
-		.with(MarketStatus.CLOSED, () => TaskEither.right([]))
-		.otherwise(() => getStockHistory(time));
+		.with(MarketStatus.CLOSED, () =>
+			getInvestmentHistory(
+				time,
+				RArray.filter((_) => isCrypto(_.type))(INVESTMENT_INFO)
+			)
+		)
+		.otherwise(() => getInvestmentHistory(time, INVESTMENT_INFO));
 
 const getMostRecentHistoryRecord = (
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>

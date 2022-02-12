@@ -1,7 +1,13 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
 
-export type InvestmentType = 'usa' | 'international' | 'crypto';
+export const INVESTMENT_USA = 'usa';
+export const INVESTMENT_INTERNATIONAL = 'international';
+export const INVESTMENT_CRYPTO = 'crypto';
+export type InvestmentType =
+	| typeof INVESTMENT_USA
+	| typeof INVESTMENT_INTERNATIONAL
+	| typeof INVESTMENT_CRYPTO;
 
 export interface InvestmentInfo {
 	readonly symbol: string;
@@ -62,6 +68,7 @@ export const INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = [
 	}
 ];
 
+// TODO probably delete this
 export const INVESTMENT_SYMBOLS = pipe(
 	INVESTMENT_INFO,
 	RArray.map((_) => _.symbol)
