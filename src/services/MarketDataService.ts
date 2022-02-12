@@ -153,9 +153,11 @@ const getQuotes = (
 		status,
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
-		.with({ status: MarketStatus.CLOSED }, () => TaskEither.right([]))
+		.with({ status: MarketStatus.CLOSED }, () =>
+			coinGeckoService.getQuotes(cryptoSymbols)
+		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
-			TaskEither.right([])
+			coinGeckoService.getQuotes(cryptoSymbols)
 		)
 		.otherwise(() =>
 			pipe(
