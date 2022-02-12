@@ -1,81 +1,68 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
 
-export interface BaseInfo {
+export type InvestmentType = 'usa' | 'international' | 'crypto';
+
+export interface InvestmentInfo {
 	readonly symbol: string;
 	readonly name: string;
+	readonly type: string;
 }
 
-export interface StockInfo extends BaseInfo {
-	readonly isInternational: boolean;
-}
-
-export interface CryptoInfo extends BaseInfo {
-	readonly id: string;
-}
-
-export const STOCK_INFO: ReadonlyArray<StockInfo> = [
+export const INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = [
 	{
 		symbol: 'VTI',
 		name: 'US Total Market',
-		isInternational: false
+		type: 'usa'
 	},
 	{
 		symbol: 'VOO',
 		name: 'S&P 500',
-		isInternational: false
+		type: 'usa'
 	},
 	{
 		symbol: 'DIA',
 		name: 'Dow Jones',
-		isInternational: false
+		type: 'usa'
 	},
 	{
 		symbol: 'QQQ',
 		name: 'NASDAQ',
-		isInternational: false
+		type: 'usa'
 	},
 	{
 		symbol: 'EWU',
 		name: 'United Kingdom',
-		isInternational: true
+		type: 'international'
 	},
 	{
 		symbol: 'SPEU',
 		name: 'Europe',
-		isInternational: true
+		type: 'international'
 	},
 	{
 		symbol: 'EWJ',
 		name: 'Japan',
-		isInternational: true
+		type: 'international'
 	},
 	{
 		symbol: 'MCHI',
 		name: 'China',
-		isInternational: true
-	}
-];
-
-export const STOCK_SYMBOLS = pipe(
-	STOCK_INFO,
-	RArray.map((_) => _.symbol)
-);
-
-export const CRYPTO_INFO: ReadonlyArray<CryptoInfo> = [
+		type: 'international'
+	},
 	{
 		symbol: 'BTC',
 		name: 'Bitcoin',
-		id: 'bitcoin'
+		type: 'crypto'
 	},
 	{
 		symbol: 'ETH',
 		name: 'Ethereum',
-		id: 'ethereum'
+		type: 'crypto'
 	}
 ];
 
-export const CRYPTO_IDS = pipe(
-	CRYPTO_INFO,
-	RArray.map((_) => _.id)
+export const INVESTMENT_SYMBOLS = pipe(
+	INVESTMENT_INFO,
+	RArray.map((_) => _.symbol)
 );
