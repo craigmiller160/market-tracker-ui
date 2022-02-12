@@ -20,7 +20,8 @@ import {
 	InvestmentType,
 	isCrypto,
 	isStock,
-	STOCK_INVESTMENT_SYMBOLS
+	STOCK_INVESTMENT_SYMBOLS,
+	STOCK_PLACEHOLDER_QUOTES
 } from './InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
@@ -112,6 +113,7 @@ const getHistory = (
 ): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
 	match(status)
 		.with(MarketStatus.CLOSED, () =>
+			// TODO add placeholder history
 			getInvestmentHistory(time, CRYPTO_INVESTMENT_INFO)
 		)
 		.otherwise(() => getInvestmentHistory(time, INVESTMENT_INFO));
@@ -127,6 +129,14 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
 	)(mostRecentRecord);
 
+const addStockPlaceholderQuotes = (
+	cryptoQuotes: TaskTryT<ReadonlyArray<Quote>>
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		cryptoQuotes,
+		TaskEither.map((quotes) => [...STOCK_PLACEHOLDER_QUOTES, ...quotes])
+	);
+
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
@@ -136,10 +146,14 @@ const getQuotes = (
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
 		.with({ status: MarketStatus.CLOSED }, () =>
-			coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			addStockPlaceholderQuotes(
+				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			)
 		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
-			coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			addStockPlaceholderQuotes(
+				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			)
 		)
 		.otherwise(() =>
 			pipe(

@@ -3,6 +3,7 @@ import { pipe } from 'fp-ts/es6/function';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import * as Option from 'fp-ts/es6/Option';
+import { Quote } from '../types/quote';
 
 export const INVESTMENT_USA = 'usa';
 export const INVESTMENT_INTERNATIONAL = 'international';
@@ -108,4 +109,12 @@ export const STOCK_INVESTMENT_INFO = pipe(
 export const CRYPTO_INVESTMENT_INFO = pipe(
 	INVESTMENT_INFO,
 	RArray.filter((info) => isCrypto(info.type))
+);
+
+export const STOCK_PLACEHOLDER_QUOTES: ReadonlyArray<Quote> = pipe(
+	STOCK_INVESTMENT_INFO,
+	RArray.map(() => ({
+		symbol: '',
+		price: 0
+	}))
 );
