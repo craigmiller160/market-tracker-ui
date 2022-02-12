@@ -12,19 +12,21 @@ import {
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import {
+	CRYPTO_INVESTMENT_INFO,
+	CRYPTO_INVESTMENT_SYMB0LS,
 	INVESTMENT_INFO,
 	INVESTMENT_SYMBOLS,
 	InvestmentInfo,
 	InvestmentType,
 	isCrypto,
-	isStock
+	isStock,
+	STOCK_INVESTMENT_SYMBOLS
 } from './InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
-import * as Either from 'fp-ts/es6/Either';
 
 export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
 
@@ -110,10 +112,7 @@ const getHistory = (
 ): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
 	match(status)
 		.with(MarketStatus.CLOSED, () =>
-			getInvestmentHistory(
-				time,
-				RArray.filter((_) => isCrypto(_.type))(INVESTMENT_INFO)
-			)
+			getInvestmentHistory(time, CRYPTO_INVESTMENT_INFO)
 		)
 		.otherwise(() => getInvestmentHistory(time, INVESTMENT_INFO));
 
@@ -131,38 +130,27 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
-): TaskTryT<ReadonlyArray<Quote>> => {
-	// TODO prep this kind of stuff, along with padding the results for the crypto-only calls
-	const { left: stockSymbols, right: cryptoSymbols } = pipe(
-		INVESTMENT_INFO,
-		RArray.partitionMap((info) =>
-			match(info)
-				.with({ type: when(isStock) }, () => Either.right(info.symbol))
-				.otherwise(() => Either.left(info.symbol))
-		)
-	);
-
-	return match({
+): TaskTryT<ReadonlyArray<Quote>> =>
+	match({
 		status,
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
 		.with({ status: MarketStatus.CLOSED }, () =>
-			coinGeckoService.getQuotes(cryptoSymbols)
+			coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
 		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
-			coinGeckoService.getQuotes(cryptoSymbols)
+			coinGeckoService.getQuotes(STOCK_INVESTMENT_SYMBOLS)
 		)
 		.otherwise(() =>
 			pipe(
 				[
-					tradierService.getQuotes(stockSymbols),
-					coinGeckoService.getQuotes(cryptoSymbols)
+					tradierService.getQuotes(STOCK_INVESTMENT_SYMBOLS),
+					coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
 				],
 				TaskEither.sequenceArray,
 				TaskEither.map(RArray.flatten)
 			)
 		);
-};
 
 const getMarketDataHistory = (
 	data: DataLoadedResult,

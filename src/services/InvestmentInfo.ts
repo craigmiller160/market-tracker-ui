@@ -99,3 +99,13 @@ export const CRYPTO_INVESTMENT_SYMB0LS = pipe(
 			.otherwise(() => Option.none)
 	)
 );
+
+export const STOCK_INVESTMENT_INFO = pipe(
+	INVESTMENT_INFO,
+	RArray.filter((info) => isStock(info.type))
+);
+
+export const CRYPTO_INVESTMENT_INFO = pipe(
+	INVESTMENT_INFO,
+	RArray.filter((info) => isCrypto(info.type))
+);
