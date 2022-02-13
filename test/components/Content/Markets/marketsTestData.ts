@@ -127,6 +127,15 @@ export const createCoinGeckoHistory = (
 	prices: [[new Date().getTime(), setting.historyPrice]]
 });
 
+export const createCoinGeckoTimesaleHistory = (
+	setting: TestDataSetting
+): CoinGeckoMarketChart => ({
+	prices: [
+		[new Date().getTime(), setting.timesalePrice1],
+		[Time.addHours(1)(new Date()).getTime(), setting.timesalePrice2]
+	]
+});
+
 export const createTradierQuotes = (
 	settings: ReadonlyArray<TestDataSetting>
 ): TradierQuotes => ({
@@ -292,10 +301,15 @@ export const createMockQueries =
 			.reply(200, coinGeckoQuotes);
 
 		coinGeckoSettings.forEach((setting) => {
+			const response =
+				coinGeckoDays === 1
+					? createCoinGeckoTimesaleHistory(setting)
+					: createCoinGeckoHistory(setting);
+
 			mockApi
 				.onGet(
 					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
 				)
-				.reply(200, createCoinGeckoHistory(setting));
+				.reply(200, response);
 		});
 	};
