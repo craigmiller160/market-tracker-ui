@@ -255,19 +255,19 @@ export const createMockQueries =
 			.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 			.reply(200, createMockCalendar(calendarDate, status));
 
-		const symbols = testDataSettings
-			.map((setting) => setting.symbol)
-			.join(',');
-		mockApi
-			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
-			.reply(200, createTradierQuotes(testDataSettings));
-
 		const tradierSettings = testDataSettings.filter((setting) =>
 			isStock(setting.type)
 		);
 		const coinGeckoSettings = testDataSettings.filter((setting) =>
 			isCrypto(setting.type)
 		);
+
+		const symbols = tradierSettings
+			.map((setting) => setting.symbol)
+			.join(',');
+		mockApi
+			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
+			.reply(200, createTradierQuotes(testDataSettings));
 
 		tradierSettings.forEach((setting) => {
 			mockApi
