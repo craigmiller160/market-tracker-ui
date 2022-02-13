@@ -31,18 +31,27 @@ const createTitle = (data: MarketData): ReactNode => (
 	</h3>
 );
 
+const localeOptions: Intl.NumberFormatOptions = {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2
+};
+
 const createPrice = (data: MarketData) => {
 	const oldestPrice = data.history[0]?.price ?? 0;
 	const priceChange = data.currentPrice - oldestPrice;
 
-	const formattedPrice = `$${data.currentPrice.toFixed(2)}`;
+	const formattedPrice = `$${data.currentPrice.toLocaleString(
+		undefined,
+		localeOptions
+	)}`;
 	const priceChangeOperator = priceChange >= 0 ? '+' : '-';
 	const formattedPriceChange = `${priceChangeOperator}$${Math.abs(
 		priceChange
-	).toFixed(2)}`;
+	).toLocaleString(undefined, localeOptions)}`;
 	const percentChange = (Math.abs(priceChange) / oldestPrice) * 100;
-	const formattedPercentChange = `${priceChangeOperator}${percentChange.toFixed(
-		2
+	const formattedPercentChange = `${priceChangeOperator}${percentChange.toLocaleString(
+		undefined,
+		localeOptions
 	)}%`;
 	const priceClassName = priceChange >= 0 ? 'up' : 'down';
 	const ChangeIcon =
