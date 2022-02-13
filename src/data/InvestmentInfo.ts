@@ -10,14 +10,11 @@ import { Quote } from '../types/quote';
 import { HistoryRecord } from '../types/history';
 import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
-// TODO make this an enum
-export const INVESTMENT_USA = 'usa';
-export const INVESTMENT_INTERNATIONAL = 'international';
-export const INVESTMENT_CRYPTO = 'crypto';
-export type InvestmentType =
-	| typeof INVESTMENT_USA
-	| typeof INVESTMENT_INTERNATIONAL
-	| typeof INVESTMENT_CRYPTO;
+export enum InvestmentType {
+	USA_ETF = 'USA_ETF',
+	INTERNATIONAL_ETF = 'INTERNATIONAL_ETF',
+	CRYPTO = 'CRYPTO'
+}
 
 export interface InvestmentInfo {
 	readonly symbol: string;
@@ -29,60 +26,61 @@ export const INVESTMENT_INFO: ReadonlyNonEmptyArrayT<InvestmentInfo> = [
 	{
 		symbol: 'VTI',
 		name: 'US Total Market',
-		type: 'usa'
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'VOO',
 		name: 'S&P 500',
-		type: 'usa'
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'DIA',
 		name: 'Dow Jones',
-		type: 'usa'
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'QQQ',
 		name: 'NASDAQ',
-		type: 'usa'
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'EWU',
 		name: 'United Kingdom',
-		type: 'international'
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'SPEU',
 		name: 'Europe',
-		type: 'international'
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'EWJ',
 		name: 'Japan',
-		type: 'international'
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'MCHI',
 		name: 'China',
-		type: 'international'
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'BTC',
 		name: 'Bitcoin',
-		type: 'crypto'
+		type: InvestmentType.CRYPTO
 	},
 	{
 		symbol: 'ETH',
 		name: 'Ethereum',
-		type: 'crypto'
+		type: InvestmentType.CRYPTO
 	}
 ];
 
 export const isCrypto: PredicateT<InvestmentType> = (type) =>
-	type === INVESTMENT_CRYPTO;
+	type === InvestmentType.CRYPTO;
 
 export const isStock: PredicateT<InvestmentType> = (type) =>
-	type === INVESTMENT_USA || type === INVESTMENT_INTERNATIONAL;
+	type === InvestmentType.USA_ETF ||
+	type === InvestmentType.INTERNATIONAL_ETF;
 
 export const INVESTMENT_SYMBOLS: ReadonlyNonEmptyArrayT<string> = pipe(
 	INVESTMENT_INFO,
