@@ -61,7 +61,7 @@ const testMarketsPage = (
 			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
 		).toHaveTextContent(`Since ${config.startDate}`);
 
-		if (config.isMarketClosed) {
+		if (config.isMarketClosed && setting.id === undefined) {
 			expect(
 				within(card).queryByText('Market Closed')
 			).toBeInTheDocument();
