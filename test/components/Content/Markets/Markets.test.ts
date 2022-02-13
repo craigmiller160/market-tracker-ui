@@ -105,10 +105,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries({
-			coinInterval: 'minutely',
-			coinDays: 1
-		});
+		mockQueries();
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
