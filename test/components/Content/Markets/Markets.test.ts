@@ -105,7 +105,9 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries();
+		mockQueries({
+			coinGeckoInterval: 'minutely'
+		});
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();

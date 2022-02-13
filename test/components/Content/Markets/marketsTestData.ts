@@ -204,6 +204,7 @@ export interface MockQueriesConfig {
 	readonly tradierInterval?: string;
 	readonly timesaleTimestamp?: number;
 	readonly isMarketClosed?: boolean;
+	readonly coinGeckoInterval?: string;
 }
 
 export const createMockCalendar = (
@@ -235,10 +236,16 @@ const getCoinGeckoDays = (start: string | undefined): number =>
 export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
-		const { start, tradierInterval, timesaleTimestamp, isMarketClosed } =
-			config;
+		const {
+			start,
+			tradierInterval,
+			timesaleTimestamp,
+			isMarketClosed,
+			coinGeckoInterval
+		} = config;
 
 		const coinGeckoDays = getCoinGeckoDays(start);
+		const realCoinGeckoInverval = coinGeckoInterval ?? 'daily';
 		const calendarToday = new Date();
 		const calendarDate = Time.format('yyyy-MM-dd')(calendarToday);
 		const month = Time.format('MM')(calendarToday);
@@ -284,9 +291,7 @@ export const createMockQueries =
 		coinGeckoSettings.forEach((setting) => {
 			mockApi
 				.onGet(
-					`/coingecko/coins/${
-						setting.symbol
-					}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${''}`
+					`/coingecko/coins/${setting.symbol}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
 				)
 				.reply(200, createCoinGeckoHistory(setting));
 		});
