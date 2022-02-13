@@ -10,6 +10,7 @@ import { Quote } from '../types/quote';
 import { HistoryRecord } from '../types/history';
 import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
+// TODO make this an enum
 export const INVESTMENT_USA = 'usa';
 export const INVESTMENT_INTERNATIONAL = 'international';
 export const INVESTMENT_CRYPTO = 'crypto';

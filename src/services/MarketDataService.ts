@@ -15,7 +15,6 @@ import {
 	CRYPTO_INVESTMENT_INFO,
 	CRYPTO_INVESTMENT_SYMB0LS,
 	INVESTMENT_INFO,
-	INVESTMENT_SYMBOLS,
 	InvestmentInfo,
 	InvestmentType,
 	isCrypto,
@@ -29,8 +28,13 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
+import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
-export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
+export type GlobalMarketData = [
+	MarketDataGroup,
+	MarketDataGroup,
+	MarketDataGroup
+];
 
 interface DataLoadedResult {
 	readonly time: MarketTime;
@@ -220,7 +224,8 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 				history: getMarketDataHistory(data, index), // TODO check this
 				type: info.type
 			})
-		)
+		),
+		RNonEmptyArray.groupBy((data) => data.type)
 	);
 
 	// const { left: usa, right: international } = pipe(
