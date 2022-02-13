@@ -195,10 +195,14 @@ const getMarketDataHistory = (
 
 const getMarketDataCurrentPrice = (
 	data: DataLoadedResult,
+	type: InvestmentType,
 	index: number
 ): number =>
-	match(data)
-		.with({ marketStatus: MarketStatus.CLOSED }, () => 0)
+	match({ ...data, type })
+		.with(
+			{ marketStatus: MarketStatus.CLOSED, type: when(isStock) },
+			() => 0
+		)
 		.otherwise(({ quotes, history }) =>
 			pipe(
 				quotes,
@@ -223,7 +227,7 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 			(index, info): MarketData => ({
 				symbol: info.symbol,
 				name: info.name,
-				currentPrice: getMarketDataCurrentPrice(data, index), // TODO check this
+				currentPrice: getMarketDataCurrentPrice(data, info.type, index),
 				history: getMarketDataHistory(data, index),
 				type: info.type
 			})
