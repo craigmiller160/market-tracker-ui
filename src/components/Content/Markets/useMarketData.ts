@@ -20,7 +20,7 @@ import {
 	INVESTMENT_INTERNATIONAL,
 	INVESTMENT_USA,
 	InvestmentType
-} from '../../../services/InvestmentInfo';
+} from '../../../data/InvestmentInfo';
 
 const INTERVAL_1_MIN_MILLIS = 1000 * 60;
 

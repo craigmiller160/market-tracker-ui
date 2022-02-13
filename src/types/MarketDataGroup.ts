@@ -1,7 +1,7 @@
 import { MarketStatus } from './MarketStatus';
 import { MarketData } from './MarketData';
 import { MarketTime } from './MarketTime';
-import { InvestmentType } from '../services/InvestmentInfo';
+import { InvestmentType } from '../data/InvestmentInfo';
 
 export interface MarketDataGroup {
 	readonly time: MarketTime;

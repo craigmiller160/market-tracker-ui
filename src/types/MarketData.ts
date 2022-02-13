@@ -1,5 +1,5 @@
 import { HistoryRecord } from './history';
-import { InvestmentType } from '../services/InvestmentInfo';
+import { InvestmentType } from '../data/InvestmentInfo';
 
 export interface MarketData {
 	readonly symbol: string;

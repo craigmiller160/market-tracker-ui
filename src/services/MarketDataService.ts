@@ -25,7 +25,7 @@ import {
 	STOCK_INVESTMENT_SYMBOLS,
 	STOCK_PLACEHOLDER_HISTORY,
 	STOCK_PLACEHOLDER_QUOTES
-} from './InvestmentInfo';
+} from '../data/InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
