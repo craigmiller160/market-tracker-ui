@@ -14,7 +14,10 @@ import { pipe } from 'fp-ts/es6/function';
 import {
 	CRYPTO_INVESTMENT_INFO,
 	CRYPTO_INVESTMENT_SYMB0LS,
+	INVESTMENT_CRYPTO,
 	INVESTMENT_INFO,
+	INVESTMENT_INTERNATIONAL,
+	INVESTMENT_USA,
 	InvestmentInfo,
 	InvestmentType,
 	isCrypto,
@@ -31,9 +34,9 @@ import { MarketDataGroup } from '../types/MarketDataGroup';
 import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
 export type GlobalMarketData = [
-	MarketDataGroup,
-	MarketDataGroup,
-	MarketDataGroup
+	usa: MarketDataGroup,
+	international: MarketDataGroup,
+	crypto: MarketDataGroup
 ];
 
 interface DataLoadedResult {
@@ -214,7 +217,7 @@ const getMarketDataCurrentPrice = (
 		);
 
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
-	pipe(
+	const groupedMarketData = pipe(
 		INVESTMENT_INFO,
 		RArray.mapWithIndex(
 			(index, info): MarketData => ({
@@ -228,31 +231,26 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 		RNonEmptyArray.groupBy((data) => data.type)
 	);
 
-	// const { left: usa, right: international } = pipe(
-	// 	INVESTMENT_SYMBOLS,
-	// 	RArray.mapWithIndex(
-	// 		(index, symbol): MarketData => ({
-	// 			symbol,
-	// 			name: INVESTMENT_INFO[index].name,
-	// 			currentPrice: getMarketDataCurrentPrice(data, index),
-	// 			isInternational: INVESTMENT_INFO[index].isInternational,
-	// 			history: getMarketDataHistory(data, index)
-	// 		})
-	// 	),
-	// 	RArray.partition((_): boolean => _.isInternational)
-	// );
-	// return [
-	// 	{
-	// 		time: data.time,
-	// 		marketStatus: data.marketStatus,
-	// 		data: usa
-	// 	},
-	// 	{
-	// 		time: data.time,
-	// 		marketStatus: data.marketStatus,
-	// 		data: international
-	// 	}
-	// ];
+	return [
+		{
+			time: data.time,
+			marketStatus: data.marketStatus,
+			data: groupedMarketData[INVESTMENT_USA],
+			type: INVESTMENT_USA
+		},
+		{
+			time: data.time,
+			marketStatus: data.marketStatus,
+			data: groupedMarketData[INVESTMENT_INTERNATIONAL],
+			type: INVESTMENT_INTERNATIONAL
+		},
+		{
+			time: data.time,
+			marketStatus: data.marketStatus,
+			data: groupedMarketData[INVESTMENT_CRYPTO],
+			type: INVESTMENT_CRYPTO
+		}
+	];
 };
 
 export const loadMarketData = (
