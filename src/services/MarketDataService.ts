@@ -212,10 +212,16 @@ const getMarketDataCurrentPrice = (
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 	pipe(
 		INVESTMENT_INFO,
-		RArray.mapWithIndex((index, info): MarketData => ({
-			symbol: info[index].symbol
-		}))
-	)
+		RArray.mapWithIndex(
+			(index, info): MarketData => ({
+				symbol: info.symbol,
+				name: info.name,
+				currentPrice: getMarketDataCurrentPrice(data, index), // TODO check this
+				history: getMarketDataHistory(data, index), // TODO check this
+				type: info.type
+			})
+		)
+	);
 
 	// const { left: usa, right: international } = pipe(
 	// 	INVESTMENT_SYMBOLS,
