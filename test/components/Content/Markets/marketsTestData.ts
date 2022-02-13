@@ -3,6 +3,7 @@ import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import MockAdapter from 'axios-mock-adapter';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Option from 'fp-ts/es6/Option';
 import {
 	getTimesalesEnd,
 	getTimesalesStart
@@ -11,6 +12,14 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
+import {
+	InvestmentType,
+	isCrypto,
+	isStock
+} from '../../../../src/data/InvestmentInfo';
+import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
+import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
+import { pipe } from 'fp-ts/es6/function';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -23,6 +32,8 @@ export interface TestDataSetting {
 	readonly historyPrice: number;
 	readonly timesalePrice1: number;
 	readonly timesalePrice2: number;
+	readonly type: InvestmentType;
+	readonly id?: string;
 }
 
 export const testDataSettings: ReadonlyArray<TestDataSetting> = [
@@ -31,60 +42,101 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		quotePrice: 100,
 		historyPrice: 50,
 		timesalePrice1: 40,
-		timesalePrice2: 45
+		timesalePrice2: 45,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'VOO',
 		quotePrice: 101,
 		historyPrice: 51,
 		timesalePrice1: 41,
-		timesalePrice2: 46
+		timesalePrice2: 46,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'DIA',
 		quotePrice: 102,
 		historyPrice: 52,
 		timesalePrice1: 42,
-		timesalePrice2: 47
+		timesalePrice2: 47,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'QQQ',
 		quotePrice: 103,
 		historyPrice: 53,
 		timesalePrice1: 43,
-		timesalePrice2: 48
+		timesalePrice2: 48,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'EWU',
 		quotePrice: 104,
 		historyPrice: 54,
 		timesalePrice1: 44,
-		timesalePrice2: 49
+		timesalePrice2: 49,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'SPEU',
 		quotePrice: 107,
 		historyPrice: 57,
 		timesalePrice1: 47,
-		timesalePrice2: 52
+		timesalePrice2: 52,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'EWJ',
 		quotePrice: 105,
 		historyPrice: 55,
 		timesalePrice1: 45,
-		timesalePrice2: 50
+		timesalePrice2: 50,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'MCHI',
 		quotePrice: 106,
 		historyPrice: 56,
 		timesalePrice1: 46,
-		timesalePrice2: 51
+		timesalePrice2: 51,
+		type: InvestmentType.INTERNATIONAL_ETF
+	},
+	{
+		symbol: 'BTC',
+		quotePrice: 108,
+		historyPrice: 58,
+		timesalePrice1: 48,
+		timesalePrice2: 52,
+		type: InvestmentType.CRYPTO,
+		id: 'bitcoin'
+	},
+	{
+		symbol: 'ETH',
+		quotePrice: 109,
+		historyPrice: 59,
+		timesalePrice1: 49,
+		timesalePrice2: 53,
+		type: InvestmentType.CRYPTO,
+		id: 'ethereum'
 	}
 ];
 
-export const createQuotes = (
+export const createCoinGeckoHistory = (
+	setting: TestDataSetting
+): CoinGeckoMarketChart => ({
+	prices: [[new Date().getTime(), setting.historyPrice]]
+});
+
+export const createCoinGeckoTimesaleHistory = (
+	setting: TestDataSetting
+): CoinGeckoMarketChart => ({
+	prices: [
+		[new Date().getTime(), setting.timesalePrice1],
+		[Time.addHours(1)(new Date()).getTime(), setting.timesalePrice2]
+	]
+});
+
+export const createTradierQuotes = (
 	settings: ReadonlyArray<TestDataSetting>
 ): TradierQuotes => ({
 	quotes: {
@@ -102,7 +154,9 @@ export const createQuotes = (
 	}
 });
 
-export const createHistory = (setting: TestDataSetting): TradierHistory => ({
+export const createTradierHistory = (
+	setting: TestDataSetting
+): TradierHistory => ({
 	history: {
 		day: [
 			{
@@ -115,6 +169,15 @@ export const createHistory = (setting: TestDataSetting): TradierHistory => ({
 		]
 	}
 });
+
+const coinGeckoQuotes: CoinGeckoPrice = {
+	bitcoin: {
+		usd: '108'
+	},
+	ethereum: {
+		usd: '109'
+	}
+};
 
 export const createTimesale = (
 	timestamp = 0,
@@ -150,9 +213,10 @@ export const createTimesale = (
 
 export interface MockQueriesConfig {
 	readonly start?: string;
-	readonly interval?: string;
+	readonly tradierInterval?: string;
 	readonly timesaleTimestamp?: number;
 	readonly isMarketClosed?: boolean;
+	readonly coinGeckoInterval?: string;
 }
 
 export const createMockCalendar = (
@@ -173,11 +237,27 @@ export const createMockCalendar = (
 	}
 });
 
+const getCoinGeckoDays = (start: string | undefined): number =>
+	pipe(
+		Option.fromNullable(start),
+		Option.map(Time.parse('yyyy-MM-dd')),
+		Option.map(Time.differenceInDays(new Date())),
+		Option.getOrElse(() => 1)
+	);
+
 export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
-		const { start, interval, timesaleTimestamp, isMarketClosed } = config;
+		const {
+			start,
+			tradierInterval,
+			timesaleTimestamp,
+			isMarketClosed,
+			coinGeckoInterval
+		} = config;
 
+		const coinGeckoDays = getCoinGeckoDays(start);
+		const realCoinGeckoInverval = coinGeckoInterval ?? 'daily';
 		const calendarToday = new Date();
 		const calendarDate = Time.format('yyyy-MM-dd')(calendarToday);
 		const month = Time.format('MM')(calendarToday);
@@ -187,23 +267,54 @@ export const createMockQueries =
 			.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 			.reply(200, createMockCalendar(calendarDate, status));
 
-		const symbols = testDataSettings
+		const tradierSettings = testDataSettings.filter((setting) =>
+			isStock(setting.type)
+		);
+		const coinGeckoSettings = testDataSettings.filter((setting) =>
+			isCrypto(setting.type)
+		);
+
+		const symbols = tradierSettings
 			.map((setting) => setting.symbol)
 			.join(',');
 		mockApi
 			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
-			.reply(200, createQuotes(testDataSettings));
+			.reply(200, createTradierQuotes(testDataSettings));
 
-		testDataSettings.forEach((setting) => {
+		tradierSettings.forEach((setting) => {
 			mockApi
 				.onGet(
-					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${interval}`
+					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${tradierInterval}`
 				)
-				.reply(200, createHistory(setting));
+				.reply(200, createTradierHistory(setting));
 			mockApi
 				.onGet(
 					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=1min`
 				)
 				.reply(200, createTimesale(timesaleTimestamp, setting));
+		});
+
+		mockApi
+			.onGet(
+				'/coingecko/simple/price?ids=bitcoin,ethereum&vs_currencies=usd'
+			)
+			.reply(200, coinGeckoQuotes);
+
+		coinGeckoSettings.forEach((setting) => {
+			const response =
+				coinGeckoDays === 1
+					? createCoinGeckoTimesaleHistory(setting)
+					: createCoinGeckoHistory(setting);
+
+			mockApi
+				.onGet(
+					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=1&interval=minutely`
+				)
+				.reply(200, createCoinGeckoTimesaleHistory(setting));
+			mockApi
+				.onGet(
+					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
+				)
+				.reply(200, response);
 		});
 	};

@@ -1,6 +1,7 @@
 import { MarketTime } from '../types/MarketTime';
 import { match, when } from 'ts-pattern';
 import * as tradierService from './TradierService';
+import * as coinGeckoService from './CoinGeckoService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { MarketStatus } from '../types/MarketStatus';
 import {
@@ -10,14 +11,30 @@ import {
 } from '@craigmiller160/ts-functions/es/types';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
-import { MARKET_INFO, MARKET_SYMBOLS } from './MarketInfo';
+import {
+	CRYPTO_INVESTMENT_INFO,
+	CRYPTO_INVESTMENT_SYMB0LS,
+	INVESTMENT_INFO,
+	InvestmentInfo,
+	InvestmentType,
+	isCrypto,
+	isStock,
+	STOCK_INVESTMENT_SYMBOLS,
+	STOCK_PLACEHOLDER_HISTORY,
+	STOCK_PLACEHOLDER_QUOTES
+} from '../data/InvestmentInfo';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
+import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
-export type GlobalMarketData = [MarketDataGroup, MarketDataGroup];
+export type GlobalMarketData = [
+	usa: MarketDataGroup,
+	international: MarketDataGroup,
+	crypto: MarketDataGroup
+];
 
 interface DataLoadedResult {
 	readonly time: MarketTime;
@@ -33,32 +50,87 @@ const checkMarketStatus = (timeValue: MarketTime): TaskTryT<MarketStatus> =>
 		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
 		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
 
-const getHistoryFn = (time: MarketTime): HistoryFn =>
-	match(time)
-		.with(MarketTime.ONE_DAY, () => tradierService.getTimesales)
-		.with(MarketTime.ONE_WEEK, () => tradierService.getOneWeekHistory)
-		.with(MarketTime.ONE_MONTH, () => tradierService.getOneMonthHistory)
+const getHistoryFn = (time: MarketTime, type: InvestmentType): HistoryFn =>
+	match({ time, type })
 		.with(
-			MarketTime.THREE_MONTHS,
+			{ time: MarketTime.ONE_DAY, type: when(isStock) },
+			() => tradierService.getTimesales
+		)
+		.with(
+			{ time: MarketTime.ONE_DAY, type: when(isCrypto) },
+			() => coinGeckoService.getTodayHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_WEEK, type: when(isStock) },
+			() => tradierService.getOneWeekHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_WEEK, type: when(isCrypto) },
+			() => coinGeckoService.getOneWeekHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_MONTH, type: when(isStock) },
+			() => tradierService.getOneMonthHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_MONTH, type: when(isCrypto) },
+			() => coinGeckoService.getOneMonthHistory
+		)
+		.with(
+			{ time: MarketTime.THREE_MONTHS, type: when(isStock) },
 			() => tradierService.getThreeMonthHistory
 		)
-		.with(MarketTime.ONE_YEAR, () => tradierService.getOneYearHistory)
-		.with(MarketTime.FIVE_YEARS, () => tradierService.getFiveYearHistory)
+		.with(
+			{ time: MarketTime.THREE_MONTHS, type: when(isCrypto) },
+			() => coinGeckoService.getThreeMonthHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_YEAR, type: when(isStock) },
+			() => tradierService.getOneYearHistory
+		)
+		.with(
+			{ time: MarketTime.ONE_YEAR, type: when(isCrypto) },
+			() => coinGeckoService.getOneYearHistory
+		)
+		.with(
+			{ time: MarketTime.FIVE_YEARS, type: when(isStock) },
+			() => tradierService.getFiveYearHistory
+		)
+		.with(
+			{ time: MarketTime.FIVE_YEARS, type: when(isCrypto) },
+			() => coinGeckoService.getFiveYearHistory
+		)
 		.run();
+
+const getInvestmentHistory = (
+	time: MarketTime,
+	investments: ReadonlyArray<InvestmentInfo>
+): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
+	pipe(
+		investments,
+		RArray.map((_) => getHistoryFn(time, _.type)(_.symbol)),
+		TaskEither.sequenceArray
+	);
+
+const addStockPlaceholderHistory = (
+	cryptoHistory: TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>>
+): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
+	pipe(
+		cryptoHistory,
+		TaskEither.map((history) => [...STOCK_PLACEHOLDER_HISTORY, ...history])
+	);
 
 const getHistory = (
 	status: MarketStatus,
 	time: MarketTime
 ): TaskTryT<ReadonlyArray<ReadonlyArray<HistoryRecord>>> =>
 	match(status)
-		.with(MarketStatus.CLOSED, () => TaskEither.right([]))
-		.otherwise(() =>
-			pipe(
-				MARKET_SYMBOLS,
-				RArray.map(getHistoryFn(time)),
-				TaskEither.sequenceArray
+		.with(MarketStatus.CLOSED, () =>
+			addStockPlaceholderHistory(
+				getInvestmentHistory(time, CRYPTO_INVESTMENT_INFO)
 			)
-		);
+		)
+		.otherwise(() => getInvestmentHistory(time, INVESTMENT_INFO));
 
 const getMostRecentHistoryRecord = (
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
@@ -71,6 +143,14 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
 	)(mostRecentRecord);
 
+const addStockPlaceholderQuotes = (
+	cryptoQuotes: TaskTryT<ReadonlyArray<Quote>>
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		cryptoQuotes,
+		TaskEither.map((quotes) => [...STOCK_PLACEHOLDER_QUOTES, ...quotes])
+	);
+
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
@@ -79,11 +159,26 @@ const getQuotes = (
 		status,
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
-		.with({ status: MarketStatus.CLOSED }, () => TaskEither.right([]))
-		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
-			TaskEither.right([])
+		.with({ status: MarketStatus.CLOSED }, () =>
+			addStockPlaceholderQuotes(
+				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			)
 		)
-		.otherwise(() => tradierService.getQuotes(MARKET_SYMBOLS));
+		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
+			addStockPlaceholderQuotes(
+				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+			)
+		)
+		.otherwise(() =>
+			pipe(
+				[
+					tradierService.getQuotes(STOCK_INVESTMENT_SYMBOLS),
+					coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+				],
+				TaskEither.sequenceArray,
+				TaskEither.map(RArray.flatten)
+			)
+		);
 
 const getMarketDataHistory = (
 	data: DataLoadedResult,
@@ -97,15 +192,20 @@ const getMarketDataHistory = (
 
 const getMarketDataCurrentPrice = (
 	data: DataLoadedResult,
+	type: InvestmentType,
 	index: number
 ): number =>
-	match(data)
-		.with({ marketStatus: MarketStatus.CLOSED }, () => 0)
+	match({ ...data, type })
+		.with(
+			{ marketStatus: MarketStatus.CLOSED, type: when(isStock) },
+			() => 0
+		)
 		.otherwise(({ quotes, history }) =>
 			pipe(
 				quotes,
 				RArray.lookup(index),
 				Option.map((_) => _.price),
+				Option.filter((_) => _ > 0),
 				Option.getOrElse(() =>
 					pipe(
 						history,
@@ -119,29 +219,38 @@ const getMarketDataCurrentPrice = (
 		);
 
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
-	const { left: usa, right: international } = pipe(
-		MARKET_SYMBOLS,
+	const groupedMarketData = pipe(
+		INVESTMENT_INFO,
 		RArray.mapWithIndex(
-			(index, symbol): MarketData => ({
-				symbol,
-				name: MARKET_INFO[index].name,
-				currentPrice: getMarketDataCurrentPrice(data, index),
-				isInternational: MARKET_INFO[index].isInternational,
-				history: getMarketDataHistory(data, index)
+			(index, info): MarketData => ({
+				symbol: info.symbol,
+				name: info.name,
+				currentPrice: getMarketDataCurrentPrice(data, info.type, index),
+				history: getMarketDataHistory(data, index),
+				type: info.type
 			})
 		),
-		RArray.partition((_): boolean => _.isInternational)
+		RNonEmptyArray.groupBy((data) => data.type)
 	);
+
 	return [
 		{
 			time: data.time,
 			marketStatus: data.marketStatus,
-			data: usa
+			data: groupedMarketData[InvestmentType.USA_ETF],
+			type: InvestmentType.USA_ETF
 		},
 		{
 			time: data.time,
 			marketStatus: data.marketStatus,
-			data: international
+			data: groupedMarketData[InvestmentType.INTERNATIONAL_ETF],
+			type: InvestmentType.INTERNATIONAL_ETF
+		},
+		{
+			time: data.time,
+			marketStatus: data.marketStatus,
+			data: groupedMarketData[InvestmentType.CRYPTO],
+			type: InvestmentType.CRYPTO
 		}
 	];
 };

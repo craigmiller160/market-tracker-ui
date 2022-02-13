@@ -1,12 +1,10 @@
 import './Recognition.scss';
 import { Typography } from 'antd';
 import TradierLogo from '../../../images/tradier.png';
-import MessariLogo from '../../../images/messari.png';
+import CoinGeckoLogo from '../../../images/coingecko.png';
 import { useContext } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
-
-const SHOW_CRYPTO_SOURCE = false;
 
 export const Recognition = () => {
 	const { breakpoints } = useContext(ScreenContext);
@@ -20,14 +18,12 @@ export const Recognition = () => {
 					The source of all stock market data
 				</Typography.Title>
 			</div>
-			{SHOW_CRYPTO_SOURCE && (
-				<div className={`Source ${breakpointName}`}>
-					<img src={MessariLogo} alt="Messari" />
-					<Typography.Title level={4}>
-						The source of all crypto data
-					</Typography.Title>
-				</div>
-			)}
+			<div className={`Source ${breakpointName}`}>
+				<img src={CoinGeckoLogo} alt="CoinGecko" />
+				<Typography.Title level={4}>
+					The source of all crypto data
+				</Typography.Title>
+			</div>
 		</div>
 	);
 };

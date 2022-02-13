@@ -19,7 +19,7 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { createMockQueries, testDataSettings } from './marketsTestData';
-import { MARKET_INFO } from '../../../../src/services/MarketInfo';
+import { INVESTMENT_INFO } from '../../../../src/data/InvestmentInfo';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -39,7 +39,7 @@ const testMarketsPage = (
 	const isTimesale = config.isTimesale ?? false;
 	const isCurrentPriceQuote = config.isCurrentPriceQuote ?? true;
 	const marketCards = within(marketsPage).queryAllByRole('listitem');
-	expect(marketCards).toHaveLength(8);
+	expect(marketCards).toHaveLength(10);
 	testDataSettings.forEach((setting) => {
 		const maybeCard = within(marketsPage).queryByTestId(
 			`market-card-${setting.symbol}`
@@ -47,7 +47,7 @@ const testMarketsPage = (
 		expect(maybeCard).not.toBeUndefined();
 		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-		const name = MARKET_INFO.find(
+		const name = INVESTMENT_INFO.find(
 			(info) => info.symbol === setting.symbol
 		)?.name;
 		expect(name).not.toBeUndefined();
@@ -61,7 +61,7 @@ const testMarketsPage = (
 			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
 		).toHaveTextContent(`Since ${config.startDate}`);
 
-		if (config.isMarketClosed) {
+		if (config.isMarketClosed && setting.id === undefined) {
 			expect(
 				within(card).queryByText('Market Closed')
 			).toBeInTheDocument();
@@ -73,9 +73,10 @@ const testMarketsPage = (
 			const initialPrice = isTimesale
 				? setting.timesalePrice1
 				: setting.historyPrice;
-			const currentPrice = isCurrentPriceQuote
-				? setting.quotePrice
-				: setting.timesalePrice2;
+			const currentPrice =
+				isCurrentPriceQuote || setting.id !== undefined
+					? setting.quotePrice
+					: setting.timesalePrice2;
 			const diff = currentPrice - initialPrice;
 			const expectedPrice = `$${currentPrice.toFixed(
 				2
@@ -105,7 +106,9 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries();
+		mockQueries({
+			coinGeckoInterval: 'minutely'
+		});
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
@@ -157,7 +160,7 @@ describe('Markets', () => {
 	it('renders for 1 week', async () => {
 		mockQueries({
 			start: getOneWeekHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -180,7 +183,7 @@ describe('Markets', () => {
 	it('renders for 1 month', async () => {
 		mockQueries({
 			start: getOneMonthHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -203,7 +206,7 @@ describe('Markets', () => {
 	it('renders for 3 months', async () => {
 		mockQueries({
 			start: getThreeMonthHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -226,7 +229,7 @@ describe('Markets', () => {
 	it('renders for 1 year', async () => {
 		mockQueries({
 			start: getOneYearHistoryStartDate(),
-			interval: 'weekly'
+			tradierInterval: 'weekly'
 		});
 
 		await renderApp();
@@ -249,7 +252,7 @@ describe('Markets', () => {
 	it('renders for 5 years', async () => {
 		mockQueries({
 			start: getFiveYearHistoryStartDate(),
-			interval: 'monthly'
+			tradierInterval: 'monthly'
 		});
 
 		await renderApp();

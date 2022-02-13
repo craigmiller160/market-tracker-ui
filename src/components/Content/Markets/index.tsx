@@ -4,7 +4,8 @@ import './Markets.scss';
 import { MarketSection } from './MarketSection';
 
 export const Markets = () => {
-	const { loading, usMarketData, intMarketData } = useMarketData();
+	const { loading, usMarketData, intMarketData, cryptoMarketData } =
+		useMarketData();
 
 	return (
 		<div className="GlobalMarkets" data-testid="markets-page">
@@ -19,6 +20,11 @@ export const Markets = () => {
 				title="International Markets"
 				loading={loading}
 				data={intMarketData}
+			/>
+			<MarketSection
+				title="Crypto"
+				loading={loading}
+				data={cryptoMarketData}
 			/>
 		</div>
 	);

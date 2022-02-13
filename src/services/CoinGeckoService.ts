@@ -1,4 +1,4 @@
-import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskTryT, TryT, MonoidT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
 import { pipe } from 'fp-ts/es6/function';
 import { ajaxApi, getResponseData } from './AjaxApi';
@@ -11,6 +11,25 @@ import { HistoryRecord } from '../types/history';
 import { CoinGeckoMarketChart } from '../types/coingecko/marketchart';
 import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { match } from 'ts-pattern';
+import * as Monoid from 'fp-ts/es6/Monoid';
+import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate,
+	HISTORY_DATE_FORMAT
+} from '../utils/timeUtils';
+
+const quoteSymbolMonoid: MonoidT<string> = {
+	empty: '',
+	concat: (s1, s2) =>
+		match(s1)
+			.with(Pattern.lengthGT(0), () => `${s1},${s2}`)
+			.otherwise(() => s2)
+};
 
 export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
 
@@ -19,6 +38,18 @@ export interface HistoryQuery {
 	readonly days: number;
 	readonly interval: HistoryInterval;
 }
+
+const getId = (symbol: string): string =>
+	match(symbol.toLowerCase())
+		.with('btc', () => 'bitcoin')
+		.with('eth', () => 'ethereum')
+		.run();
+
+const getSymbol = (id: string): string =>
+	match(id)
+		.with('bitcoin', () => 'BTC')
+		.with('ethereum', () => 'ETH')
+		.run();
 
 const getMarketChartDate: (millis: number) => string = flow(
 	Time.fromMillis,
@@ -31,15 +62,15 @@ const getMarketChartTime: (millis: number) => string = flow(
 );
 
 const formatPrice =
-	(symbols: ReadonlyArray<string>) =>
+	(ids: ReadonlyArray<string>) =>
 	(price: CoinGeckoPrice): TryT<ReadonlyArray<Quote>> =>
 		pipe(
-			symbols,
-			RArray.map((symbol) =>
+			ids,
+			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[symbol]),
+					Option.fromNullable(price[id]),
 					Option.map((price) => ({
-						symbol,
+						symbol: getSymbol(id),
 						price: parseFloat(price.usd)
 					}))
 				)
@@ -48,23 +79,25 @@ const formatPrice =
 			Either.fromOption(
 				() =>
 					new Error(
-						`Unable to find all symbols in quote response. ${symbols}`
+						`Unable to find all symbols in quote response. ${ids}`
 					)
 			)
 		);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> =>
-	pipe(
+): TaskTryT<ReadonlyArray<Quote>> => {
+	const ids = pipe(symbols, RArray.map(getId));
+	const idString = pipe(ids, Monoid.concatAll(quoteSymbolMonoid));
+
+	return pipe(
 		ajaxApi.get<CoinGeckoPrice>({
-			uri: `/coingecko/simple/price?ids=${symbols.join(
-				','
-			)}&vs_currencies=usd`
+			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.chainEitherK(formatPrice(symbols))
+		TaskEither.chainEitherK(formatPrice(ids))
 	);
+};
 
 const formatMarketChart = (
 	chart: CoinGeckoMarketChart
@@ -83,14 +116,16 @@ const formatMarketChart = (
 
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
-	pipe(
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	const id = getId(historyQuery.symbol);
+	return pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${historyQuery.symbol}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
+			uri: `/coingecko/coins/${id}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.map(formatMarketChart)
 	);
+};
 
 export const getTodayHistory = (
 	symbol: string
@@ -101,30 +136,38 @@ export const getTodayHistory = (
 		interval: 'minutely'
 	});
 
+export const getDays = (historyDate: string): number =>
+	pipe(
+		historyDate,
+		Time.parse(HISTORY_DATE_FORMAT),
+		Time.differenceInDays(new Date())
+	);
+
 export const getOneWeekHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 7,
+		days: getDays(getOneWeekHistoryStartDate()),
 		interval: 'daily'
 	});
 
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	return getHistoryQuote({
 		symbol,
-		days: 30,
+		days: getDays(getOneMonthHistoryStartDate()),
 		interval: 'daily'
 	});
+};
 
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 90,
+		days: getDays(getThreeMonthHistoryStartDate()),
 		interval: 'daily'
 	});
 
@@ -133,7 +176,7 @@ export const getOneYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 365,
+		days: getDays(getOneYearHistoryStartDate()),
 		interval: 'daily'
 	});
 
@@ -142,6 +185,6 @@ export const getFiveYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 365 * 5,
+		days: getDays(getFiveYearHistoryStartDate()),
 		interval: 'daily'
 	});

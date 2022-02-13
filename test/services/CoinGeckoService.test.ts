@@ -3,6 +3,7 @@ import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
 import {
+	getDays,
 	getFiveYearHistory,
 	getOneMonthHistory,
 	getOneWeekHistory,
@@ -14,8 +15,16 @@ import {
 import { CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { HistoryRecord } from '../../src/types/history';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
+} from '../../src/utils/timeUtils';
 
-const symbols: ReadonlyArray<string> = ['bitcoin', 'ethereum'];
+const ids: ReadonlyArray<string> = ['bitcoin', 'ethereum'];
+const symbols: ReadonlyArray<string> = ['BTC', 'ETH'];
 
 const price: CoinGeckoPrice = {
 	bitcoin: {
@@ -61,20 +70,18 @@ describe('CoinGeckoService', () => {
 	it('gets quotes for currencies', async () => {
 		mockApi
 			.onGet(
-				`/coingecko/simple/price?ids=${symbols.join(
-					','
-				)}&vs_currencies=usd`
+				`/coingecko/simple/price?ids=${ids.join(',')}&vs_currencies=usd`
 			)
 			.reply(200, price);
 
 		const result = await getQuotes(symbols)();
 		expect(result).toEqualRight([
 			{
-				symbol: 'bitcoin',
+				symbol: 'BTC',
 				price: 100.5
 			},
 			{
-				symbol: 'ethereum',
+				symbol: 'ETH',
 				price: 50.75
 			}
 		]);
@@ -86,58 +93,62 @@ describe('CoinGeckoService', () => {
 				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=1&interval=minutely'
 			)
 			.reply(200, chart);
-		const result = await getTodayHistory('bitcoin')();
+		const result = await getTodayHistory('BTC')();
 		expect(result).toEqualRight(history);
 	});
 
 	it('gets 1 week history', async () => {
-		mockApi
-			.onGet(
-				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=daily'
-			)
-			.reply(200, chart);
-		const result = await getOneWeekHistory('bitcoin')();
-		expect(result).toEqualRight(history);
-	});
-
-	it('gets 1 month history', async () => {
-		mockApi
-			.onGet(
-				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily'
-			)
-			.reply(200, chart);
-		const result = await getOneMonthHistory('bitcoin')();
-		expect(result).toEqualRight(history);
-	});
-
-	it('gets 3 months history', async () => {
-		mockApi
-			.onGet(
-				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily'
-			)
-			.reply(200, chart);
-		const result = await getThreeMonthHistory('bitcoin')();
-		expect(result).toEqualRight(history);
-	});
-
-	it('gets 1 year history', async () => {
-		mockApi
-			.onGet(
-				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily'
-			)
-			.reply(200, chart);
-		const result = await getOneYearHistory('bitcoin')();
-		expect(result).toEqualRight(history);
-	});
-
-	it('gets 5 years history', async () => {
-		const days = 365 * 5;
+		const days = getDays(getOneWeekHistoryStartDate());
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
-		const result = await getFiveYearHistory('bitcoin')();
+		const result = await getOneWeekHistory('BTC')();
+		expect(result).toEqualRight(history);
+	});
+
+	it('gets 1 month history', async () => {
+		const days = getDays(getOneMonthHistoryStartDate());
+		mockApi
+			.onGet(
+				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+			)
+			.reply(200, chart);
+		const result = await getOneMonthHistory('BTC')();
+		expect(result).toEqualRight(history);
+	});
+
+	it('gets 3 months history', async () => {
+		const days = getDays(getThreeMonthHistoryStartDate());
+		mockApi
+			.onGet(
+				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+			)
+			.reply(200, chart);
+		const result = await getThreeMonthHistory('BTC')();
+		expect(result).toEqualRight(history);
+	});
+
+	it('gets 1 year history', async () => {
+		const days = getDays(getOneYearHistoryStartDate());
+		mockApi
+			.onGet(
+				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+			)
+			.reply(200, chart);
+		const result = await getOneYearHistory('BTC')();
+		expect(result).toEqualRight(history);
+	});
+
+	it('gets 5 years history', async () => {
+		const days = getDays(getFiveYearHistoryStartDate());
+		mockApi
+			.onGet(
+				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+			)
+			.reply(200, chart);
+		const result = await getFiveYearHistory('BTC')();
 		expect(result).toEqualRight(history);
 	});
 });
