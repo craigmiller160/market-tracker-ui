@@ -15,12 +15,7 @@ import { castDraft } from 'immer';
 import { MarketTime } from '../../../types/MarketTime';
 import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
-import {
-	INVESTMENT_CRYPTO,
-	INVESTMENT_INTERNATIONAL,
-	INVESTMENT_USA,
-	InvestmentType
-} from '../../../data/InvestmentInfo';
+import { InvestmentType } from '../../../data/InvestmentInfo';
 
 const INTERVAL_1_MIN_MILLIS = 1000 * 60;
 
@@ -87,9 +82,11 @@ export const useMarketData = (): State => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
 		time: MarketTime.ONE_DAY,
-		usMarketData: createDefaultMarketDataGroup(INVESTMENT_USA),
-		intMarketData: createDefaultMarketDataGroup(INVESTMENT_INTERNATIONAL),
-		cryptoMarketData: createDefaultMarketDataGroup(INVESTMENT_CRYPTO)
+		usMarketData: createDefaultMarketDataGroup(InvestmentType.USA_ETF),
+		intMarketData: createDefaultMarketDataGroup(
+			InvestmentType.INTERNATIONAL_ETF
+		),
+		cryptoMarketData: createDefaultMarketDataGroup(InvestmentType.CRYPTO)
 	});
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const marketDataLoader = useCallback(

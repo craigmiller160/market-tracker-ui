@@ -14,10 +14,7 @@ import { pipe } from 'fp-ts/es6/function';
 import {
 	CRYPTO_INVESTMENT_INFO,
 	CRYPTO_INVESTMENT_SYMB0LS,
-	INVESTMENT_CRYPTO,
 	INVESTMENT_INFO,
-	INVESTMENT_INTERNATIONAL,
-	INVESTMENT_USA,
 	InvestmentInfo,
 	InvestmentType,
 	isCrypto,
@@ -239,20 +236,20 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 		{
 			time: data.time,
 			marketStatus: data.marketStatus,
-			data: groupedMarketData[INVESTMENT_USA],
-			type: INVESTMENT_USA
+			data: groupedMarketData[InvestmentType.USA_ETF],
+			type: InvestmentType.USA_ETF
 		},
 		{
 			time: data.time,
 			marketStatus: data.marketStatus,
-			data: groupedMarketData[INVESTMENT_INTERNATIONAL],
-			type: INVESTMENT_INTERNATIONAL
+			data: groupedMarketData[InvestmentType.INTERNATIONAL_ETF],
+			type: InvestmentType.INTERNATIONAL_ETF
 		},
 		{
 			time: data.time,
 			marketStatus: data.marketStatus,
-			data: groupedMarketData[INVESTMENT_CRYPTO],
-			type: INVESTMENT_CRYPTO
+			data: groupedMarketData[InvestmentType.CRYPTO],
+			type: InvestmentType.CRYPTO
 		}
 	];
 };
