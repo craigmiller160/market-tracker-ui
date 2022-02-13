@@ -224,7 +224,7 @@ const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
 				symbol: info.symbol,
 				name: info.name,
 				currentPrice: getMarketDataCurrentPrice(data, index), // TODO check this
-				history: getMarketDataHistory(data, index), // TODO check this
+				history: getMarketDataHistory(data, index),
 				type: info.type
 			})
 		),
