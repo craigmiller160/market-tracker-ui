@@ -1,7 +1,7 @@
 import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
-const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
+export const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
 const TIMESALES_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DISPLAY_DATE_FORMAT = 'MMM dd, yyyy';
 export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);

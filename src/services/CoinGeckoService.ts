@@ -14,6 +14,14 @@ import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
 import * as Monoid from 'fp-ts/es6/Monoid';
 import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
+import {
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate,
+	HISTORY_DATE_FORMAT
+} from '../utils/timeUtils';
 
 const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
@@ -128,30 +136,38 @@ export const getTodayHistory = (
 		interval: 'minutely'
 	});
 
+const getDays = (historyDate: string): number =>
+	pipe(
+		historyDate,
+		Time.parse(HISTORY_DATE_FORMAT),
+		Time.differenceInDays(new Date())
+	);
+
 export const getOneWeekHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 7,
+		days: getDays(getOneWeekHistoryStartDate()),
 		interval: 'daily'
 	});
 
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
+): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+	return getHistoryQuote({
 		symbol,
-		days: 30,
+		days: getDays(getOneMonthHistoryStartDate()),
 		interval: 'daily'
 	});
+};
 
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 90,
+		days: getDays(getThreeMonthHistoryStartDate()),
 		interval: 'daily'
 	});
 
@@ -160,7 +176,7 @@ export const getOneYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 365,
+		days: getDays(getOneYearHistoryStartDate()),
 		interval: 'daily'
 	});
 
@@ -169,6 +185,6 @@ export const getFiveYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 365 * 5,
+		days: getDays(getFiveYearHistoryStartDate()),
 		interval: 'daily'
 	});
