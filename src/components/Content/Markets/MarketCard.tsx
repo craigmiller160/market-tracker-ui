@@ -2,7 +2,7 @@ import { MarketData } from '../../../types/MarketData';
 import { Card } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match } from 'ts-pattern';
+import { match, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -17,6 +17,7 @@ import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
 import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
+import { isStock } from '../../../data/InvestmentInfo';
 
 interface Props {
 	readonly data: MarketData;
@@ -122,14 +123,17 @@ export const MarketCard = ({ marketStatus, data, time }: Props) => {
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 
-	const { Price, Chart } = match(marketStatus)
-		.with(MarketStatus.OPEN, () => ({
+	const { Price, Chart } = match({ marketStatus, type: data.type })
+		.with(
+			{ marketStatus: MarketStatus.CLOSED, type: when(isStock) },
+			() => ({
+				Price: MarketClosed,
+				Chart: <div />
+			})
+		)
+		.otherwise(() => ({
 			Price: createPrice(data),
 			Chart: <ChartComp data={data} />
-		}))
-		.otherwise(() => ({
-			Price: MarketClosed,
-			Chart: <div />
 		}));
 
 	const FullTitle = (
