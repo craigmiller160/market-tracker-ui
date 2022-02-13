@@ -308,6 +308,11 @@ export const createMockQueries =
 
 			mockApi
 				.onGet(
+					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=1&interval=minutely`
+				)
+				.reply(200, createCoinGeckoTimesaleHistory(setting));
+			mockApi
+				.onGet(
 					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
 				)
 				.reply(200, response);
