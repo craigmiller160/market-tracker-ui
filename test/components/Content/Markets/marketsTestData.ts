@@ -11,6 +11,7 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
+import { InvestmentType } from '../../../../src/data/InvestmentInfo';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -23,6 +24,7 @@ export interface TestDataSetting {
 	readonly historyPrice: number;
 	readonly timesalePrice1: number;
 	readonly timesalePrice2: number;
+	readonly type: InvestmentType;
 }
 
 export const testDataSettings: ReadonlyArray<TestDataSetting> = [
@@ -31,56 +33,80 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		quotePrice: 100,
 		historyPrice: 50,
 		timesalePrice1: 40,
-		timesalePrice2: 45
+		timesalePrice2: 45,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'VOO',
 		quotePrice: 101,
 		historyPrice: 51,
 		timesalePrice1: 41,
-		timesalePrice2: 46
+		timesalePrice2: 46,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'DIA',
 		quotePrice: 102,
 		historyPrice: 52,
 		timesalePrice1: 42,
-		timesalePrice2: 47
+		timesalePrice2: 47,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'QQQ',
 		quotePrice: 103,
 		historyPrice: 53,
 		timesalePrice1: 43,
-		timesalePrice2: 48
+		timesalePrice2: 48,
+		type: InvestmentType.USA_ETF
 	},
 	{
 		symbol: 'EWU',
 		quotePrice: 104,
 		historyPrice: 54,
 		timesalePrice1: 44,
-		timesalePrice2: 49
+		timesalePrice2: 49,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'SPEU',
 		quotePrice: 107,
 		historyPrice: 57,
 		timesalePrice1: 47,
-		timesalePrice2: 52
+		timesalePrice2: 52,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'EWJ',
 		quotePrice: 105,
 		historyPrice: 55,
 		timesalePrice1: 45,
-		timesalePrice2: 50
+		timesalePrice2: 50,
+		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'MCHI',
 		quotePrice: 106,
 		historyPrice: 56,
 		timesalePrice1: 46,
-		timesalePrice2: 51
+		timesalePrice2: 51,
+		type: InvestmentType.INTERNATIONAL_ETF
+	},
+	{
+		symbol: 'BTC',
+		quotePrice: 108,
+		historyPrice: 58,
+		timesalePrice1: 48,
+		timesalePrice2: 52,
+		type: InvestmentType.CRYPTO
+	},
+	{
+		symbol: 'ETH',
+		quotePrice: 109,
+		historyPrice: 59,
+		timesalePrice1: 49,
+		timesalePrice2: 53,
+		type: InvestmentType.CRYPTO
 	}
 ];
 
