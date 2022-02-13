@@ -136,7 +136,7 @@ export const getTodayHistory = (
 		interval: 'minutely'
 	});
 
-const getDays = (historyDate: string): number =>
+export const getDays = (historyDate: string): number =>
 	pipe(
 		historyDate,
 		Time.parse(HISTORY_DATE_FORMAT),
