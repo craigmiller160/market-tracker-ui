@@ -157,7 +157,7 @@ describe('Markets', () => {
 	it('renders for 1 week', async () => {
 		mockQueries({
 			start: getOneWeekHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -180,7 +180,7 @@ describe('Markets', () => {
 	it('renders for 1 month', async () => {
 		mockQueries({
 			start: getOneMonthHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -203,7 +203,7 @@ describe('Markets', () => {
 	it('renders for 3 months', async () => {
 		mockQueries({
 			start: getThreeMonthHistoryStartDate(),
-			interval: 'daily'
+			tradierInterval: 'daily'
 		});
 
 		await renderApp();
@@ -226,7 +226,7 @@ describe('Markets', () => {
 	it('renders for 1 year', async () => {
 		mockQueries({
 			start: getOneYearHistoryStartDate(),
-			interval: 'weekly'
+			tradierInterval: 'weekly'
 		});
 
 		await renderApp();
@@ -249,7 +249,7 @@ describe('Markets', () => {
 	it('renders for 5 years', async () => {
 		mockQueries({
 			start: getFiveYearHistoryStartDate(),
-			interval: 'monthly'
+			tradierInterval: 'monthly'
 		});
 
 		await renderApp();
