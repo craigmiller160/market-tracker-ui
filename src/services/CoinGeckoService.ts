@@ -13,10 +13,14 @@ import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
 import * as Monoid from 'fp-ts/es6/Monoid';
+import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
 
 const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
-	concat: (s1, s2) => `${s1},${s2}`
+	concat: (s1, s2) =>
+		match(s1)
+			.with(Pattern.lengthGT(0), () => `${s1},${s2}`)
+			.otherwise(() => s2)
 };
 
 export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
@@ -28,7 +32,7 @@ export interface HistoryQuery {
 }
 
 const getId = (symbol: string): string =>
-	match(symbol)
+	match(symbol.toLowerCase())
 		.with('btc', () => 'bitcoin')
 		.with('eth', () => 'ethereum')
 		.run();
