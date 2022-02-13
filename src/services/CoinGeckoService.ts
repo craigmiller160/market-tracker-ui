@@ -37,6 +37,12 @@ const getId = (symbol: string): string =>
 		.with('eth', () => 'ethereum')
 		.run();
 
+const getSymbol = (id: string): string =>
+	match(id)
+		.with('bitcoin', () => 'BTC')
+		.with('ethereum', () => 'ETH')
+		.run();
+
 const getMarketChartDate: (millis: number) => string = flow(
 	Time.fromMillis,
 	Time.format('yyyy-MM-dd')
@@ -48,15 +54,15 @@ const getMarketChartTime: (millis: number) => string = flow(
 );
 
 const formatPrice =
-	(symbols: ReadonlyArray<string>) =>
+	(ids: ReadonlyArray<string>) =>
 	(price: CoinGeckoPrice): TryT<ReadonlyArray<Quote>> =>
 		pipe(
-			symbols,
-			RArray.map((symbol) =>
+			ids,
+			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[symbol]),
+					Option.fromNullable(price[id]),
 					Option.map((price) => ({
-						symbol,
+						symbol: getSymbol(id),
 						price: parseFloat(price.usd)
 					}))
 				)
@@ -65,7 +71,7 @@ const formatPrice =
 			Either.fromOption(
 				() =>
 					new Error(
-						`Unable to find all symbols in quote response. ${symbols}`
+						`Unable to find all symbols in quote response. ${ids}`
 					)
 			)
 		);
@@ -73,18 +79,15 @@ const formatPrice =
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> => {
-	const idString = pipe(
-		symbols,
-		RArray.map(getId),
-		Monoid.concatAll(quoteSymbolMonoid)
-	);
+	const ids = pipe(symbols, RArray.map(getId));
+	const idString = pipe(ids, Monoid.concatAll(quoteSymbolMonoid));
 
 	return pipe(
 		ajaxApi.get<CoinGeckoPrice>({
 			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.chainEitherK(formatPrice(symbols))
+		TaskEither.chainEitherK(formatPrice(ids))
 	);
 };
 

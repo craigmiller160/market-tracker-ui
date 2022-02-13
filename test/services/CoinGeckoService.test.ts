@@ -67,14 +67,13 @@ describe('CoinGeckoService', () => {
 			.reply(200, price);
 
 		const result = await getQuotes(symbols)();
-		console.log(result); // TODO delete this
 		expect(result).toEqualRight([
 			{
-				symbol: 'bitcoin',
+				symbol: 'BTC',
 				price: 100.5
 			},
 			{
-				symbol: 'ethereum',
+				symbol: 'ETH',
 				price: 50.75
 			}
 		]);
