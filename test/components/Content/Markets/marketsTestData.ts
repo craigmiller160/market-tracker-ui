@@ -33,6 +33,7 @@ export interface TestDataSetting {
 	readonly timesalePrice1: number;
 	readonly timesalePrice2: number;
 	readonly type: InvestmentType;
+	readonly id?: string;
 }
 
 export const testDataSettings: ReadonlyArray<TestDataSetting> = [
@@ -101,20 +102,22 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		type: InvestmentType.INTERNATIONAL_ETF
 	},
 	{
-		symbol: 'bitcoin',
+		symbol: 'BTC',
 		quotePrice: 108,
 		historyPrice: 58,
 		timesalePrice1: 48,
 		timesalePrice2: 52,
-		type: InvestmentType.CRYPTO
+		type: InvestmentType.CRYPTO,
+		id: 'bitcoin'
 	},
 	{
-		symbol: 'ethereum',
+		symbol: 'ETH',
 		quotePrice: 109,
 		historyPrice: 59,
 		timesalePrice1: 49,
 		timesalePrice2: 53,
-		type: InvestmentType.CRYPTO
+		type: InvestmentType.CRYPTO,
+		id: 'ethereum'
 	}
 ];
 
@@ -291,7 +294,7 @@ export const createMockQueries =
 		coinGeckoSettings.forEach((setting) => {
 			mockApi
 				.onGet(
-					`/coingecko/coins/${setting.symbol}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
+					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
 				)
 				.reply(200, createCoinGeckoHistory(setting));
 		});

@@ -39,7 +39,7 @@ const testMarketsPage = (
 	const isTimesale = config.isTimesale ?? false;
 	const isCurrentPriceQuote = config.isCurrentPriceQuote ?? true;
 	const marketCards = within(marketsPage).queryAllByRole('listitem');
-	expect(marketCards).toHaveLength(8);
+	expect(marketCards).toHaveLength(10);
 	testDataSettings.forEach((setting) => {
 		const maybeCard = within(marketsPage).queryByTestId(
 			`market-card-${setting.symbol}`
