@@ -3,6 +3,7 @@ import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import MockAdapter from 'axios-mock-adapter';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Option from 'fp-ts/es6/Option';
 import {
 	getTimesalesEnd,
 	getTimesalesStart
@@ -18,6 +19,7 @@ import {
 } from '../../../../src/data/InvestmentInfo';
 import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
+import { pipe } from 'fp-ts/es6/function';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -222,12 +224,21 @@ export const createMockCalendar = (
 	}
 });
 
+const getCoinGeckoDays = (start: string | undefined): number =>
+	pipe(
+		Option.fromNullable(start),
+		Option.map(Time.parse('yyyy-MM-dd')),
+		Option.map(Time.differenceInDays(new Date())),
+		Option.getOrElse(() => 1)
+	);
+
 export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
 		const { start, tradierInterval, timesaleTimestamp, isMarketClosed } =
 			config;
 
+		const coinGeckoDays = getCoinGeckoDays(start);
 		const calendarToday = new Date();
 		const calendarDate = Time.format('yyyy-MM-dd')(calendarToday);
 		const month = Time.format('MM')(calendarToday);
@@ -275,7 +286,7 @@ export const createMockQueries =
 				.onGet(
 					`/coingecko/coins/${
 						setting.symbol
-					}/market_chart?vs_currency=usd&days=${''}&interval=${''}`
+					}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${''}`
 				)
 				.reply(200, createCoinGeckoHistory(setting));
 		});
