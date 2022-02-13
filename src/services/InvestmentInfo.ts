@@ -1,10 +1,14 @@
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { pipe } from 'fp-ts/es6/function';
 import { match, when } from 'ts-pattern';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import {
+	PredicateT,
+	ReadonlyNonEmptyArrayT
+} from '@craigmiller160/ts-functions/es/types';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import { HistoryRecord } from '../types/history';
+import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
 export const INVESTMENT_USA = 'usa';
 export const INVESTMENT_INTERNATIONAL = 'international';
@@ -20,7 +24,7 @@ export interface InvestmentInfo {
 	readonly type: InvestmentType;
 }
 
-export const INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = [
+export const INVESTMENT_INFO: ReadonlyNonEmptyArrayT<InvestmentInfo> = [
 	{
 		symbol: 'VTI',
 		name: 'US Total Market',
@@ -79,12 +83,12 @@ export const isCrypto: PredicateT<InvestmentType> = (type) =>
 export const isStock: PredicateT<InvestmentType> = (type) =>
 	type === INVESTMENT_USA || type === INVESTMENT_INTERNATIONAL;
 
-export const INVESTMENT_SYMBOLS = pipe(
+export const INVESTMENT_SYMBOLS: ReadonlyNonEmptyArrayT<string> = pipe(
 	INVESTMENT_INFO,
-	RArray.map((info) => info.symbol)
+	RNonEmptyArray.map((info) => info.symbol)
 );
 
-export const STOCK_INVESTMENT_SYMBOLS = pipe(
+export const STOCK_INVESTMENT_SYMBOLS: ReadonlyArray<string> = pipe(
 	INVESTMENT_INFO,
 	RArray.filterMap((info) =>
 		match(info)
@@ -93,7 +97,7 @@ export const STOCK_INVESTMENT_SYMBOLS = pipe(
 	)
 );
 
-export const CRYPTO_INVESTMENT_SYMB0LS = pipe(
+export const CRYPTO_INVESTMENT_SYMB0LS: ReadonlyArray<string> = pipe(
 	INVESTMENT_INFO,
 	RArray.filterMap((info) =>
 		match(info)
@@ -102,12 +106,12 @@ export const CRYPTO_INVESTMENT_SYMB0LS = pipe(
 	)
 );
 
-export const STOCK_INVESTMENT_INFO = pipe(
+export const STOCK_INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = pipe(
 	INVESTMENT_INFO,
 	RArray.filter((info) => isStock(info.type))
 );
 
-export const CRYPTO_INVESTMENT_INFO = pipe(
+export const CRYPTO_INVESTMENT_INFO: ReadonlyArray<InvestmentInfo> = pipe(
 	INVESTMENT_INFO,
 	RArray.filter((info) => isCrypto(info.type))
 );

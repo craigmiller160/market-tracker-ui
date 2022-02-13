@@ -210,31 +210,38 @@ const getMarketDataCurrentPrice = (
 		);
 
 const handleMarketData = (data: DataLoadedResult): GlobalMarketData => {
-	const { left: usa, right: international } = pipe(
-		INVESTMENT_SYMBOLS,
-		RArray.mapWithIndex(
-			(index, symbol): MarketData => ({
-				symbol,
-				name: INVESTMENT_INFO[index].name,
-				currentPrice: getMarketDataCurrentPrice(data, index),
-				isInternational: INVESTMENT_INFO[index].isInternational,
-				history: getMarketDataHistory(data, index)
-			})
-		),
-		RArray.partition((_): boolean => _.isInternational)
-	);
-	return [
-		{
-			time: data.time,
-			marketStatus: data.marketStatus,
-			data: usa
-		},
-		{
-			time: data.time,
-			marketStatus: data.marketStatus,
-			data: international
-		}
-	];
+	pipe(
+		INVESTMENT_INFO,
+		RArray.mapWithIndex((index, info): MarketData => ({
+			symbol: info[index].symbol
+		}))
+	)
+
+	// const { left: usa, right: international } = pipe(
+	// 	INVESTMENT_SYMBOLS,
+	// 	RArray.mapWithIndex(
+	// 		(index, symbol): MarketData => ({
+	// 			symbol,
+	// 			name: INVESTMENT_INFO[index].name,
+	// 			currentPrice: getMarketDataCurrentPrice(data, index),
+	// 			isInternational: INVESTMENT_INFO[index].isInternational,
+	// 			history: getMarketDataHistory(data, index)
+	// 		})
+	// 	),
+	// 	RArray.partition((_): boolean => _.isInternational)
+	// );
+	// return [
+	// 	{
+	// 		time: data.time,
+	// 		marketStatus: data.marketStatus,
+	// 		data: usa
+	// 	},
+	// 	{
+	// 		time: data.time,
+	// 		marketStatus: data.marketStatus,
+	// 		data: international
+	// 	}
+	// ];
 };
 
 export const loadMarketData = (
