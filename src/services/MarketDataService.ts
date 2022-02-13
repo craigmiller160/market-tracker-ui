@@ -205,6 +205,7 @@ const getMarketDataCurrentPrice = (
 				quotes,
 				RArray.lookup(index),
 				Option.map((_) => _.price),
+				Option.filter((_) => _ > 0),
 				Option.getOrElse(() =>
 					pipe(
 						history,
