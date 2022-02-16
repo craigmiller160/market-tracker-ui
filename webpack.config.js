@@ -5,6 +5,7 @@ const {
 } = require('@craigmiller160/webpack-config/utils/nodeEnvCheck');
 const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
+const { GenerateSW } = require('workbox-webpack-plugin');
 const path = require('path');
 
 const localDevServerConfig = {
@@ -35,14 +36,20 @@ const localDevServerConfig = {
 };
 
 // TODO delete this if useless
-const serviceWorkerConfig = {
+const serviceWorkerConfig2 = {
 	entry: {
 		main: path.resolve(process.cwd(), 'src'),
 		serviceWorker: path.resolve(process.cwd(), 'src', 'serviceWorker.ts')
 	}
 };
 
-const parts = [config, sassConfig, tsConfig];
+const serviceWorkerConfig = {
+	plugins: [
+		new GenerateSW()
+	]
+}
+
+const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
 
 if (isDevelopment()) {
 	parts.push(localDevServerConfig);
