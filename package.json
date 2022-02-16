@@ -22,7 +22,8 @@
     "*.{ts,tsx}": "yarn lint"
   },
   "devDependencies": {
-    "@craigmiller160/babel-config": "1.0.0",
+    "@craigmiller160/babel-config": "1.1.0",
+    "@craigmiller160/babel-config-core-polyfills": "^1.0.0",
     "@craigmiller160/babel-config-react": "1.0.0",
     "@craigmiller160/config-merge": "^1.0.0",
     "@craigmiller160/eslint-config-jest": "1.0.0",
