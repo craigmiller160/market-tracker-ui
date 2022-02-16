@@ -2,6 +2,7 @@ import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { MockStore } from 'redux-mock-store';
+import * as Option from 'fp-ts/es6/Option';
 
 jest.mock('../../src/store', () => {
 	const createMockStore = jest.requireActual('redux-mock-store').default;
@@ -33,19 +34,33 @@ describe('AjaxApi Error Handler', () => {
 		]);
 	});
 
-	it('is 401 error, no body', () => {
+	it('is 401 error, no body', async () => {
+		mockApi.onGet('/foo').reply(401);
+		await ajaxApi.get({
+			uri: '/foo'
+		})();
+		expect(mockStore.getActions()).toEqual([
+			{
+				type: 'auth/setUserData',
+				payload: Option.none
+			},
+			{
+				type: 'notification/addError',
+				payload:
+					'401 - Message: Request failed with status code 401 Body: {}'
+			}
+		]);
+	});
+
+	it('is 401 error, with body', async () => {
 		throw new Error();
 	});
 
-	it('is 401 error, with body', () => {
+	it('is 500 error, with body', async () => {
 		throw new Error();
 	});
 
-	it('is 500 error, with body', () => {
-		throw new Error();
-	});
-
-	it('is error without status', () => {
+	it('is error without status', async () => {
 		throw new Error();
 	});
 });
