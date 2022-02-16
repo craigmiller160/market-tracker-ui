@@ -5,6 +5,7 @@ const {
 } = require('@craigmiller160/webpack-config/utils/nodeEnvCheck');
 const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
+const path = require('path');
 
 const localDevServerConfig = {
 	devServer: {
@@ -30,6 +31,14 @@ const localDevServerConfig = {
 				logLevel: 'debug'
 			}
 		}
+	}
+};
+
+// TODO delete this if useless
+const serviceWorkerConfig = {
+	entry: {
+		main: path.resolve(process.cwd(), 'src'),
+		serviceWorker: path.resolve(process.cwd(), 'src', 'serviceWorker.ts')
 	}
 };
 
