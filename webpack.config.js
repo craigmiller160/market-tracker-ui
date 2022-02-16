@@ -5,8 +5,6 @@ const {
 } = require('@craigmiller160/webpack-config/utils/nodeEnvCheck');
 const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
-const { GenerateSW } = require('workbox-webpack-plugin');
-const path = require('path');
 
 const localDevServerConfig = {
 	devServer: {
@@ -35,11 +33,7 @@ const localDevServerConfig = {
 	}
 };
 
-const serviceWorkerConfig = {
-	plugins: [new GenerateSW()]
-};
-
-const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
+const parts = [config, sassConfig, tsConfig];
 
 if (isDevelopment()) {
 	parts.push(localDevServerConfig);
