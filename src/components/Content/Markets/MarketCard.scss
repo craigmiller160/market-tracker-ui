@@ -15,6 +15,14 @@
 
   &.xs {
     width: 100%;
+    .Price {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .ant-card-head-title {
+    text-align: left;
   }
 
   p {
