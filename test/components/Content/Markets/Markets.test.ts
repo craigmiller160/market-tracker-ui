@@ -78,11 +78,13 @@ const testMarketsPage = (
 					? setting.quotePrice
 					: setting.timesalePrice2;
 			const diff = currentPrice - initialPrice;
-			const expectedPrice = `$${currentPrice.toFixed(
-				2
-			)} (+$${diff.toFixed(2)}, +${((diff / initialPrice) * 100).toFixed(
-				2
-			)}%)`;
+			const expectedPrice = `(+$${diff.toFixed(2)}, +${(
+				(diff / initialPrice) *
+				100
+			).toFixed(2)}%)`;
+			expect(
+				within(card).queryByText(`$${currentPrice.toFixed(2)}`)
+			).toBeInTheDocument();
 			expect(priceLine).toHaveTextContent(expectedPrice);
 
 			expect(
