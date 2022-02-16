@@ -4,49 +4,59 @@ import {
 	isAxiosError
 } from '@craigmiller160/ajax-api-fp-ts';
 import { store } from '../store';
-import createAjaxErrorHandler from '@craigmiller160/ajax-error-handler';
 import { AxiosResponse } from 'axios';
 import { authSlice } from '../store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { notificationSlice } from '../store/notification/slice';
 import { AxiosError } from 'axios';
-import { match, when } from 'ts-pattern';
+import { match, when, not } from 'ts-pattern';
+import * as Json from '@craigmiller160/ts-functions/es/Json';
+import { pipe } from 'fp-ts/es6/function';
 
-interface ErrorResponse {
-	status: number;
-	message: string;
-}
+const isUndefined = (value: string | undefined): boolean => value === undefined;
 
-const isErrorResponse = (
-	data?: Partial<ErrorResponse>
-): data is ErrorResponse =>
-	data?.status !== undefined && data?.message !== undefined;
+const getAxiosErrorBody = (error: AxiosError<unknown>): string =>
+	pipe(
+		Json.stringifyO(error.response?.data ?? {}),
+		Option.getOrElse(() => '')
+	);
 
-// TODO delete this
-const ajaxErrorHandler2 = createAjaxErrorHandler({
-	responseMessageExtractor: (response: AxiosResponse) => {
-		if (isErrorResponse(response.data)) {
-			return response.data.message;
-		}
-		return '';
-	},
-	errorMessageHandler: (message: string) => {
-		store.dispatch(notificationSlice.actions.addError(message));
-	},
-	unauthorizedHandler: () =>
-		store.dispatch(authSlice.actions.setUserData(Option.none))
-});
-
-const handleAxiosError = (error: AxiosError<unknown>) => {};
+const getFullErrorMessage = (
+	status: number,
+	errorMsg: string | undefined,
+	error: Error
+) =>
+	match({ errorMsg, error })
+		.with(
+			{ errorMsg: not(when(isUndefined)), error: when(isAxiosError) },
+			() => {
+				const responseBody = getAxiosErrorBody(
+					error as AxiosError<unknown>
+				);
+				return `${status} - ${errorMsg} Message: ${error.message} Body: ${responseBody}`;
+			}
+		)
+		.with(
+			{ errorMsg: when(isUndefined), error: when(isAxiosError) },
+			() => {
+				const responseBody = getAxiosErrorBody(
+					error as AxiosError<unknown>
+				);
+				return `${status} - Message: ${error.message} Body: ${responseBody}`;
+			}
+		)
+		.otherwise(() => `${status} - Message: ${error.message}`);
 
 const ajaxErrorHandler: DefaultErrorHandler = (status, error, message) => {
-	match(error)
-		.with(when(isAxiosError), () =>
-			handleAxiosError(error as AxiosError<unknown>)
+	if (status === 401) {
+		store.dispatch(authSlice.actions.setUserData(Option.none));
+	}
+
+	store.dispatch(
+		notificationSlice.actions.addError(
+			getFullErrorMessage(status, message, error)
 		)
-		.otherwise(() => {
-			store.dispatch(notificationSlice.actions.addError(error.message));
-		});
+	);
 };
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
