@@ -1,0 +1,3 @@
+https://stackoverflow.com/questions/38728176/can-you-use-a-service-worker-with-a-self-signed-certificate
+
+https://letsencrypt.org/docs/certificates-for-localhost/
