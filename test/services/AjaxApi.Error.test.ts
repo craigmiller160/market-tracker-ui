@@ -53,11 +53,35 @@ describe('AjaxApi Error Handler', () => {
 	});
 
 	it('is 401 error, with body', async () => {
-		throw new Error();
+		mockApi.onGet('/foo').reply(401, { hello: 'world' });
+		await ajaxApi.get({
+			uri: '/foo'
+		})();
+		const text = JSON.stringify({ hello: 'world' });
+		expect(mockStore.getActions()).toEqual([
+			{
+				type: 'auth/setUserData',
+				payload: Option.none
+			},
+			{
+				type: 'notification/addError',
+				payload: `401 - Message: Request failed with status code 401 Body: ${text}`
+			}
+		]);
 	});
 
 	it('is 500 error, with body', async () => {
-		throw new Error();
+		mockApi.onGet('/foo').reply(500, { hello: 'world' });
+		await ajaxApi.get({
+			uri: '/foo'
+		})();
+		const text = JSON.stringify({ hello: 'world' });
+		expect(mockStore.getActions()).toEqual([
+			{
+				type: 'notification/addError',
+				payload: `500 - Message: Request failed with status code 500 Body: ${text}`
+			}
+		]);
 	});
 
 	it('is error without status', async () => {
