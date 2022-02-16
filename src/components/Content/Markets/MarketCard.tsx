@@ -59,8 +59,15 @@ const createPrice = (data: MarketData) => {
 
 	return (
 		<p className={priceClassName}>
-			<span className="Icon">{ChangeIcon}</span>
-			{formattedPrice} ({formattedPriceChange}, {formattedPercentChange})
+			<span className="Price">
+				<span>
+					<span className="Icon">{ChangeIcon}</span>
+					{formattedPrice}{' '}
+				</span>
+				<span>
+					({formattedPriceChange}, {formattedPercentChange})
+				</span>
+			</span>
 		</p>
 	);
 };
