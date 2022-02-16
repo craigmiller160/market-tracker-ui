@@ -83,8 +83,4 @@ describe('AjaxApi Error Handler', () => {
 			}
 		]);
 	});
-
-	it('is error without status', async () => {
-		throw new Error();
-	});
 });
