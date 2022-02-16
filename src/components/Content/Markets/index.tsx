@@ -22,7 +22,7 @@ export const Markets = () => {
 				data={intMarketData}
 			/>
 			<MarketSection
-				title="Crypto"
+				title="Cryptocurrencies"
 				loading={loading}
 				data={cryptoMarketData}
 			/>
