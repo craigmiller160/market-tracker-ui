@@ -35,19 +35,9 @@ const localDevServerConfig = {
 	}
 };
 
-// TODO delete this if useless
-const serviceWorkerConfig2 = {
-	entry: {
-		main: path.resolve(process.cwd(), 'src'),
-		serviceWorker: path.resolve(process.cwd(), 'src', 'serviceWorker.ts')
-	}
-};
-
 const serviceWorkerConfig = {
-	plugins: [
-		new GenerateSW()
-	]
-}
+	plugins: [new GenerateSW()]
+};
 
 const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
 
