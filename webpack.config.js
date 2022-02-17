@@ -7,7 +7,7 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
-const { GenerateSW } = require('workbox-webpack-plugin');
+const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
@@ -62,25 +62,29 @@ const serviceWorkerConfig = {
 		filename: 'assets/js/[name].js?hash=[contenthash]'
 	},
 	plugins: [
-		new GenerateSW({
-			exclude: [ // TODO only do this in dev
-				/.*/
-			],
-			runtimeCaching: [
-				{
-					handler: 'NetworkFirst',
-					// urlPattern: /.*\/api\/tradier\/.*/,
-					urlPattern: (ctx) => {
-						console.log('Context', ctx);
-						return false;
-					},
-					options: {
-						cacheName: 'tradier'
-					}
-				}
-			],
-			clientsClaim: true,
-			skipWaiting: true
+		// new GenerateSW({
+		// 	exclude: [ // TODO only do this in dev
+		// 		/.*/
+		// 	],
+		// 	runtimeCaching: [
+		// 		{
+		// 			handler: 'NetworkFirst',
+		// 			// urlPattern: /.*\/api\/tradier\/.*/,
+		// 			urlPattern: (ctx) => {
+		// 				console.log('Context', ctx);
+		// 				return false;
+		// 			},
+		// 			options: {
+		// 				cacheName: 'tradier'
+		// 			}
+		// 		}
+		// 	],
+		// 	clientsClaim: true,
+		// 	skipWaiting: true
+		// })
+		new InjectManifest({
+			swSrc: path.join(process.cwd(), 'src', 'sw.js'),
+			swDest: path.join(process.cwd(), 'build', 'swOut.js')
 		})
 	]
 };
