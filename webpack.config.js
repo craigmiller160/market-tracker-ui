@@ -54,7 +54,7 @@ const localDevServerConfig = {
 const serviceWorkerConfig = {
 	entry: {
 		main: path.join(process.cwd(), 'src'),
-		'service-worker': path.join(process.cwd(), 'src', 'service-worker.ts')
+		'service-worker2': path.join(process.cwd(), 'src', 'service-worker2.ts')
 	},
 	output: {
 		// TODO apply this to the main config and to the CSS files and see if it works
