@@ -51,6 +51,8 @@ const localDevServerConfig = {
 // /api/tradier
 // /api/coingecko
 
+// TODO getting warnings about files i don't care about
+// TODO once all issues are resolved, get rid of full-screen warnings
 const serviceWorkerConfig = {
 	plugins: [
 		new GenerateSW({
