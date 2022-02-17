@@ -7,7 +7,6 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
-const { GenerateSW } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
