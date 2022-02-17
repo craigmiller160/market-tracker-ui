@@ -7,7 +7,6 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
-const { GenerateSW } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
@@ -52,39 +51,26 @@ const localDevServerConfig = {
 // /api/coingecko
 
 // TODO see about adding optional service-worker support into main config... or maybe that's going too far?
-const serviceWorkerConfig = {
-	entry: {
-		main: path.join(process.cwd(), 'src'),
-		'service-worker': path.join(process.cwd(), 'src', 'service-worker.ts')
-	},
+const serviceWorkerBase = {
+	entry: path.join(process.cwd(), 'src', 'service-worker.ts'),
+	target: 'webworker',
 	output: {
-		// TODO apply this to the main config and to the CSS files and see if it works
-		filename: 'assets/js/[name].js?hash=[contenthash]'
-	},
-	plugins: [
-		// new GenerateSW({
-		// 	exclude: [ // TODO only do this in dev
-		// 		/.*/
-		// 	],
-		// 	runtimeCaching: [
-		// 		{
-		// 			handler: 'NetworkFirst',
-		// 			urlPattern: /.*\/api\/tradier\/.*/,
-		// 			options: {
-		// 				cacheName: 'tradier'
-		// 			}
-		// 		}
-		// 	],
-		// 	clientsClaim: true,
-		// 	skipWaiting: true
-		// })
-	]
+		path: path.join(process.cwd(), 'build'),
+		filename: '[name].js?hash=[contenthash]',
+		chunkFilename: '[name].js?hash=[contenthash]',
+		publicPath: process.env.WEBPACK_PUBLIC_PATH || '/'
+	}
 };
 
-const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
+const standardParts = [config, sassConfig, tsConfig];
+const serviceWorkerParts = [serviceWorkerBase, tsConfig];
 
 if (isDevelopment()) {
-	parts.push(localDevServerConfig);
+	standardParts.push(localDevServerConfig);
+	serviceWorkerParts.push(localDevServerConfig);
 }
 
-module.exports = merge(parts);
+const standardConfig = merge(standardParts);
+const serviceWorkerConfig = merge(serviceWorkerParts);
+
+module.exports = [standardConfig, serviceWorkerConfig];
