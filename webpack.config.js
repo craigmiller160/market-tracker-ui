@@ -7,6 +7,7 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
@@ -47,7 +48,23 @@ const localDevServerConfig = {
 	}
 };
 
-const parts = [config, sassConfig, tsConfig];
+// /api/tradier
+// /api/coingecko
+
+const serviceWorkerConfig = {
+	plugins: [
+		new GenerateSW({
+			runtimeCaching: [
+				{
+					handler: 'NetworkFirst',
+					urlPattern: /\/api\/tradier/
+				}
+			]
+		})
+	]
+};
+
+const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
 
 if (isDevelopment()) {
 	parts.push(localDevServerConfig);
