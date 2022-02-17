@@ -11,13 +11,7 @@ if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker
 			.register('/market-tracker/assets/js/service-worker.js')
-			.then((registration) => {
-				console.log(
-					'Service Worker Registered successfully',
-					registration
-				);
-				return registration.update(); // TODO I believe it's good to always call this
-			})
+			.then((registration) => registration.update())
 			.catch((ex) =>
 				console.error('Service Worker Registration failed', ex)
 			);

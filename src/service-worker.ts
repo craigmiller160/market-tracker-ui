@@ -1,3 +1,3 @@
 export {};
 
-console.log('FooBar');
+// console.log('FooBar');
