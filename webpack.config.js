@@ -51,34 +51,33 @@ const localDevServerConfig = {
 // /api/tradier
 // /api/coingecko
 
-// TODO getting warnings about files i don't care about
-// TODO once all issues are resolved, get rid of full-screen warnings
+// TODO see about adding optional service-worker support into main config... or maybe that's going too far?
 const serviceWorkerConfig = {
 	entry: {
 		main: path.join(process.cwd(), 'src'),
-		foo: path.join(process.cwd(), 'src', 'foo')
+		'service-worker': path.join(process.cwd(), 'src', 'service-worker.ts')
 	},
 	output: {
 		// TODO apply this to the main config and to the CSS files and see if it works
 		filename: 'assets/js/[name].js?hash=[contenthash]'
 	},
 	plugins: [
-		new GenerateSW({
-			exclude: [ // TODO only do this in dev
-				/.*/
-			],
-			runtimeCaching: [
-				{
-					handler: 'NetworkFirst',
-					urlPattern: /.*\/api\/tradier\/.*/,
-					options: {
-						cacheName: 'tradier'
-					}
-				}
-			],
-			clientsClaim: true,
-			skipWaiting: true
-		})
+		// new GenerateSW({
+		// 	exclude: [ // TODO only do this in dev
+		// 		/.*/
+		// 	],
+		// 	runtimeCaching: [
+		// 		{
+		// 			handler: 'NetworkFirst',
+		// 			urlPattern: /.*\/api\/tradier\/.*/,
+		// 			options: {
+		// 				cacheName: 'tradier'
+		// 			}
+		// 		}
+		// 	],
+		// 	clientsClaim: true,
+		// 	skipWaiting: true
+		// })
 	]
 };
 
