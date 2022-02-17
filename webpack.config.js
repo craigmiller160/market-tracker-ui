@@ -11,9 +11,12 @@ const fs = require('fs');
 const localDevServerConfig = {
 	devServer: {
 		port: 3000,
-		https: {
-			cert: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.cert.pem'), 'utf8'),
-			key: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.key.pem'), 'utf8')
+		server: {
+			type: 'https',
+			options: {
+				cert: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.cert.pem'), 'utf8'),
+				key: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.key.pem'), 'utf8')
+			}
 		},
 		proxy: {
 			'/market-tracker/api': {
