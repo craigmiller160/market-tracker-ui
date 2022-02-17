@@ -10,8 +10,12 @@ ReactDOM.render(<App />, document.getElementById('root'));
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker
-			.register('/market-tracker/assets/js/service-worker.js')
-			.then((registration) => registration.update())
+			// .register('/market-tracker/assets/js/service-worker.js')
+			.register('/market-tracker/service-worker.js')
+			.then((registration) => {
+				console.log('Registered', registration.scope);
+				return registration.update();
+			})
 			.catch((ex) =>
 				console.error('Service Worker Registration failed', ex)
 			);
