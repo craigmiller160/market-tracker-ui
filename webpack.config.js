@@ -59,7 +59,7 @@ const serviceWorkerConfig = {
 			runtimeCaching: [
 				{
 					handler: 'NetworkFirst',
-					urlPattern: /\/api\/tradier/
+					urlPattern: /.*\/api\/tradier\/.*/
 				}
 			]
 		})
