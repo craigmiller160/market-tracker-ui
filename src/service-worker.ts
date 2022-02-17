@@ -1,11 +1,19 @@
-export {};
-console.log('Hello World');
+import { offlineFallback } from 'workbox-recipes';
+import { setDefaultHandler } from 'workbox-routing';
+import { NetworkFirst } from 'workbox-strategies';
 
-declare const self: ServiceWorkerGlobalScope & typeof globalThis;
+declare const self: ServiceWorkerGlobalScope &
+	typeof globalThis & {
+		__WB_MANIFEST: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+	};
 
-// @ts-ignore
 self.__WB_MANIFEST;
 
-self.addEventListener('install', () => {
-	self.skipWaiting();
-});
+setDefaultHandler(new NetworkFirst());
+offlineFallback();
+
+// self.addEventListener('install', () => {
+// 	console.log('Installed')
+// 	self.skipWaiting()
+// 		.then(() => console.log('Skipped Waiting'));
+// });

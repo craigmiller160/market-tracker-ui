@@ -76,6 +76,9 @@
     "regenerator-runtime": "^0.13.9",
     "ts-pattern": "^3.3.4",
     "use-immer": "^0.6.0",
+    "workbox-recipes": "^6.4.2",
+    "workbox-routing": "^6.4.2",
+    "workbox-strategies": "^6.4.2",
     "workbox-webpack-plugin": "^6.4.2"
   }
 }
