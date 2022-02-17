@@ -83,7 +83,7 @@ const serviceWorkerConfig = {
 		// 	skipWaiting: true
 		// })
 		new InjectManifest({
-			swSrc: path.join(process.cwd(), 'src', 'sw.js'),
+			swSrc: path.join(process.cwd(), 'src', 'sw.ts'),
 			swDest: path.join(process.cwd(), 'build', 'swOut.js')
 		})
 	]
