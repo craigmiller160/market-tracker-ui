@@ -47,7 +47,14 @@ const localDevServerConfig = {
 	}
 };
 
-const parts = [config, sassConfig, tsConfig];
+const entryConfig = {
+	entry: {
+		main: path.join(process.cwd(), 'src'),
+		serviceWorker: path.join(process.cwd(), 'src', 'service-worker.ts')
+	}
+};
+
+const parts = [config, sassConfig, tsConfig, entryConfig];
 
 if (isDevelopment()) {
 	parts.push(localDevServerConfig);
