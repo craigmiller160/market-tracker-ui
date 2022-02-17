@@ -5,11 +5,25 @@ const {
 } = require('@craigmiller160/webpack-config/utils/nodeEnvCheck');
 const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
+const path = require('path');
+const fs = require('fs');
 
 const localDevServerConfig = {
 	devServer: {
 		port: 3000,
-		https: true,
+		server: {
+			type: 'https',
+			options: {
+				cert: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.cert.pem'),
+					'utf8'
+				),
+				key: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.key.pem'),
+					'utf8'
+				)
+			}
+		},
 		proxy: {
 			'/market-tracker/api': {
 				target: 'https://localhost:8080',
