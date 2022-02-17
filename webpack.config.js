@@ -7,7 +7,7 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
-const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
@@ -53,14 +53,14 @@ const localDevServerConfig = {
 
 // TODO see about adding optional service-worker support into main config... or maybe that's going too far?
 const serviceWorkerConfig = {
-	entry: {
-		main: path.join(process.cwd(), 'src'),
-		'service-worker2': path.join(process.cwd(), 'src', 'service-worker2.ts')
-	},
-	output: {
-		// TODO apply this to the main config and to the CSS files and see if it works
-		filename: 'assets/js/[name].js?hash=[contenthash]'
-	},
+	// entry: {
+	// 	main: path.join(process.cwd(), 'src'),
+	// 	'service-worker2': path.join(process.cwd(), 'src', 'service-worker2.ts')
+	// },
+	// output: {
+	// 	// TODO apply this to the main config and to the CSS files and see if it works
+	// 	filename: 'assets/js/[name].js?hash=[contenthash]'
+	// },
 	plugins: [
 		// new GenerateSW({
 		// 	exclude: [ // TODO only do this in dev
@@ -83,8 +83,8 @@ const serviceWorkerConfig = {
 		// 	skipWaiting: true
 		// })
 		new InjectManifest({
-			swSrc: path.join(process.cwd(), 'src', 'sw.ts'),
-			swDest: path.join(process.cwd(), 'build', 'swOut.js')
+			swSrc: path.join(process.cwd(), 'src', 'service-worker.ts'),
+			swDest: path.join(process.cwd(), 'build', 'service-worker.js')
 		})
 	]
 };
