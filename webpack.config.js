@@ -54,6 +54,14 @@ const localDevServerConfig = {
 // TODO getting warnings about files i don't care about
 // TODO once all issues are resolved, get rid of full-screen warnings
 const serviceWorkerConfig = {
+	entry: {
+		main: path.join(process.cwd(), 'src'),
+		foo: path.join(process.cwd(), 'src', 'foo')
+	},
+	output: {
+		// TODO apply this to the main config and to the CSS files and see if it works
+		filename: 'assets/js/[name].js?hash=[contenthash]'
+	},
 	plugins: [
 		new GenerateSW({
 			exclude: [ // TODO only do this in dev
