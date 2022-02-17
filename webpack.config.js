@@ -48,40 +48,8 @@ const localDevServerConfig = {
 	}
 };
 
-// /api/tradier
-// /api/coingecko
-
-// TODO see about adding optional service-worker support into main config... or maybe that's going too far?
 const serviceWorkerConfig = {
-	// entry: {
-	// 	main: path.join(process.cwd(), 'src'),
-	// 	'service-worker2': path.join(process.cwd(), 'src', 'service-worker2.ts')
-	// },
-	// output: {
-	// 	// TODO apply this to the main config and to the CSS files and see if it works
-	// 	filename: 'assets/js/[name].js?hash=[contenthash]'
-	// },
 	plugins: [
-		// new GenerateSW({
-		// 	exclude: [ // TODO only do this in dev
-		// 		/.*/
-		// 	],
-		// 	runtimeCaching: [
-		// 		{
-		// 			handler: 'NetworkFirst',
-		// 			// urlPattern: /.*\/api\/tradier\/.*/,
-		// 			urlPattern: (ctx) => {
-		// 				console.log('Context', ctx);
-		// 				return false;
-		// 			},
-		// 			options: {
-		// 				cacheName: 'tradier'
-		// 			}
-		// 		}
-		// 	],
-		// 	clientsClaim: true,
-		// 	skipWaiting: true
-		// })
 		new InjectManifest({
 			swSrc: path.join(process.cwd(), 'src', 'service-worker.ts'),
 			swDest: path.join(process.cwd(), 'build', 'service-worker.js')
