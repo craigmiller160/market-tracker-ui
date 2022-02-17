@@ -69,7 +69,11 @@ const serviceWorkerConfig = {
 			runtimeCaching: [
 				{
 					handler: 'NetworkFirst',
-					urlPattern: /.*\/api\/tradier\/.*/,
+					// urlPattern: /.*\/api\/tradier\/.*/,
+					urlPattern: (ctx) => {
+						console.log('Context', ctx);
+						return false;
+					},
 					options: {
 						cacheName: 'tradier'
 					}
