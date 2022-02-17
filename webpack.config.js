@@ -14,8 +14,14 @@ const localDevServerConfig = {
 		server: {
 			type: 'https',
 			options: {
-				cert: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.cert.pem'), 'utf8'),
-				key: fs.readFileSync(path.join(process.cwd(), 'config', 'localhost.key.pem'), 'utf8')
+				cert: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.cert.pem'),
+					'utf8'
+				),
+				key: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.key.pem'),
+					'utf8'
+				)
 			}
 		},
 		proxy: {
