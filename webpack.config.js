@@ -56,12 +56,20 @@ const localDevServerConfig = {
 const serviceWorkerConfig = {
 	plugins: [
 		new GenerateSW({
+			exclude: [ // TODO only do this in dev
+				/.*/
+			],
 			runtimeCaching: [
 				{
 					handler: 'NetworkFirst',
-					urlPattern: /.*\/api\/tradier\/.*/
+					urlPattern: /.*\/api\/tradier\/.*/,
+					options: {
+						cacheName: 'tradier'
+					}
 				}
-			]
+			],
+			clientsClaim: true,
+			skipWaiting: true
 		})
 	]
 };
