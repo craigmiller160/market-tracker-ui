@@ -152,24 +152,14 @@ const ErrorMsg = (
 	</Typography.Title>
 );
 
-export const MarketCard = ({ info }: Props) => {
-	const Title = createTitle(info);
-	const { breakpoints } = useContext(ScreenContext);
-	const breakpointName = getBreakpointName(breakpoints);
-	const time = useSelector(timeValueSelector);
-	const Time = createTime(time);
-	const { status } = useContext(MarketStatusContext);
-	const respectMarketStatus = shouldRespectMarketStatus(info);
-	const shouldLoadData =
-		status === MarketStatus.OPEN ||
-		(status === MarketStatus.CLOSED && !respectMarketStatus);
-	const { loading, data, hasError } = useInvestmentData(
-		time,
-		info,
-		shouldLoadData
-	);
-
-	const { Price, Body } = match({
+const getPriceAndBody = (
+	status: MarketStatus,
+	respectMarketStatus: boolean,
+	loading: boolean,
+	hasError: boolean,
+	data: InvestmentData
+): { Price: ReactNode; Body: ReactNode } =>
+	match({
 		status,
 		respectMarketStatus,
 		loading,
@@ -198,6 +188,31 @@ export const MarketCard = ({ info }: Props) => {
 			Price: createPrice(data),
 			Body: <ChartComp data={data} />
 		}));
+
+export const MarketCard = ({ info }: Props) => {
+	const Title = createTitle(info);
+	const { breakpoints } = useContext(ScreenContext);
+	const breakpointName = getBreakpointName(breakpoints);
+	const time = useSelector(timeValueSelector);
+	const Time = createTime(time);
+	const { status } = useContext(MarketStatusContext);
+	const respectMarketStatus = shouldRespectMarketStatus(info);
+	const shouldLoadData =
+		status === MarketStatus.OPEN ||
+		(status === MarketStatus.CLOSED && !respectMarketStatus);
+	const { loading, data, hasError } = useInvestmentData(
+		time,
+		info,
+		shouldLoadData
+	);
+
+	const { Price, Body } = getPriceAndBody(
+		status,
+		respectMarketStatus,
+		loading,
+		hasError,
+		data
+	);
 
 	const FullTitle = (
 		<>
