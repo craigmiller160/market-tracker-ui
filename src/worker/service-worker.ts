@@ -1,7 +1,3 @@
-// import { offlineFallback } from 'workbox-recipes';
-// import { setDefaultHandler } from 'workbox-routing';
-// import { NetworkFirst } from 'workbox-strategies';
-
 export {};
 
 declare const self: ServiceWorkerGlobalScope &
@@ -13,8 +9,6 @@ self.__WB_MANIFEST;
 const MARKET_DATA_CACHE = 'market-data-cache';
 const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
 
-// setDefaultHandler(new NetworkFirst());
-// offlineFallback();
 
 self.addEventListener('install', () => {
 	console.log('Installed');

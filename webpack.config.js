@@ -54,7 +54,7 @@ const localDevServerConfig = {
 const serviceWorkerConfig = {
 	plugins: [
 		new InjectManifest({
-			swSrc: path.join(process.cwd(), 'src', 'service-worker.ts'),
+			swSrc: path.join(process.cwd(), 'src', 'worker', 'service-worker.ts'),
 			swDest: path.join(process.cwd(), 'build', 'service-worker.js')
 		})
 	]
