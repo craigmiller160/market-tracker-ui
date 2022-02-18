@@ -52,9 +52,9 @@ interface Props {
 	readonly info: MarketInvestmentInfo;
 }
 
-const createTitle = (data: MarketData): ReactNode => (
+const createTitle = (info: MarketInvestmentInfo): ReactNode => (
 	<h3>
-		<strong>{`${data.name} (${data.symbol})`}</strong>
+		<strong>{`${info.name} (${info.symbol})`}</strong>
 	</h3>
 );
 
@@ -246,7 +246,7 @@ const useInvestmentData = (
 };
 
 export const MarketCard = ({ info }: Props) => {
-	// const Title = createTitle(data);
+	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
@@ -275,7 +275,7 @@ export const MarketCard = ({ info }: Props) => {
 	// );
 	return (
 		<Card
-			title={`${info.name} (${info.symbol})`}
+			title={Title}
 			extra={Time}
 			className={`MarketCard ${breakpointName}`}
 			role="listitem"
