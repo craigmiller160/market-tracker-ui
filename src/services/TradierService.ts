@@ -1,4 +1,4 @@
-import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -37,6 +37,7 @@ import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation'
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
+const validateQuotes = TypeValidation.validate(tradierQuotesV.decode);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -127,10 +128,6 @@ export const getTimesales = (
 		TaskEither.map(formatTimesales)
 	);
 };
-
-// TODO move to ts-functions
-const validateQuotes = (data: TradierQuotes): TryT<TradierQuotes> =>
-	pipe(tradierQuotesV.decode(data), TypeValidation.handleResult);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
