@@ -37,7 +37,7 @@ import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation'
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
-const validateQuotes = TypeValidation.validate(tradierQuotesV.decode);
+const validateQuotes = TypeValidation.decode(tradierQuotesV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
