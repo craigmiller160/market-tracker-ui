@@ -22,6 +22,8 @@ import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
@@ -135,6 +137,9 @@ const createTime = (time: MarketTime): ReactNode => {
 	);
 };
 
+const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
+	info.type !== MarketInvestmentType.CRYPTO;
+
 export const MarketCard = ({ info }: Props) => {
 	// const Title = createTitle(data);
 	const { breakpoints } = useContext(ScreenContext);
@@ -142,6 +147,7 @@ export const MarketCard = ({ info }: Props) => {
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const { status } = useContext(MarketStatusContext);
+	const respectMarketStatus = shouldRespectMarketStatus(status);
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(
