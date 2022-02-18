@@ -2,7 +2,7 @@ import { MarketData } from '../../../types/MarketData';
 import { Card, Space, Spin } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useCallback, useContext, useEffect } from 'react';
-import { match, when } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -11,13 +11,11 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../utils/timeUtils';
-import { Chart as ChartComp } from '../../UI/Chart';
 import './MarketCard.scss';
 import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
 import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
-import { InvestmentInfo, isStock } from '../../../data/InvestmentInfo';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
@@ -35,6 +33,7 @@ import { TaskT } from '@craigmiller160/ts-functions/types';
 import { Dispatch } from 'redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
+import { Chart as ChartComp } from '../../UI/Chart';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -193,12 +192,12 @@ const createHandleGetDataSuccess =
 		});
 	};
 
+// TODO move to separate file
 const useInvestmentData = (
 	time: MarketTime,
-	info: MarketInvestmentInfo
+	info: MarketInvestmentInfo,
+	shouldLoadData: boolean
 ): InvestmentDataState => {
-	const { status } = useContext(MarketStatusContext);
-	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
@@ -220,7 +219,7 @@ const useInvestmentData = (
 	);
 
 	useEffect(() => {
-		if (respectMarketStatus && MarketStatus.OPEN !== status) {
+		if (!shouldLoadData) {
 			return;
 		}
 
@@ -235,11 +234,10 @@ const useInvestmentData = (
 	}, [
 		time,
 		info,
-		status,
 		setState,
-		respectMarketStatus,
 		handleGetDataError,
-		handleGetDataSuccess
+		handleGetDataSuccess,
+		shouldLoadData
 	]);
 
 	return state;
@@ -251,12 +249,37 @@ export const MarketCard = ({ info }: Props) => {
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	const { loading, data, hasError } = useInvestmentData(time, info);
+	const { status } = useContext(MarketStatusContext);
+	const respectMarketStatus = shouldRespectMarketStatus(info);
+	const shouldLoadData =
+		status === MarketStatus.OPEN ||
+		(status === MarketStatus.CLOSED && !respectMarketStatus);
+	const { loading, data, hasError } = useInvestmentData(
+		time,
+		info,
+		shouldLoadData
+	);
 
-	//
-	// const { Price, Chart } = match({ marketStatus, type: data.type })
+	const { Price, Chart } = match({ status, respectMarketStatus })
+		.with({ status: MarketStatus.UNKNOWN }, () => ({
+			Price: <div />,
+			Chart: Spinner
+		}))
+		.with(
+			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
+			() => ({
+				Price: MarketClosed,
+				Chart: <div />
+			})
+		)
+		.otherwise(() => ({
+			Price: createPrice(null),
+			Chart: <ChartComp data={null} />
+		}));
+
+	// const { Price, Chart } = match({ status, type: data.type })
 	// 	.with(
-	// 		{ marketStatus: MarketStatus.CLOSED, type: when(isStock) },
+	// 		{ status: MarketStatus.CLOSED, type: when(isStock) },
 	// 		() => ({
 	// 			Price: MarketClosed,
 	// 			Chart: <div />
