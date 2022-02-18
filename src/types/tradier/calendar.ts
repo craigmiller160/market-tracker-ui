@@ -1,3 +1,5 @@
+// TODO add typechecking
+
 import { MarketStatus } from '../MarketStatus';
 import { match } from 'ts-pattern';
 

@@ -1,3 +1,5 @@
+// TODO add typechecking
+
 export type TradierClockState = 'premarket' | 'open' | 'postmarket' | 'closed';
 
 export interface TradierClock {

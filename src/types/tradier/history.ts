@@ -1,3 +1,5 @@
+// TODO add typechecking
+
 export interface TradierHistoryDay {
 	readonly date: string;
 	readonly open: number;

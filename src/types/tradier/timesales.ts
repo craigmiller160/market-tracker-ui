@@ -1,3 +1,5 @@
+// TODO add typechecking
+
 export interface TradierSeriesData {
 	readonly time: string;
 	readonly timestamp: number;
