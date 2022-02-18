@@ -291,28 +291,15 @@ export const MarketCard = ({ info }: Props) => {
 			Chart: <ChartComp data={data} />
 		}));
 
-	// const { Price, Chart } = match({ status, type: data.type })
-	// 	.with(
-	// 		{ status: MarketStatus.CLOSED, type: when(isStock) },
-	// 		() => ({
-	// 			Price: MarketClosed,
-	// 			Chart: <div />
-	// 		})
-	// 	)
-	// 	.otherwise(() => ({
-	// 		Price: createPrice(data),
-	// 		Chart: <ChartComp data={data} />
-	// 	}));
-	//
-	// const FullTitle = (
-	// 	<>
-	// 		{Title}
-	// 		{Price}
-	// 	</>
-	// );
+	const FullTitle = (
+		<>
+			{Title}
+			{Price}
+		</>
+	);
 	return (
 		<Card
-			title={Title}
+			title={FullTitle}
 			extra={Time}
 			className={`MarketCard ${breakpointName}`}
 			role="listitem"
