@@ -315,7 +315,7 @@ export const createMockQueries =
 			.onGet('/coingecko/simple/price?ids=bitcoin&vs_currencies=usd')
 			.reply(200, bitcoinPrice);
 		mockApi
-			.onGet('/coingecko/simple/price?ids=etheruem&vs_currencies=usd')
+			.onGet('/coingecko/simple/price?ids=ethereum&vs_currencies=usd')
 			.reply(200, ethereumQuote);
 
 		coinGeckoSettings.forEach((setting) => {
