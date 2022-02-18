@@ -12,6 +12,7 @@ import { notificationSlice } from '../../../store/notification/slice';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 import { MarketSection } from './MarketSection';
 import { TodayContextValue, TodayContext } from './TodayContext';
+import { useTodayTimer } from './useTodayTimer';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -51,8 +52,9 @@ const useHandleInvestmentError = (error?: Error) => {
 export const Markets = () => {
 	const investmentResult = useMemo(getInvestmentResult, []);
 	useHandleInvestmentError(investmentResult.error);
+	const timestamp = useTodayTimer();
 	const value: TodayContextValue = {
-		timestamp: ''
+		timestamp
 	};
 
 	return (
