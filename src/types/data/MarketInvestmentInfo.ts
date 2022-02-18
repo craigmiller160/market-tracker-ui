@@ -17,14 +17,10 @@ const marketInvestmentInfoV = ioType.type({
 	name: ioType.readonly(ioType.string),
 	type: ioType.readonly(marketInvestmentTypeV)
 });
-export type MarketInvestmentInfo = ioType.TypeOf<typeof marketInvestmentInfoV>;
-
-const foo: MarketInvestmentInfo = {
-	symbol: '',
-	name: '',
-	type: MarketInvestmentType.USA_ETF
-};
-foo.symbol = 'abc';
+// TODO not good enough, does not cascade to array type
+export type MarketInvestmentInfo = Readonly<
+	ioType.TypeOf<typeof marketInvestmentInfoV>
+>;
 
 const marketInvestmentInfoArrayV = ioType.readonlyArray(marketInvestmentInfoV);
 export type MarketInvestmentInfoArray = ioType.TypeOf<
