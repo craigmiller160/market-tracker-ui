@@ -2,9 +2,7 @@ import * as ioType from 'io-ts';
 import { TryT, ValidationT } from '@craigmiller160/ts-functions/es/types';
 import { pipe } from 'fp-ts/es6/function';
 import * as Either from 'fp-ts/es6/Either';
-import { PathReporter } from 'io-ts/PathReporter';
-
-// TODO move to ts-functions if this works well
+import { PathReporter } from 'io-ts/es6/PathReporter';
 
 export class TypeValidationError extends Error {
 	readonly name = 'TypeValidationError';
