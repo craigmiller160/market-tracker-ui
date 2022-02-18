@@ -19,7 +19,8 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { createMockQueries, testDataSettings } from './marketsTestData';
-import { INVESTMENT_INFO } from '../../../../src/data/InvestmentInfo';
+import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
+import * as Try from '@craigmiller160/ts-functions/es/Try';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -47,7 +48,9 @@ const testMarketsPage = (
 		expect(maybeCard).not.toBeUndefined();
 		const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-		const name = INVESTMENT_INFO.find(
+		const investmentInfo = Try.getOrThrow(getAllMarketInvestmentInfo());
+
+		const name = investmentInfo.find(
 			(info) => info.symbol === setting.symbol
 		)?.name;
 		expect(name).not.toBeUndefined();
