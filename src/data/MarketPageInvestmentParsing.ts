@@ -17,12 +17,14 @@ export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
-export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
+export const getAllMarketInvestmentInfo = (): TryT<MarketInvestmentInfoArray> =>
 	pipe(
 		marketInvestmentInfoArrayV.decode(marketDataJson),
-		TypeValidation.handleResult,
-		Either.map(groupInvestmentsByType)
+		TypeValidation.handleResult
 	);
+
+export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
+	pipe(getAllMarketInvestmentInfo(), Either.map(groupInvestmentsByType));
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	empty: {
