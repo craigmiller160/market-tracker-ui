@@ -2,7 +2,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch } from 'react-redux';
 import { Updater, useImmer } from 'use-immer';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import {
 	getInvestmentData,
 	InvestmentData
@@ -13,6 +13,7 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
+import { TimerContext } from './TimerContext';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -55,6 +56,7 @@ export const useInvestmentData = (
 	info: MarketInvestmentInfo,
 	shouldLoadData: boolean
 ): InvestmentDataState => {
+	const { timestamp } = useContext(TimerContext);
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
@@ -95,7 +97,8 @@ export const useInvestmentData = (
 		setState,
 		handleGetDataError,
 		handleGetDataSuccess,
-		shouldLoadData
+		shouldLoadData,
+		timestamp
 	]);
 
 	return state;
