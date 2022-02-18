@@ -12,14 +12,14 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
-import {
-	InvestmentType,
-	isCrypto,
-	isStock
-} from '../../../../src/data/InvestmentInfo';
 import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
 import { pipe } from 'fp-ts/es6/function';
+import {
+	isCrypto,
+	isStock,
+	MarketInvestmentType
+} from '../../../../src/types/data/MarketInvestmentType';
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
@@ -32,7 +32,7 @@ export interface TestDataSetting {
 	readonly historyPrice: number;
 	readonly timesalePrice1: number;
 	readonly timesalePrice2: number;
-	readonly type: InvestmentType;
+	readonly type: MarketInvestmentType;
 	readonly id?: string;
 }
 
@@ -43,7 +43,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 50,
 		timesalePrice1: 40,
 		timesalePrice2: 45,
-		type: InvestmentType.USA_ETF
+		type: MarketInvestmentType.USA_ETF
 	},
 	{
 		symbol: 'VOO',
@@ -51,7 +51,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 51,
 		timesalePrice1: 41,
 		timesalePrice2: 46,
-		type: InvestmentType.USA_ETF
+		type: MarketInvestmentType.USA_ETF
 	},
 	{
 		symbol: 'DIA',
@@ -59,7 +59,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 52,
 		timesalePrice1: 42,
 		timesalePrice2: 47,
-		type: InvestmentType.USA_ETF
+		type: MarketInvestmentType.USA_ETF
 	},
 	{
 		symbol: 'QQQ',
@@ -67,7 +67,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 53,
 		timesalePrice1: 43,
 		timesalePrice2: 48,
-		type: InvestmentType.USA_ETF
+		type: MarketInvestmentType.USA_ETF
 	},
 	{
 		symbol: 'EWU',
@@ -75,7 +75,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 54,
 		timesalePrice1: 44,
 		timesalePrice2: 49,
-		type: InvestmentType.INTERNATIONAL_ETF
+		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'SPEU',
@@ -83,7 +83,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 57,
 		timesalePrice1: 47,
 		timesalePrice2: 52,
-		type: InvestmentType.INTERNATIONAL_ETF
+		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'EWJ',
@@ -91,7 +91,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 55,
 		timesalePrice1: 45,
 		timesalePrice2: 50,
-		type: InvestmentType.INTERNATIONAL_ETF
+		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'MCHI',
@@ -99,7 +99,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 56,
 		timesalePrice1: 46,
 		timesalePrice2: 51,
-		type: InvestmentType.INTERNATIONAL_ETF
+		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
 		symbol: 'BTC',
@@ -107,7 +107,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 58,
 		timesalePrice1: 48,
 		timesalePrice2: 52,
-		type: InvestmentType.CRYPTO,
+		type: MarketInvestmentType.CRYPTO,
 		id: 'bitcoin'
 	},
 	{
@@ -116,7 +116,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 59,
 		timesalePrice1: 49,
 		timesalePrice2: 53,
-		type: InvestmentType.CRYPTO,
+		type: MarketInvestmentType.CRYPTO,
 		id: 'ethereum'
 	}
 ];
@@ -190,13 +190,13 @@ export const createTradierHistory = (
 
 const bitcoinPrice: CoinGeckoPrice = {
 	bitcoin: {
-		usd: '108'
+		usd: 108
 	}
 };
 
 const ethereumQuote: CoinGeckoPrice = {
 	ethereum: {
-		usd: '109'
+		usd: 109
 	}
 };
 

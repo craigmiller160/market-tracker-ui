@@ -1943,10 +1943,10 @@
   dependencies:
     prettier "^2.5.1"
 
-"@craigmiller160/ts-functions@1.1.0":
-  version "1.1.0"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.1.0.tgz#8feea6eb155814c749932b7f61e6faeafbad1d0f"
-  integrity sha512-uXYlR0/NPpmClhH+2GwySVcwqWox/T09uiEWrPgZJaP2F1u3K2ZWwa+SU8sw8kmhEyTZ1Ya1CXx5rKE8cLB/mQ==
+"@craigmiller160/ts-functions@^1.2.0-beta":
+  version "1.2.0-beta.4"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.2.0-beta.4.tgz#54bbcd7a23cb28fc0345f7b0754db1c625babe4a"
+  integrity sha512-uL9l9oL+vcwzta36ZdwJdYBu82UzTtfh0GdwQN7rvbpFeFJtKFIPCS+86k1E9tP3M3GBLj4pZkeyq3JW+NZJrg==
 
 "@craigmiller160/webpack-config-sass@1.0.0":
   version "1.0.0"

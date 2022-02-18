@@ -1,17 +1,27 @@
-export interface TradierSeriesData {
-	readonly time: string;
-	readonly timestamp: number;
-	readonly price: number;
-	readonly open: number;
-	readonly high: number;
-	readonly low: number;
-	readonly close: number;
-	readonly volume: number;
-	readonly vwap: number;
-}
+import * as ioType from 'io-ts';
 
-export interface TradierSeries {
-	readonly series: {
-		readonly data: ReadonlyArray<TradierSeriesData>;
-	};
-}
+export const tradierSeriesDataV = ioType.readonly(
+	ioType.type({
+		time: ioType.string,
+		timestamp: ioType.number,
+		price: ioType.number,
+		open: ioType.number,
+		high: ioType.number,
+		low: ioType.number,
+		close: ioType.number,
+		volume: ioType.number,
+		vwap: ioType.number
+	})
+);
+export type TradierSeriesData = ioType.TypeOf<typeof tradierSeriesDataV>;
+
+export const tradierSeriesV = ioType.readonly(
+	ioType.type({
+		series: ioType.readonly(
+			ioType.type({
+				data: ioType.readonlyArray(tradierSeriesDataV)
+			})
+		)
+	})
+);
+export type TradierSeries = ioType.TypeOf<typeof tradierSeriesV>;

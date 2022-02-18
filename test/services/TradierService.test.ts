@@ -286,7 +286,7 @@ describe('TradierService', () => {
 			});
 
 		const result = await getTimesales('VTI')();
-		expect(result).toEqualRight([]);
+		expect(result).toBeLeft();
 	});
 
 	describe('getMarketStatus', () => {
