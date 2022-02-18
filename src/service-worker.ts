@@ -17,7 +17,12 @@ self.addEventListener('install', () => {
 self.addEventListener('activate', (event) => {
 	console.log('Activated');
 	event.waitUntil(
-		self.clients.claim().then(() => console.log('Clients claimed'))
+		self.clients
+			.claim()
+			.then(() => caches.keys())
+			.then((cacheNames: string[]) =>
+				Promise.all(cacheNames.map((name) => caches.delete(name)))
+			)
 	);
 });
 
