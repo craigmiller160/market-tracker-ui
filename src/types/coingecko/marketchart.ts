@@ -1,3 +1,5 @@
+// TODO add typechecking
+
 type CoinGeckoChartPrice = [unixTimestamp: number, price: number];
 
 export interface CoinGeckoMarketChart {
