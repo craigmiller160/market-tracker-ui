@@ -1,7 +1,7 @@
 import { MarketData } from '../../../types/MarketData';
 import { Card, Space, Spin } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useCallback, useContext, useEffect } from 'react';
 import { match, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -19,18 +19,34 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { isStock } from '../../../data/InvestmentInfo';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
-import { getInvestmentData } from '../../../services/MarketInvestmentService';
+import {
+	getInvestmentData,
+	InvestmentData
+} from '../../../services/MarketInvestmentService';
+import { pipe } from 'fp-ts/es6/function';
+import { Updater, useImmer } from 'use-immer';
+import * as TaskEither from 'fp-ts/es6/TaskEither';
+import { TaskT } from '@craigmiller160/ts-functions/types';
+import { Dispatch } from 'redux';
+import { notificationSlice } from '../../../store/notification/slice';
+import { castDraft } from 'immer';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
 		<Spin size="large" />
 	</Space>
 );
+
+interface State {
+	readonly loading: boolean;
+	readonly data: InvestmentData;
+	readonly hasError: boolean;
+}
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
@@ -147,19 +163,85 @@ const createTime = (time: MarketTime): ReactNode => {
 const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
 	info.type !== MarketInvestmentType.CRYPTO;
 
+const createHandleGetDataError =
+	(dispatch: Dispatch, setState: Updater<State>) =>
+	(ex: Error): TaskT<void> =>
+	async () => {
+		dispatch(
+			notificationSlice.actions.addError(
+				`Error getting data: ${ex.message}`
+			)
+		);
+		setState((draft) => {
+			draft.loading = false;
+			draft.hasError = true;
+			draft.data = {
+				currentPrice: 0,
+				history: []
+			};
+		});
+	};
+
+const createHandleGetDataSuccess =
+	(setState: Updater<State>) =>
+	(data: InvestmentData): TaskT<void> =>
+	async () => {
+		setState((draft) => {
+			draft.loading = false;
+			draft.hasError = false;
+			draft.data = castDraft(data);
+		});
+	};
+
 export const MarketCard = ({ info }: Props) => {
 	// const Title = createTitle(data);
+	const [state, setState] = useImmer<State>({
+		loading: false,
+		data: {
+			currentPrice: 0,
+			history: []
+		},
+		hasError: false
+	});
+	const dispatch = useDispatch();
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const { status } = useContext(MarketStatusContext);
 	const respectMarketStatus = shouldRespectMarketStatus(info);
+	// TODO figure out a better way to handle this useCallback pattern
+	const handleGetDataError = useCallback(
+		(ex: Error) => createHandleGetDataError(dispatch, setState)(ex),
+		[dispatch, setState]
+	);
+	const handleGetDataSuccess = useCallback(
+		(data: InvestmentData) => createHandleGetDataSuccess(setState)(data),
+		[setState]
+	);
 
 	useEffect(() => {
-		// getInvestmentData(time, info)();
-		console.log('EffectRunning');
-	}, [time, info]);
+		if (respectMarketStatus && MarketStatus.OPEN !== status) {
+			return;
+		}
+
+		setState((draft) => {
+			draft.loading = true;
+		});
+
+		pipe(
+			getInvestmentData(time, info),
+			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
+		)();
+	}, [
+		time,
+		info,
+		status,
+		setState,
+		respectMarketStatus,
+		handleGetDataError,
+		handleGetDataSuccess
+	]);
 
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
