@@ -23,21 +23,20 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
 	if (MARKET_DATA_REGEX.test(event.request.url)) {
-		console.log('MarketData', event.request.url);
-		return event.respondWith(
-			caches.open(MARKET_DATA_CACHE).then((cache) => {
-				return cache.match(event.request).then((response) => {
-					return (
-						response ||
-						fetch(event.request).then((response2) => {
-							cache.put(event.request, response2.clone());
-							return response2;
-						})
-					);
-				});
-			})
-		);
-	} else {
-		return event.respondWith(fetch(event.request));
+		console.log('MarketData 2', event.request.url);
+		// return event.respondWith(
+		// 	caches.open(MARKET_DATA_CACHE).then((cache) => {
+		// 		return cache.match(event.request).then((response) => {
+		// 			return (
+		// 				response ||
+		// 				fetch(event.request).then((response2) => {
+		// 					cache.put(event.request, response2.clone());
+		// 					return response2;
+		// 				})
+		// 			);
+		// 		});
+		// 	})
+		// );
 	}
+	return event.respondWith(fetch(event.request));
 });
