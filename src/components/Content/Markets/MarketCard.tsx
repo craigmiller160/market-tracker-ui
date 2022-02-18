@@ -135,8 +135,8 @@ const createTime = (time: string): ReactNode => {
 export const MarketCard = ({ info }: Props) => {
 	// const Title = createTitle(data);
 	// const Time = createTime(time);
-	// const { breakpoints } = useContext(ScreenContext);
-	// const breakpointName = getBreakpointName(breakpoints);
+	const { breakpoints } = useContext(ScreenContext);
+	const breakpointName = getBreakpointName(breakpoints);
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(
@@ -169,5 +169,14 @@ export const MarketCard = ({ info }: Props) => {
 	// 		{Chart}
 	// 	</Card>
 	// );
-	return <p>Card: {info.symbol}</p>;
+	return (
+		<Card
+			title={`${info.name} (${info.symbol})`}
+			className={`MarketCard ${breakpointName}`}
+			role="listitem"
+			data-testid={`market-card-${info.symbol}`}
+		>
+			<p>More Content Goes Here</p>
+		</Card>
+	);
 };
