@@ -151,6 +151,26 @@ const addStockPlaceholderQuotes = (
 		TaskEither.map((quotes) => [...STOCK_PLACEHOLDER_QUOTES, ...quotes])
 	);
 
+const makeCoinGeckoQuoteCalls = (
+	symbols: ReadonlyArray<string>
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		symbols,
+		RArray.map((_) => coinGeckoService.getQuotes([_])),
+		TaskEither.sequenceArray,
+		TaskEither.map(RArray.flatten)
+	);
+
+const makeTradierQuoteCalls = (
+	symbols: ReadonlyArray<string>
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		symbols,
+		RArray.map((_) => tradierService.getQuotes([_])),
+		TaskEither.sequenceArray,
+		TaskEither.map(RArray.flatten)
+	);
+
 const getQuotes = (
 	status: MarketStatus,
 	history: ReadonlyArray<ReadonlyArray<HistoryRecord>>
@@ -161,7 +181,7 @@ const getQuotes = (
 	})
 		.with({ status: MarketStatus.CLOSED }, () =>
 			addStockPlaceholderQuotes(
-				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+				makeCoinGeckoQuoteCalls(CRYPTO_INVESTMENT_SYMB0LS)
 			)
 		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
@@ -172,8 +192,8 @@ const getQuotes = (
 		.otherwise(() =>
 			pipe(
 				[
-					tradierService.getQuotes(STOCK_INVESTMENT_SYMBOLS),
-					coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+					makeTradierQuoteCalls(STOCK_INVESTMENT_SYMBOLS),
+					makeCoinGeckoQuoteCalls(CRYPTO_INVESTMENT_SYMB0LS)
 				],
 				TaskEither.sequenceArray,
 				TaskEither.map(RArray.flatten)
