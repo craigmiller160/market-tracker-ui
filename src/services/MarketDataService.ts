@@ -186,7 +186,7 @@ const getQuotes = (
 		)
 		.with({ mostRecentHistoryRecord: when(isLaterThanNow) }, () =>
 			addStockPlaceholderQuotes(
-				coinGeckoService.getQuotes(CRYPTO_INVESTMENT_SYMB0LS)
+				makeCoinGeckoQuoteCalls(CRYPTO_INVESTMENT_SYMB0LS)
 			)
 		)
 		.otherwise(() =>
