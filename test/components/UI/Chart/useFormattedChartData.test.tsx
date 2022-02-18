@@ -1,16 +1,12 @@
-import { MarketData } from '../../../../src/types/MarketData';
 import { render } from '@testing-library/react';
 import {
 	ChartRecord,
 	useFormattedChartData
 } from '../../../../src/components/UI/Chart/useFormattedChartData';
-import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
+import { InvestmentData } from '../../../../src/services/MarketInvestmentService';
 
-const marketData: MarketData = {
-	symbol: 'VTI',
-	name: 'Total Index Fund',
+const marketData: InvestmentData = {
 	currentPrice: 50,
-	type: MarketInvestmentType.USA_ETF,
 	history: [
 		{
 			date: '2022-01-01',
@@ -46,7 +42,7 @@ const marketData: MarketData = {
 };
 
 interface Props {
-	readonly data: MarketData;
+	readonly data: InvestmentData;
 	readonly callback: (result: ReadonlyArray<ChartRecord>) => void;
 }
 
