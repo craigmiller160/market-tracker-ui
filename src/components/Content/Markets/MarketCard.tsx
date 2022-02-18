@@ -21,6 +21,7 @@ import { isStock } from '../../../data/InvestmentInfo';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
+import { MarketStatusContext } from '../MarketStatusContext';
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
@@ -140,6 +141,7 @@ export const MarketCard = ({ info }: Props) => {
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
+	const { status } = useContext(MarketStatusContext);
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(
