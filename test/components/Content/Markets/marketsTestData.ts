@@ -136,6 +136,24 @@ export const createCoinGeckoTimesaleHistory = (
 	]
 });
 
+export const createTradierQuote = (
+	setting: TestDataSetting
+): TradierQuotes => ({
+	quotes: {
+		quote: {
+			symbol: setting.symbol,
+			description: '',
+			open: 0,
+			high: 0,
+			low: 0,
+			bid: 0,
+			ask: 0,
+			close: 0,
+			last: setting.quotePrice
+		}
+	}
+});
+
 export const createTradierQuotes = (
 	settings: ReadonlyArray<TestDataSetting>
 ): TradierQuotes => ({
@@ -170,10 +188,13 @@ export const createTradierHistory = (
 	}
 });
 
-const coinGeckoQuotes: CoinGeckoPrice = {
+const bitcoinPrice: CoinGeckoPrice = {
 	bitcoin: {
 		usd: '108'
-	},
+	}
+};
+
+const ethereumQuote: CoinGeckoPrice = {
 	ethereum: {
 		usd: '109'
 	}
@@ -274,14 +295,10 @@ export const createMockQueries =
 			isCrypto(setting.type)
 		);
 
-		const symbols = tradierSettings
-			.map((setting) => setting.symbol)
-			.join(',');
-		mockApi
-			.onGet(`/tradier/markets/quotes?symbols=${symbols}`)
-			.reply(200, createTradierQuotes(testDataSettings));
-
 		tradierSettings.forEach((setting) => {
+			mockApi
+				.onGet(`/tradier/markets/quotes?symbols=${setting.symbol}`)
+				.reply(200, createTradierQuote(setting));
 			mockApi
 				.onGet(
 					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${tradierInterval}`
@@ -295,10 +312,11 @@ export const createMockQueries =
 		});
 
 		mockApi
-			.onGet(
-				'/coingecko/simple/price?ids=bitcoin,ethereum&vs_currencies=usd'
-			)
-			.reply(200, coinGeckoQuotes);
+			.onGet('/coingecko/simple/price?ids=bitcoin&vs_currencies=usd')
+			.reply(200, bitcoinPrice);
+		mockApi
+			.onGet('/coingecko/simple/price?ids=ethereum&vs_currencies=usd')
+			.reply(200, ethereumQuote);
 
 		coinGeckoSettings.forEach((setting) => {
 			const response =
