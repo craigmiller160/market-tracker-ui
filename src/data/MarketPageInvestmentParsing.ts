@@ -10,6 +10,7 @@ import { handleValidationResult } from '../errors/TypeValidationError';
 import { MonoidT } from '@craigmiller160/ts-functions/es/types';
 import * as Monoid from 'fp-ts/es6/Monoid';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import { match } from 'ts-pattern';
 
 type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
@@ -41,19 +42,36 @@ const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	})
 };
 
+const createInvestmentsByType = (
+	usaEtfs: ReadonlyArray<MarketInvestmentInfo>,
+	intEtfs: ReadonlyArray<MarketInvestmentInfo>,
+	crypto: ReadonlyArray<MarketInvestmentInfo>
+): InvestmentsByType => ({
+	[MarketInvestmentType.USA_ETF]: usaEtfs,
+	[MarketInvestmentType.INTERNATIONAL_ETF]: intEtfs,
+	[MarketInvestmentType.CRYPTO]: crypto
+});
+
 const infoToInvestmentByType = (
 	info: MarketInvestmentInfo
-): InvestmentsByType => {
-	// TODO finish this
-	throw new Error();
-};
+): InvestmentsByType =>
+	match(info)
+		.with({ type: MarketInvestmentType.USA_ETF }, (_) =>
+			createInvestmentsByType([_], [], [])
+		)
+		.with({ type: MarketInvestmentType.INTERNATIONAL_ETF }, (_) =>
+			createInvestmentsByType([], [_], [])
+		)
+		.with({ type: MarketInvestmentType.CRYPTO }, (_) =>
+			createInvestmentsByType([], [], [_])
+		)
+		.run();
 
 const groupInvestmentsByType = (
 	infoArray: MarketInvestmentInfoArray
-): InvestmentsByType => {
-	const result = pipe(
+): InvestmentsByType =>
+	pipe(
 		infoArray,
 		RArray.map(infoToInvestmentByType),
 		Monoid.concatAll(groupByTypeMonoid)
 	);
-};
