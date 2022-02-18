@@ -12,7 +12,7 @@ interface State {
 	readonly timestamp: string;
 }
 
-export const useTodayTimer = (): string => {
+export const useRefreshTimer = (): string => {
 	const [state, setState] = useImmer<State>({
 		timestamp: ''
 	});

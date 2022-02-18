@@ -11,8 +11,8 @@ import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 import { MarketSection } from './MarketSection';
-import { TodayContextValue, TodayContext } from './TodayContext';
-import { useTodayTimer } from './useTodayTimer';
+import { TimerContextValue, TimerContext } from './TimerContext';
+import { useRefreshTimer } from './useRefreshTimer';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -52,13 +52,13 @@ const useHandleInvestmentError = (error?: Error) => {
 export const Markets = () => {
 	const investmentResult = useMemo(getInvestmentResult, []);
 	useHandleInvestmentError(investmentResult.error);
-	const timestamp = useTodayTimer();
-	const value: TodayContextValue = {
+	const timestamp = useRefreshTimer();
+	const value: TimerContextValue = {
 		timestamp
 	};
 
 	return (
-		<TodayContext.Provider value={value}>
+		<TimerContext.Provider value={value}>
 			<div className="GlobalMarkets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
 				<MarketSection
@@ -74,6 +74,6 @@ export const Markets = () => {
 					data={investmentResult.investments}
 				/>
 			</div>
-		</TodayContext.Provider>
+		</TimerContext.Provider>
 	);
 };
