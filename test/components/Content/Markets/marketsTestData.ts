@@ -190,13 +190,13 @@ export const createTradierHistory = (
 
 const bitcoinPrice: CoinGeckoPrice = {
 	bitcoin: {
-		usd: '108'
+		usd: 108
 	}
 };
 
 const ethereumQuote: CoinGeckoPrice = {
 	ethereum: {
-		usd: '109'
+		usd: 109
 	}
 };
 

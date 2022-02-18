@@ -1944,9 +1944,9 @@
     prettier "^2.5.1"
 
 "@craigmiller160/ts-functions@^1.2.0-beta":
-  version "1.2.0-beta.2"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.2.0-beta.2.tgz#dbd2916e697d9f12f9f51f3e451aad9ad6f8ca7e"
-  integrity sha512-qnJzA8gS+0Gasf/tgrRpk8Jy5HY5hT9RSt3TRKO6KsTwvq86SEZaEtp72YrMVAGmFcNonRnzVZldzc7/7BcvxA==
+  version "1.2.0-beta.4"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.2.0-beta.4.tgz#54bbcd7a23cb28fc0345f7b0754db1c625babe4a"
+  integrity sha512-uL9l9oL+vcwzta36ZdwJdYBu82UzTtfh0GdwQN7rvbpFeFJtKFIPCS+86k1E9tP3M3GBLj4pZkeyq3JW+NZJrg==
 
 "@craigmiller160/webpack-config-sass@1.0.0":
   version "1.0.0"

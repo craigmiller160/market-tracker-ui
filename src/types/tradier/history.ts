@@ -1,13 +1,23 @@
-export interface TradierHistoryDay {
-	readonly date: string;
-	readonly open: number;
-	readonly high: number;
-	readonly low: number;
-	readonly close: number;
-}
+import * as ioType from 'io-ts';
 
-export interface TradierHistory {
-	readonly history: {
-		readonly day: ReadonlyArray<TradierHistoryDay>;
-	};
-}
+export const tradierHistoryDayV = ioType.readonly(
+	ioType.type({
+		date: ioType.string,
+		open: ioType.number,
+		high: ioType.number,
+		low: ioType.number,
+		close: ioType.number
+	})
+);
+export type TradierHistoryDay = ioType.TypeOf<typeof tradierHistoryDayV>;
+
+export const tradierHistoryV = ioType.readonly(
+	ioType.type({
+		history: ioType.readonly(
+			ioType.type({
+				day: ioType.readonlyArray(tradierHistoryDayV)
+			})
+		)
+	})
+);
+export type TradierHistory = ioType.TypeOf<typeof tradierHistoryV>;

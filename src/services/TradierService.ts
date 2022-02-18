@@ -3,8 +3,16 @@ import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
-import { TradierHistory, TradierHistoryDay } from '../types/tradier/history';
-import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
+import {
+	TradierHistory,
+	TradierHistoryDay,
+	tradierHistoryV
+} from '../types/tradier/history';
+import {
+	TradierQuote,
+	TradierQuotes,
+	tradierQuotesV
+} from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
@@ -20,18 +28,28 @@ import {
 	getTimesalesEnd,
 	getTimesalesStart
 } from '../utils/timeUtils';
-import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
+import {
+	TradierSeries,
+	TradierSeriesData,
+	tradierSeriesV
+} from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { MarketStatus } from '../types/MarketStatus';
 import {
 	toMarketStatus,
 	TradierCalendar,
-	TradierCalendarStatus
+	TradierCalendarStatus,
+	tradierCalendarV
 } from '../types/tradier/calendar';
+import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
+const decodeQuotes = TypeValidation.decode(tradierQuotesV);
+const decodeTimesales = TypeValidation.decode(tradierSeriesV);
+const decodeHistory = TypeValidation.decode(tradierHistoryV);
+const decodeCalendar = TypeValidation.decode(tradierCalendarV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -119,6 +137,7 @@ export const getTimesales = (
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeTimesales),
 		TaskEither.map(formatTimesales)
 	);
 };
@@ -131,6 +150,7 @@ export const getQuotes = (
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeQuotes),
 		TaskEither.map(formatTradierQuotes)
 	);
 
@@ -143,6 +163,7 @@ const getHistoryQuote = (
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeHistory),
 		TaskEither.map(formatTradierHistory)
 	);
 };
@@ -217,6 +238,7 @@ export const getMarketStatus = (): TaskTryT<MarketStatus> => {
 			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeCalendar),
 		TaskEither.map((_) => _.calendar.days.day),
 		TaskEither.map(
 			flow(
