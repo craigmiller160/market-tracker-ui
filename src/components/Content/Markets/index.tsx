@@ -5,14 +5,13 @@ import {
 	InvestmentsByType
 } from '../../../data/MarketPageInvestmentParsing';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentInfo';
-import { useImmer } from 'use-immer';
 import { pipe } from 'fp-ts/es6/function';
 import * as Either from 'fp-ts/es6/Either';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 
-interface State {
+interface InvestmentResult {
 	readonly investments: InvestmentsByType;
 	readonly error?: Error;
 }
@@ -23,7 +22,7 @@ const emptyInvestmentsByType: InvestmentsByType = {
 	[MarketInvestmentType.CRYPTO]: []
 };
 
-const createInitialState = (): State =>
+const getInvestmentResult = (): InvestmentResult =>
 	pipe(
 		getMarketInvestmentByType(),
 		Either.fold(
@@ -37,16 +36,19 @@ const createInitialState = (): State =>
 		)
 	);
 
-export const Markets = () => {
+const useHandleInvestmentError = (error?: Error) => {
 	const dispatch = useDispatch();
-	const [state] = useImmer<State>(createInitialState());
 	useEffect(() => {
-		if (state.error) {
-			console.error('Error preparing market data', state.error);
-			dispatch(notificationSlice.actions.addError(state.error.message));
+		if (error) {
+			console.error('Error preparing market data', error);
+			dispatch(notificationSlice.actions.addError(error.message));
 		}
-	}, [state.error]);
-	console.log(state);
+	}, [error, dispatch]);
+};
+
+export const Markets = () => {
+	const investmentResult = useMemo(getInvestmentResult, []);
+	useHandleInvestmentError(investmentResult.error);
 
 	return (
 		<div className="GlobalMarkets" data-testid="markets-page">

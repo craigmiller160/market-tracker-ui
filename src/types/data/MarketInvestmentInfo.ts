@@ -22,7 +22,9 @@ export type MarketInvestmentInfo = Readonly<
 	ioType.TypeOf<typeof marketInvestmentInfoV>
 >;
 
-export const marketInvestmentInfoArrayV = ioType.readonlyArray(marketInvestmentInfoV);
+export const marketInvestmentInfoArrayV = ioType.readonlyArray(
+	marketInvestmentInfoV
+);
 export type MarketInvestmentInfoArray = ioType.TypeOf<
 	typeof marketInvestmentInfoArrayV
 >;
