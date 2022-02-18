@@ -30,6 +30,8 @@ import { MarketData } from '../types/MarketData';
 import { MarketDataGroup } from '../types/MarketDataGroup';
 import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
+// TODO delete this when unused
+
 export type GlobalMarketData = [
 	usa: MarketDataGroup,
 	international: MarketDataGroup,

@@ -3,14 +3,18 @@ import { Space, Spin, Typography } from 'antd';
 import { MarketData } from '../../../types/MarketData';
 import { MarketCard } from './MarketCard';
 import './MarketSection.scss';
-import { MarketDataGroup } from '../../../types/MarketDataGroup';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { MarketTime } from '../../../types/MarketTime';
+import {
+	getMarketInvestmentTypeTitle,
+	MarketInvestmentType
+} from '../../../types/data/MarketInvestmentType';
+import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
+import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 
 interface Props {
-	readonly title: string;
-	readonly loading: boolean;
-	readonly data: MarketDataGroup;
+	readonly type: MarketInvestmentType;
+	readonly data: InvestmentsByType;
 }
 
 const Spinner = (
@@ -19,30 +23,20 @@ const Spinner = (
 	</Space>
 );
 
-const createMarketDataToCard =
-	(marketStatus: MarketStatus, time: MarketTime) => (data: MarketData) =>
-		(
-			<MarketCard
-				key={data.symbol}
-				data={data}
-				time={time}
-				marketStatus={marketStatus}
-			/>
-		);
+const investmentInfoToCard = (info: MarketInvestmentInfo) => (
+	<MarketCard key={info.symbol} info={info} />
+);
 
 export const MarketSection = (props: Props) => {
-	const { title, loading, data } = props;
-	const marketDataToCard = createMarketDataToCard(
-		data.marketStatus,
-		data.time
-	);
-	const MarketCards = data.data.map(marketDataToCard);
+	const { type, data } = props;
+	const title = getMarketInvestmentTypeTitle(type);
+	const cards = data[type].map(investmentInfoToCard);
 
 	return (
 		<section className="MarketSection">
 			<Typography.Title level={3}>{title}</Typography.Title>
 			<div className="MarketCardList" role="list">
-				{loading ? Spinner : MarketCards}
+				{cards}
 			</div>
 		</section>
 	);
