@@ -4,12 +4,12 @@ import {
 	getMarketInvestmentByType,
 	InvestmentsByType
 } from '../../../data/MarketPageInvestmentParsing';
-import { MarketInvestmentType } from '../../../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/es6/function';
 import * as Either from 'fp-ts/es6/Either';
 import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
+import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;

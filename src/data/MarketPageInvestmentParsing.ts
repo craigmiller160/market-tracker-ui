@@ -2,8 +2,7 @@ import marketDataJson from './marketsPageInvestments.json';
 import {
 	MarketInvestmentInfo,
 	MarketInvestmentInfoArray,
-	marketInvestmentInfoArrayV,
-	MarketInvestmentType
+	marketInvestmentInfoArrayV
 } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/es6/function';
 import { handleValidationResult } from '../errors/TypeValidationError';
@@ -12,6 +11,7 @@ import * as Monoid from 'fp-ts/es6/Monoid';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { match } from 'ts-pattern';
 import * as Either from 'fp-ts/es6/Either';
+import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
