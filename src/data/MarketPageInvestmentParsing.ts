@@ -7,21 +7,22 @@ import {
 } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/es6/function';
 import { handleValidationResult } from '../errors/TypeValidationError';
-import { MonoidT } from '@craigmiller160/ts-functions/es/types';
+import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
 import * as Monoid from 'fp-ts/es6/Monoid';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { match } from 'ts-pattern';
+import * as Either from 'fp-ts/es6/Either';
 
-type InvestmentsByType = {
+export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
-export const getMarketInvestmentInfo = () => {
-	const result = pipe(
+export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
+	pipe(
 		marketInvestmentInfoArrayV.decode(marketDataJson),
-		handleValidationResult
+		handleValidationResult,
+		Either.map(groupInvestmentsByType)
 	);
-};
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	empty: {

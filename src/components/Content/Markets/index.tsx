@@ -1,9 +1,9 @@
 import { Typography } from 'antd';
 import './Markets.scss';
-import { getMarketInvestmentInfo } from '../../../data/MarketPageInvestmentParsing';
+import { getMarketInvestmentByType } from '../../../data/MarketPageInvestmentParsing';
 
 export const Markets = () => {
-	getMarketInvestmentInfo() // TODO delete this
+	console.log(getMarketInvestmentByType());
 	return (
 		<div className="GlobalMarkets" data-testid="markets-page">
 			<Typography.Title>All Markets</Typography.Title>
