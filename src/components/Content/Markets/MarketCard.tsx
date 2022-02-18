@@ -17,7 +17,7 @@ import { ScreenContext } from '../../ScreenContext';
 import { getBreakpointName } from '../../utils/Breakpoints';
 import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
-import { isStock } from '../../../data/InvestmentInfo';
+import { InvestmentInfo, isStock } from '../../../data/InvestmentInfo';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
@@ -42,7 +42,7 @@ const Spinner = (
 	</Space>
 );
 
-interface State {
+interface InvestmentDataState {
 	readonly loading: boolean;
 	readonly data: InvestmentData;
 	readonly hasError: boolean;
@@ -164,7 +164,7 @@ const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
 	info.type !== MarketInvestmentType.CRYPTO;
 
 const createHandleGetDataError =
-	(dispatch: Dispatch, setState: Updater<State>) =>
+	(dispatch: Dispatch, setState: Updater<InvestmentDataState>) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
 		dispatch(
@@ -183,7 +183,7 @@ const createHandleGetDataError =
 	};
 
 const createHandleGetDataSuccess =
-	(setState: Updater<State>) =>
+	(setState: Updater<InvestmentDataState>) =>
 	(data: InvestmentData): TaskT<void> =>
 	async () => {
 		setState((draft) => {
@@ -193,9 +193,14 @@ const createHandleGetDataSuccess =
 		});
 	};
 
-export const MarketCard = ({ info }: Props) => {
-	// const Title = createTitle(data);
-	const [state, setState] = useImmer<State>({
+const useInvestmentData = (
+	time: MarketTime,
+	info: MarketInvestmentInfo
+): InvestmentDataState => {
+	const { status } = useContext(MarketStatusContext);
+	const respectMarketStatus = shouldRespectMarketStatus(info);
+	const dispatch = useDispatch();
+	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
 		data: {
 			currentPrice: 0,
@@ -203,13 +208,7 @@ export const MarketCard = ({ info }: Props) => {
 		},
 		hasError: false
 	});
-	const dispatch = useDispatch();
-	const { breakpoints } = useContext(ScreenContext);
-	const breakpointName = getBreakpointName(breakpoints);
-	const time = useSelector(timeValueSelector);
-	const Time = createTime(time);
-	const { status } = useContext(MarketStatusContext);
-	const respectMarketStatus = shouldRespectMarketStatus(info);
+
 	// TODO figure out a better way to handle this useCallback pattern
 	const handleGetDataError = useCallback(
 		(ex: Error) => createHandleGetDataError(dispatch, setState)(ex),
@@ -242,6 +241,17 @@ export const MarketCard = ({ info }: Props) => {
 		handleGetDataError,
 		handleGetDataSuccess
 	]);
+
+	return state;
+};
+
+export const MarketCard = ({ info }: Props) => {
+	// const Title = createTitle(data);
+	const { breakpoints } = useContext(ScreenContext);
+	const breakpointName = getBreakpointName(breakpoints);
+	const time = useSelector(timeValueSelector);
+	const Time = createTime(time);
+	const { loading, data, hasError } = useInvestmentData(time, info);
 
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
