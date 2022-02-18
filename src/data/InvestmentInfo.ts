@@ -10,6 +10,8 @@ import { Quote } from '../types/quote';
 import { HistoryRecord } from '../types/history';
 import * as RNonEmptyArray from 'fp-ts/es6/ReadonlyNonEmptyArray';
 
+// TODO delete most of this in the end
+
 export enum InvestmentType {
 	USA_ETF = 'USA_ETF',
 	INTERNATIONAL_ETF = 'INTERNATIONAL_ETF',
