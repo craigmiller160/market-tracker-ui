@@ -6,13 +6,13 @@ export enum MarketInvestmentType {
 	CRYPTO = 'CRYPTO'
 }
 
-const marketInvestmentTypeV = ioType.keyof({
+export const marketInvestmentTypeV = ioType.keyof({
 	[MarketInvestmentType.USA_ETF]: null,
 	[MarketInvestmentType.INTERNATIONAL_ETF]: null,
 	[MarketInvestmentType.CRYPTO]: null
 });
 
-const marketInvestmentInfoV = ioType.type({
+export const marketInvestmentInfoV = ioType.type({
 	symbol: ioType.readonly(ioType.string),
 	name: ioType.readonly(ioType.string),
 	type: ioType.readonly(marketInvestmentTypeV)
@@ -22,7 +22,7 @@ export type MarketInvestmentInfo = Readonly<
 	ioType.TypeOf<typeof marketInvestmentInfoV>
 >;
 
-const marketInvestmentInfoArrayV = ioType.readonlyArray(marketInvestmentInfoV);
+export const marketInvestmentInfoArrayV = ioType.readonlyArray(marketInvestmentInfoV);
 export type MarketInvestmentInfoArray = ioType.TypeOf<
 	typeof marketInvestmentInfoArrayV
 >;
