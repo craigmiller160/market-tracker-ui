@@ -17,12 +17,6 @@ interface Props {
 	readonly data: InvestmentsByType;
 }
 
-const Spinner = (
-	<Space size="middle" className="Spinner">
-		<Spin size="large" />
-	</Space>
-);
-
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
 	<MarketCard key={info.symbol} info={info} />
 );

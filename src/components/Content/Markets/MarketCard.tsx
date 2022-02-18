@@ -1,5 +1,5 @@
 import { MarketData } from '../../../types/MarketData';
-import { Card } from 'antd';
+import { Card, Space, Spin } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
 import { match, when } from 'ts-pattern';
@@ -24,6 +24,12 @@ import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
+
+const Spinner = (
+	<Space size="middle" className="Spinner">
+		<Spin size="large" />
+	</Space>
+);
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
