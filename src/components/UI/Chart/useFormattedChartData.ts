@@ -4,6 +4,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { getFirstPrice } from './chartUtils';
 import { useMemo } from 'react';
+import { InvestmentData } from '../../../services/MarketInvestmentService';
 
 const parseTableDate = Time.parse('yyyy-MM-dd HH:mm:ss');
 const formatTableDate = Time.format("M/d/yy'\n'HH:mm");
@@ -16,7 +17,7 @@ export interface ChartRecord {
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
 
-const formatData = (data: MarketData): ReadonlyArray<ChartRecord> => {
+const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
 	const firstPrice = getFirstPrice(data.history);
 	return pipe(
 		data.history,
@@ -32,5 +33,5 @@ const formatData = (data: MarketData): ReadonlyArray<ChartRecord> => {
 };
 
 export const useFormattedChartData = (
-	data: MarketData
+	data: InvestmentData
 ): ReadonlyArray<ChartRecord> => useMemo(() => formatData(data), [data]);

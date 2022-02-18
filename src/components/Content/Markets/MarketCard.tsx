@@ -29,7 +29,7 @@ import {
 import { pipe } from 'fp-ts/es6/function';
 import { Updater, useImmer } from 'use-immer';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { TaskT } from '@craigmiller160/ts-functions/types';
+import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { Dispatch } from 'redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
@@ -62,7 +62,7 @@ const localeOptions: Intl.NumberFormatOptions = {
 	maximumFractionDigits: 2
 };
 
-const createPrice = (data: MarketData) => {
+const createPrice = (data: InvestmentData) => {
 	const oldestPrice = data.history[0]?.price ?? 0;
 	const priceChange = data.currentPrice - oldestPrice;
 
@@ -260,10 +260,24 @@ export const MarketCard = ({ info }: Props) => {
 		shouldLoadData
 	);
 
-	const { Price, Chart } = match({ status, respectMarketStatus })
+	// TODO improve error visuals
+	const { Price, Chart } = match({
+		status,
+		respectMarketStatus,
+		loading,
+		hasError
+	})
 		.with({ status: MarketStatus.UNKNOWN }, () => ({
 			Price: <div />,
+			Chart: <div />
+		}))
+		.with({ loading: true }, () => ({
+			Price: <div />,
 			Chart: Spinner
+		}))
+		.with({ hasError: true }, () => ({
+			Price: <div />,
+			Chart: <h3>Has Error</h3>
 		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
@@ -273,8 +287,8 @@ export const MarketCard = ({ info }: Props) => {
 			})
 		)
 		.otherwise(() => ({
-			Price: createPrice(null),
-			Chart: <ChartComp data={null} />
+			Price: createPrice(data),
+			Chart: <ChartComp data={data} />
 		}));
 
 	// const { Price, Chart } = match({ status, type: data.type })

@@ -3,9 +3,10 @@ import { MarketData } from '../../../types/MarketData';
 import { castDraft } from 'immer';
 import { getFirstPrice } from './chartUtils';
 import { useFormattedChartData } from './useFormattedChartData';
+import { InvestmentData } from '../../../services/MarketInvestmentService';
 
 interface Props {
-	readonly data: MarketData;
+	readonly data: InvestmentData;
 }
 
 export const Chart = (props: Props) => {
