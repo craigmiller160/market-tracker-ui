@@ -20,7 +20,7 @@ export const tradierCalendarV = ioType.type({
 			year: ioType.readonly(ioType.number),
 			days: ioType.readonly(
 				ioType.type({
-					day: ioType.readonly(tradierCalendarDayV)
+					day: ioType.readonlyArray(tradierCalendarDayV)
 				})
 			)
 		})

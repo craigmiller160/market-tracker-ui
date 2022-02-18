@@ -38,7 +38,8 @@ import { MarketStatus } from '../types/MarketStatus';
 import {
 	toMarketStatus,
 	TradierCalendar,
-	TradierCalendarStatus
+	TradierCalendarStatus,
+	tradierCalendarV
 } from '../types/tradier/calendar';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 
@@ -48,6 +49,7 @@ const formatCalendarDate = Time.format('yyyy-MM-dd');
 const decodeQuotes = TypeValidation.decode(tradierQuotesV);
 const decodeTimesales = TypeValidation.decode(tradierSeriesV);
 const decodeHistory = TypeValidation.decode(tradierHistoryV);
+const decodeCalendar = TypeValidation.decode(tradierCalendarV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -236,6 +238,7 @@ export const getMarketStatus = (): TaskTryT<MarketStatus> => {
 			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeCalendar),
 		TaskEither.map((_) => _.calendar.days.day),
 		TaskEither.map(
 			flow(
