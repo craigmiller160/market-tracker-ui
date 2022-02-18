@@ -1,7 +1,7 @@
 import { MarketData } from '../../../types/MarketData';
 import { Card, Space, Spin } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { match, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -24,6 +24,7 @@ import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
+import { getInvestmentData } from '../../../services/MarketInvestmentService';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -154,6 +155,12 @@ export const MarketCard = ({ info }: Props) => {
 	const Time = createTime(time);
 	const { status } = useContext(MarketStatusContext);
 	const respectMarketStatus = shouldRespectMarketStatus(info);
+
+	useEffect(() => {
+		// getInvestmentData(time, info)();
+		console.log('EffectRunning');
+	}, [time, info]);
+
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(

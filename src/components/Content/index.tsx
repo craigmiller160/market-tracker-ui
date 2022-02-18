@@ -15,17 +15,23 @@ import {
 import { identity, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as Task from 'fp-ts/es6/Task';
+import { hasCheckedSelector, isAuthorizedSelector } from '../../store/auth/selectors';
 
 interface MarketStatusState {
 	readonly marketStatus: MarketStatus;
 }
 
 const useCheckMarketStatus = (): MarketStatus => {
+	const isAuth = useSelector(isAuthorizedSelector);
 	const [state, setState] = useImmer<MarketStatusState>({
 		marketStatus: MarketStatus.UNKNOWN
 	});
 	const time = useSelector(timeValueSelector);
 	useEffect(() => {
+		if (!isAuth) {
+			return;
+		}
+
 		setState((draft) => {
 			draft.marketStatus = MarketStatus.UNKNOWN;
 		});
@@ -41,7 +47,7 @@ const useCheckMarketStatus = (): MarketStatus => {
 				})
 			)
 		)();
-	}, [time, setState]);
+	}, [time, setState, isAuth]);
 
 	return state.marketStatus;
 };

@@ -173,11 +173,10 @@ const handleInvestmentData = ({
 export const getInvestmentData = (
 	time: MarketTime,
 	info: MarketInvestmentInfo
-) => {
+): TaskTryT<InvestmentData> =>
 	pipe(
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
 		TaskEither.map(handleInvestmentData)
 	);
-};
