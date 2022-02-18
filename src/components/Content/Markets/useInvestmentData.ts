@@ -65,13 +65,14 @@ export const useInvestmentData = (
 		hasError: false
 	});
 
-	// TODO figure out a better way to handle this useCallback pattern
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleGetDataError = useCallback(
-		(ex: Error) => createHandleGetDataError(dispatch, setState)(ex),
+		createHandleGetDataError(dispatch, setState),
 		[dispatch, setState]
 	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleGetDataSuccess = useCallback(
-		(data: InvestmentData) => createHandleGetDataSuccess(setState)(data),
+		createHandleGetDataSuccess(setState),
 		[setState]
 	);
 
