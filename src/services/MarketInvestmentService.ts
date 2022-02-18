@@ -5,7 +5,7 @@ import {
 	TaskTryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
-import { match, not, when } from 'ts-pattern';
+import { match, when } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
@@ -157,7 +157,17 @@ const handleInvestmentData = ({
 	history,
 	quote
 }: IntermediateInvestmentData): InvestmentData => {
-	// Quote, Then Last History, Then 0
+	const currentPrice = pipe(
+		quote,
+		Option.fold(
+			() => 0,
+			(q) => q.price
+		)
+	);
+	return {
+		currentPrice,
+		history
+	};
 };
 
 export const getInvestmentData = (
