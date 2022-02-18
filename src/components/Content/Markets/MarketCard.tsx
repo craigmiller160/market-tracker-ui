@@ -157,18 +157,6 @@ export const MarketCard = ({ info }: Props) => {
 	// 		{Price}
 	// 	</>
 	// );
-	//
-	// return (
-	// 	<Card
-	// 		title={FullTitle}
-	// 		className={`MarketCard ${breakpointName}`}
-	// 		extra={Time}
-	// 		role="listitem"
-	// 		data-testid={`market-card-${data.symbol}`}
-	// 	>
-	// 		{Chart}
-	// 	</Card>
-	// );
 	return (
 		<Card
 			title={`${info.name} (${info.symbol})`}
