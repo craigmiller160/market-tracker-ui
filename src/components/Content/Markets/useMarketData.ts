@@ -17,6 +17,8 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { InvestmentType } from '../../../data/InvestmentInfo';
 
+// TODO delete this when unused
+
 const INTERVAL_1_MIN_MILLIS = 1000 * 60;
 
 interface State {
