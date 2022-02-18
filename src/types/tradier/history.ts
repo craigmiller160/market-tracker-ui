@@ -1,15 +1,19 @@
-// TODO add typechecking
+import * as ioType from 'io-ts';
 
-export interface TradierHistoryDay {
-	readonly date: string;
-	readonly open: number;
-	readonly high: number;
-	readonly low: number;
-	readonly close: number;
-}
+export const tradierHistoryDayV = ioType.type({
+	date: ioType.readonly(ioType.string),
+	open: ioType.readonly(ioType.number),
+	high: ioType.readonly(ioType.number),
+	low: ioType.readonly(ioType.number),
+	close: ioType.readonly(ioType.number)
+});
+export type TradierHistoryDay = ioType.TypeOf<typeof tradierHistoryDayV>;
 
-export interface TradierHistory {
-	readonly history: {
-		readonly day: ReadonlyArray<TradierHistoryDay>;
-	};
-}
+export const tradierHistoryV = ioType.type({
+	history: ioType.readonly(
+		ioType.type({
+			day: ioType.readonlyArray(tradierHistoryDayV)
+		})
+	)
+});
+export type TradierHistory = ioType.TypeOf<typeof tradierHistoryV>;
