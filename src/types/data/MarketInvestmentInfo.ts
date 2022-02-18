@@ -19,12 +19,12 @@ const marketInvestmentInfoV = ioType.type({
 });
 export type MarketInvestmentInfo = ioType.TypeOf<typeof marketInvestmentInfoV>;
 
-// TODO delete this
 const foo: MarketInvestmentInfo = {
 	symbol: '',
 	name: '',
 	type: MarketInvestmentType.USA_ETF
 };
+foo.symbol = 'abc';
 
 const marketInvestmentInfoArrayV = ioType.readonlyArray(marketInvestmentInfoV);
 export type MarketInvestmentInfoArray = ioType.TypeOf<
