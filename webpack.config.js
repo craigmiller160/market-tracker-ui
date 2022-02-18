@@ -25,6 +25,9 @@ const localDevServerConfig = {
 				)
 			}
 		},
+		headers: {
+			'Service-Worker-Allowed': '/'
+		},
 		proxy: {
 			'/market-tracker/api': {
 				target: 'https://localhost:8080',
