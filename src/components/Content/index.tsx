@@ -12,10 +12,10 @@ import {
 	MarketStatusContext,
 	MarketStatusContextValue
 } from './MarketStatusContext';
-import { identity, pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as Task from 'fp-ts/es6/Task';
-import { hasCheckedSelector, isAuthorizedSelector } from '../../store/auth/selectors';
+import { isAuthorizedSelector } from '../../store/auth/selectors';
 
 interface MarketStatusState {
 	readonly marketStatus: MarketStatus;

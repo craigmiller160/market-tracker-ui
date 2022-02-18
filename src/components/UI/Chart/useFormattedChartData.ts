@@ -1,4 +1,3 @@
-import { MarketData } from '../../../types/MarketData';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';

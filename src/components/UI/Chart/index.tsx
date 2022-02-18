@@ -1,5 +1,4 @@
 import { Line } from '@ant-design/charts';
-import { MarketData } from '../../../types/MarketData';
 import { castDraft } from 'immer';
 import { getFirstPrice } from './chartUtils';
 import { useFormattedChartData } from './useFormattedChartData';

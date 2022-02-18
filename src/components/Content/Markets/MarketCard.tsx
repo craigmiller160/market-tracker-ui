@@ -1,4 +1,3 @@
-import { MarketData } from '../../../types/MarketData';
 import { Card, Space, Spin } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useCallback, useContext, useEffect } from 'react';
@@ -261,7 +260,7 @@ export const MarketCard = ({ info }: Props) => {
 	);
 
 	// TODO improve error visuals
-	const { Price, Chart } = match({
+	const { Price, Body } = match({
 		status,
 		respectMarketStatus,
 		loading,
@@ -269,26 +268,26 @@ export const MarketCard = ({ info }: Props) => {
 	})
 		.with({ status: MarketStatus.UNKNOWN }, () => ({
 			Price: <div />,
-			Chart: <div />
+			Body: <div />
 		}))
 		.with({ loading: true }, () => ({
 			Price: <div />,
-			Chart: Spinner
+			Body: Spinner
 		}))
 		.with({ hasError: true }, () => ({
 			Price: <div />,
-			Chart: <h3>Has Error</h3>
+			Body: <h3>Has Error</h3>
 		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
 			() => ({
 				Price: MarketClosed,
-				Chart: <div />
+				Body: <div />
 			})
 		)
 		.otherwise(() => ({
 			Price: createPrice(data),
-			Chart: <ChartComp data={data} />
+			Body: <ChartComp data={data} />
 		}));
 
 	const FullTitle = (
@@ -305,7 +304,7 @@ export const MarketCard = ({ info }: Props) => {
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
 		>
-			<p>More Content Goes Here</p>
+			{Body}
 		</Card>
 	);
 };

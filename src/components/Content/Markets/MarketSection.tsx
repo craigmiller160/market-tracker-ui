@@ -1,10 +1,6 @@
-/* eslint-disable react/display-name */
-import { Space, Spin, Typography } from 'antd';
-import { MarketData } from '../../../types/MarketData';
+import { Typography } from 'antd';
 import { MarketCard } from './MarketCard';
 import './MarketSection.scss';
-import { MarketStatus } from '../../../types/MarketStatus';
-import { MarketTime } from '../../../types/MarketTime';
 import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
