@@ -3,6 +3,7 @@ import * as ioType from 'io-ts';
 const priceV = ioType.type({
 	usd: ioType.readonly(ioType.string)
 });
+export type CoinPrice = ioType.TypeOf<typeof priceV>;
 
 const coinGeckoPriceV = ioType.partial({
 	bitcoin: ioType.readonly(priceV),

@@ -68,7 +68,7 @@ const formatPrice =
 			ids,
 			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[id]),
+					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
 					Option.map((price) => ({
 						symbol: getSymbol(id),
 						price: parseFloat(price.usd)
