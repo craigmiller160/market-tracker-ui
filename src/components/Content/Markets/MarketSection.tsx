@@ -1,10 +1,6 @@
-/* eslint-disable react/display-name */
-import { Space, Spin, Typography } from 'antd';
-import { MarketData } from '../../../types/MarketData';
+import { Typography } from 'antd';
 import { MarketCard } from './MarketCard';
 import './MarketSection.scss';
-import { MarketStatus } from '../../../types/MarketStatus';
-import { MarketTime } from '../../../types/MarketTime';
 import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
@@ -16,12 +12,6 @@ interface Props {
 	readonly type: MarketInvestmentType;
 	readonly data: InvestmentsByType;
 }
-
-const Spinner = (
-	<Space size="middle" className="Spinner">
-		<Spin size="large" />
-	</Space>
-);
 
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
 	<MarketCard key={info.symbol} info={info} />
