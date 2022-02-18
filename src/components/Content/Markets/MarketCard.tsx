@@ -136,7 +136,6 @@ const createTime = (time: MarketTime): ReactNode => {
 
 export const MarketCard = ({ info }: Props) => {
 	// const Title = createTitle(data);
-	// const Time = createTime(time);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
