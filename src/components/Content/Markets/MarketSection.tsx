@@ -10,6 +10,7 @@ import {
 	MarketInvestmentType
 } from '../../../types/data/MarketInvestmentType';
 import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
+import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 
 interface Props {
 	readonly type: MarketInvestmentType;
@@ -22,26 +23,21 @@ const Spinner = (
 	</Space>
 );
 
-const createMarketDataToCard =
-	(marketStatus: MarketStatus, time: MarketTime) => (data: MarketData) =>
-		(
-			<MarketCard
-				key={data.symbol}
-				data={data}
-				time={time}
-				marketStatus={marketStatus}
-			/>
-		);
+const investmentInfoToCard = (info: MarketInvestmentInfo) => (
+	<MarketCard key={info.symbol} info={info} />
+);
 
+// TODO need MarketStatus to be done at a higher level, no need to spam that for every card
 export const MarketSection = (props: Props) => {
 	const { type, data } = props;
 	const title = getMarketInvestmentTypeTitle(type);
+	const cards = data[type].map(investmentInfoToCard);
 
 	return (
 		<section className="MarketSection">
 			<Typography.Title level={3}>{title}</Typography.Title>
 			<div className="MarketCardList" role="list">
-				<p>Cards Go Here</p>
+				{cards}
 			</div>
 		</section>
 	);
