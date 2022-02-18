@@ -1,6 +1,6 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode, useCallback, useContext, useEffect } from 'react';
+import { ReactNode, useContext } from 'react';
 import { match } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -16,35 +16,20 @@ import { getBreakpointName } from '../../utils/Breakpoints';
 import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
-import {
-	getInvestmentData,
-	InvestmentData
-} from '../../../services/MarketInvestmentService';
-import { pipe } from 'fp-ts/es6/function';
-import { Updater, useImmer } from 'use-immer';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { TaskT } from '@craigmiller160/ts-functions/es/types';
-import { Dispatch } from 'redux';
-import { notificationSlice } from '../../../store/notification/slice';
-import { castDraft } from 'immer';
+import { InvestmentData } from '../../../services/MarketInvestmentService';
 import { Chart as ChartComp } from '../../UI/Chart';
+import { useInvestmentData } from './useInvestmentData';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
 		<Spin size="large" />
 	</Space>
 );
-
-interface InvestmentDataState {
-	readonly loading: boolean;
-	readonly data: InvestmentData;
-	readonly hasError: boolean;
-}
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
@@ -160,87 +145,6 @@ const createTime = (time: MarketTime): ReactNode => {
 
 const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
 	info.type !== MarketInvestmentType.CRYPTO;
-
-const createHandleGetDataError =
-	(dispatch: Dispatch, setState: Updater<InvestmentDataState>) =>
-	(ex: Error): TaskT<void> =>
-	async () => {
-		dispatch(
-			notificationSlice.actions.addError(
-				`Error getting data: ${ex.message}`
-			)
-		);
-		setState((draft) => {
-			draft.loading = false;
-			draft.hasError = true;
-			draft.data = {
-				currentPrice: 0,
-				history: []
-			};
-		});
-	};
-
-const createHandleGetDataSuccess =
-	(setState: Updater<InvestmentDataState>) =>
-	(data: InvestmentData): TaskT<void> =>
-	async () => {
-		setState((draft) => {
-			draft.loading = false;
-			draft.hasError = false;
-			draft.data = castDraft(data);
-		});
-	};
-
-// TODO move to separate file
-const useInvestmentData = (
-	time: MarketTime,
-	info: MarketInvestmentInfo,
-	shouldLoadData: boolean
-): InvestmentDataState => {
-	const dispatch = useDispatch();
-	const [state, setState] = useImmer<InvestmentDataState>({
-		loading: false,
-		data: {
-			currentPrice: 0,
-			history: []
-		},
-		hasError: false
-	});
-
-	// TODO figure out a better way to handle this useCallback pattern
-	const handleGetDataError = useCallback(
-		(ex: Error) => createHandleGetDataError(dispatch, setState)(ex),
-		[dispatch, setState]
-	);
-	const handleGetDataSuccess = useCallback(
-		(data: InvestmentData) => createHandleGetDataSuccess(setState)(data),
-		[setState]
-	);
-
-	useEffect(() => {
-		if (!shouldLoadData) {
-			return;
-		}
-
-		setState((draft) => {
-			draft.loading = true;
-		});
-
-		pipe(
-			getInvestmentData(time, info),
-			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
-		)();
-	}, [
-		time,
-		info,
-		setState,
-		handleGetDataError,
-		handleGetDataSuccess,
-		shouldLoadData
-	]);
-
-	return state;
-};
 
 const ErrorMsg = (
 	<Typography.Title className="ErrorMsg" level={3}>
