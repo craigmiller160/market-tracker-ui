@@ -1,24 +1,27 @@
-// TODO fix readonly
 import * as ioType from 'io-ts';
 
-export const tradierSeriesDataV = ioType.type({
-	time: ioType.readonly(ioType.string),
-	timestamp: ioType.readonly(ioType.number),
-	price: ioType.readonly(ioType.number),
-	open: ioType.readonly(ioType.number),
-	high: ioType.readonly(ioType.number),
-	low: ioType.readonly(ioType.number),
-	close: ioType.readonly(ioType.number),
-	volume: ioType.readonly(ioType.number),
-	vwap: ioType.readonly(ioType.number)
-});
+export const tradierSeriesDataV = ioType.readonly(
+	ioType.type({
+		time: ioType.string,
+		timestamp: ioType.number,
+		price: ioType.number,
+		open: ioType.number,
+		high: ioType.number,
+		low: ioType.number,
+		close: ioType.number,
+		volume: ioType.number,
+		vwap: ioType.number
+	})
+);
 export type TradierSeriesData = ioType.TypeOf<typeof tradierSeriesDataV>;
 
-export const tradierSeriesV = ioType.type({
-	series: ioType.readonly(
-		ioType.type({
-			data: ioType.readonlyArray(tradierSeriesDataV)
-		})
-	)
-});
+export const tradierSeriesV = ioType.readonly(
+	ioType.type({
+		series: ioType.readonly(
+			ioType.type({
+				data: ioType.readonlyArray(tradierSeriesDataV)
+			})
+		)
+	})
+);
 export type TradierSeries = ioType.TypeOf<typeof tradierSeriesV>;
