@@ -1,17 +1,26 @@
-export interface TradierQuote {
-	readonly symbol: string;
-	readonly description: string;
-	readonly open: number;
-	readonly high: number;
-	readonly low: number;
-	readonly bid: number;
-	readonly ask: number;
-	readonly close: number;
-	readonly last: number;
-}
+import * as ioType from 'io-ts';
 
-export interface TradierQuotes {
-	readonly quotes: {
-		readonly quote: TradierQuote | ReadonlyArray<TradierQuote>;
-	};
-}
+export const tradierQuoteV = ioType.type({
+	symbol: ioType.readonly(ioType.string),
+	description: ioType.readonly(ioType.string),
+	open: ioType.readonly(ioType.number),
+	high: ioType.readonly(ioType.number),
+	low: ioType.readonly(ioType.number),
+	bid: ioType.readonly(ioType.number),
+	ask: ioType.readonly(ioType.number),
+	close: ioType.readonly(ioType.number),
+	last: ioType.readonly(ioType.number)
+});
+export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
+
+const tradierQuotesV = ioType.type({
+	quotes: ioType.readonly(
+		ioType.type({
+			quote: ioType.union([
+				tradierQuoteV,
+				ioType.readonlyArray(tradierQuoteV)
+			])
+		})
+	)
+});
+export type TradierQuotes = ioType.TypeOf<typeof tradierQuotesV>;
