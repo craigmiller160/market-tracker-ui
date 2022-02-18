@@ -1,4 +1,4 @@
-import { Card, Space, Spin } from 'antd';
+import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useCallback, useContext, useEffect } from 'react';
 import { match } from 'ts-pattern';
@@ -242,6 +242,12 @@ const useInvestmentData = (
 	return state;
 };
 
+const ErrorMsg = (
+	<Typography.Title className="ErrorMsg" level={3}>
+		Error: Unable to Get Data
+	</Typography.Title>
+);
+
 export const MarketCard = ({ info }: Props) => {
 	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
@@ -259,7 +265,6 @@ export const MarketCard = ({ info }: Props) => {
 		shouldLoadData
 	);
 
-	// TODO improve error visuals
 	const { Price, Body } = match({
 		status,
 		respectMarketStatus,
@@ -276,7 +281,7 @@ export const MarketCard = ({ info }: Props) => {
 		}))
 		.with({ hasError: true }, () => ({
 			Price: <div />,
-			Body: <h3>Has Error</h3>
+			Body: ErrorMsg
 		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
