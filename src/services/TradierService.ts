@@ -3,7 +3,11 @@ import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
-import { TradierHistory, TradierHistoryDay } from '../types/tradier/history';
+import {
+	TradierHistory,
+	TradierHistoryDay,
+	tradierHistoryV
+} from '../types/tradier/history';
 import {
 	TradierQuote,
 	TradierQuotes,
@@ -43,6 +47,7 @@ const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
 const decodeQuotes = TypeValidation.decode(tradierQuotesV);
 const decodeTimesales = TypeValidation.decode(tradierSeriesV);
+const decodeHistory = TypeValidation.decode(tradierHistoryV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -156,6 +161,7 @@ const getHistoryQuote = (
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeHistory),
 		TaskEither.map(formatTradierHistory)
 	);
 };
