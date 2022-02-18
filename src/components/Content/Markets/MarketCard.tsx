@@ -147,7 +147,7 @@ export const MarketCard = ({ info }: Props) => {
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const { status } = useContext(MarketStatusContext);
-	const respectMarketStatus = shouldRespectMarketStatus(status);
+	const respectMarketStatus = shouldRespectMarketStatus(info);
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(
