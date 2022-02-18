@@ -1,7 +1,11 @@
 import { MarketTime } from '../types/MarketTime';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import {
+	OptionT,
+	PredicateT,
+	TaskTryT
+} from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
-import { match, when } from 'ts-pattern';
+import { match, not, when } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
@@ -11,10 +15,35 @@ import {
 	isCrypto
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
+import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
+import { pipe } from 'fp-ts/es6/function';
+import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Option from 'fp-ts/es6/Option';
+import { Quote } from '../types/quote';
+import { queries } from '@testing-library/react';
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
+type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
 
 export interface InvestmentData {}
+
+const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
+	match(type)
+		.with(
+			when(isStock),
+			() => (symbol: string) =>
+				pipe(
+					tradierService.getQuotes([symbol]),
+					TaskEither.map(RArray.head)
+				)
+		)
+		.otherwise(
+			() => (symbol: string) =>
+				pipe(
+					coinGeckoService.getQuotes([symbol]),
+					TaskEither.map(RArray.head)
+				)
+		);
 
 const getHistoryFn = (
 	time: MarketTime,
@@ -78,4 +107,52 @@ export const checkMarketStatus = (
 		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
 		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
 
-export const getInvestmentData = () => {};
+const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
+	Option.fold(
+		() => false,
+		(_: HistoryRecord) => _.unixTimestampMillis > new Date().getTime()
+	)(mostRecentRecord);
+
+const getMostRecentHistoryRecord = (
+	history: ReadonlyArray<HistoryRecord>
+): OptionT<HistoryRecord> => RArray.last(history);
+
+const historyRecordToQuote =
+	(symbol: string) =>
+	(record: HistoryRecord): Quote => ({
+		symbol,
+		price: record.price
+	});
+
+const getQuote = (
+	info: MarketInvestmentInfo,
+	history: ReadonlyArray<HistoryRecord>
+): TaskTryT<OptionT<Quote>> =>
+	match({
+		type: info.type,
+		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+	})
+		.with(
+			{
+				type: when(isStock),
+				mostRecentHistoryRecord: when(isLaterThanNow)
+			},
+			({ mostRecentHistoryRecord }) =>
+				pipe(
+					mostRecentHistoryRecord,
+					Option.map(historyRecordToQuote(info.symbol)),
+					TaskEither.right
+				)
+		)
+		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
+
+export const getInvestmentData = (
+	time: MarketTime,
+	info: MarketInvestmentInfo
+) => {
+	pipe(
+		getHistoryFn(time, info.type)(info.symbol),
+		TaskEither.bindTo('history'),
+		TaskEither.bind('quote', ({ history }) => getQuote(info, history))
+	);
+};
