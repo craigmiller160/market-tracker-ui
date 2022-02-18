@@ -28,10 +28,10 @@ const symbols: ReadonlyArray<string> = ['BTC', 'ETH'];
 
 const price: CoinGeckoPrice = {
 	bitcoin: {
-		usd: '100.50'
+		usd: 100.5
 	},
 	ethereum: {
-		usd: '50.75'
+		usd: 50.75
 	}
 };
 

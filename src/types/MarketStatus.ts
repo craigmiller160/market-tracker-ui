@@ -1,4 +1,5 @@
 export enum MarketStatus {
 	OPEN,
-	CLOSED
+	CLOSED,
+	UNKNOWN
 }

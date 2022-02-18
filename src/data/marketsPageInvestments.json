@@ -1,0 +1,52 @@
+[
+  {
+    "symbol": "VTI",
+    "name": "US Total Market",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "VOO",
+    "name": "S&P 500",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "DIA",
+    "name": "Dow Jones",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "QQQ",
+    "name": "NASDAQ",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "EWU",
+    "name": "United Kingdom",
+    "type": "INTERNATIONAL_ETF"
+  },
+  {
+    "symbol": "SPEU",
+    "name": "Europe",
+    "type": "INTERNATIONAL_ETF"
+  },
+  {
+    "symbol": "EWJ",
+    "name": "Japan",
+    "type": "INTERNATIONAL_ETF"
+  },
+  {
+    "symbol": "MCHI",
+    "name": "China",
+    "type": "INTERNATIONAL_ETF"
+  },
+  {
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "type": "CRYPTO"
+  },
+  {
+    "symbol": "ETH",
+    "name": "Ethereum",
+    "type": "CRYPTO"
+  }
+]

@@ -3,12 +3,15 @@ import { Quote } from '../types/quote';
 import { pipe } from 'fp-ts/es6/function';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { CoinGeckoPrice } from '../types/coingecko/price';
+import { CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import * as Either from 'fp-ts/es6/Either';
 import { HistoryRecord } from '../types/history';
-import { CoinGeckoMarketChart } from '../types/coingecko/marketchart';
+import {
+	CoinGeckoMarketChart,
+	coinGeckoMarketChartV
+} from '../types/coingecko/marketchart';
 import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
@@ -22,6 +25,10 @@ import {
 	getThreeMonthHistoryStartDate,
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
+import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+
+const decodePrice = TypeValidation.decode(coinGeckoPriceV);
+const decodeMarketChart = TypeValidation.decode(coinGeckoMarketChartV);
 
 const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
@@ -68,10 +75,10 @@ const formatPrice =
 			ids,
 			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[id]),
+					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
 					Option.map((price) => ({
 						symbol: getSymbol(id),
-						price: parseFloat(price.usd)
+						price: price.usd
 					}))
 				)
 			),
@@ -95,6 +102,7 @@ export const getQuotes = (
 			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodePrice),
 		TaskEither.chainEitherK(formatPrice(ids))
 	);
 };
@@ -123,6 +131,7 @@ const getHistoryQuote = (
 			uri: `/coingecko/coins/${id}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeMarketChart),
 		TaskEither.map(formatMarketChart)
 	);
 };
