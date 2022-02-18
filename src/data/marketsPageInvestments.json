@@ -1,0 +1,17 @@
+[
+  {
+    "symbol": "VTI",
+    "name": "US Total Market",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "VOO",
+    "name": "S&P 500",
+    "type": "USA_ETF"
+  },
+  {
+    "symbol": "DIA",
+    "name": "Dow Jones",
+    "type": "USA_ETF"
+  }
+]
