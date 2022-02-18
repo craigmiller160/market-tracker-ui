@@ -4,13 +4,13 @@ import {
 	ChartRecord,
 	useFormattedChartData
 } from '../../../../src/components/UI/Chart/useFormattedChartData';
-import { InvestmentType } from '../../../../src/data/InvestmentInfo';
+import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
 
 const marketData: MarketData = {
 	symbol: 'VTI',
 	name: 'Total Index Fund',
 	currentPrice: 50,
-	type: InvestmentType.USA_ETF,
+	type: MarketInvestmentType.USA_ETF,
 	history: [
 		{
 			date: '2022-01-01',
