@@ -6,5 +6,5 @@ export interface MarketStatusContextValue {
 }
 
 export const MarketStatusContext = createContext<MarketStatusContextValue>({
-	status: MarketStatus.OPEN
+	status: MarketStatus.UNKNOWN
 });
