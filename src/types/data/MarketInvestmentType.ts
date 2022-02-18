@@ -1,5 +1,6 @@
 import * as ioType from 'io-ts';
 import { match } from 'ts-pattern';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 
 export enum MarketInvestmentType {
 	USA_ETF = 'USA_ETF',
@@ -24,3 +25,12 @@ export const getMarketInvestmentTypeTitle = (
 		)
 		.with(MarketInvestmentType.CRYPTO, () => 'Cryptocurrency')
 		.run();
+
+export const isStock: PredicateT<MarketInvestmentType> = (type) =>
+	[
+		MarketInvestmentType.USA_ETF,
+		MarketInvestmentType.INTERNATIONAL_ETF
+	].includes(type);
+
+export const isCrypto: PredicateT<MarketInvestmentType> = (type) =>
+	MarketInvestmentType.CRYPTO === type;
