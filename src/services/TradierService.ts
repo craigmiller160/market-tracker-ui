@@ -24,7 +24,11 @@ import {
 	getTimesalesEnd,
 	getTimesalesStart
 } from '../utils/timeUtils';
-import { TradierSeries, TradierSeriesData } from '../types/tradier/timesales';
+import {
+	TradierSeries,
+	TradierSeriesData,
+	tradierSeriesV
+} from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { MarketStatus } from '../types/MarketStatus';
 import {
@@ -38,6 +42,7 @@ const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
 const decodeQuotes = TypeValidation.decode(tradierQuotesV);
+const decodeTimesales = TypeValidation.decode(tradierSeriesV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -125,6 +130,7 @@ export const getTimesales = (
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeTimesales),
 		TaskEither.map(formatTimesales)
 	);
 };
