@@ -13,7 +13,7 @@ export const tradierQuoteV = ioType.type({
 });
 export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
 
-const tradierQuotesV = ioType.type({
+export const tradierQuotesV = ioType.type({
 	quotes: ioType.readonly(
 		ioType.type({
 			quote: ioType.union([

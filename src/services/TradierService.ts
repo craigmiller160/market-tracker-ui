@@ -1,10 +1,14 @@
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
 import { TradierHistory, TradierHistoryDay } from '../types/tradier/history';
-import { TradierQuote, TradierQuotes } from '../types/tradier/quotes';
+import {
+	TradierQuote,
+	TradierQuotes,
+	tradierQuotesV
+} from '../types/tradier/quotes';
 import { instanceOf, match } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
@@ -28,6 +32,7 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../types/tradier/calendar';
+import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
@@ -123,6 +128,10 @@ export const getTimesales = (
 	);
 };
 
+// TODO move to ts-functions
+const validateQuotes = (data: TradierQuotes): TryT<TradierQuotes> =>
+	pipe(tradierQuotesV.decode(data), TypeValidation.handleResult);
+
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
@@ -131,6 +140,7 @@ export const getQuotes = (
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(validateQuotes),
 		TaskEither.map(formatTradierQuotes)
 	);
 
