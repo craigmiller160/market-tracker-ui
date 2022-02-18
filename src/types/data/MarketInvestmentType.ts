@@ -1,4 +1,3 @@
-// TODO fix readonly
 import * as ioType from 'io-ts';
 import { match } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
