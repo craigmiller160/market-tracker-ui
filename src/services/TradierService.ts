@@ -37,7 +37,7 @@ import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation'
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
-const validateQuotes = TypeValidation.decode(tradierQuotesV);
+const decodeQuotes = TypeValidation.decode(tradierQuotesV);
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -137,7 +137,7 @@ export const getQuotes = (
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
-		TaskEither.chainEitherK(validateQuotes),
+		TaskEither.chainEitherK(decodeQuotes),
 		TaskEither.map(formatTradierQuotes)
 	);
 
