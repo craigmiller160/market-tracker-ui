@@ -10,6 +10,8 @@ declare const self: ServiceWorkerGlobalScope &
 	};
 
 self.__WB_MANIFEST;
+const MARKET_DATA_CACHE = 'market-data-cache';
+const MARKET_DATA_REGEX = /^.*\/api\/tradier\/.*$/;
 
 // setDefaultHandler(new NetworkFirst());
 // offlineFallback();
@@ -27,6 +29,21 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-	console.log('Fetch', event.request);
-	return event.respondWith(fetch(event.request));
+	if (MARKET_DATA_REGEX.test(event.request.url)) {
+		return event.respondWith(
+			caches.open(MARKET_DATA_CACHE).then((cache) => {
+				return cache.match(event.request).then((response) => {
+					return (
+						response ||
+						fetch(event.request).then((response2) => {
+							cache.put(event.request, response2.clone());
+							return response2;
+						})
+					);
+				});
+			})
+		);
+	} else {
+		return event.respondWith(fetch(event.request));
+	}
 });
