@@ -27,7 +27,6 @@ const investmentInfoToCard = (info: MarketInvestmentInfo) => (
 	<MarketCard key={info.symbol} info={info} />
 );
 
-// TODO need MarketStatus to be done at a higher level, no need to spam that for every card
 export const MarketSection = (props: Props) => {
 	const { type, data } = props;
 	const title = getMarketInvestmentTypeTitle(type);
@@ -41,19 +40,4 @@ export const MarketSection = (props: Props) => {
 			</div>
 		</section>
 	);
-
-	// const marketDataToCard = createMarketDataToCard(
-	// 	data.marketStatus,
-	// 	data.time
-	// );
-	// const MarketCards = data.data.map(marketDataToCard);
-	//
-	// return (
-	// 	<section className="MarketSection">
-	// 		<Typography.Title level={3}>{title}</Typography.Title>
-	// 		<div className="MarketCardList" role="list">
-	// 			{loading ? Spinner : MarketCards}
-	// 		</div>
-	// 	</section>
-	// );
 };
