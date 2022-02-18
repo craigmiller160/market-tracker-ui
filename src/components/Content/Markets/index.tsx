@@ -10,6 +10,7 @@ import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
+import { MarketSection } from './MarketSection';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -53,7 +54,18 @@ export const Markets = () => {
 	return (
 		<div className="GlobalMarkets" data-testid="markets-page">
 			<Typography.Title>All Markets</Typography.Title>
-			<h3>Market Sections Coming Back Soon</h3>
+			<MarketSection
+				type={MarketInvestmentType.USA_ETF}
+				data={investmentResult.investments}
+			/>
+			<MarketSection
+				type={MarketInvestmentType.INTERNATIONAL_ETF}
+				data={investmentResult.investments}
+			/>
+			<MarketSection
+				type={MarketInvestmentType.CRYPTO}
+				data={investmentResult.investments}
+			/>
 		</div>
 	);
 };
