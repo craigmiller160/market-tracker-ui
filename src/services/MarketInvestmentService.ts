@@ -20,12 +20,19 @@ import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
-import { queries } from '@testing-library/react';
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
 
-export interface InvestmentData {}
+export interface InvestmentData {
+	readonly currentPrice: number;
+	readonly history: ReadonlyArray<HistoryRecord>;
+}
+
+interface IntermediateInvestmentData {
+	readonly history: ReadonlyArray<HistoryRecord>;
+	readonly quote: OptionT<Quote>;
+}
 
 const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
 	match(type)
@@ -146,6 +153,13 @@ const getQuote = (
 		)
 		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
 
+const handleInvestmentData = ({
+	history,
+	quote
+}: IntermediateInvestmentData): InvestmentData => {
+	// Quote, Then Last History, Then 0
+};
+
 export const getInvestmentData = (
 	time: MarketTime,
 	info: MarketInvestmentInfo
@@ -153,6 +167,7 @@ export const getInvestmentData = (
 	pipe(
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
-		TaskEither.bind('quote', ({ history }) => getQuote(info, history))
+		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
+		TaskEither.map(handleInvestmentData)
 	);
 };
