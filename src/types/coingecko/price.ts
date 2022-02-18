@@ -1,7 +1,7 @@
 import * as ioType from 'io-ts';
 
 export const coinPriceV = ioType.type({
-	usd: ioType.readonly(ioType.string)
+	usd: ioType.readonly(ioType.number)
 });
 export type CoinPrice = ioType.TypeOf<typeof coinPriceV>;
 
