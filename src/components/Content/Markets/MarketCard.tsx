@@ -19,6 +19,8 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { isStock } from '../../../data/InvestmentInfo';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../../../store/time/selectors';
 
 interface Props {
 	readonly info: MarketInvestmentInfo;
@@ -78,7 +80,7 @@ interface TimeInfo {
 	readonly sinceDate: string;
 }
 
-const createTime = (time: string): ReactNode => {
+const createTime = (time: MarketTime): ReactNode => {
 	const timeInfo: TimeInfo = match(time)
 		.with(
 			MarketTime.ONE_DAY,
@@ -137,6 +139,8 @@ export const MarketCard = ({ info }: Props) => {
 	// const Time = createTime(time);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
+	const time = useSelector(timeValueSelector);
+	const Time = createTime(time);
 	//
 	// const { Price, Chart } = match({ marketStatus, type: data.type })
 	// 	.with(
@@ -160,6 +164,7 @@ export const MarketCard = ({ info }: Props) => {
 	return (
 		<Card
 			title={`${info.name} (${info.symbol})`}
+			extra={Time}
 			className={`MarketCard ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
