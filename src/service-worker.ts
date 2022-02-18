@@ -11,7 +11,7 @@ declare const self: ServiceWorkerGlobalScope &
 
 self.__WB_MANIFEST;
 const MARKET_DATA_CACHE = 'market-data-cache';
-const MARKET_DATA_REGEX = /^.*\/api\/tradier\/.*$/;
+const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
 
 // setDefaultHandler(new NetworkFirst());
 // offlineFallback();
@@ -30,6 +30,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
 	if (MARKET_DATA_REGEX.test(event.request.url)) {
+		console.log('MarketData', event.request.url);
 		return event.respondWith(
 			caches.open(MARKET_DATA_CACHE).then((cache) => {
 				return cache.match(event.request).then((response) => {
