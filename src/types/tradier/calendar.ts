@@ -1,3 +1,4 @@
+// TODO fix readonly
 import { MarketStatus } from '../MarketStatus';
 import { match } from 'ts-pattern';
 import * as ioType from 'io-ts';

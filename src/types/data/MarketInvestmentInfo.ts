@@ -1,3 +1,4 @@
+// TODO fix readonly
 import * as ioType from 'io-ts';
 import { marketInvestmentTypeV } from './MarketInvestmentType';
 

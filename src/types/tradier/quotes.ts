@@ -1,3 +1,4 @@
+// TODO fix readonly
 import * as ioType from 'io-ts';
 
 export const tradierQuoteV = ioType.type({
