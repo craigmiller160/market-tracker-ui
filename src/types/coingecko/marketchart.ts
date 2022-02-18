@@ -1,7 +1,12 @@
-// TODO add typechecking
+import * as ioType from 'io-ts';
 
-type CoinGeckoChartPrice = [unixTimestamp: number, price: number];
+export const coinGeckoChartPriceV = ioType.tuple([
+	ioType.number,
+	ioType.number
+]);
+export type CoinGeckoChartPrice = ioType.TypeOf<typeof coinGeckoChartPriceV>;
 
-export interface CoinGeckoMarketChart {
-	readonly prices: ReadonlyArray<CoinGeckoChartPrice>;
-}
+export const coinGeckoMarketChartV = ioType.type({
+	prices: ioType.readonlyArray(coinGeckoChartPriceV)
+});
+export type CoinGeckoMarketChart = ioType.TypeOf<typeof coinGeckoMarketChartV>;
