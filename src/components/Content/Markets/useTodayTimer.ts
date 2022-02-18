@@ -2,16 +2,30 @@ import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/time/selectors';
 import { useEffect } from 'react';
 import { MarketTime } from '../../../types/MarketTime';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { useImmer } from 'use-immer';
 
 const ONE_MIN_INTERVAL = 1000 * 60;
+const formatTimestamp = Time.format("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-export const useTodayTimer = () => {
+interface State {
+	readonly timestamp: string;
+}
+
+export const useTodayTimer = (): string => {
+	const [state, setState] = useImmer<State>({
+		timestamp: ''
+	});
 	const time = useSelector(timeValueSelector);
 
 	useEffect(() => {
 		let interval: NodeJS.Timer | null = null;
 		if (MarketTime.ONE_DAY === time) {
-			interval = setInterval(() => {}, ONE_MIN_INTERVAL);
+			interval = setInterval(() => {
+				setState((draft) => {
+					draft.timestamp = formatTimestamp(new Date());
+				});
+			}, ONE_MIN_INTERVAL);
 		}
 
 		return () => {
@@ -19,5 +33,7 @@ export const useTodayTimer = () => {
 				clearInterval(interval);
 			}
 		};
-	}, [time]);
+	}, [time, setState]);
+
+	return state.timestamp;
 };
