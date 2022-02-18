@@ -8,7 +8,10 @@ import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import * as Either from 'fp-ts/es6/Either';
 import { HistoryRecord } from '../types/history';
-import { CoinGeckoMarketChart } from '../types/coingecko/marketchart';
+import {
+	CoinGeckoMarketChart,
+	coinGeckoMarketChartV
+} from '../types/coingecko/marketchart';
 import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
@@ -25,6 +28,7 @@ import {
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 
 const decodePrice = TypeValidation.decode(coinGeckoPriceV);
+const decodeMarketChart = TypeValidation.decode(coinGeckoMarketChartV);
 
 const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
@@ -127,6 +131,7 @@ const getHistoryQuote = (
 			uri: `/coingecko/coins/${id}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
 		}),
 		TaskEither.map(getResponseData),
+		TaskEither.chainEitherK(decodeMarketChart),
 		TaskEither.map(formatMarketChart)
 	);
 };
