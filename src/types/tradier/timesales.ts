@@ -1,19 +1,23 @@
-// TODO add typechecking
+import * as ioType from 'io-ts';
 
-export interface TradierSeriesData {
-	readonly time: string;
-	readonly timestamp: number;
-	readonly price: number;
-	readonly open: number;
-	readonly high: number;
-	readonly low: number;
-	readonly close: number;
-	readonly volume: number;
-	readonly vwap: number;
-}
+export const tradierSeriesDataV = ioType.type({
+	time: ioType.readonly(ioType.string),
+	timestamp: ioType.readonly(ioType.number),
+	price: ioType.readonly(ioType.number),
+	open: ioType.readonly(ioType.number),
+	high: ioType.readonly(ioType.number),
+	low: ioType.readonly(ioType.number),
+	close: ioType.readonly(ioType.number),
+	volume: ioType.readonly(ioType.number),
+	vwap: ioType.readonly(ioType.number)
+});
+export type TradierSeriesData = ioType.TypeOf<typeof tradierSeriesDataV>;
 
-export interface TradierSeries {
-	readonly series: {
-		readonly data: ReadonlyArray<TradierSeriesData>;
-	};
-}
+export const tradierSeriesV = ioType.type({
+	series: ioType.readonly(
+		ioType.type({
+			data: ioType.readonlyArray(tradierSeriesDataV)
+		})
+	)
+});
+export type TradierSeries = ioType.TypeOf<typeof tradierSeriesV>;
