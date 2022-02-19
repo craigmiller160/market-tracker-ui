@@ -7,7 +7,6 @@ const sassConfig = require('@craigmiller160/webpack-config-sass');
 const tsConfig = require('@craigmiller160/webpack-config-ts');
 const path = require('path');
 const fs = require('fs');
-const { InjectManifest } = require('workbox-webpack-plugin');
 
 const localDevServerConfig = {
 	devServer: {
@@ -52,12 +51,13 @@ const localDevServerConfig = {
 };
 
 const serviceWorkerConfig = {
-	plugins: [
-		new InjectManifest({
-			swSrc: path.join(process.cwd(), 'src', 'service-worker.ts'),
-			swDest: path.join(process.cwd(), 'build', 'service-worker.js')
-		})
-	]
+	entry: {
+		main: path.join(process.cwd(), 'src'),
+		'service-worker': {
+			import: path.join(process.cwd(), 'src', 'service-worker.ts'),
+			filename: 'service-worker.js'
+		}
+	}
 };
 
 const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];

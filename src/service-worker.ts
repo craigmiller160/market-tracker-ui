@@ -1,11 +1,7 @@
 export {};
 
-declare const self: ServiceWorkerGlobalScope &
-	typeof globalThis & {
-		__WB_MANIFEST: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-	};
+declare const self: ServiceWorkerGlobalScope;
 
-self.__WB_MANIFEST;
 const MARKET_DATA_CACHE = 'market-data-cache';
 const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
 
