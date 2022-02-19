@@ -24,6 +24,9 @@ const localDevServerConfig = {
 				)
 			}
 		},
+		headers: {
+			'Service-Worker-Allowed': '/'
+		},
 		proxy: {
 			'/market-tracker/api': {
 				target: 'https://localhost:8080',
@@ -47,7 +50,17 @@ const localDevServerConfig = {
 	}
 };
 
-const parts = [config, sassConfig, tsConfig];
+const serviceWorkerConfig = {
+	entry: {
+		main: path.join(process.cwd(), 'src'),
+		'service-worker': {
+			import: path.join(process.cwd(), 'src', 'service-worker.ts'),
+			filename: 'service-worker.js'
+		}
+	}
+};
+
+const parts = [config, sassConfig, tsConfig, serviceWorkerConfig];
 
 if (isDevelopment()) {
 	parts.push(localDevServerConfig);
