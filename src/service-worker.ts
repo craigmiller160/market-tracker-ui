@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
 				return response;
 			})
 			.catch((ex) => {
-				console.log('WorkerError', ex, navigator.onLine);
+				console.log('WorkerError', ex.message, Object.keys(ex), navigator.onLine);
 				const init = { status: 500, statusText: 'offline' };
 				return new Response('', init);
 			})

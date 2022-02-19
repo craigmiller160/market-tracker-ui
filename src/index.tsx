@@ -4,6 +4,8 @@ import 'antd/dist/antd.min.css';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import { App } from './components/App';
+import { store } from './store';
+import { notificationSlice } from './store/notification/slice';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -11,12 +13,13 @@ if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker
 			.register('/market-tracker/service-worker.js', { scope: '/' })
-			.then((registration) => {
-				console.log('Registered: ', registration.scope);
-				return registration.update();
-			})
+			.then((registration) => registration.update())
 			.catch((ex) =>
-				console.error('Service Worker Registration failed', ex)
+				store.dispatch(
+					notificationSlice.actions.addError(
+						`Service Worker registration failed: ${ex.message}`
+					)
+				)
 			);
 	});
 }
