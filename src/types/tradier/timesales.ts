@@ -17,11 +17,15 @@ export type TradierSeriesData = ioType.TypeOf<typeof tradierSeriesDataV>;
 
 export const tradierSeriesV = ioType.readonly(
 	ioType.type({
-		series: ioType.readonly(
+		series: ioType.union([
 			ioType.type({
-				data: ioType.readonlyArray(tradierSeriesDataV)
-			})
-		)
+				data: ioType.union([
+					ioType.readonly(tradierSeriesDataV),
+					ioType.readonlyArray(tradierSeriesDataV)
+				])
+			}),
+			ioType.null
+		])
 	})
 );
 export type TradierSeries = ioType.TypeOf<typeof tradierSeriesV>;

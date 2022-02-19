@@ -108,12 +108,20 @@ const getTimesaleTime: (timestamp: string) => string = flow(
 	Time.format('HH:mm:ss')
 );
 
+const ensureSeriesDataArray = (
+	data: TradierSeriesData | ReadonlyArray<TradierSeriesData>
+): ReadonlyArray<TradierSeriesData> =>
+	match(data)
+		.with(instanceOf(Array), () => data as ReadonlyArray<TradierSeriesData>)
+		.otherwise(() => [data] as ReadonlyArray<TradierSeriesData>);
+
 const formatTimesales = (
 	timesales: TradierSeries
 ): ReadonlyArray<HistoryRecord> =>
 	pipe(
 		Option.fromNullable(timesales.series),
 		Option.map((_) => _.data),
+		Option.map(ensureSeriesDataArray),
 		Option.map(
 			RArray.map(
 				(_: TradierSeriesData): HistoryRecord => ({
