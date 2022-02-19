@@ -50,7 +50,7 @@ self.addEventListener('fetch', (event) => {
 
 				console.error('Critical Error', ex);
 				const init = { status: 500, statusText: 'Critical Error' };
-				return new Response('Critical Error', init);
+				return new Response(`Critical Error: ${ex.message}`, init);
 			})
 	);
 });
