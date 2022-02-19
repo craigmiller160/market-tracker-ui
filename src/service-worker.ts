@@ -28,11 +28,12 @@ self.addEventListener('fetch', (event) => {
 					MARKET_DATA_REGEX.test(event.request.url) &&
 					isCacheableStatus(response)
 				) {
-					caches
+					return caches
 						.open(MARKET_DATA_CACHE)
 						.then((cache) =>
 							cache.put(event.request, response.clone())
-						);
+						)
+						.then(() => response);
 				}
 				return response;
 			})
