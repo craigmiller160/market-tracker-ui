@@ -28,11 +28,17 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
 	event.respondWith(
-		fetch(event.request).then((response) => {
-			if (MARKET_DATA_REGEX.test(event.request.url)) {
-				console.log('Response', response);
-			}
-			return response;
-		})
+		fetch(event.request)
+			.then((response) => {
+				if (MARKET_DATA_REGEX.test(event.request.url)) {
+					console.log('Response', response);
+				}
+				return response;
+			})
+			.catch((ex) => {
+				console.log('WorkerError', ex, navigator.onLine);
+				const init = { status: 500, statusText: 'offline' };
+				return new Response('', init);
+			})
 	);
 });
