@@ -2141,8 +2141,10 @@
   dependencies:
     ts-loader "^9.2.6"
 
-"@craigmiller160/webpack-config@file:.yalc/@craigmiller160/webpack-config":
+"@craigmiller160/webpack-config@1.0.2":
   version "1.0.2"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/webpack-config/-/webpack-config-1.0.2.tgz#5733116e96460506b231df832d7252c759a0ee63"
+  integrity sha512-JLcO6/v1BNztuY5/OenQFqbdEgUBz6xtUwAuYzoD2MPLU18izeueFbyh35lY+YXuDdA9guJ8L7Qf1R5vOoMlhw==
   dependencies:
     "@craigmiller160/postcss-config" "^1.0.0"
     babel-loader "^8.2.3"
