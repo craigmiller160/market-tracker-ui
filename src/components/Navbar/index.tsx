@@ -57,6 +57,7 @@ const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
+					// TODO need to dispatch thunk action here to set status as well
 					dispatch(
 						marketSettingsSlice.actions.setTime(menuItemInfo.key)
 					);
