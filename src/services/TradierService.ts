@@ -125,8 +125,8 @@ const formatTimesales = (
 		Option.map(
 			RArray.map(
 				(_: TradierSeriesData): HistoryRecord => ({
-					date: getTimesaleDate(_.marketSettings),
-					time: getTimesaleTime(_.marketSettings),
+					date: getTimesaleDate(_.time),
+					time: getTimesaleTime(_.time),
 					unixTimestampMillis: _.timestamp * 1000,
 					price: _.price
 				})

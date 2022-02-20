@@ -82,7 +82,7 @@ const createTimesale = (): TradierSeries => ({
 	series: {
 		data: [
 			{
-				marketSettings: '2022-01-01T01:01:01',
+				time: '2022-01-01T01:01:01',
 				timestamp: unix1,
 				price: 2,
 				open: 0,
@@ -93,7 +93,7 @@ const createTimesale = (): TradierSeries => ({
 				vwap: 0
 			},
 			{
-				marketSettings: '2022-01-01T02:02:02',
+				time: '2022-01-01T02:02:02',
 				timestamp: unix2,
 				price: 5,
 				open: 0,

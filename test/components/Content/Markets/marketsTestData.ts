@@ -207,7 +207,7 @@ export const createTimesale = (
 	series: {
 		data: [
 			{
-				marketSettings: '2022-01-01T01:00:00',
+				time: '2022-01-01T01:00:00',
 				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
 				price: setting.timesalePrice1,
 				open: 0,
@@ -218,7 +218,7 @@ export const createTimesale = (
 				vwap: 0
 			},
 			{
-				marketSettings: '2022-01-01T01:01:01',
+				time: '2022-01-01T01:01:01',
 				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
 				price: setting.timesalePrice2,
 				open: 0,
