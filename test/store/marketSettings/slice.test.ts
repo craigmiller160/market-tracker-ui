@@ -1,5 +1,6 @@
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
+import { MarketStatus } from '../../../src/types/MarketStatus';
 
 describe('marketSettings slice', () => {
 	it('setTime', () => {
@@ -13,7 +14,8 @@ describe('marketSettings slice', () => {
 			time: {
 				menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
 				value: MarketTime.FIVE_YEARS
-			}
+			},
+			status: MarketStatus.UNKNOWN
 		});
 	});
 
@@ -23,7 +25,8 @@ describe('marketSettings slice', () => {
 				time: {
 					menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
 					value: MarketTime.FIVE_YEARS
-				}
+				},
+				status: MarketStatus.OPEN
 			},
 			marketSettingsSlice.actions.reset()
 		);
