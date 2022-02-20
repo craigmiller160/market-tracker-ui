@@ -12,7 +12,7 @@ import { RootLayout } from '../../src/components/RootLayout';
 import { AuthUser } from '../../src/types/auth';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
-import { timeSlice } from '../../src/store/time/slice';
+import { marketSettingsSlice } from '../../src/store/marketSettings/slice';
 import { authSlice } from '../../src/store/auth/slice';
 import { notificationSlice } from '../../src/store/notification/slice';
 
@@ -36,7 +36,7 @@ const mockUserAuthFailure = (mockApi: MockAdapter) =>
 	mockApi.onGet('/oauth/user').reply(401);
 
 const resetStore = () => {
-	store.dispatch(timeSlice.actions.reset());
+	store.dispatch(marketSettingsSlice.actions.reset());
 	store.dispatch(notificationSlice.actions.reset());
 	store.dispatch(authSlice.actions.reset());
 };

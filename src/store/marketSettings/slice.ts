@@ -25,7 +25,7 @@ const reset = (draft: Draft<StateType>) => {
 	draft.value = initialState.value;
 };
 
-export const timeSlice = createSlice({
+export const marketSettingsSlice = createSlice({
 	name: 'time',
 	initialState,
 	reducers: {

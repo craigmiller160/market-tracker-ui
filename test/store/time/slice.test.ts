@@ -1,11 +1,11 @@
-import { timeSlice } from '../../../src/store/time/slice';
+import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 
 describe('time slice', () => {
 	it('setTime', () => {
-		const result = timeSlice.reducer(
-			timeSlice.getInitialState(),
-			timeSlice.actions.setTime(
+		const result = marketSettingsSlice.reducer(
+			marketSettingsSlice.getInitialState(),
+			marketSettingsSlice.actions.setTime(
 				marketTimeToMenuKey(MarketTime.FIVE_YEARS)
 			)
 		);
@@ -16,13 +16,13 @@ describe('time slice', () => {
 	});
 
 	it('reset', () => {
-		const result = timeSlice.reducer(
+		const result = marketSettingsSlice.reducer(
 			{
 				menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
 				value: MarketTime.FIVE_YEARS
 			},
-			timeSlice.actions.reset()
+			marketSettingsSlice.actions.reset()
 		);
-		expect(result).toEqual(timeSlice.getInitialState());
+		expect(result).toEqual(marketSettingsSlice.getInitialState());
 	});
 });

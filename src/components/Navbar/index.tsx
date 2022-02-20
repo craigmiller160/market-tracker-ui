@@ -13,8 +13,8 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { timeSlice } from '../../store/time/slice';
-import { timeMenuKeySelector } from '../../store/time/selectors';
+import { marketSettingsSlice } from '../../store/marketSettings/slice';
+import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -57,7 +57,9 @@ const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
-					dispatch(timeSlice.actions.setTime(menuItemInfo.key));
+					dispatch(
+						marketSettingsSlice.actions.setTime(menuItemInfo.key)
+					);
 				})
 				.otherwise(() => {
 					console.error('Invalid MenuInfo keyParts', keyParts);

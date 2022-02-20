@@ -4,7 +4,7 @@ import { loadAuthUser } from '../../store/auth/actions';
 import { Layout } from 'antd';
 import { AppRoutes } from './AppRoutes';
 import { useNotification } from '../UI/Notification/useNotification';
-import { timeValueSelector } from '../../store/time/selectors';
+import { timeValueSelector } from '../../store/marketSettings/selectors';
 import { checkMarketStatus } from '../../services/MarketInvestmentService';
 import { MarketStatus } from '../../types/MarketStatus';
 import { useImmer } from 'use-immer';

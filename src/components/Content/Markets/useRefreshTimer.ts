@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { timeValueSelector } from '../../../store/time/selectors';
+import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { useEffect } from 'react';
 import { MarketTime } from '../../../types/MarketTime';
 import * as Time from '@craigmiller160/ts-functions/es/Time';

@@ -56,53 +56,53 @@ const getHistoryFn = (
 	time: MarketTime,
 	type: MarketInvestmentType
 ): HistoryFn =>
-	match({ time, type })
+	match({ time: marketSettings, type })
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isStock) },
+			{ marketSettings: MarketTime.ONE_DAY, type: when(isStock) },
 			() => tradierService.getTimesales
 		)
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isCrypto) },
+			{ marketSettings: MarketTime.ONE_DAY, type: when(isCrypto) },
 			() => coinGeckoService.getTodayHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isStock) },
+			{ marketSettings: MarketTime.ONE_WEEK, type: when(isStock) },
 			() => tradierService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isCrypto) },
+			{ marketSettings: MarketTime.ONE_WEEK, type: when(isCrypto) },
 			() => coinGeckoService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isStock) },
+			{ marketSettings: MarketTime.ONE_MONTH, type: when(isStock) },
 			() => tradierService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isCrypto) },
+			{ marketSettings: MarketTime.ONE_MONTH, type: when(isCrypto) },
 			() => coinGeckoService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isStock) },
+			{ marketSettings: MarketTime.THREE_MONTHS, type: when(isStock) },
 			() => tradierService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isCrypto) },
+			{ marketSettings: MarketTime.THREE_MONTHS, type: when(isCrypto) },
 			() => coinGeckoService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isStock) },
+			{ marketSettings: MarketTime.ONE_YEAR, type: when(isStock) },
 			() => tradierService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isCrypto) },
+			{ marketSettings: MarketTime.ONE_YEAR, type: when(isCrypto) },
 			() => coinGeckoService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isStock) },
+			{ marketSettings: MarketTime.FIVE_YEARS, type: when(isStock) },
 			() => tradierService.getFiveYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isCrypto) },
+			{ marketSettings: MarketTime.FIVE_YEARS, type: when(isCrypto) },
 			() => coinGeckoService.getFiveYearHistory
 		)
 		.run();

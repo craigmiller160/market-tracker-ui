@@ -17,7 +17,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useSelector } from 'react-redux';
-import { timeValueSelector } from '../../../store/time/selectors';
+import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { MarketStatusContext } from '../MarketStatusContext';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';

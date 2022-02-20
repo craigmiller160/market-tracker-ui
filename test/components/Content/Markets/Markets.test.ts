@@ -59,7 +59,9 @@ const testMarketsPage = (
 		);
 		expect(title).toHaveTextContent(`${name} (${setting.symbol})`);
 
-		expect(within(card).queryByText(config.time)).toBeInTheDocument();
+		expect(
+			within(card).queryByText(config.marketSettings)
+		).toBeInTheDocument();
 		expect(
 			within(card).queryByText(/\w{3} \d{2}, \d{4}/)
 		).toHaveTextContent(`Since ${config.startDate}`);
@@ -120,7 +122,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: 'Today',
+			marketSettings: 'Today',
 			startDate: getTodayDisplayDate(),
 			isTimesale: true
 		});
@@ -136,7 +138,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: 'Today',
+			marketSettings: 'Today',
 			startDate: getTodayDisplayDate(),
 			isTimesale: true,
 			isCurrentPriceQuote: false
@@ -154,7 +156,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: 'Today',
+			marketSettings: 'Today',
 			startDate: getTodayDisplayDate(),
 			isTimesale: true,
 			isCurrentPriceQuote: false,
@@ -179,7 +181,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: '1 Week',
+			marketSettings: '1 Week',
 			startDate: getOneWeekDisplayStartDate(),
 			isTimesale: false
 		});
@@ -202,7 +204,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: '1 Month',
+			marketSettings: '1 Month',
 			startDate: getOneMonthDisplayStartDate(),
 			isTimesale: false
 		});
@@ -225,7 +227,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: '3 Months',
+			marketSettings: '3 Months',
 			startDate: getThreeMonthDisplayStartDate(),
 			isTimesale: false
 		});
@@ -248,7 +250,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: '1 Year',
+			marketSettings: '1 Year',
 			startDate: getOneYearDisplayStartDate(),
 			isTimesale: false
 		});
@@ -271,7 +273,7 @@ describe('Markets', () => {
 
 		const marketsPage = screen.getByTestId('markets-page');
 		testMarketsPage(marketsPage, {
-			time: '5 Years',
+			marketSettings: '5 Years',
 			startDate: getFiveYearDisplayStartDate(),
 			isTimesale: false
 		});

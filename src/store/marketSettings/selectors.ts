@@ -2,7 +2,7 @@ import { RootState } from '../index';
 import { MarketTime } from '../../types/MarketTime';
 
 export const timeMenuKeySelector = (state: RootState): string =>
-	state.time.menuKey;
+	state.marketSettings.menuKey;
 
 export const timeValueSelector = (state: RootState): MarketTime =>
-	state.time.value;
+	state.marketSettings.value;

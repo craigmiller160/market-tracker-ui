@@ -2,7 +2,7 @@ import * as ioType from 'io-ts';
 
 export const tradierSeriesDataV = ioType.readonly(
 	ioType.type({
-		time: ioType.string,
+		marketSettings: ioType.string,
 		timestamp: ioType.number,
 		price: ioType.number,
 		open: ioType.number,

@@ -7,7 +7,7 @@ export const defaultState: RootState = {
 		hasChecked: false,
 		userData: Option.none
 	},
-	time: {
+	marketSettings: {
 		menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
 		value: MarketTime.ONE_DAY
 	},

@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import { authSlice } from './auth/slice';
 import { configureStore } from '@reduxjs/toolkit';
-import { timeSlice } from './time/slice';
+import { marketSettingsSlice } from './marketSettings/slice';
 import { notificationSlice } from './notification/slice';
 
 export const rootReducer = combineReducers({
 	auth: authSlice.reducer,
-	time: timeSlice.reducer,
+	marketSettings: marketSettingsSlice.reducer,
 	notification: notificationSlice.reducer
 });
 
