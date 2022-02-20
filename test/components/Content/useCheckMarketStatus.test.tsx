@@ -7,6 +7,9 @@ import { MarketTime } from '../../../src/types/MarketTime';
 import { render } from '@testing-library/react';
 import { useCheckMarketStatus } from '../../../src/components/Content/useCheckMarketStatus';
 import { Provider } from 'react-redux';
+import produce from 'immer';
+import { AuthUser } from '../../../src/types/auth';
+import * as Option from 'fp-ts/es6/Option';
 
 jest.mock('../../../src/store/marketSettings/actions', () => ({
 	checkAndUpdateMarketStatus: (time: MarketTime) => ({
@@ -14,6 +17,10 @@ jest.mock('../../../src/store/marketSettings/actions', () => ({
 		payload: time
 	})
 }));
+
+const userData: AuthUser = {
+	userId: 1
+};
 
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
 
@@ -43,7 +50,18 @@ describe('useCheckMarketStatus', () => {
 	});
 
 	it('runs successfully a single time', () => {
-		throw new Error();
+		const newState = produce(defaultState, (draft) => {
+			draft.auth.hasChecked = true;
+			draft.auth.userData = Option.some(userData);
+		});
+		const mockStore = newMockStore(newState);
+		doRender(mockStore);
+		expect(mockStore.getActions()).toEqual([
+			{
+				type: 'checkAndUpdateMarketStatus',
+				payload: MarketTime.ONE_DAY
+			}
+		]);
 	});
 
 	it('tries to run more than once', () => {
