@@ -21,13 +21,9 @@ export const useCheckMarketStatus = () => {
 			return;
 		}
 
-		console.log('HookEffectRunning');
-
 		dispatch(checkAndUpdateMarketStatus(time));
 		setState((draft) => {
 			draft.hasChecked = true;
 		});
 	}, [time, isAuth, dispatch, setState, state.hasChecked]);
-
-	console.log('Rendering');
 };

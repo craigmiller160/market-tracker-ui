@@ -12,6 +12,7 @@ import { AuthUser } from '../../../src/types/auth';
 import * as Option from 'fp-ts/es6/Option';
 import { useImmer } from 'use-immer';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event';
 
 jest.mock('../../../src/store/marketSettings/actions', () => ({
 	checkAndUpdateMarketStatus: (time: MarketTime) => ({
@@ -86,7 +87,23 @@ describe('useCheckMarketStatus', () => {
 		]);
 	});
 
-	it('tries to run more than once', () => {
-		throw new Error();
+	it('Invoked by a component re-render after already having run', () => {
+		const newState = produce(defaultState, (draft) => {
+			draft.auth.hasChecked = true;
+			draft.auth.userData = Option.some(userData);
+		});
+		const mockStore = newMockStore(newState);
+		doRender(mockStore);
+		expect(screen.queryByText(/Name: .*/)).toHaveTextContent('Name: Bob');
+
+		userEvent.click(screen.getByText('Click'));
+		expect(screen.queryByText(/Name: .*/)).toHaveTextContent('Name: Joe');
+
+		expect(mockStore.getActions()).toEqual([
+			{
+				type: 'checkAndUpdateMarketStatus',
+				payload: MarketTime.ONE_DAY
+			}
+		]);
 	});
 });
