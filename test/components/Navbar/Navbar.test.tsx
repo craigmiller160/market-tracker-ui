@@ -8,7 +8,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { createRenderApp } from '../../testutils/RenderApp';
-import { timeSlice } from '../../../src/store/time/slice';
+import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
 	menuItemIsNotSelected,
 	menuItemIsSelected
@@ -286,7 +286,7 @@ describe('Navbar', () => {
 
 	it('selects Today', async () => {
 		const { store } = await renderApp();
-		store.dispatch(timeSlice.actions.setTime('time.oneWeek'));
+		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
 		menuItemIsSelected('1 Week');
 		menuItemIsNotSelected('Today');
 

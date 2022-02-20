@@ -17,8 +17,10 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketStatus } from '../../../types/MarketStatus';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useSelector } from 'react-redux';
-import { timeValueSelector } from '../../../store/time/selectors';
-import { MarketStatusContext } from '../MarketStatusContext';
+import {
+	marketStatusSelector,
+	timeValueSelector
+} from '../../../store/marketSettings/selectors';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 import { InvestmentData } from '../../../services/MarketInvestmentService';
@@ -195,7 +197,7 @@ export const MarketCard = ({ info }: Props) => {
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	const { status } = useContext(MarketStatusContext);
+	const status = useSelector(marketStatusSelector);
 	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const shouldLoadData =
 		status === MarketStatus.OPEN ||
