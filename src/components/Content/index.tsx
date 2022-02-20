@@ -5,67 +5,35 @@ import { Layout } from 'antd';
 import { AppRoutes } from './AppRoutes';
 import { useNotification } from '../UI/Notification/useNotification';
 import { timeValueSelector } from '../../store/marketSettings/selectors';
-import { checkMarketStatus } from '../../services/MarketInvestmentService';
-import { MarketStatus } from '../../types/MarketStatus';
-import { useImmer } from 'use-immer';
-import {
-	MarketStatusContext,
-	MarketStatusContextValue
-} from './MarketStatusContext';
-import { pipe } from 'fp-ts/es6/function';
-import * as Task from 'fp-ts/es6/Task';
 import { isAuthorizedSelector } from '../../store/auth/selectors';
+import { checkAndUpdateMarketStatus } from '../../store/marketSettings/actions';
 
-interface MarketStatusState {
-	readonly marketStatus: MarketStatus;
-}
-
-// TODO delete this... although the market status check is still needed on page start...
-const useCheckMarketStatus = (): MarketStatus => {
+const useCheckMarketStatus = () => {
 	const isAuth = useSelector(isAuthorizedSelector);
-	const [state, setState] = useImmer<MarketStatusState>({
-		marketStatus: MarketStatus.UNKNOWN
-	});
+	const dispatch = useDispatch();
 	const time = useSelector(timeValueSelector);
 	useEffect(() => {
 		if (!isAuth) {
 			return;
 		}
 
-		setState((draft) => {
-			draft.marketStatus = MarketStatus.UNKNOWN;
-		});
-		pipe(
-			checkMarketStatus(time),
-			Task.map((status) =>
-				setState((draft) => {
-					draft.marketStatus = status;
-				})
-			)
-		)();
-	}, [time, setState, isAuth]);
-
-	return state.marketStatus;
+		// TODO this will run alongside the time change one... need to figure out solution...
+		dispatch(checkAndUpdateMarketStatus(time));
+	}, [time, isAuth, dispatch]);
 };
 
 export const Content = () => {
 	const dispatch = useDispatch();
 	useNotification();
-	const marketStatus = useCheckMarketStatus();
+	useCheckMarketStatus();
 
 	useEffect(() => {
 		dispatch(loadAuthUser());
 	}, [dispatch]);
 
-	const marketStatusContextValue: MarketStatusContextValue = {
-		status: marketStatus
-	};
-
 	return (
-		<MarketStatusContext.Provider value={marketStatusContextValue}>
-			<Layout.Content className="MainContent">
-				<AppRoutes />
-			</Layout.Content>
-		</MarketStatusContext.Provider>
+		<Layout.Content className="MainContent">
+			<AppRoutes />
+		</Layout.Content>
 	);
 };
