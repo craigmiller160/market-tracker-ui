@@ -9,7 +9,6 @@ interface MarketStatusCheckState {
 	readonly hasChecked: boolean;
 }
 
-// TODO need individual tests for this
 export const useCheckMarketStatus = () => {
 	const [state, setState] = useImmer<MarketStatusCheckState>({
 		hasChecked: false
