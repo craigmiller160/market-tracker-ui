@@ -4,19 +4,22 @@ import {
 	marketTimeToMenuKey,
 	menuKeyToMarketTime
 } from '../../types/MarketTime';
+import { MarketStatus } from '../../types/MarketStatus';
 
 interface StateType {
 	readonly time: {
 		readonly menuKey: string;
 		readonly value: MarketTime;
 	};
+	readonly status: MarketStatus;
 }
 
 const initialState: StateType = {
 	time: {
 		menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
 		value: MarketTime.ONE_DAY
-	}
+	},
+	status: MarketStatus.UNKNOWN
 };
 
 const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
