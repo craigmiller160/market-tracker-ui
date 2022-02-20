@@ -1,7 +1,7 @@
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 
-describe('time slice', () => {
+describe('marketSettings slice', () => {
 	it('setTime', () => {
 		const result = marketSettingsSlice.reducer(
 			marketSettingsSlice.getInitialState(),
