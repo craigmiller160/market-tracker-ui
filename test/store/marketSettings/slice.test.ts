@@ -37,6 +37,13 @@ describe('marketSettings slice', () => {
 	});
 
 	it('setStatus', () => {
-		throw new Error();
+		const result = marketSettingsSlice.reducer(
+			marketSettingsSlice.getInitialState(),
+			marketSettingsSlice.actions.setStatus(MarketStatus.OPEN)
+		);
+		expect(result).toEqual({
+			...marketSettingsSlice.getInitialState(),
+			status: MarketStatus.OPEN
+		});
 	});
 });
