@@ -35,4 +35,8 @@ describe('marketSettings slice', () => {
 		);
 		expect(result).toEqual(marketSettingsSlice.getInitialState());
 	});
+
+	it('setStatus', () => {
+		throw new Error();
+	});
 });

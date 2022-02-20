@@ -21,7 +21,7 @@ interface MarketStatusState {
 	readonly marketStatus: MarketStatus;
 }
 
-// TODO delete this
+// TODO delete this... although the market status check is still needed on page start...
 const useCheckMarketStatus = (): MarketStatus => {
 	const isAuth = useSelector(isAuthorizedSelector);
 	const [state, setState] = useImmer<MarketStatusState>({

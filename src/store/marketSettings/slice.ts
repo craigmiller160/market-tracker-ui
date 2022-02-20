@@ -30,6 +30,13 @@ const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
 	draft.status = MarketStatus.UNKNOWN;
 };
 
+const setStatus = (
+	draft: Draft<StateType>,
+	action: PayloadAction<MarketStatus>
+) => {
+	draft.status = action.payload;
+};
+
 const reset = (draft: Draft<StateType>) => {
 	draft.time = initialState.time;
 	draft.status = initialState.status;
@@ -40,6 +47,7 @@ export const marketSettingsSlice = createSlice({
 	initialState,
 	reducers: {
 		setTime,
-		reset
+		reset,
+		setStatus
 	}
 });
