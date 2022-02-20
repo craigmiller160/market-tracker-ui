@@ -1,10 +1,13 @@
-import { changeSelectedTime } from '../../../src/store/marketSettings/actions';
+import {
+	changeSelectedTime,
+	checkAndUpdateMarketStatus
+} from '../../../src/store/marketSettings/actions';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 import { RootState } from '../../../src/store';
-import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { MarketStatus } from '../../../src/types/MarketStatus';
@@ -100,11 +103,34 @@ describe('marketSettings actions', () => {
 
 	describe('checkAndUpdateMarketStatus', () => {
 		it('checks market status for today', async () => {
-			throw new Error();
+			mockApi
+				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+				.reply(200, tradierCalendar);
+			const mockStore = newMockStore(defaultState);
+			await mockStore.dispatch(
+				checkAndUpdateMarketStatus(MarketTime.ONE_DAY)
+			);
+
+			expect(mockStore.getActions()).toEqual([
+				{
+					type: marketSettingsSlice.actions.setStatus.type,
+					payload: MarketStatus.CLOSED
+				}
+			]);
 		});
 
 		it('checks market status for another time', async () => {
-			throw new Error();
+			const mockStore = newMockStore(defaultState);
+			await mockStore.dispatch(
+				checkAndUpdateMarketStatus(MarketTime.ONE_WEEK)
+			);
+
+			expect(mockStore.getActions()).toEqual([
+				{
+					type: marketSettingsSlice.actions.setStatus.type,
+					payload: MarketStatus.OPEN
+				}
+			]);
 		});
 	});
 });
