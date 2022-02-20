@@ -1,6 +1,7 @@
 import { MarketStatus } from '../../types/MarketStatus';
 import { createContext } from 'react';
 
+// TODO delete this
 export interface MarketStatusContextValue {
 	readonly status: MarketStatus;
 }

@@ -21,6 +21,7 @@ interface MarketStatusState {
 	readonly marketStatus: MarketStatus;
 }
 
+// TODO delete this
 const useCheckMarketStatus = (): MarketStatus => {
 	const isAuth = useSelector(isAuthorizedSelector);
 	const [state, setState] = useImmer<MarketStatusState>({
