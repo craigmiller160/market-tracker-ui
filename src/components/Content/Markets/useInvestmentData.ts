@@ -2,7 +2,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch } from 'react-redux';
 import { Updater, useImmer } from 'use-immer';
-import { useCallback, useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import {
 	getInvestmentData,
 	InvestmentData
@@ -67,14 +67,12 @@ export const useInvestmentData = (
 		hasError: false
 	});
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleGetDataError = useCallback(
-		createHandleGetDataError(dispatch, setState),
+	const handleGetDataError = useMemo(
+		() => createHandleGetDataError(dispatch, setState),
 		[dispatch, setState]
 	);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleGetDataSuccess = useCallback(
-		createHandleGetDataSuccess(setState),
+	const handleGetDataSuccess = useMemo(
+		() => createHandleGetDataSuccess(setState),
 		[setState]
 	);
 
