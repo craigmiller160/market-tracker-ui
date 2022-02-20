@@ -23,14 +23,11 @@ const initialState: StateType = {
 };
 
 const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
-	const oldTimeValue = draft.time.value;
 	draft.time = {
 		menuKey: action.payload,
 		value: menuKeyToMarketTime(action.payload)
 	};
-	if (oldTimeValue !== draft.time.value) {
-		draft.status = MarketStatus.UNKNOWN;
-	}
+	draft.status = MarketStatus.UNKNOWN;
 };
 
 const reset = (draft: Draft<StateType>) => {
