@@ -5,8 +5,6 @@ import { menuKeyToMarketTime } from '../../types/MarketTime';
 import { marketSettingsSlice } from './slice';
 import { checkMarketStatus } from '../../services/MarketInvestmentService';
 import { pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { MarketStatus } from '../../types/MarketStatus';
 import * as Task from 'fp-ts/es6/Task';
 
 export const changeSelectedTime =
@@ -24,10 +22,6 @@ export const changeSelectedTime =
 
 		return pipe(
 			checkMarketStatus(newTimeValue),
-			TaskEither.fold(
-				() => async () => MarketStatus.UNKNOWN,
-				(status) => async () => status
-			),
 			Task.map((status) =>
 				dispatch(marketSettingsSlice.actions.setStatus(status))
 			)

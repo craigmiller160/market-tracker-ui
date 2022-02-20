@@ -2,6 +2,7 @@ import { MarketTime } from '../types/MarketTime';
 import {
 	OptionT,
 	PredicateT,
+	TaskT,
 	TaskTryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
@@ -109,10 +110,19 @@ const getHistoryFn = (
 
 export const checkMarketStatus = (
 	timeValue: MarketTime
-): TaskTryT<MarketStatus> =>
-	match(timeValue)
+): TaskT<MarketStatus> => {
+	const statusTE = match(timeValue)
 		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
 		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
+
+	return pipe(
+		statusTE,
+		TaskEither.fold(
+			() => async () => MarketStatus.UNKNOWN,
+			(status) => async () => status
+		)
+	);
+};
 
 const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 	Option.fold(

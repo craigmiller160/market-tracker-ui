@@ -13,7 +13,6 @@ import {
 	MarketStatusContextValue
 } from './MarketStatusContext';
 import { pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as Task from 'fp-ts/es6/Task';
 import { isAuthorizedSelector } from '../../store/auth/selectors';
 
@@ -38,10 +37,6 @@ const useCheckMarketStatus = (): MarketStatus => {
 		});
 		pipe(
 			checkMarketStatus(time),
-			TaskEither.fold(
-				() => async () => MarketStatus.UNKNOWN,
-				(status) => async () => status
-			),
 			Task.map((status) =>
 				setState((draft) => {
 					draft.marketStatus = status;
