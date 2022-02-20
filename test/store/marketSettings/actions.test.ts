@@ -56,7 +56,7 @@ describe('marketSettings actions', () => {
 			expect(mockStore.getActions()).toEqual([]);
 		});
 
-		it('checks market status for Today', async () => {
+		it('changes time and checks market status for Today', async () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, tradierCalendar);
@@ -78,7 +78,7 @@ describe('marketSettings actions', () => {
 			]);
 		});
 
-		it('checks market status for other time', async () => {
+		it('changes time and checks market status for other time', async () => {
 			const newDefaultState = produce(defaultState, (draft) => {
 				draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
 			});
@@ -95,6 +95,16 @@ describe('marketSettings actions', () => {
 					payload: MarketStatus.OPEN
 				}
 			]);
+		});
+	});
+
+	describe('checkAndUpdateMarketStatus', () => {
+		it('checks market status for today', async () => {
+			throw new Error();
+		});
+
+		it('checks market status for another time', async () => {
+			throw new Error();
 		});
 	});
 });
