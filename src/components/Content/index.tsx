@@ -7,19 +7,31 @@ import { useNotification } from '../UI/Notification/useNotification';
 import { timeValueSelector } from '../../store/marketSettings/selectors';
 import { isAuthorizedSelector } from '../../store/auth/selectors';
 import { checkAndUpdateMarketStatus } from '../../store/marketSettings/actions';
+import { useImmer } from 'use-immer';
 
+interface MarketStatusCheckState {
+	readonly hasChecked: boolean;
+}
+
+// TODO need individual tests for this
+// TODO move to separate file
 const useCheckMarketStatus = () => {
+	const [state, setState] = useImmer<MarketStatusCheckState>({
+		hasChecked: false
+	});
 	const isAuth = useSelector(isAuthorizedSelector);
 	const dispatch = useDispatch();
 	const time = useSelector(timeValueSelector);
 	useEffect(() => {
-		if (!isAuth) {
+		if (!isAuth || state.hasChecked) {
 			return;
 		}
 
-		// TODO this will run alongside the time change one... need to figure out solution...
 		dispatch(checkAndUpdateMarketStatus(time));
-	}, [time, isAuth, dispatch]);
+		setState((draft) => {
+			draft.hasChecked = true;
+		});
+	}, [time, isAuth, dispatch, setState, state.hasChecked]);
 };
 
 export const Content = () => {
