@@ -12,9 +12,9 @@ import * as Regex from '@craigmiller160/ts-functions/es/Regex';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
 import { changeSelectedTime } from '../../store/marketSettings/actions';
+import { StoreDispatch } from '../../store';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -38,7 +38,10 @@ const MENU_KEY_PARTS_REGEX = /^(?<prefix>.*)\.(?<action>.*)$/;
 const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
 const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
 
-const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
+const useHandleMenuClick = (
+	navigate: NavigateFunction,
+	dispatch: StoreDispatch
+) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
 			const keyParts = pipe(
@@ -57,7 +60,6 @@ const useHandleMenuClick = (navigate: NavigateFunction, dispatch: Dispatch) =>
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
-					// TODO need to dispatch thunk action here to set status as well
 					dispatch(changeSelectedTime(menuItemInfo.key));
 				})
 				.otherwise(() => {

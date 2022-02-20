@@ -1,4 +1,4 @@
-import { AppThunkAction } from '../index';
+import { RootState, StoreDispatch } from '../index';
 import { timeValueSelector } from './selectors';
 import { MarketTime, menuKeyToMarketTime } from '../../types/MarketTime';
 import { marketSettingsSlice } from './slice';
@@ -7,8 +7,8 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Task from 'fp-ts/es6/Task';
 
 export const changeSelectedTime =
-	(timeMenuKey: string): AppThunkAction<Promise<unknown>> =>
-	(dispatch, getState) => {
+	(timeMenuKey: string) =>
+	(dispatch: StoreDispatch, getState: () => RootState): Promise<unknown> => {
 		const state = getState();
 		const currentTimeValue = timeValueSelector(state);
 		const newTimeValue = menuKeyToMarketTime(timeMenuKey);
@@ -23,8 +23,7 @@ export const changeSelectedTime =
 	};
 
 export const checkAndUpdateMarketStatus =
-	(timeValue: MarketTime): AppThunkAction<Promise<unknown>> =>
-	(dispatch) =>
+	(timeValue: MarketTime) => (dispatch: StoreDispatch) =>
 		pipe(
 			checkMarketStatus(timeValue),
 			Task.map((status) =>
