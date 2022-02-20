@@ -10,31 +10,31 @@ const marketData: InvestmentData = {
 	history: [
 		{
 			date: '2022-01-01',
-			marketSettings: '00:00:00',
+			time: '00:00:00',
 			price: 10,
 			unixTimestampMillis: 0
 		},
 		{
 			date: '2022-01-01',
-			marketSettings: '23:59:59',
+			time: '23:59:59',
 			price: 15,
 			unixTimestampMillis: 0
 		},
 		{
 			date: '2022-01-02',
-			marketSettings: '00:00:00',
+			time: '00:00:00',
 			price: 21,
 			unixTimestampMillis: 0
 		},
 		{
 			date: '2022-01-02',
-			marketSettings: '23:59:59',
+			time: '23:59:59',
 			price: 17,
 			unixTimestampMillis: 0
 		},
 		{
 			date: '2022-01-03',
-			marketSettings: '00:00:00',
+			time: '00:00:00',
 			price: 28,
 			unixTimestampMillis: 0
 		}

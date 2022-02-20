@@ -110,25 +110,25 @@ const createTimesale = (): TradierSeries => ({
 const createHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '1',
-		marketSettings: '00:00:00',
+		time: '00:00:00',
 		unixTimestampMillis: 0,
 		price: 2
 	},
 	{
 		date: '1',
-		marketSettings: '23:59:59',
+		time: '23:59:59',
 		unixTimestampMillis: 0,
 		price: 5
 	},
 	{
 		date: '2',
-		marketSettings: '00:00:00',
+		time: '00:00:00',
 		unixTimestampMillis: 0,
 		price: 6
 	},
 	{
 		date: '2',
-		marketSettings: '23:59:59',
+		time: '23:59:59',
 		unixTimestampMillis: 0,
 		price: 9
 	}
@@ -137,13 +137,13 @@ const createHistory = (): ReadonlyArray<HistoryRecord> => [
 const createTimesaleHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
 		date: '2022-01-01',
-		marketSettings: '01:01:01',
+		time: '01:01:01',
 		unixTimestampMillis: unix1 * 1000,
 		price: 2
 	},
 	{
 		date: '2022-01-01',
-		marketSettings: '02:02:02',
+		time: '02:02:02',
 		unixTimestampMillis: unix2 * 1000,
 		price: 5
 	}

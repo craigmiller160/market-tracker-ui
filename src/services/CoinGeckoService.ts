@@ -115,7 +115,7 @@ const formatMarketChart = (
 		RArray.map(
 			([millis, price]): HistoryRecord => ({
 				date: getMarketChartDate(millis),
-				marketSettings: getMarketChartTime(millis),
+				time: getMarketChartTime(millis),
 				unixTimestampMillis: millis,
 				price
 			})

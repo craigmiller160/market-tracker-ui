@@ -48,13 +48,13 @@ const chart: CoinGeckoMarketChart = {
 const history: ReadonlyArray<HistoryRecord> = [
 	{
 		date: Time.format('yyyy-MM-dd')(date1),
-		marketSettings: Time.format('HH:mm:ss')(date1),
+		time: Time.format('HH:mm:ss')(date1),
 		unixTimestampMillis: date1.getTime(),
 		price: 100
 	},
 	{
 		date: Time.format('yyyy-MM-dd')(date2),
-		marketSettings: Time.format('HH:mm:ss')(date2),
+		time: Time.format('HH:mm:ss')(date2),
 		unixTimestampMillis: date2.getTime(),
 		price: 200
 	}
