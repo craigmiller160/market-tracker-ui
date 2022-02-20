@@ -1,15 +1,14 @@
-import { Dispatch } from 'redux';
-import { RootState } from '../index';
+import { AppThunkAction } from '../index';
 import { timeValueSelector } from './selectors';
-import { menuKeyToMarketTime } from '../../types/MarketTime';
+import { MarketTime, menuKeyToMarketTime } from '../../types/MarketTime';
 import { marketSettingsSlice } from './slice';
 import { checkMarketStatus } from '../../services/MarketInvestmentService';
 import { pipe } from 'fp-ts/es6/function';
 import * as Task from 'fp-ts/es6/Task';
 
 export const changeSelectedTime =
-	(timeMenuKey: string) =>
-	(dispatch: Dispatch, getState: () => RootState): Promise<unknown> => {
+	(timeMenuKey: string): AppThunkAction<Promise<unknown>> =>
+	(dispatch, getState) => {
 		const state = getState();
 		const currentTimeValue = timeValueSelector(state);
 		const newTimeValue = menuKeyToMarketTime(timeMenuKey);
@@ -20,10 +19,15 @@ export const changeSelectedTime =
 
 		dispatch(marketSettingsSlice.actions.setTime(timeMenuKey));
 
-		return pipe(
-			checkMarketStatus(newTimeValue),
+		return dispatch(checkAndUpdateMarketStatus(newTimeValue));
+	};
+
+export const checkAndUpdateMarketStatus =
+	(timeValue: MarketTime): AppThunkAction<Promise<unknown>> =>
+	(dispatch) =>
+		pipe(
+			checkMarketStatus(timeValue),
 			Task.map((status) =>
 				dispatch(marketSettingsSlice.actions.setStatus(status))
 			)
 		)();
-	};
