@@ -10,16 +10,20 @@ describe('marketSettings slice', () => {
 			)
 		);
 		expect(result).toEqual({
-			menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
-			value: MarketTime.FIVE_YEARS
+			time: {
+				menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
+				value: MarketTime.FIVE_YEARS
+			}
 		});
 	});
 
 	it('reset', () => {
 		const result = marketSettingsSlice.reducer(
 			{
-				menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
-				value: MarketTime.FIVE_YEARS
+				time: {
+					menuKey: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
+					value: MarketTime.FIVE_YEARS
+				}
 			},
 			marketSettingsSlice.actions.reset()
 		);

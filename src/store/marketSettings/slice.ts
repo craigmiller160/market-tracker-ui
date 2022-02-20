@@ -6,23 +6,28 @@ import {
 } from '../../types/MarketTime';
 
 interface StateType {
-	readonly menuKey: string;
-	readonly value: MarketTime;
+	readonly time: {
+		readonly menuKey: string;
+		readonly value: MarketTime;
+	};
 }
 
 const initialState: StateType = {
-	menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
-	value: MarketTime.ONE_DAY
+	time: {
+		menuKey: marketTimeToMenuKey(MarketTime.ONE_DAY),
+		value: MarketTime.ONE_DAY
+	}
 };
 
 const setTime = (draft: Draft<StateType>, action: PayloadAction<string>) => {
-	draft.menuKey = action.payload;
-	draft.value = menuKeyToMarketTime(action.payload);
+	draft.time = {
+		menuKey: action.payload,
+		value: menuKeyToMarketTime(action.payload)
+	};
 };
 
 const reset = (draft: Draft<StateType>) => {
-	draft.menuKey = initialState.menuKey;
-	draft.value = initialState.value;
+	draft.time = initialState.time;
 };
 
 export const marketSettingsSlice = createSlice({
