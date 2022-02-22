@@ -34,23 +34,18 @@ self.addEventListener('fetch', (event) => {
 				return response;
 			})
 			.catch((ex) => {
-				if (!navigator.onLine) {
-					return caches
-						.open(MARKET_DATA_CACHE)
-						.then((cache) => cache.match(event.request))
-						.then(
-							(response) =>
-								response ??
-								new Response('Offline', {
-									status: 500,
-									statusText: 'offline'
-								})
-						);
-				}
-
 				console.error('Critical Error', ex);
-				const init = { status: 500, statusText: 'Critical Error' };
-				return new Response(`Critical Error: ${ex.message}`, init);
+				return caches
+					.open(MARKET_DATA_CACHE)
+					.then((cache) => cache.match(event.request))
+					.then(
+						(response) =>
+							response ??
+							new Response(`Critical Error: ${ex.message}`, {
+								status: 500,
+								statusText: 'Critical Error'
+							})
+					);
 			})
 	);
 });
