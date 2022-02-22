@@ -202,7 +202,7 @@ const handleInvestmentData = ({
 			time: pipe(parseTime(record.time), subtractOneHour, formatTime)
 		})),
 		Option.getOrElse(() => ({
-			date: formatDate(new Date()), // TODO setup new defaults here
+			date: formatDate(new Date()),
 			time: formatTime(new Date())
 		}))
 	);
