@@ -156,7 +156,7 @@ describe('timeUtils', () => {
 			new Date(),
 			Time.subDays(1),
 			Time.set({
-				hours: 16,
+				hours: 0,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
@@ -171,7 +171,7 @@ describe('timeUtils', () => {
 		const expected = pipe(
 			new Date(),
 			Time.set({
-				hours: 18,
+				hours: 23,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
