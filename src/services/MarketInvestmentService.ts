@@ -17,7 +17,7 @@ import {
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
-import { pipe } from 'fp-ts/es6/function';
+import { identity, pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -177,12 +177,19 @@ const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
 	(_) => _.price
 );
 
+const greaterThan0: PredicateT<number> = (_) => _ > 0;
+
 const getStartPrice = (
 	quote: OptionT<Quote>,
 	history: ReadonlyArray<HistoryRecord>
 ): number =>
 	pipe(
 		quote,
+		Option.chain((q) =>
+			match(q.previousClose)
+				.with(when(greaterThan0), Option.some)
+				.otherwise(() => Option.none)
+		),
 		Option.fold(
 			() =>
 				pipe(
@@ -190,7 +197,7 @@ const getStartPrice = (
 					Option.map((_) => _.price),
 					Option.getOrElse(() => 0)
 				),
-			(_) => _.previousClose
+			identity
 		)
 	);
 
@@ -209,25 +216,26 @@ const getFirstHistoryRecordDateTime = (
 		}))
 	);
 
-const handleInvestmentData =
-	(info: MarketInvestmentInfo) =>
-	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
-		const currentPrice = getCurrentPrice(quote);
-		const startPrice = getStartPrice(quote, history);
-		const { date, time } = getFirstHistoryRecordDateTime(history);
+const handleInvestmentData = ({
+	history,
+	quote
+}: IntermediateInvestmentData): InvestmentData => {
+	const currentPrice = getCurrentPrice(quote);
+	const startPrice = getStartPrice(quote, history);
+	const { date, time } = getFirstHistoryRecordDateTime(history);
 
-		const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
-			date,
-			unixTimestampMillis: 0,
-			time,
-			price: startPrice
-		})(history);
-		return {
-			startPrice,
-			currentPrice,
-			history: newHistory
-		};
+	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
+		date,
+		unixTimestampMillis: 0,
+		time,
+		price: startPrice
+	})(history);
+	return {
+		startPrice,
+		currentPrice,
+		history: newHistory
 	};
+};
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -237,5 +245,5 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
-		TaskEither.map(handleInvestmentData(info))
+		TaskEither.map(handleInvestmentData)
 	);
