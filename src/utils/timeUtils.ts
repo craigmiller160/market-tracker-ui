@@ -39,6 +39,8 @@ export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
+// TODO split the intervals into functions that return a date and ones that return a string. Then integrate the date ones into CoinGeckoService
+
 export const getTodayStart = (): string =>
 	pipe(new Date(), setTodayStartTime, formatTimesalesDate);
 
