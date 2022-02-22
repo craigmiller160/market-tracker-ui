@@ -172,18 +172,16 @@ const getQuote = (
 		)
 		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
 
-const handleInvestmentData = ({
-	history,
-	quote
-}: IntermediateInvestmentData): InvestmentData => {
-	const currentPrice = pipe(
-		quote,
-		Option.fold(
-			() => 0,
-			(q) => q.price
-		)
-	);
-	const startPrice = pipe(
+const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
+	() => 0,
+	(_) => _.price
+);
+
+const getStartPrice = (
+	quote: OptionT<Quote>,
+	history: ReadonlyArray<HistoryRecord>
+): number =>
+	pipe(
 		quote,
 		Option.fold(
 			() =>
@@ -195,7 +193,11 @@ const handleInvestmentData = ({
 			(_) => _.previousClose
 		)
 	);
-	const { date, time } = pipe(
+
+const getFirstHistoryRecordDateTime = (
+	history: ReadonlyArray<HistoryRecord>
+): { date: string; time: string } =>
+	pipe(
 		RArray.head(history),
 		Option.map((record) => ({
 			date: record.date,
@@ -207,18 +209,25 @@ const handleInvestmentData = ({
 		}))
 	);
 
-	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
-		date,
-		unixTimestampMillis: 0,
-		time,
-		price: startPrice
-	})(history);
-	return {
-		startPrice,
-		currentPrice,
-		history: newHistory
+const handleInvestmentData =
+	(info: MarketInvestmentInfo) =>
+	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
+		const currentPrice = getCurrentPrice(quote);
+		const startPrice = getStartPrice(quote, history);
+		const { date, time } = getFirstHistoryRecordDateTime(history);
+
+		const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
+			date,
+			unixTimestampMillis: 0,
+			time,
+			price: startPrice
+		})(history);
+		return {
+			startPrice,
+			currentPrice,
+			history: newHistory
+		};
 	};
-};
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -228,5 +237,5 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
-		TaskEither.map(handleInvestmentData)
+		TaskEither.map(handleInvestmentData(info))
 	);
