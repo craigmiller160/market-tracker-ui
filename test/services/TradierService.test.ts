@@ -24,8 +24,8 @@ import {
 	getOneMonthHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTimesalesEnd,
-	getTimesalesStart
+	getTodayEnd,
+	getTodayStart
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
 import { MarketStatus } from '../../src/types/MarketStatus';
@@ -264,8 +264,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today', async () => {
-		const start = getTimesalesStart();
-		const end = getTimesalesEnd();
+		const start = getTodayStart();
+		const end = getTodayEnd();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
@@ -277,8 +277,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today with null response', async () => {
-		const start = getTimesalesStart();
-		const end = getTimesalesEnd();
+		const start = getTodayStart();
+		const end = getTodayEnd();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`

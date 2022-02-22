@@ -39,10 +39,10 @@ export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
-export const getTimesalesStart = (): string =>
-	pipe(new Date(), Time.subDays(1), setTodayStartTime, formatTimesalesDate);
+export const getTodayStart = (): string =>
+	pipe(new Date(), setTodayStartTime, formatTimesalesDate);
 
-export const getTimesalesEnd = (): string =>
+export const getTodayEnd = (): string =>
 	pipe(new Date(), setTodayEndTime, formatTimesalesDate);
 
 export const getOneWeekHistoryStartDate = (): string =>

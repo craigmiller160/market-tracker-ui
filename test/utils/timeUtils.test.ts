@@ -12,8 +12,8 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
-	getTimesalesEnd,
-	getTimesalesStart,
+	getTodayEnd,
+	getTodayStart,
 	getTodayDisplayDate,
 	getTodayHistoryDate,
 	setTodayEndTime,
@@ -151,10 +151,9 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
-	it('getTimesalesStart', () => {
+	it('getTodayStart', () => {
 		const expected = pipe(
 			new Date(),
-			Time.subDays(1),
 			Time.set({
 				hours: 0,
 				minutes: 0,
@@ -163,11 +162,11 @@ describe('timeUtils', () => {
 			}),
 			formatTimesalesDate
 		);
-		const actual = getTimesalesStart();
+		const actual = getTodayStart();
 		expect(actual).toEqual(expected);
 	});
 
-	it('getTimesalesEnd', () => {
+	it('getTodayEnd', () => {
 		const expected = pipe(
 			new Date(),
 			Time.set({
@@ -178,7 +177,7 @@ describe('timeUtils', () => {
 			}),
 			formatTimesalesDate
 		);
-		const actual = getTimesalesEnd();
+		const actual = getTodayEnd();
 		expect(actual).toEqual(expected);
 	});
 });

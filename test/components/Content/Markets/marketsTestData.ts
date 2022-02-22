@@ -4,10 +4,7 @@ import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import MockAdapter from 'axios-mock-adapter';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Option from 'fp-ts/es6/Option';
-import {
-	getTimesalesEnd,
-	getTimesalesStart
-} from '../../../../src/utils/timeUtils';
+import { getTodayEnd, getTodayStart } from '../../../../src/utils/timeUtils';
 import {
 	TradierCalendar,
 	TradierCalendarStatus
@@ -23,8 +20,8 @@ import {
 
 const formatDate = Time.format('yyyy-MM-dd');
 const today = formatDate(new Date());
-const timesalesStart = getTimesalesStart();
-const timesalesEnd = getTimesalesEnd();
+const timesalesStart = getTodayStart();
+const timesalesEnd = getTodayEnd();
 
 export interface TestDataSetting {
 	readonly symbol: string;
