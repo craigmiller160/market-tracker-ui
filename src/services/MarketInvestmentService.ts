@@ -21,6 +21,13 @@ import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const TIME_FORMAT = 'HH:mm:ss';
+const parseTime = Time.parse(TIME_FORMAT);
+const formatTime = Time.format(TIME_FORMAT);
+const subtractOneHour = Time.subHours(1);
+const formatDate = Time.format('yyyy-MM-dd');
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
@@ -188,10 +195,28 @@ const handleInvestmentData = ({
 			(_) => _.previousClose
 		)
 	);
+	const { date, time } = pipe(
+		RArray.head(history),
+		Option.map((record) => ({
+			date: record.date,
+			time: pipe(parseTime(record.time), subtractOneHour, formatTime)
+		})),
+		Option.getOrElse(() => ({
+			date: formatDate(new Date()), // TODO setup new defaults here
+			time: formatTime(new Date())
+		}))
+	);
+
+	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
+		date,
+		unixTimestampMillis: 0,
+		time,
+		price: startPrice
+	})(history);
 	return {
 		startPrice,
 		currentPrice,
-		history
+		history: newHistory
 	};
 };
 
