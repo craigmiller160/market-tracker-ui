@@ -68,7 +68,8 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 	return RArray.map(
 		(_: TradierQuote): Quote => ({
 			symbol: _.symbol,
-			price: _.last ?? 0
+			price: _.last ?? 0,
+			previousClose: _.prevclose ?? 0
 		})
 	)(tradierQuotes);
 };
