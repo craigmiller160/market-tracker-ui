@@ -79,7 +79,7 @@ const formatPrice =
 					Option.map((price) => ({
 						symbol: getSymbol(id),
 						price: price.usd,
-						previousClose: 0 // TODO this is a problem
+						previousClose: 0
 					}))
 				)
 			),

@@ -26,6 +26,7 @@ type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
 
 export interface InvestmentData {
+	readonly startPrice: number;
 	readonly currentPrice: number;
 	readonly history: ReadonlyArray<HistoryRecord>;
 }
@@ -139,7 +140,7 @@ const historyRecordToQuote =
 	(record: HistoryRecord): Quote => ({
 		symbol,
 		price: record.price,
-		previousClose: 0 // TODO need to get first record price here
+		previousClose: 0
 	});
 
 const getQuote = (
@@ -175,7 +176,20 @@ const handleInvestmentData = ({
 			(q) => q.price
 		)
 	);
+	const startPrice = pipe(
+		quote,
+		Option.fold(
+			() =>
+				pipe(
+					RArray.head(history),
+					Option.map((_) => _.price),
+					Option.getOrElse(() => 0)
+				),
+			(_) => _.previousClose
+		)
+	);
 	return {
+		startPrice,
 		currentPrice,
 		history
 	};
