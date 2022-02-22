@@ -41,23 +41,29 @@ export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
 // TODO split the intervals into functions that return a date and ones that return a string. Then integrate the date ones into CoinGeckoService
 
-export const getTodayStart = (): string =>
-	pipe(new Date(), setTodayStartTime, formatTimesalesDate);
+export const getTodayStart = (): Date => setTodayStartTime(new Date());
+export const getTodayStartString = (): string =>
+	pipe(getTodayStart(), formatTimesalesDate);
 
-export const getTodayEnd = (): string =>
-	pipe(new Date(), setTodayEndTime, formatTimesalesDate);
+export const getTodayEnd = (): Date => setTodayEndTime(new Date());
+export const getTodayEndString = (): string =>
+	pipe(getTodayEnd(), formatTimesalesDate);
+
+export const getOneWeekStartDate = (): Date => Time.subWeeks(1)(new Date());
 
 export const getOneWeekHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subWeeks(1));
+	pipe(getOneWeekStartDate(), formatHistoryDate);
 
 export const getOneWeekDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subWeeks(1));
+	pipe(getOneWeekStartDate(), formatDisplayDate);
+
+export const getOneMonthStartDate = (): Date => Time.subMonths(1)(new Date());
 
 export const getOneMonthHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subMonths(1));
+	pipe(getOneMonthStartDate(), formatHistoryDate);
 
 export const getOneMonthDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subMonths(1));
+	pipe(getOneMonthStartDate(), formatDisplayDate);
 
 export const getThreeMonthHistoryStartDate = (): string =>
 	getHistoryStartDate(Time.subMonths(3));

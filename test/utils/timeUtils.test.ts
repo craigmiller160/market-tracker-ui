@@ -17,10 +17,16 @@ import {
 	getTodayDisplayDate,
 	getTodayHistoryDate,
 	setTodayEndTime,
-	setTodayStartTime
+	setTodayStartTime,
+	getTodayStartString,
+	getTodayEndString,
+	getOneWeekStartDate,
+	getOneMonthStartDate
 } from '../../src/utils/timeUtils';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const compareFormat = Time.format('yyyy-MM-dd HH:mm:ss');
 
 describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
@@ -51,42 +57,38 @@ describe('timeUtils', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	it('getOneWeekStartDate', () => {
+		const expected = pipe(new Date(), Time.subWeeks(1));
+		const actual = getOneWeekStartDate();
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+	});
+
 	it('getOneWeekHistoryStartDate', () => {
-		const expected = pipe(
-			new Date(),
-			flow(Time.subWeeks(1), Time.addDays(1)),
-			formatHistoryDate
-		);
+		const expected = pipe(new Date(), Time.subWeeks(1), formatHistoryDate);
 		const actual = getOneWeekHistoryStartDate();
 		expect(actual).toEqual(expected);
 	});
 
 	it('getOneWeekDisplayStartDate', () => {
-		const expected = pipe(
-			new Date(),
-			flow(Time.subWeeks(1), Time.addDays(1)),
-			formatDisplayDate
-		);
+		const expected = pipe(new Date(), Time.subWeeks(1), formatDisplayDate);
 		const actual = getOneWeekDisplayStartDate();
 		expect(actual).toEqual(expected);
 	});
 
+	it('getOneMonthStartDate', () => {
+		const expected = pipe(new Date(), Time.subMonths(1));
+		const actual = getOneMonthStartDate();
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+	});
+
 	it('getOneMonthHistoryStartDate', () => {
-		const expected = pipe(
-			new Date(),
-			flow(Time.subMonths(1), Time.addDays(1)),
-			formatHistoryDate
-		);
+		const expected = pipe(new Date(), Time.subMonths(1), formatHistoryDate);
 		const actual = getOneMonthHistoryStartDate();
 		expect(actual).toEqual(expected);
 	});
 
 	it('getOneMonthDisplayStartDate', () => {
-		const expected = pipe(
-			new Date(),
-			flow(Time.subMonths(1), Time.addDays(1)),
-			formatDisplayDate
-		);
+		const expected = pipe(new Date(), Time.subMonths(1), formatDisplayDate);
 		const actual = getOneMonthDisplayStartDate();
 		expect(actual).toEqual(expected);
 	});
@@ -159,10 +161,24 @@ describe('timeUtils', () => {
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
+			})
+		);
+		const actual = getTodayStart();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTodayStartString', () => {
+		const expected = pipe(
+			new Date(),
+			Time.set({
+				hours: 0,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
 			}),
 			formatTimesalesDate
 		);
-		const actual = getTodayStart();
+		const actual = getTodayStartString();
 		expect(actual).toEqual(expected);
 	});
 
@@ -174,10 +190,24 @@ describe('timeUtils', () => {
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
+			})
+		);
+		const actual = getTodayEnd();
+		expect(actual).toEqual(expected);
+	});
+
+	it('getTodayEndString', () => {
+		const expected = pipe(
+			new Date(),
+			Time.set({
+				hours: 23,
+				minutes: 0,
+				seconds: 0,
+				milliseconds: 0
 			}),
 			formatTimesalesDate
 		);
-		const actual = getTodayEnd();
+		const actual = getTodayEndString();
 		expect(actual).toEqual(expected);
 	});
 });
