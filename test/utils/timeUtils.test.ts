@@ -15,12 +15,30 @@ import {
 	getTimesalesEnd,
 	getTimesalesStart,
 	getTodayDisplayDate,
-	getTodayHistoryDate
+	getTodayHistoryDate,
+	setTodayEndTime,
+	setTodayStartTime
 } from '../../src/utils/timeUtils';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 describe('timeUtils', () => {
+	it('setTodayStartTime', () => {
+		const date = new Date();
+		const actual = setTodayStartTime(date);
+		const actualText = Time.format('yyyy-MM-dd HH:mm:ss')(actual);
+		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
+		expect(actualText).toEqual(`${expectedTextDate} 00:00:00`);
+	});
+
+	it('setTodayEndTime', () => {
+		const date = new Date();
+		const actual = setTodayEndTime(date);
+		const actualText = Time.format('yyyy-MM-dd HH:mm:ss')(actual);
+		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
+		expect(actualText).toEqual(`${expectedTextDate} 23:00:00`);
+	});
+
 	it('getTodayHistoryDate', () => {
 		const expected = formatHistoryDate(new Date());
 		const actual = getTodayHistoryDate();
