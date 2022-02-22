@@ -46,12 +46,14 @@ const createTradierQuote = (symbol: string): TradierQuote => ({
 	bid: 3,
 	ask: 4,
 	close: 5,
-	last: 6
+	last: 6,
+	prevclose: 7
 });
 
 const createQuote = (symbol: string): Quote => ({
 	symbol,
-	price: 6
+	price: 6,
+	previousClose: 7
 });
 
 const createTradierHistory = (): TradierHistory => ({
