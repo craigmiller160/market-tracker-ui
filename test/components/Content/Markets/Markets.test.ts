@@ -85,12 +85,9 @@ const testMarketsPage = (
 			})
 				.with(
 					{ type: when(isStock), isCurrentPriceQuote: false },
-					() => setting.historyPrice
+					() => setting.timesalePrice1
 				)
-				.with(
-					{ type: when(isStock) },
-					() => setting.prevClosePrice
-				)
+				.with({ type: when(isStock) }, () => setting.prevClosePrice)
 				.with(
 					{ type: when(isCrypto), isTimesale: true },
 					() => setting.timesalePrice1
@@ -112,12 +109,7 @@ const testMarketsPage = (
 			expect(
 				within(card).queryByText(`$${currentPrice.toFixed(2)}`)
 			).toBeInTheDocument();
-			try {
-				expect(priceLine).toHaveTextContent(expectedPrice);
-			} catch (ex) {
-				console.log('Error', setting.symbol, config.isCurrentPriceQuote);
-				throw ex;
-			}
+			expect(priceLine).toHaveTextContent(expectedPrice);
 
 			expect(
 				within(card).queryByText('Chart is Here')
