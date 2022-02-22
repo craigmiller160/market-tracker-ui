@@ -4,13 +4,13 @@ export const tradierQuoteV = ioType.readonly(
 	ioType.type({
 		symbol: ioType.string,
 		description: ioType.string,
-		open: ioType.number,
-		high: ioType.number,
-		low: ioType.number,
-		bid: ioType.number,
-		ask: ioType.number,
+		open: ioType.union([ioType.number, ioType.null]),
+		high: ioType.union([ioType.number, ioType.null]),
+		low: ioType.union([ioType.number, ioType.null]),
+		bid: ioType.union([ioType.number, ioType.null]),
+		ask: ioType.union([ioType.number, ioType.null]),
 		close: ioType.union([ioType.number, ioType.null]),
-		last: ioType.number
+		last: ioType.union([ioType.number, ioType.null])
 	})
 );
 export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
