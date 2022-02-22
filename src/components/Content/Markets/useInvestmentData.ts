@@ -34,6 +34,7 @@ const createHandleGetDataError =
 			draft.loading = false;
 			draft.hasError = true;
 			draft.data = {
+				startPrice: 0,
 				currentPrice: 0,
 				history: []
 			};
@@ -61,6 +62,7 @@ export const useInvestmentData = (
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
 		data: {
+			startPrice: 0,
 			currentPrice: 0,
 			history: []
 		},

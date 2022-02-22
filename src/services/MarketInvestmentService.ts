@@ -17,15 +17,23 @@ import {
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
-import { pipe } from 'fp-ts/es6/function';
+import { identity, pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const TIME_FORMAT = 'HH:mm:ss';
+const parseTime = Time.parse(TIME_FORMAT);
+const formatTime = Time.format(TIME_FORMAT);
+const subtractOneHour = Time.subHours(1);
+const formatDate = Time.format('yyyy-MM-dd');
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
 
 export interface InvestmentData {
+	readonly startPrice: number;
 	readonly currentPrice: number;
 	readonly history: ReadonlyArray<HistoryRecord>;
 }
@@ -138,7 +146,8 @@ const historyRecordToQuote =
 	(symbol: string) =>
 	(record: HistoryRecord): Quote => ({
 		symbol,
-		price: record.price
+		price: record.price,
+		previousClose: 0
 	});
 
 const getQuote = (
@@ -163,20 +172,68 @@ const getQuote = (
 		)
 		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
 
+const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
+	() => 0,
+	(_) => _.price
+);
+
+const greaterThan0: PredicateT<number> = (_) => _ > 0;
+
+const getStartPrice = (
+	quote: OptionT<Quote>,
+	history: ReadonlyArray<HistoryRecord>
+): number =>
+	pipe(
+		quote,
+		Option.chain((q) =>
+			match(q.previousClose)
+				.with(when(greaterThan0), Option.some)
+				.otherwise(() => Option.none)
+		),
+		Option.fold(
+			() =>
+				pipe(
+					RArray.head(history),
+					Option.map((_) => _.price),
+					Option.getOrElse(() => 0)
+				),
+			identity
+		)
+	);
+
+const getFirstHistoryRecordDateTime = (
+	history: ReadonlyArray<HistoryRecord>
+): { date: string; time: string } =>
+	pipe(
+		RArray.head(history),
+		Option.map((record) => ({
+			date: record.date,
+			time: pipe(parseTime(record.time), subtractOneHour, formatTime)
+		})),
+		Option.getOrElse(() => ({
+			date: formatDate(new Date()),
+			time: formatTime(new Date())
+		}))
+	);
+
 const handleInvestmentData = ({
 	history,
 	quote
 }: IntermediateInvestmentData): InvestmentData => {
-	const currentPrice = pipe(
-		quote,
-		Option.fold(
-			() => 0,
-			(q) => q.price
-		)
-	);
+	const currentPrice = getCurrentPrice(quote);
+	const startPrice = getStartPrice(quote, history);
+	const { date, time } = getFirstHistoryRecordDateTime(history);
+
+	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
+		date,
+		unixTimestampMillis: 0,
+		time,
+		price: startPrice
+	})(history);
 	return {
+		startPrice,
 		currentPrice,
-		history
+		history: newHistory
 	};
 };
 

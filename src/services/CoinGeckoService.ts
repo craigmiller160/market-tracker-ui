@@ -78,7 +78,8 @@ const formatPrice =
 					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
 					Option.map((price) => ({
 						symbol: getSymbol(id),
-						price: price.usd
+						price: price.usd,
+						previousClose: 0
 					}))
 				)
 			),

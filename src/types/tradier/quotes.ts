@@ -10,7 +10,8 @@ export const tradierQuoteV = ioType.readonly(
 		bid: ioType.union([ioType.number, ioType.null]),
 		ask: ioType.union([ioType.number, ioType.null]),
 		close: ioType.union([ioType.number, ioType.null]),
-		last: ioType.union([ioType.number, ioType.null])
+		last: ioType.union([ioType.number, ioType.null]),
+		prevclose: ioType.union([ioType.number, ioType.number])
 	})
 );
 export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;

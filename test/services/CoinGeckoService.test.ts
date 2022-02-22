@@ -78,11 +78,13 @@ describe('CoinGeckoService', () => {
 		expect(result).toEqualRight([
 			{
 				symbol: 'BTC',
-				price: 100.5
+				price: 100.5,
+				previousClose: 0
 			},
 			{
 				symbol: 'ETH',
-				price: 50.75
+				price: 50.75,
+				previousClose: 0
 			}
 		]);
 	});

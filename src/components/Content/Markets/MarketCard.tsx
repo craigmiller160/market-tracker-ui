@@ -49,7 +49,7 @@ const localeOptions: Intl.NumberFormatOptions = {
 };
 
 const createPrice = (data: InvestmentData) => {
-	const oldestPrice = data.history[0]?.price ?? 0;
+	const oldestPrice = data.startPrice;
 	const priceChange = data.currentPrice - oldestPrice;
 
 	const formattedPrice = `$${data.currentPrice.toLocaleString(
