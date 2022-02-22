@@ -138,7 +138,8 @@ const historyRecordToQuote =
 	(symbol: string) =>
 	(record: HistoryRecord): Quote => ({
 		symbol,
-		price: record.price
+		price: record.price,
+		previousClose: 0 // TODO need to get first record price here
 	});
 
 const getQuote = (
