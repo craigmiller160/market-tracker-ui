@@ -33,6 +33,7 @@ export interface TestDataSetting {
 	readonly timesalePrice1: number;
 	readonly timesalePrice2: number;
 	readonly type: MarketInvestmentType;
+	readonly prevClosePrice: number;
 	readonly id?: string;
 }
 
@@ -43,6 +44,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 50,
 		timesalePrice1: 40,
 		timesalePrice2: 45,
+		prevClosePrice: 30,
 		type: MarketInvestmentType.USA_ETF
 	},
 	{
@@ -51,6 +53,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 51,
 		timesalePrice1: 41,
 		timesalePrice2: 46,
+		prevClosePrice: 31,
 		type: MarketInvestmentType.USA_ETF
 	},
 	{
@@ -59,6 +62,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 52,
 		timesalePrice1: 42,
 		timesalePrice2: 47,
+		prevClosePrice: 32,
 		type: MarketInvestmentType.USA_ETF
 	},
 	{
@@ -67,6 +71,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 53,
 		timesalePrice1: 43,
 		timesalePrice2: 48,
+		prevClosePrice: 33,
 		type: MarketInvestmentType.USA_ETF
 	},
 	{
@@ -75,6 +80,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 54,
 		timesalePrice1: 44,
 		timesalePrice2: 49,
+		prevClosePrice: 34,
 		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
@@ -83,6 +89,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 57,
 		timesalePrice1: 47,
 		timesalePrice2: 52,
+		prevClosePrice: 35,
 		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
@@ -91,6 +98,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 55,
 		timesalePrice1: 45,
 		timesalePrice2: 50,
+		prevClosePrice: 36,
 		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
@@ -99,6 +107,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 56,
 		timesalePrice1: 46,
 		timesalePrice2: 51,
+		prevClosePrice: 37,
 		type: MarketInvestmentType.INTERNATIONAL_ETF
 	},
 	{
@@ -107,6 +116,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 58,
 		timesalePrice1: 48,
 		timesalePrice2: 52,
+		prevClosePrice: 38,
 		type: MarketInvestmentType.CRYPTO,
 		id: 'bitcoin'
 	},
@@ -116,6 +126,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 59,
 		timesalePrice1: 49,
 		timesalePrice2: 53,
+		prevClosePrice: 39,
 		type: MarketInvestmentType.CRYPTO,
 		id: 'ethereum'
 	}
@@ -149,7 +160,8 @@ export const createTradierQuote = (
 			bid: 0,
 			ask: 0,
 			close: 0,
-			last: setting.quotePrice
+			last: setting.quotePrice,
+			prevclose: setting.prevClosePrice
 		}
 	}
 });
@@ -167,7 +179,8 @@ export const createTradierQuotes = (
 			bid: 0,
 			ask: 0,
 			close: 0,
-			last: setting.quotePrice
+			last: setting.quotePrice,
+			prevclose: setting.prevClosePrice
 		}))
 	}
 });
