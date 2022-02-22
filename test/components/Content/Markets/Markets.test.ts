@@ -78,8 +78,19 @@ const testMarketsPage = (
 			).not.toBeInTheDocument();
 		} else {
 			const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-			const initialPrice = match({ isTimesale, type: setting.type })
-				.with({ type: when(isStock) }, () => setting.prevClosePrice)
+			const initialPrice = match({
+				isTimesale,
+				type: setting.type,
+				isCurrentPriceQuote: config.isCurrentPriceQuote
+			})
+				.with(
+					{ type: when(isStock), isCurrentPriceQuote: false },
+					() => setting.historyPrice
+				)
+				.with(
+					{ type: when(isStock) },
+					() => setting.prevClosePrice
+				)
 				.with(
 					{ type: when(isCrypto), isTimesale: true },
 					() => setting.timesalePrice1
@@ -104,7 +115,7 @@ const testMarketsPage = (
 			try {
 				expect(priceLine).toHaveTextContent(expectedPrice);
 			} catch (ex) {
-				console.log('Error', setting.symbol);
+				console.log('Error', setting.symbol, config.isCurrentPriceQuote);
 				throw ex;
 			}
 
