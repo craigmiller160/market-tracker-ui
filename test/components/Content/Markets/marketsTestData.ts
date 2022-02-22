@@ -116,7 +116,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 58,
 		timesalePrice1: 48,
 		timesalePrice2: 52,
-		prevClosePrice: 38,
+		prevClosePrice: 0,
 		type: MarketInvestmentType.CRYPTO,
 		id: 'bitcoin'
 	},
@@ -126,7 +126,7 @@ export const testDataSettings: ReadonlyArray<TestDataSetting> = [
 		historyPrice: 59,
 		timesalePrice1: 49,
 		timesalePrice2: 53,
-		prevClosePrice: 39,
+		prevClosePrice: 0,
 		type: MarketInvestmentType.CRYPTO,
 		id: 'ethereum'
 	}
