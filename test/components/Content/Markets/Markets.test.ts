@@ -21,6 +21,11 @@ import {
 import { createMockQueries, testDataSettings } from './marketsTestData';
 import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
+import {
+	isCrypto,
+	isStock
+} from '../../../../src/types/data/MarketInvestmentType';
+import { match, when } from 'ts-pattern';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -73,9 +78,17 @@ const testMarketsPage = (
 			).not.toBeInTheDocument();
 		} else {
 			const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-			const initialPrice = isTimesale
-				? setting.timesalePrice1
-				: setting.historyPrice;
+			const initialPrice = match({ isTimesale, type: setting.type })
+				.with({ type: when(isStock) }, () => setting.prevClosePrice)
+				.with(
+					{ type: when(isCrypto), isTimesale: true },
+					() => setting.timesalePrice1
+				)
+				.with(
+					{ type: when(isCrypto), isTimesale: false },
+					() => setting.historyPrice
+				)
+				.run();
 			const currentPrice =
 				isCurrentPriceQuote || setting.id !== undefined
 					? setting.quotePrice
@@ -88,7 +101,12 @@ const testMarketsPage = (
 			expect(
 				within(card).queryByText(`$${currentPrice.toFixed(2)}`)
 			).toBeInTheDocument();
-			expect(priceLine).toHaveTextContent(expectedPrice);
+			try {
+				expect(priceLine).toHaveTextContent(expectedPrice);
+			} catch (ex) {
+				console.log('Error', setting.symbol);
+				throw ex;
+			}
 
 			expect(
 				within(card).queryByText('Chart is Here')
