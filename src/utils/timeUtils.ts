@@ -1,4 +1,4 @@
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 export const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
@@ -9,70 +9,71 @@ export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 const formatInEST = Time.formatTZ('America/New_York');
 export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
 // TODO much better but won't handle daylight savings time changes
-export const setTimesalesStartTime = Time.setUtc({
-	hours: 21,
+export const setTodayStartTime: (d: Date) => Date = Time.setUtc({
+	hours: 5,
 	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
 });
 // TODO much better but won't handle daylight savings time changes
-export const setTimesalesEndTime = Time.setUtc({
-	hours: 23,
-	minutes: 0,
-	seconds: 0,
-	milliseconds: 0
-});
-
-const getStartDate = (intervalFn: (d: Date) => Date): Date =>
-	pipe(new Date(), intervalFn, Time.addDays(1));
-
-const getHistoryStartDate = (intervalFn: (d: Date) => Date): string =>
-	pipe(getStartDate(intervalFn), formatHistoryDate);
-
-const getDisplayStartDate = (intervalFn: (d: Date) => Date): string =>
-	pipe(getStartDate(intervalFn), formatDisplayDate);
+export const setTodayEndTime: (d: Date) => Date = flow(
+	Time.setUtc({
+		hours: 4,
+		minutes: 0,
+		seconds: 0,
+		milliseconds: 0
+	}),
+	Time.addDays(1)
+);
 
 export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
 
-export const getTimesalesStart = (): string =>
-	pipe(
-		new Date(),
-		Time.subDays(1),
-		setTimesalesStartTime,
-		formatTimesalesDate
-	);
+export const getTodayStart = (): Date => setTodayStartTime(new Date());
+export const getTodayStartString = (): string =>
+	pipe(getTodayStart(), formatTimesalesDate);
 
-export const getTimesalesEnd = (): string =>
-	pipe(new Date(), setTimesalesEndTime, formatTimesalesDate);
+export const getTodayEnd = (): Date => setTodayEndTime(new Date());
+export const getTodayEndString = (): string =>
+	pipe(getTodayEnd(), formatTimesalesDate);
+
+export const getOneWeekStartDate = (): Date => Time.subWeeks(1)(new Date());
 
 export const getOneWeekHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subWeeks(1));
+	pipe(getOneWeekStartDate(), formatHistoryDate);
 
 export const getOneWeekDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subWeeks(1));
+	pipe(getOneWeekStartDate(), formatDisplayDate);
+
+export const getOneMonthStartDate = (): Date => Time.subMonths(1)(new Date());
 
 export const getOneMonthHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subMonths(1));
+	pipe(getOneMonthStartDate(), formatHistoryDate);
 
 export const getOneMonthDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subMonths(1));
+	pipe(getOneMonthStartDate(), formatDisplayDate);
+
+export const getThreeMonthStartDate = (): Date => Time.subMonths(3)(new Date());
 
 export const getThreeMonthHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subMonths(3));
+	pipe(getThreeMonthStartDate(), formatHistoryDate);
 
 export const getThreeMonthDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subMonths(3));
+	pipe(getThreeMonthStartDate(), formatDisplayDate);
+
+export const getOneYearStartDate = (): Date => Time.subYears(1)(new Date());
 
 export const getOneYearHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subYears(1));
+	pipe(getOneYearStartDate(), formatHistoryDate);
 
 export const getOneYearDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subYears(1));
+	pipe(getOneYearStartDate(), formatDisplayDate);
+
+export const getFiveYearStartDate = (): Date => Time.subYears(5)(new Date());
 
 export const getFiveYearHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subYears(5));
+	pipe(getFiveYearStartDate(), formatHistoryDate);
 
 export const getFiveYearDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subYears(5));
+	pipe(getFiveYearStartDate(), formatDisplayDate);

@@ -3,10 +3,11 @@ import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import MockAdapter from 'axios-mock-adapter';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import * as Option from 'fp-ts/es6/Option';
 import {
-	getTimesalesEnd,
-	getTimesalesStart
+	formatHistoryDate,
+	formatTimesalesDate,
+	getTodayEnd,
+	getTodayStart
 } from '../../../../src/utils/timeUtils';
 import {
 	TradierCalendar,
@@ -14,17 +15,16 @@ import {
 } from '../../../../src/types/tradier/calendar';
 import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
-import { pipe } from 'fp-ts/es6/function';
 import {
 	isCrypto,
 	isStock,
 	MarketInvestmentType
 } from '../../../../src/types/data/MarketInvestmentType';
 
-const formatDate = Time.format('yyyy-MM-dd');
-const today = formatDate(new Date());
-const timesalesStart = getTimesalesStart();
-const timesalesEnd = getTimesalesEnd();
+const today = new Date();
+const todayFormatted = formatHistoryDate(today);
+const timesalesStart = getTodayStart();
+const timesalesEnd = getTodayEnd();
 
 export interface TestDataSetting {
 	readonly symbol: string;
@@ -246,11 +246,10 @@ export const createTimesale = (
 });
 
 export interface MockQueriesConfig {
-	readonly start?: string;
+	readonly start?: Date;
 	readonly tradierInterval?: string;
 	readonly timesaleTimestamp?: number;
 	readonly isMarketClosed?: boolean;
-	readonly coinGeckoInterval?: string;
 }
 
 export const createMockCalendar = (
@@ -271,27 +270,12 @@ export const createMockCalendar = (
 	}
 });
 
-const getCoinGeckoDays = (start: string | undefined): number =>
-	pipe(
-		Option.fromNullable(start),
-		Option.map(Time.parse('yyyy-MM-dd')),
-		Option.map(Time.differenceInDays(new Date())),
-		Option.getOrElse(() => 1)
-	);
-
 export const createMockQueries =
 	(mockApi: MockAdapter) =>
 	(config: MockQueriesConfig = {}) => {
-		const {
-			start,
-			tradierInterval,
-			timesaleTimestamp,
-			isMarketClosed,
-			coinGeckoInterval
-		} = config;
+		const { start, tradierInterval, timesaleTimestamp, isMarketClosed } =
+			config;
 
-		const coinGeckoDays = getCoinGeckoDays(start);
-		const realCoinGeckoInverval = coinGeckoInterval ?? 'daily';
 		const calendarToday = new Date();
 		const calendarDate = Time.format('yyyy-MM-dd')(calendarToday);
 		const month = Time.format('MM')(calendarToday);
@@ -307,6 +291,10 @@ export const createMockQueries =
 		const coinGeckoSettings = testDataSettings.filter((setting) =>
 			isCrypto(setting.type)
 		);
+		const realStart = start ?? Time.subDays(1)(new Date());
+		const startFormatted = formatHistoryDate(realStart);
+		const timesaleStartFormatted = formatTimesalesDate(timesalesStart);
+		const timesaleEndFormatted = formatTimesalesDate(timesalesEnd);
 
 		tradierSettings.forEach((setting) => {
 			mockApi
@@ -314,12 +302,12 @@ export const createMockQueries =
 				.reply(200, createTradierQuote(setting));
 			mockApi
 				.onGet(
-					`/tradier/markets/history?symbol=${setting.symbol}&start=${start}&end=${today}&interval=${tradierInterval}`
+					`/tradier/markets/history?symbol=${setting.symbol}&start=${startFormatted}&end=${todayFormatted}&interval=${tradierInterval}`
 				)
 				.reply(200, createTradierHistory(setting));
 			mockApi
 				.onGet(
-					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesalesStart}&end=${timesalesEnd}&interval=1min`
+					`/tradier/markets/timesales?symbol=${setting.symbol}&start=${timesaleStartFormatted}&end=${timesaleEndFormatted}&interval=1min`
 				)
 				.reply(200, createTimesale(timesaleTimestamp, setting));
 		});
@@ -332,20 +320,32 @@ export const createMockQueries =
 			.reply(200, ethereumQuote);
 
 		coinGeckoSettings.forEach((setting) => {
-			const response =
-				coinGeckoDays === 1
-					? createCoinGeckoTimesaleHistory(setting)
-					: createCoinGeckoHistory(setting);
+			const todayStartMillis = Math.floor(
+				timesalesStart.getTime() / 1000
+			).toString();
+			const todayEndMillis = Math.floor(
+				today.getTime() / 1000
+			).toString();
+			const todayStartPattern = `${todayStartMillis.substring(0, 9)}\\d`;
+			const todayEndPattern = `${todayEndMillis.substring(0, 9)}\\d`;
+			const todayUrlPattern = RegExp(
+				`\\/coingecko\\/coins\\/${setting.id}\\/market_chart\\/range\\?vs_currency=usd&from=${todayStartPattern}&to=${todayEndPattern}`
+			);
 
 			mockApi
-				.onGet(
-					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=1&interval=minutely`
-				)
+				.onGet(todayUrlPattern)
 				.reply(200, createCoinGeckoTimesaleHistory(setting));
-			mockApi
-				.onGet(
-					`/coingecko/coins/${setting.id}/market_chart?vs_currency=usd&days=${coinGeckoDays}&interval=${realCoinGeckoInverval}`
-				)
-				.reply(200, response);
+			if (start !== undefined) {
+				const actualStart = Math.floor(
+					start.getTime() / 1000
+				).toString();
+				const actualStartPattern = `${actualStart.substring(0, 9)}\\d`;
+				const actualUrlPattern = RegExp(
+					`\\/coingecko\\/coins\\/${setting.id}\\/market_chart\\/range\\?vs_currency=usd&from=${actualStartPattern}&to=${todayEndPattern}`
+				);
+				mockApi
+					.onGet(actualUrlPattern)
+					.reply(200, createCoinGeckoHistory(setting));
+			}
 		});
 	};

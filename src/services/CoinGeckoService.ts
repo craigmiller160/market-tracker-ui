@@ -1,6 +1,6 @@
-import { TaskTryT, TryT, MonoidT } from '@craigmiller160/ts-functions/es/types';
+import { MonoidT, TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
-import { pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/es6/function';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
@@ -12,17 +12,17 @@ import {
 	CoinGeckoMarketChart,
 	coinGeckoMarketChartV
 } from '../types/coingecko/marketchart';
-import { flow } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
 import * as Monoid from 'fp-ts/es6/Monoid';
 import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
 import {
-	getFiveYearHistoryStartDate,
-	getOneMonthHistoryStartDate,
-	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate,
+	getFiveYearStartDate,
+	getOneMonthStartDate,
+	getOneWeekStartDate,
+	getOneYearStartDate,
+	getThreeMonthStartDate,
+	getTodayStart,
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
@@ -42,8 +42,7 @@ export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
 
 export interface HistoryQuery {
 	readonly symbol: string;
-	readonly days: number;
-	readonly interval: HistoryInterval;
+	readonly start: Date;
 }
 
 const getId = (symbol: string): string =>
@@ -127,9 +126,11 @@ const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const id = getId(historyQuery.symbol);
+	const start = Math.floor(historyQuery.start.getTime() / 1000);
+	const end = Math.floor(new Date().getTime() / 1000);
 	return pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${id}/market_chart?vs_currency=usd&days=${historyQuery.days}&interval=${historyQuery.interval}`
+			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeMarketChart),
@@ -142,8 +143,7 @@ export const getTodayHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: 1,
-		interval: 'minutely'
+		start: getTodayStart()
 	});
 
 export const getDays = (historyDate: string): number =>
@@ -158,8 +158,7 @@ export const getOneWeekHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: getDays(getOneWeekHistoryStartDate()),
-		interval: 'daily'
+		start: getOneWeekStartDate()
 	});
 
 export const getOneMonthHistory = (
@@ -167,8 +166,7 @@ export const getOneMonthHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	return getHistoryQuote({
 		symbol,
-		days: getDays(getOneMonthHistoryStartDate()),
-		interval: 'daily'
+		start: getOneMonthStartDate()
 	});
 };
 
@@ -177,8 +175,7 @@ export const getThreeMonthHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: getDays(getThreeMonthHistoryStartDate()),
-		interval: 'daily'
+		start: getThreeMonthStartDate()
 	});
 
 export const getOneYearHistory = (
@@ -186,8 +183,7 @@ export const getOneYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: getDays(getOneYearHistoryStartDate()),
-		interval: 'daily'
+		start: getOneYearStartDate()
 	});
 
 export const getFiveYearHistory = (
@@ -195,6 +191,5 @@ export const getFiveYearHistory = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
-		days: getDays(getFiveYearHistoryStartDate()),
-		interval: 'daily'
+		start: getFiveYearStartDate()
 	});

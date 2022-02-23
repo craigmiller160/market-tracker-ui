@@ -3,29 +3,29 @@ import MockAdapter from 'axios-mock-adapter';
 import { TradierQuote } from '../../src/types/tradier/quotes';
 import {
 	getFiveYearHistory,
+	getMarketStatus,
 	getOneMonthHistory,
 	getOneWeekHistory,
 	getOneYearHistory,
 	getQuotes,
 	getThreeMonthHistory,
 	getTimesales,
-	HistoryQuery,
-	getMarketStatus
+	HistoryQuery
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { pipe } from 'fp-ts/es6/function';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTimesalesEnd,
-	getTimesalesStart
+	getTodayEndString,
+	getTodayStartString
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
 import { MarketStatus } from '../../src/types/MarketStatus';
@@ -182,7 +182,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subDays(6), formatDate),
+			start: getOneWeekHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'daily'
 		};
@@ -264,8 +264,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today', async () => {
-		const start = getTimesalesStart();
-		const end = getTimesalesEnd();
+		const start = getTodayStartString();
+		const end = getTodayEndString();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
@@ -277,8 +277,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today with null response', async () => {
-		const start = getTimesalesStart();
-		const end = getTimesalesEnd();
+		const start = getTodayStartString();
+		const end = getTodayEndString();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
