@@ -222,6 +222,8 @@ const handleInvestmentData = ({
 }: IntermediateInvestmentData): InvestmentData => {
 	const currentPrice = getCurrentPrice(quote);
 	const startPrice = getStartPrice(quote, history);
+	// TODO this is probably the source of the 0 bug on historical items
+	// TODO only want to do this extra starting record for today entries
 	const { date, time } = getFirstHistoryRecordDateTime(history);
 
 	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({

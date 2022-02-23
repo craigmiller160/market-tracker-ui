@@ -64,7 +64,7 @@ describe('MarketInvestmentService', () => {
 	});
 
 	describe('getInvestmentData', () => {
-		it('gets history and quote and combines', async () => {
+		it('gets past history and current quote and combines', async () => {
 			throw new Error();
 		});
 
@@ -78,6 +78,10 @@ describe('MarketInvestmentService', () => {
 
 		it('what is going on with previousClose in my logic???', async () => {
 			// Probably the source of some bugs
+			throw new Error();
+		});
+
+		it('adds special starting history record for previousClose for Today', async () => {
 			throw new Error();
 		});
 	});
