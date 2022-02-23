@@ -130,7 +130,7 @@ describe('CoinGeckoService', () => {
 		const end = Math.floor(new Date().getTime() / 1000);
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to-${end}`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
 		const result = await getThreeMonthHistory('BTC')();
