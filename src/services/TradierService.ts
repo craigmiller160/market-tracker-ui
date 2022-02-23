@@ -50,6 +50,8 @@ const decodeQuotes = TypeValidation.decode(tradierQuotesV);
 const decodeTimesales = TypeValidation.decode(tradierSeriesV);
 const decodeHistory = TypeValidation.decode(tradierHistoryV);
 const decodeCalendar = TypeValidation.decode(tradierCalendarV);
+const getMillisFromDateTime = (d: string): number =>
+	Time.parse('yyyy-MM-dd HH:mm:ss')(d).getTime();
 
 export interface HistoryQuery {
 	readonly symbol: string;
@@ -84,13 +86,17 @@ const formatTradierHistory = (
 				{
 					date: _.date,
 					time: '00:00:00',
-					unixTimestampMillis: 0,
+					unixTimestampMillis: getMillisFromDateTime(
+						`${_.date} 00:00:00`
+					),
 					price: _.open
 				},
 				{
 					date: _.date,
 					time: '23:59:59',
-					unixTimestampMillis: 0,
+					unixTimestampMillis: getMillisFromDateTime(
+						`${_.date} 23:59:59`
+					),
 					price: _.close
 				}
 			]

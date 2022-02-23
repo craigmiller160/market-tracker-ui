@@ -59,6 +59,9 @@ const tradierQuote: TradierQuotes = {
 	}
 };
 
+const getMillisFromDateTime = (d: string): number =>
+	Time.parse('yyyy-MM-dd HH:mm:ss')(d).getTime();
+
 const tradierTimesale: TradierSeries = {
 	series: {
 		data: [
@@ -278,13 +281,17 @@ describe('MarketInvestmentService', () => {
 						date: tradierHistory.history.day[0].date,
 						time: '00:00:00',
 						price: tradierHistory.history.day[0].open,
-						unixTimestampMillis: 0
+						unixTimestampMillis: getMillisFromDateTime(
+							`${tradierHistory.history.day[0].date} 00:00:00`
+						)
 					},
 					{
 						date: tradierHistory.history.day[0].date,
 						time: '23:59:59',
 						price: tradierHistory.history.day[0].close,
-						unixTimestampMillis: 0
+						unixTimestampMillis: getMillisFromDateTime(
+							`${tradierHistory.history.day[0].date} 23:59:59`
+						)
 					}
 				]
 			});
