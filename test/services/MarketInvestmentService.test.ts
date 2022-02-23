@@ -367,10 +367,5 @@ describe('MarketInvestmentService', () => {
 		it('gets investment data for past history, no quote or history available', async () => {
 			throw new Error();
 		});
-
-		it('what is going on with previousClose in my logic???', async () => {
-			// Probably the source of some bugs
-			throw new Error();
-		});
 	});
 });
