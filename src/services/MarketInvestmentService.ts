@@ -3,7 +3,8 @@ import {
 	OptionT,
 	PredicateT,
 	TaskT,
-	TaskTryT
+	TaskTryT,
+	TryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
 import { match, when } from 'ts-pattern';
@@ -22,6 +23,7 @@ import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Either from 'fp-ts/es6/Either';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
@@ -40,7 +42,7 @@ export interface InvestmentData {
 
 interface IntermediateInvestmentData {
 	readonly history: ReadonlyArray<HistoryRecord>;
-	readonly quote: OptionT<Quote>;
+	readonly quote: Quote;
 }
 
 export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
@@ -138,7 +140,7 @@ const historyRecordToQuote =
 	});
 
 // TODO simplify this, move a lot of the logic here into the ending handle data function
-const getQuote = (
+const getQuote2 = (
 	info: MarketInvestmentInfo,
 	history: ReadonlyArray<HistoryRecord>
 ): TaskTryT<OptionT<Quote>> =>
@@ -161,6 +163,21 @@ const getQuote = (
 		.otherwise(({ type }) =>
 			pipe(getQuoteFn(type)([info.symbol]), TaskEither.map(RArray.head))
 		);
+
+const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
+	pipe(
+		getQuoteFn(info.type)([info.symbol]),
+		TaskEither.map(RArray.head),
+		TaskEither.chain(
+			Option.fold(
+				() =>
+					TaskEither.left(
+						new Error(`No quote found for symbol: ${info.symbol}`)
+					),
+				TaskEither.right
+			)
+		)
+	);
 
 const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
 	() => 0,
@@ -208,29 +225,72 @@ const getFirstHistoryRecordDate = (
 		Option.getOrElse(() => new Date())
 	);
 
+const handleUseQuoteOrHistoryQuote =
+	(info: MarketInvestmentInfo) =>
+	({
+		history,
+		quote
+	}: IntermediateInvestmentData): TryT<IntermediateInvestmentData> => {
+		const quoteEither = match({
+			type: info.type,
+			mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+		})
+			.with(
+				{
+					type: when(isStock),
+					mostRecentHistoryRecord: when(isLaterThanNow)
+				},
+				({ mostRecentHistoryRecord }) =>
+					pipe(
+						mostRecentHistoryRecord,
+						Option.map(historyRecordToQuote(info.symbol)),
+						Option.fold(
+							() =>
+								Either.left(
+									new Error(
+										'No history record for history quote'
+									)
+								),
+							(_) => Either.right(_)
+						)
+					)
+			)
+			.otherwise(() => Either.right(quote));
+		return pipe(
+			quoteEither,
+			Either.map((_) => ({
+				quote: _,
+				history
+			}))
+		);
+	};
+
 const handleInvestmentData =
 	(time: MarketTime) =>
 	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
-		const currentPrice = getCurrentPrice(quote);
-		const startPrice = getStartPrice(quote, history);
+		const startPrice =
+			quote.previousClose > 0 ? quote.previousClose : history?.[0]?.price;
 
 		// TODO no need for extra history record when already using history for start price
-		const newHistory = match(time)
-			.with(MarketTime.ONE_DAY, () => {
-				const date = getFirstHistoryRecordDate(history);
+		const newHistory = match({ time, startPrice })
+			.with(
+				{ time: MarketTime.ONE_DAY, startPrice: quote.previousClose },
+				() => {
+					const date = getFirstHistoryRecordDate(history);
 
-				return RArray.prepend({
-					date: formatDate(date),
-					unixTimestampMillis: date.getTime(),
-					time: formatTime(date),
-					price: startPrice
-				})(history);
-			})
+					return RArray.prepend({
+						date: formatDate(date),
+						unixTimestampMillis: date.getTime(),
+						time: formatTime(date),
+						price: startPrice
+					})(history);
+				}
+			)
 			.otherwise(() => history);
 
 		return {
 			startPrice,
-			currentPrice,
+			currentPrice: quote.price,
 			history: newHistory
 		};
 	};
@@ -242,6 +302,7 @@ export const getInvestmentData = (
 	pipe(
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
-		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
+		TaskEither.bind('quote', () => getQuote(info)),
+		TaskEither.chainEitherK(handleUseQuoteOrHistoryQuote(info)),
 		TaskEither.map(handleInvestmentData(time))
 	);
