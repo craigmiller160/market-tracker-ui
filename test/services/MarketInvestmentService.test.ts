@@ -1,15 +1,91 @@
 import {
 	getHistoryFn,
+	getInvestmentData,
 	getQuoteFn
 } from '../../src/services/MarketInvestmentService';
 import { MarketTime } from '../../src/types/MarketTime';
 import { MarketInvestmentType } from '../../src/types/data/MarketInvestmentType';
 import * as tradierService from '../../src/services/TradierService';
 import * as coinGeckoService from '../../src/services/CoinGeckoService';
+import { MarketInvestmentInfo } from '../../src/types/data/MarketInvestmentInfo';
+import { ajaxApi } from '../../src/services/AjaxApi';
+import MockAdapter from 'axios-mock-adapter';
+import '@relmify/jest-fp-ts';
+import {
+	getTodayEndString,
+	getTodayStartString
+} from '../../src/utils/timeUtils';
+import { TradierHistory } from '../../src/types/tradier/history';
+import { TradierSeries } from '../../src/types/tradier/timesales';
+import { TradierQuotes } from '../../src/types/tradier/quotes';
 
-// TODO take the API setup stuff for the regexes in Markets.test and make it re-usable
+const mockApi = new MockAdapter(ajaxApi.instance);
+
+const tradierHistory: TradierHistory = {
+	history: {
+		day: [
+			{
+				date: '2022-01-01',
+				open: 50,
+				high: 0,
+				low: 0,
+				close: 0
+			}
+		]
+	}
+};
+
+const traiderQuote: TradierQuotes = {
+	quotes: {
+		quote: {
+			symbol: 'VTI',
+			description: '',
+			open: 0,
+			high: 0,
+			low: 0,
+			bid: 0,
+			ask: 0,
+			close: 0,
+			last: 100,
+			prevclose: 60
+		}
+	}
+};
+
+const tradierTimesale: TradierSeries = {
+	series: {
+		data: [
+			{
+				time: '2022-01-01T01:00:00',
+				timestamp: new Date().getTime(),
+				price: 20,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			},
+			{
+				time: '2022-01-01T01:01:01',
+				timestamp: new Date().getTime(),
+				price: 30,
+				open: 0,
+				high: 0,
+				low: 0,
+				close: 0,
+				volume: 0,
+				vwap: 0
+			}
+		]
+	}
+};
 
 describe('MarketInvestmentService', () => {
+	beforeEach(() => {
+		mockApi.reset();
+	});
+
 	describe('getHistoryFn', () => {
 		it('Tradier One Day', () => {
 			const usResult = getHistoryFn(
@@ -155,12 +231,29 @@ describe('MarketInvestmentService', () => {
 	});
 
 	describe('getInvestmentData', () => {
+		const info: MarketInvestmentInfo = {
+			symbol: 'VTI',
+			name: 'US Total Market',
+			type: MarketInvestmentType.USA_ETF
+		};
+
 		it('gets investment data for past history', async () => {
 			throw new Error();
 		});
 
 		it('gets investment data for today', async () => {
-			throw new Error();
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, traiderQuote);
+			const start = getTodayStartString();
+			const end = getTodayEndString();
+			mockApi
+				.onGet(
+					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
+				)
+				.reply(200, tradierTimesale);
+			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+			console.log(result);
 		});
 
 		it('gets investment data for today when most recent history record is later than now', async () => {
