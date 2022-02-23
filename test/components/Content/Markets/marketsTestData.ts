@@ -320,20 +320,31 @@ export const createMockQueries =
 			.reply(200, ethereumQuote);
 
 		coinGeckoSettings.forEach((setting) => {
-			const todayStart = Math.floor(timesalesStart.getTime() / 1000);
-			const todayEnd = Math.floor(today.getTime() / 1000);
+			const todayStartMillis = Math.floor(
+				timesalesStart.getTime() / 1000
+			).toString();
+			const todayEndMillis = Math.floor(
+				today.getTime() / 1000
+			).toString();
+			const todayStartPattern = `${todayStartMillis.substring(0, 9)}\\d`;
+			const todayEndPattern = `${todayEndMillis.substring(0, 9)}\\d`;
+			const todayUrlPattern = RegExp(
+				`\\/coingecko\\/coins\\/${setting.id}\\/market_chart\\/range\\?vs_currency=usd&from=${todayStartPattern}&to=${todayEndPattern}`
+			);
 
 			mockApi
-				.onGet(
-					`/coingecko/coins/${setting.id}/market_chart/range?vs_currency=usd&from=${todayStart}&to=${todayEnd}`
-				)
+				.onGet(todayUrlPattern)
 				.reply(200, createCoinGeckoTimesaleHistory(setting));
 			if (start !== undefined) {
-				const actualStart = Math.floor(start.getTime() / 1000);
+				const actualStart = Math.floor(
+					start.getTime() / 1000
+				).toString();
+				const actualStartPattern = `${actualStart.substring(0, 9)}\\d`;
+				const actualUrlPattern = RegExp(
+					`\\/coingecko\\/coins\\/${setting.id}\\/market_chart\\/range\\?vs_currency=usd&from=${actualStartPattern}&to=${todayEndPattern}`
+				);
 				mockApi
-					.onGet(
-						`/coingecko/coins/${setting.id}/market_chart/range?vs_currency=usd&from=${actualStart}&to=${todayEnd}`
-					)
+					.onGet(actualUrlPattern)
 					.reply(200, createCoinGeckoHistory(setting));
 			}
 		});
