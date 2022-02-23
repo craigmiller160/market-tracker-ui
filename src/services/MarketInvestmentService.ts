@@ -23,9 +23,9 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
-const TIME_FORMAT = 'HH:mm:ss';
-const parseTime = Time.parse(TIME_FORMAT);
-const formatTime = Time.format(TIME_FORMAT);
+const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+const parseDateTime = Time.parse(DATE_TIME_FORMAT);
+const formatTime = Time.format('HH:mm:ss');
 const subtractOneHour = Time.subHours(1);
 const formatDate = Time.format('yyyy-MM-dd');
 
@@ -194,19 +194,18 @@ const getStartPrice = (
 		)
 	);
 
-const getFirstHistoryRecordDateTime = (
+const getFirstHistoryRecordDate = (
 	history: ReadonlyArray<HistoryRecord>
-): { date: string; time: string } =>
+): Date =>
 	pipe(
 		RArray.head(history),
-		Option.map((record) => ({
-			date: record.date,
-			time: pipe(parseTime(record.time), subtractOneHour, formatTime)
-		})),
-		Option.getOrElse(() => ({
-			date: formatDate(new Date()),
-			time: formatTime(new Date())
-		}))
+		Option.map((record) =>
+			pipe(
+				parseDateTime(`${record.date} ${record.time}`),
+				subtractOneHour
+			)
+		),
+		Option.getOrElse(() => new Date())
 	);
 
 const handleInvestmentData = ({
@@ -217,12 +216,12 @@ const handleInvestmentData = ({
 	const startPrice = getStartPrice(quote, history);
 	// TODO this is probably the source of the 0 bug on historical items
 	// TODO only want to do this extra starting record for today entries
-	const { date, time } = getFirstHistoryRecordDateTime(history);
+	const date = getFirstHistoryRecordDate(history);
 
 	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
-		date,
-		unixTimestampMillis: 0, // TODO why not give this a timestamp if I have date/time values?
-		time,
+		date: formatDate(date),
+		unixTimestampMillis: date.getTime(),
+		time: formatTime(date),
 		price: startPrice
 	})(history);
 	return {

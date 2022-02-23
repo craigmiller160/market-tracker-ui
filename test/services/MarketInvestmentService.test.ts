@@ -281,7 +281,7 @@ describe('MarketInvestmentService', () => {
 						date: formatHistoryDate(firstRecordDate),
 						time: formatHistoryTime(firstRecordDate),
 						price: 60,
-						unixTimestampMillis: 0
+						unixTimestampMillis: firstRecordDate.getTime()
 					},
 					{
 						date: pipe(
