@@ -61,7 +61,7 @@ const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
 				)
 		);
 
-const getHistoryFn = (
+export const getHistoryFn = (
 	time: MarketTime,
 	type: MarketInvestmentType
 ): HistoryFn =>
