@@ -437,13 +437,5 @@ describe('MarketInvestmentService', () => {
 				]
 			});
 		});
-
-		it('gets investment data for past history, no quote available', async () => {
-			throw new Error();
-		});
-
-		it('gets investment data for past history, no quote or history available', async () => {
-			throw new Error();
-		});
 	});
 });
