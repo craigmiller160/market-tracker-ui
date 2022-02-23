@@ -26,20 +26,9 @@ export const setTodayEndTime: (d: Date) => Date = flow(
 	Time.addDays(1)
 );
 
-const getStartDate = (intervalFn: (d: Date) => Date): Date =>
-	pipe(new Date(), intervalFn, Time.addDays(1));
-
-const getHistoryStartDate = (intervalFn: (d: Date) => Date): string =>
-	pipe(getStartDate(intervalFn), formatHistoryDate);
-
-const getDisplayStartDate = (intervalFn: (d: Date) => Date): string =>
-	pipe(getStartDate(intervalFn), formatDisplayDate);
-
 export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
 
 export const getTodayDisplayDate = (): string => formatDisplayDate(new Date());
-
-// TODO split the intervals into functions that return a date and ones that return a string. Then integrate the date ones into CoinGeckoService
 
 export const getTodayStart = (): Date => setTodayStartTime(new Date());
 export const getTodayStartString = (): string =>
@@ -65,20 +54,26 @@ export const getOneMonthHistoryStartDate = (): string =>
 export const getOneMonthDisplayStartDate = (): string =>
 	pipe(getOneMonthStartDate(), formatDisplayDate);
 
+export const getThreeMonthStartDate = (): Date => Time.subMonths(3)(new Date());
+
 export const getThreeMonthHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subMonths(3));
+	pipe(getThreeMonthStartDate(), formatHistoryDate);
 
 export const getThreeMonthDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subMonths(3));
+	pipe(getThreeMonthStartDate(), formatDisplayDate);
+
+export const getOneYearStartDate = (): Date => Time.subYears(1)(new Date());
 
 export const getOneYearHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subYears(1));
+	pipe(getOneYearStartDate(), formatHistoryDate);
 
 export const getOneYearDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subYears(1));
+	pipe(getOneYearStartDate(), formatDisplayDate);
+
+export const getFiveYearStartDate = (): Date => Time.subYears(5)(new Date());
 
 export const getFiveYearHistoryStartDate = (): string =>
-	getHistoryStartDate(Time.subYears(5));
+	pipe(getFiveYearStartDate(), formatHistoryDate);
 
 export const getFiveYearDisplayStartDate = (): string =>
-	getDisplayStartDate(Time.subYears(5));
+	pipe(getFiveYearStartDate(), formatDisplayDate);
