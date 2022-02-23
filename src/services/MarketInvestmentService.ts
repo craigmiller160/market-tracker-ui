@@ -43,7 +43,7 @@ interface IntermediateInvestmentData {
 	readonly quote: OptionT<Quote>;
 }
 
-const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
+export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
 	match(type)
 		.with(
 			when(isStock),

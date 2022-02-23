@@ -52,4 +52,33 @@ describe('MarketInvestmentService', () => {
 			throw new Error();
 		});
 	});
+
+	describe('getQuoteFn', () => {
+		it('Tradier Quote', () => {
+			throw new Error();
+		});
+
+		it('CoinGecko Quote', () => {
+			throw new Error();
+		});
+	});
+
+	describe('getInvestmentData', () => {
+		it('gets history and quote and combines', async () => {
+			throw new Error();
+		});
+
+		it('No quote available', async () => {
+			throw new Error();
+		});
+
+		it('No quote or history available', async () => {
+			throw new Error();
+		});
+
+		it('what is going on with previousClose in my logic???', async () => {
+			// Probably the source of some bugs
+			throw new Error();
+		});
+	});
 });
