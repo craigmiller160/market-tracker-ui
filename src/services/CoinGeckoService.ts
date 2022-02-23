@@ -38,6 +38,8 @@ const quoteSymbolMonoid: MonoidT<string> = {
 			.otherwise(() => s2)
 };
 
+// TODO switch to market_chart range APIs and set start/end dates from timeUtils
+
 export type HistoryInterval = 'minutely' | 'hourly' | 'daily';
 
 export interface HistoryQuery {
