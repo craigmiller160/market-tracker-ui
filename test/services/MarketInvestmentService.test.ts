@@ -18,6 +18,7 @@ import {
 import { TradierHistory } from '../../src/types/tradier/history';
 import { TradierSeries } from '../../src/types/tradier/timesales';
 import { TradierQuotes } from '../../src/types/tradier/quotes';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
@@ -35,7 +36,7 @@ const tradierHistory: TradierHistory = {
 	}
 };
 
-const traiderQuote: TradierQuotes = {
+const tradierQuote: TradierQuotes = {
 	quotes: {
 		quote: {
 			symbol: 'VTI',
@@ -57,7 +58,7 @@ const tradierTimesale: TradierSeries = {
 		data: [
 			{
 				time: '2022-01-01T01:00:00',
-				timestamp: new Date().getTime(),
+				timestamp: Time.subMinutes(30)(new Date()).getTime(),
 				price: 20,
 				open: 0,
 				high: 0,
@@ -68,7 +69,7 @@ const tradierTimesale: TradierSeries = {
 			},
 			{
 				time: '2022-01-01T01:01:01',
-				timestamp: new Date().getTime(),
+				timestamp: Time.subMinutes(20)(new Date()).getTime(),
 				price: 30,
 				open: 0,
 				high: 0,
@@ -244,7 +245,7 @@ describe('MarketInvestmentService', () => {
 		it('gets investment data for today', async () => {
 			mockApi
 				.onGet('/tradier/markets/quotes?symbols=VTI')
-				.reply(200, traiderQuote);
+				.reply(200, tradierQuote);
 			const start = getTodayStartString();
 			const end = getTodayEndString();
 			mockApi

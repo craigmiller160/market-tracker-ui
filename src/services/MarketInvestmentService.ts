@@ -168,6 +168,7 @@ const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
 
 const greaterThan0: PredicateT<number> = (_) => _ > 0;
 
+// TODO make sure the different permutations here are tested
 const getStartPrice = (
 	quote: OptionT<Quote>,
 	history: ReadonlyArray<HistoryRecord>
@@ -175,8 +176,11 @@ const getStartPrice = (
 	pipe(
 		quote,
 		Option.chain((q) =>
-			match(q.previousClose)
-				.with(when(greaterThan0), Option.some)
+			match(q)
+				.with(
+					{ previousClose: when(greaterThan0) },
+					({ previousClose }) => Option.some(previousClose)
+				)
 				.otherwise(() => Option.none)
 		),
 		Option.fold(
