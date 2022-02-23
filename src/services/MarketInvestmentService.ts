@@ -137,6 +137,7 @@ const historyRecordToQuote =
 		previousClose: 0
 	});
 
+// TODO simplify this, move a lot of the logic here into the ending handle data function
 const getQuote = (
 	info: MarketInvestmentInfo,
 	history: ReadonlyArray<HistoryRecord>
@@ -214,6 +215,7 @@ const handleInvestmentData =
 		const currentPrice = getCurrentPrice(quote);
 		const startPrice = getStartPrice(quote, history);
 
+		// TODO no need for extra history record when already using history for start price
 		const newHistory = match(time)
 			.with(MarketTime.ONE_DAY, () => {
 				const date = getFirstHistoryRecordDate(history);

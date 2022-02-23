@@ -377,6 +377,8 @@ describe('MarketInvestmentService', () => {
 					]
 				}
 			};
+			const newTimesaleArray: ReadonlyArray<TradierSeriesData> =
+				newTimesale.series?.data as ReadonlyArray<TradierSeriesData>;
 			mockApi
 				.onGet(
 					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
@@ -384,50 +386,53 @@ describe('MarketInvestmentService', () => {
 				.reply(200, newTimesale);
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
+			// TODO this is where the double-start record is
 			expect(result).toEqualRight({
-				startPrice: 60,
-				currentPrice: 100,
+				startPrice: 20,
+				currentPrice: 30,
 				history: [
 					{
 						date: pipe(
-							parseTimesaleTime(timesaleArray[0].time),
+							parseTimesaleTime(newTimesaleArray[0].time),
 							Time.subHours(1),
 							formatHistoryDate
 						),
 						time: pipe(
-							parseTimesaleTime(timesaleArray[0].time),
+							parseTimesaleTime(newTimesaleArray[0].time),
 							Time.subHours(1),
 							formatHistoryTime
 						),
-						price: 60,
+						price: newTimesaleArray[0].price,
 						unixTimestampMillis: pipe(
-							parseTimesaleTime(timesaleArray[0].time),
+							parseTimesaleTime(newTimesaleArray[0].time),
 							Time.subHours(1)
 						).getTime()
 					},
 					{
 						date: pipe(
-							parseTimesaleTime(timesaleArray[0].time),
+							parseTimesaleTime(newTimesaleArray[0].time),
 							formatHistoryDate
 						),
 						time: pipe(
-							parseTimesaleTime(timesaleArray[0].time),
+							parseTimesaleTime(newTimesaleArray[0].time),
 							formatHistoryTime
 						),
-						price: timesaleArray[0].price,
-						unixTimestampMillis: timesaleArray[0].timestamp * 1000
+						price: newTimesaleArray[0].price,
+						unixTimestampMillis:
+							newTimesaleArray[0].timestamp * 1000
 					},
 					{
 						date: pipe(
-							parseTimesaleTime(timesaleArray[1].time),
+							parseTimesaleTime(newTimesaleArray[1].time),
 							formatHistoryDate
 						),
 						time: pipe(
-							parseTimesaleTime(timesaleArray[1].time),
+							parseTimesaleTime(newTimesaleArray[1].time),
 							formatHistoryTime
 						),
-						price: timesaleArray[1].price,
-						unixTimestampMillis: timesaleArray[1].timestamp * 1000
+						price: newTimesaleArray[1].price,
+						unixTimestampMillis:
+							newTimesaleArray[1].timestamp * 1000
 					}
 				]
 			});
