@@ -3,14 +3,14 @@ import MockAdapter from 'axios-mock-adapter';
 import { TradierQuote } from '../../src/types/tradier/quotes';
 import {
 	getFiveYearHistory,
+	getMarketStatus,
 	getOneMonthHistory,
 	getOneWeekHistory,
 	getOneYearHistory,
 	getQuotes,
 	getThreeMonthHistory,
 	getTimesales,
-	HistoryQuery,
-	getMarketStatus
+	HistoryQuery
 } from '../../src/services/TradierService';
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
@@ -24,8 +24,8 @@ import {
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayEnd,
-	getTodayStart
+	getTodayEndString,
+	getTodayStartString
 } from '../../src/utils/timeUtils';
 import { TradierSeries } from '../../src/types/tradier/timesales';
 import { MarketStatus } from '../../src/types/MarketStatus';
@@ -264,8 +264,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today', async () => {
-		const start = getTodayStart();
-		const end = getTodayEnd();
+		const start = getTodayStartString();
+		const end = getTodayEndString();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
@@ -277,8 +277,8 @@ describe('TradierService', () => {
 	});
 
 	it('gets timesales for today with null response', async () => {
-		const start = getTodayStart();
-		const end = getTodayEnd();
+		const start = getTodayStartString();
+		const end = getTodayEndString();
 		mockApi
 			.onGet(
 				`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
