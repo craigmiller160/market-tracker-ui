@@ -20,7 +20,8 @@ import {
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate
+	getThreeMonthHistoryStartDate,
+	getTodayStart
 } from '../../src/utils/timeUtils';
 
 const ids: ReadonlyArray<string> = ['bitcoin', 'ethereum'];
@@ -90,9 +91,11 @@ describe('CoinGeckoService', () => {
 	});
 
 	it('gets history for today', async () => {
+		const start = Math.floor(getTodayStart().getTime() / 1000);
+		const end = Math.floor(new Date().getTime() / 1000);
 		mockApi
 			.onGet(
-				'/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=1&interval=minutely'
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
 		const result = await getTodayHistory('BTC')();
@@ -103,7 +106,7 @@ describe('CoinGeckoService', () => {
 		const days = getDays(getOneWeekHistoryStartDate());
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
 		const result = await getOneWeekHistory('BTC')();
@@ -114,7 +117,7 @@ describe('CoinGeckoService', () => {
 		const days = getDays(getOneMonthHistoryStartDate());
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
 		const result = await getOneMonthHistory('BTC')();
@@ -125,7 +128,7 @@ describe('CoinGeckoService', () => {
 		const days = getDays(getThreeMonthHistoryStartDate());
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
 		const result = await getThreeMonthHistory('BTC')();
@@ -136,7 +139,7 @@ describe('CoinGeckoService', () => {
 		const days = getDays(getOneYearHistoryStartDate());
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
 		const result = await getOneYearHistory('BTC')();
@@ -147,7 +150,7 @@ describe('CoinGeckoService', () => {
 		const days = getDays(getFiveYearHistoryStartDate());
 		mockApi
 			.onGet(
-				`/coingecko/coins/bitcoin/market_chart?vs_currency=usd&days=${days}&interval=daily`
+				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&days=${days}&interval=daily`
 			)
 			.reply(200, chart);
 		const result = await getFiveYearHistory('BTC')();

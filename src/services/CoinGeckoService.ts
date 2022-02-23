@@ -130,7 +130,7 @@ const getHistoryQuote = (
 	const end = Math.floor(new Date().getTime() / 1000);
 	return pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd?from=${start}&to=${end}`
+			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeMarketChart),
