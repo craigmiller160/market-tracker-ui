@@ -7,15 +7,15 @@ import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import userEvent from '@testing-library/user-event';
 import {
 	getFiveYearDisplayStartDate,
-	getFiveYearHistoryStartDate,
+	getFiveYearStartDate,
 	getOneMonthDisplayStartDate,
-	getOneMonthHistoryStartDate,
+	getOneMonthStartDate,
 	getOneWeekDisplayStartDate,
-	getOneWeekHistoryStartDate,
+	getOneWeekStartDate,
 	getOneYearDisplayStartDate,
-	getOneYearHistoryStartDate,
+	getOneYearStartDate,
 	getThreeMonthDisplayStartDate,
-	getThreeMonthHistoryStartDate,
+	getThreeMonthStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import { createMockQueries, testDataSettings } from './marketsTestData';
@@ -140,9 +140,7 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries({
-			coinGeckoInterval: 'minutely'
-		});
+		mockQueries();
 		await renderApp();
 		menuItemIsSelected('Today');
 		testPageHeaders();
@@ -193,7 +191,7 @@ describe('Markets', () => {
 
 	it('renders for 1 week', async () => {
 		mockQueries({
-			start: getOneWeekHistoryStartDate(),
+			start: getOneWeekStartDate(),
 			tradierInterval: 'daily'
 		});
 
@@ -216,7 +214,7 @@ describe('Markets', () => {
 
 	it('renders for 1 month', async () => {
 		mockQueries({
-			start: getOneMonthHistoryStartDate(),
+			start: getOneMonthStartDate(),
 			tradierInterval: 'daily'
 		});
 
@@ -239,7 +237,7 @@ describe('Markets', () => {
 
 	it('renders for 3 months', async () => {
 		mockQueries({
-			start: getThreeMonthHistoryStartDate(),
+			start: getThreeMonthStartDate(),
 			tradierInterval: 'daily'
 		});
 
@@ -262,7 +260,7 @@ describe('Markets', () => {
 
 	it('renders for 1 year', async () => {
 		mockQueries({
-			start: getOneYearHistoryStartDate(),
+			start: getOneYearStartDate(),
 			tradierInterval: 'weekly'
 		});
 
@@ -285,7 +283,7 @@ describe('Markets', () => {
 
 	it('renders for 5 years', async () => {
 		mockQueries({
-			start: getFiveYearHistoryStartDate(),
+			start: getFiveYearStartDate(),
 			tradierInterval: 'monthly'
 		});
 
