@@ -26,6 +26,10 @@ import { TradierQuotes } from '../../src/types/tradier/quotes';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
 
+const parseTimesaleTime: (time: string) => Date = Time.parse(
+	"yyyy-MM-dd'T'HH:mm:ss"
+);
+
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 const tradierHistory: TradierHistory = {
@@ -67,7 +71,8 @@ const tradierTimesale: TradierSeries = {
 		data: [
 			{
 				time: '2022-01-01T01:00:00',
-				timestamp: Time.subMinutes(30)(new Date()).getTime() / 1000,
+				timestamp:
+					parseTimesaleTime('2022-01-01T01:00:00').getTime() / 1000,
 				price: 20,
 				open: 0,
 				high: 0,
@@ -78,7 +83,8 @@ const tradierTimesale: TradierSeries = {
 			},
 			{
 				time: '2022-01-01T01:01:01',
-				timestamp: Time.subMinutes(20)(new Date()).getTime() / 1000,
+				timestamp:
+					parseTimesaleTime('2022-01-01T01:01:01').getTime() / 1000,
 				price: 30,
 				open: 0,
 				high: 0,
@@ -93,17 +99,8 @@ const tradierTimesale: TradierSeries = {
 
 const timesaleArray: ReadonlyArray<TradierSeriesData> = tradierTimesale.series
 	?.data as ReadonlyArray<TradierSeriesData>;
-
-const parseTimesaleTime: (time: string) => Date = Time.parse(
-	"yyyy-MM-dd'T'HH:mm:ss"
-);
 const formatHistoryDate: (date: Date) => string = Time.format('yyyy-MM-dd');
 const formatHistoryTime: (date: Date) => string = Time.format('HH:mm:ss');
-
-const firstRecordDate = pipe(
-	parseTimesaleTime(timesaleArray[0].time),
-	Time.subHours(1)
-);
 
 describe('MarketInvestmentService', () => {
 	beforeEach(() => {
@@ -326,7 +323,10 @@ describe('MarketInvestmentService', () => {
 							formatHistoryTime
 						),
 						price: 60,
-						unixTimestampMillis: firstRecordDate.getTime()
+						unixTimestampMillis: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1)
+						).getTime()
 					},
 					{
 						date: pipe(
@@ -357,7 +357,80 @@ describe('MarketInvestmentService', () => {
 		});
 
 		it('gets investment data for today when most recent history record is later than now', async () => {
-			throw new Error();
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, tradierQuote);
+			const start = getTodayStartString();
+			const end = getTodayEndString();
+			const newTimesale: TradierSeries = {
+				series: {
+					data: [
+						timesaleArray[0],
+						{
+							...timesaleArray[1],
+							time: '2100-01-01T01:01:01',
+							timestamp:
+								parseTimesaleTime(
+									'2100-01-01T01:01:01'
+								).getTime() / 1000
+						}
+					]
+				}
+			};
+			mockApi
+				.onGet(
+					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
+				)
+				.reply(200, newTimesale);
+			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+
+			expect(result).toEqualRight({
+				startPrice: 60,
+				currentPrice: 100,
+				history: [
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryTime
+						),
+						price: 60,
+						unixTimestampMillis: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1)
+						).getTime()
+					},
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							formatHistoryTime
+						),
+						price: timesaleArray[0].price,
+						unixTimestampMillis: timesaleArray[0].timestamp * 1000
+					},
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[1].time),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[1].time),
+							formatHistoryTime
+						),
+						price: timesaleArray[1].price,
+						unixTimestampMillis: timesaleArray[1].timestamp * 1000
+					}
+				]
+			});
 		});
 
 		it('gets investment data for past history, no quote available', async () => {
