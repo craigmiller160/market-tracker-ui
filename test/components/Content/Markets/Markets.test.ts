@@ -47,10 +47,10 @@ const testMarketsPage = (
 	const marketCards = within(marketsPage).queryAllByRole('listitem');
 	expect(marketCards).toHaveLength(10);
 	testDataSettings.forEach((setting) => {
+		const maybeCard = within(marketsPage).queryByTestId(
+			`market-card-${setting.symbol}`
+		);
 		try {
-			const maybeCard = within(marketsPage).queryByTestId(
-				`market-card-${setting.symbol}`
-			);
 			expect(maybeCard).not.toBeUndefined();
 			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
@@ -118,6 +118,9 @@ const testMarketsPage = (
 			}
 		} catch (ex) {
 			console.error('Failed Symbol', setting.symbol);
+			if (maybeCard) {
+				screen.debug(maybeCard);
+			}
 			throw ex;
 		}
 	});
