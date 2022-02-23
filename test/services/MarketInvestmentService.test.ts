@@ -430,28 +430,10 @@ describe('MarketInvestmentService', () => {
 				.reply(200, newTimesale);
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
-			// TODO this is where the double-start record is
 			expect(result).toEqualRight({
 				startPrice: 20,
 				currentPrice: 30,
 				history: [
-					{
-						date: pipe(
-							parseTimesaleTime(newTimesaleArray[0].time),
-							Time.subHours(1),
-							formatHistoryDate
-						),
-						time: pipe(
-							parseTimesaleTime(newTimesaleArray[0].time),
-							Time.subHours(1),
-							formatHistoryTime
-						),
-						price: newTimesaleArray[0].price,
-						unixTimestampMillis: pipe(
-							parseTimesaleTime(newTimesaleArray[0].time),
-							Time.subHours(1)
-						).getTime()
-					},
 					{
 						date: pipe(
 							parseTimesaleTime(newTimesaleArray[0].time),

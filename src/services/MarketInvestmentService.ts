@@ -18,7 +18,7 @@ import {
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
-import { identity, pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -139,31 +139,6 @@ const historyRecordToQuote =
 		previousClose: 0
 	});
 
-// TODO simplify this, move a lot of the logic here into the ending handle data function
-const getQuote2 = (
-	info: MarketInvestmentInfo,
-	history: ReadonlyArray<HistoryRecord>
-): TaskTryT<OptionT<Quote>> =>
-	match({
-		type: info.type,
-		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
-	})
-		.with(
-			{
-				type: when(isStock),
-				mostRecentHistoryRecord: when(isLaterThanNow)
-			},
-			({ mostRecentHistoryRecord }) =>
-				pipe(
-					mostRecentHistoryRecord,
-					Option.map(historyRecordToQuote(info.symbol)),
-					TaskEither.right
-				)
-		)
-		.otherwise(({ type }) =>
-			pipe(getQuoteFn(type)([info.symbol]), TaskEither.map(RArray.head))
-		);
-
 const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
 	pipe(
 		getQuoteFn(info.type)([info.symbol]),
@@ -176,38 +151,6 @@ const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
 					),
 				TaskEither.right
 			)
-		)
-	);
-
-const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
-	() => 0,
-	(_) => _.price
-);
-
-const greaterThan0: PredicateT<number> = (_) => _ > 0;
-
-const getStartPrice = (
-	quote: OptionT<Quote>,
-	history: ReadonlyArray<HistoryRecord>
-): number =>
-	pipe(
-		quote,
-		Option.chain((q) =>
-			match(q)
-				.with(
-					{ previousClose: when(greaterThan0) },
-					({ previousClose }) => Option.some(previousClose)
-				)
-				.otherwise(() => Option.none)
-		),
-		Option.fold(
-			() =>
-				pipe(
-					RArray.head(history),
-					Option.map((_) => _.price),
-					Option.getOrElse(() => 0)
-				),
-			identity
 		)
 	);
 
