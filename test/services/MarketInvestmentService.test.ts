@@ -356,6 +356,50 @@ describe('MarketInvestmentService', () => {
 			});
 		});
 
+		it('gets investment data for past history without previous close for start price', async () => {
+			const newQuote: TradierQuotes = {
+				quotes: {
+					quote: {
+						...tradierQuote.quotes.quote,
+						prevclose: 0
+					}
+				}
+			};
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, newQuote);
+			const start = getOneWeekHistoryStartDate();
+			const end = getTodayHistoryDate();
+			mockApi
+				.onGet(
+					`/tradier/markets/history?symbol=VTI&start=${start}&end=${end}&interval=daily`
+				)
+				.reply(200, tradierHistory);
+			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
+			expect(result).toEqualRight({
+				startPrice: tradierHistory.history.day[0].open,
+				currentPrice: 100,
+				history: [
+					{
+						date: tradierHistory.history.day[0].date,
+						time: '00:00:00',
+						price: tradierHistory.history.day[0].open,
+						unixTimestampMillis: getMillisFromDateTime(
+							`${tradierHistory.history.day[0].date} 00:00:00`
+						)
+					},
+					{
+						date: tradierHistory.history.day[0].date,
+						time: '23:59:59',
+						price: tradierHistory.history.day[0].close,
+						unixTimestampMillis: getMillisFromDateTime(
+							`${tradierHistory.history.day[0].date} 23:59:59`
+						)
+					}
+				]
+			});
+		});
+
 		it('gets investment data for today when most recent history record is later than now', async () => {
 			mockApi
 				.onGet('/tradier/markets/quotes?symbols=VTI')

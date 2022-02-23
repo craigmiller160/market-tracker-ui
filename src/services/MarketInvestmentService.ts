@@ -169,7 +169,6 @@ const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
 
 const greaterThan0: PredicateT<number> = (_) => _ > 0;
 
-// TODO make sure the different permutations here are tested
 const getStartPrice = (
 	quote: OptionT<Quote>,
 	history: ReadonlyArray<HistoryRecord>
