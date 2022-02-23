@@ -11,9 +11,9 @@ import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
 import {
-	MarketInvestmentType,
+	isCrypto,
 	isStock,
-	isCrypto
+	MarketInvestmentType
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
@@ -208,28 +208,31 @@ const getFirstHistoryRecordDate = (
 		Option.getOrElse(() => new Date())
 	);
 
-const handleInvestmentData = ({
-	history,
-	quote
-}: IntermediateInvestmentData): InvestmentData => {
-	const currentPrice = getCurrentPrice(quote);
-	const startPrice = getStartPrice(quote, history);
-	// TODO this is probably the source of the 0 bug on historical items
-	// TODO only want to do this extra starting record for today entries
-	const date = getFirstHistoryRecordDate(history);
+const handleInvestmentData =
+	(time: MarketTime) =>
+	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
+		const currentPrice = getCurrentPrice(quote);
+		const startPrice = getStartPrice(quote, history);
 
-	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
-		date: formatDate(date),
-		unixTimestampMillis: date.getTime(),
-		time: formatTime(date),
-		price: startPrice
-	})(history);
-	return {
-		startPrice,
-		currentPrice,
-		history: newHistory
+		const newHistory = match(time)
+			.with(MarketTime.ONE_DAY, () => {
+				const date = getFirstHistoryRecordDate(history);
+
+				return RArray.prepend({
+					date: formatDate(date),
+					unixTimestampMillis: date.getTime(),
+					time: formatTime(date),
+					price: startPrice
+				})(history);
+			})
+			.otherwise(() => history);
+
+		return {
+			startPrice,
+			currentPrice,
+			history: newHistory
+		};
 	};
-};
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -239,5 +242,5 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
-		TaskEither.map(handleInvestmentData)
+		TaskEither.map(handleInvestmentData(time))
 	);

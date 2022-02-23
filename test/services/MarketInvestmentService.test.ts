@@ -12,7 +12,9 @@ import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
 import {
+	getOneWeekHistoryStartDate,
 	getTodayEndString,
+	getTodayHistoryDate,
 	getTodayStartString
 } from '../../src/utils/timeUtils';
 import { TradierHistory } from '../../src/types/tradier/history';
@@ -257,7 +259,29 @@ describe('MarketInvestmentService', () => {
 		};
 
 		it('gets investment data for past history', async () => {
-			throw new Error();
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, tradierQuote);
+			const start = getOneWeekHistoryStartDate();
+			const end = getTodayHistoryDate();
+			mockApi
+				.onGet(
+					`/tradier/markets/history?symbol=VTI&start=${start}&end=${end}&interval=daily`
+				)
+				.reply(200, tradierHistory);
+			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
+			expect(result).toEqualRight({
+				startPrice: 60,
+				currentPrice: 100,
+				history: [
+					{
+						date: tradierHistory.history.day[0].date,
+						time: '00:00:00',
+						price: tradierHistory.history.day[0].open,
+						unixTimestampMillis: 0
+					}
+				]
+			});
 		});
 
 		it('gets investment data for today', async () => {
@@ -278,8 +302,16 @@ describe('MarketInvestmentService', () => {
 				currentPrice: 100,
 				history: [
 					{
-						date: formatHistoryDate(firstRecordDate),
-						time: formatHistoryTime(firstRecordDate),
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryTime
+						),
 						price: 60,
 						unixTimestampMillis: firstRecordDate.getTime()
 					},
