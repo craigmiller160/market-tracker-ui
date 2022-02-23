@@ -16,12 +16,12 @@ import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { pipe } from 'fp-ts/es6/function';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate,
 	getTodayEnd,
@@ -182,7 +182,7 @@ describe('TradierService', () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
 			symbol: 'VTI',
-			start: pipe(today, Time.subDays(6), formatDate),
+			start: getOneWeekHistoryStartDate(),
 			end: formatDate(today),
 			interval: 'daily'
 		};
