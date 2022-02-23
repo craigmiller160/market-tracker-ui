@@ -30,7 +30,7 @@ const subtractOneHour = Time.subHours(1);
 const formatDate = Time.format('yyyy-MM-dd');
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
-type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
+type QuoteFn = (s: ReadonlyArray<string>) => TaskTryT<ReadonlyArray<Quote>>;
 
 export interface InvestmentData {
 	readonly startPrice: number;
@@ -45,21 +45,8 @@ interface IntermediateInvestmentData {
 
 export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
 	match(type)
-		.with(
-			when(isStock),
-			() => (symbol: string) =>
-				pipe(
-					tradierService.getQuotes([symbol]),
-					TaskEither.map(RArray.head)
-				)
-		)
-		.otherwise(
-			() => (symbol: string) =>
-				pipe(
-					coinGeckoService.getQuotes([symbol]),
-					TaskEither.map(RArray.head)
-				)
-		);
+		.with(when(isStock), () => tradierService.getQuotes)
+		.otherwise(() => coinGeckoService.getQuotes);
 
 export const getHistoryFn = (
 	time: MarketTime,
@@ -170,7 +157,9 @@ const getQuote = (
 					TaskEither.right
 				)
 		)
-		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
+		.otherwise(({ type }) =>
+			pipe(getQuoteFn(type)([info.symbol]), TaskEither.map(RArray.head))
+		);
 
 const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
 	() => 0,

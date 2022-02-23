@@ -1,4 +1,7 @@
-import { getHistoryFn } from '../../src/services/MarketInvestmentService';
+import {
+	getHistoryFn,
+	getQuoteFn
+} from '../../src/services/MarketInvestmentService';
 import { MarketTime } from '../../src/types/MarketTime';
 import { MarketInvestmentType } from '../../src/types/data/MarketInvestmentType';
 import * as tradierService from '../../src/services/TradierService';
@@ -137,11 +140,17 @@ describe('MarketInvestmentService', () => {
 
 	describe('getQuoteFn', () => {
 		it('Tradier Quote', () => {
-			throw new Error();
+			const usResult = getQuoteFn(MarketInvestmentType.USA_ETF);
+			const intResult = getQuoteFn(
+				MarketInvestmentType.INTERNATIONAL_ETF
+			);
+			expect(usResult).toEqual(tradierService.getQuotes);
+			expect(intResult).toEqual(tradierService.getQuotes);
 		});
 
 		it('CoinGecko Quote', () => {
-			throw new Error();
+			const result = getQuoteFn(MarketInvestmentType.CRYPTO);
+			expect(result).toEqual(coinGeckoService.getQuotes);
 		});
 	});
 
@@ -151,6 +160,10 @@ describe('MarketInvestmentService', () => {
 		});
 
 		it('gets investment data for today', async () => {
+			throw new Error();
+		});
+
+		it('gets investment data for today when most recent history record is later than now', async () => {
 			throw new Error();
 		});
 
