@@ -3,7 +3,8 @@ import {
 	OptionT,
 	PredicateT,
 	TaskT,
-	TaskTryT
+	TaskTryT,
+	TryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
 import { match, when } from 'ts-pattern';
@@ -11,26 +12,27 @@ import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
 import {
-	MarketInvestmentType,
+	isCrypto,
 	isStock,
-	isCrypto
+	MarketInvestmentType
 } from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
-import { identity, pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Either from 'fp-ts/es6/Either';
 
-const TIME_FORMAT = 'HH:mm:ss';
-const parseTime = Time.parse(TIME_FORMAT);
-const formatTime = Time.format(TIME_FORMAT);
+const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+const parseDateTime = Time.parse(DATE_TIME_FORMAT);
+const formatTime = Time.format('HH:mm:ss');
 const subtractOneHour = Time.subHours(1);
 const formatDate = Time.format('yyyy-MM-dd');
 
 type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
-type QuoteFn = (s: string) => TaskTryT<OptionT<Quote>>;
+type QuoteFn = (s: ReadonlyArray<string>) => TaskTryT<ReadonlyArray<Quote>>;
 
 export interface InvestmentData {
 	readonly startPrice: number;
@@ -40,28 +42,15 @@ export interface InvestmentData {
 
 interface IntermediateInvestmentData {
 	readonly history: ReadonlyArray<HistoryRecord>;
-	readonly quote: OptionT<Quote>;
+	readonly quote: Quote;
 }
 
-const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
+export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
 	match(type)
-		.with(
-			when(isStock),
-			() => (symbol: string) =>
-				pipe(
-					tradierService.getQuotes([symbol]),
-					TaskEither.map(RArray.head)
-				)
-		)
-		.otherwise(
-			() => (symbol: string) =>
-				pipe(
-					coinGeckoService.getQuotes([symbol]),
-					TaskEither.map(RArray.head)
-				)
-		);
+		.with(when(isStock), () => tradierService.getQuotes)
+		.otherwise(() => coinGeckoService.getQuotes);
 
-const getHistoryFn = (
+export const getHistoryFn = (
 	time: MarketTime,
 	type: MarketInvestmentType
 ): HistoryFn =>
@@ -150,92 +139,104 @@ const historyRecordToQuote =
 		previousClose: 0
 	});
 
-const getQuote = (
-	info: MarketInvestmentInfo,
-	history: ReadonlyArray<HistoryRecord>
-): TaskTryT<OptionT<Quote>> =>
-	match({
-		type: info.type,
-		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
-	})
-		.with(
-			{
-				type: when(isStock),
-				mostRecentHistoryRecord: when(isLaterThanNow)
-			},
-			({ mostRecentHistoryRecord }) =>
-				pipe(
-					mostRecentHistoryRecord,
-					Option.map(historyRecordToQuote(info.symbol)),
-					TaskEither.right
-				)
-		)
-		.otherwise(({ type }) => getQuoteFn(type)(info.symbol));
-
-const getCurrentPrice: (quote: OptionT<Quote>) => number = Option.fold(
-	() => 0,
-	(_) => _.price
-);
-
-const greaterThan0: PredicateT<number> = (_) => _ > 0;
-
-const getStartPrice = (
-	quote: OptionT<Quote>,
-	history: ReadonlyArray<HistoryRecord>
-): number =>
+const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
 	pipe(
-		quote,
-		Option.chain((q) =>
-			match(q.previousClose)
-				.with(when(greaterThan0), Option.some)
-				.otherwise(() => Option.none)
-		),
-		Option.fold(
-			() =>
-				pipe(
-					RArray.head(history),
-					Option.map((_) => _.price),
-					Option.getOrElse(() => 0)
-				),
-			identity
+		getQuoteFn(info.type)([info.symbol]),
+		TaskEither.map(RArray.head),
+		TaskEither.chain(
+			Option.fold(
+				() =>
+					TaskEither.left(
+						new Error(`No quote found for symbol: ${info.symbol}`)
+					),
+				TaskEither.right
+			)
 		)
 	);
 
-const getFirstHistoryRecordDateTime = (
+const getFirstHistoryRecordDate = (
 	history: ReadonlyArray<HistoryRecord>
-): { date: string; time: string } =>
+): Date =>
 	pipe(
 		RArray.head(history),
-		Option.map((record) => ({
-			date: record.date,
-			time: pipe(parseTime(record.time), subtractOneHour, formatTime)
-		})),
-		Option.getOrElse(() => ({
-			date: formatDate(new Date()),
-			time: formatTime(new Date())
-		}))
+		Option.map((record) =>
+			pipe(
+				parseDateTime(`${record.date} ${record.time}`),
+				subtractOneHour
+			)
+		),
+		Option.getOrElse(() => new Date())
 	);
 
-const handleInvestmentData = ({
-	history,
-	quote
-}: IntermediateInvestmentData): InvestmentData => {
-	const currentPrice = getCurrentPrice(quote);
-	const startPrice = getStartPrice(quote, history);
-	const { date, time } = getFirstHistoryRecordDateTime(history);
-
-	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
-		date,
-		unixTimestampMillis: 0,
-		time,
-		price: startPrice
-	})(history);
-	return {
-		startPrice,
-		currentPrice,
-		history: newHistory
+const handleUseQuoteOrHistoryQuote =
+	(info: MarketInvestmentInfo) =>
+	({
+		history,
+		quote
+	}: IntermediateInvestmentData): TryT<IntermediateInvestmentData> => {
+		const quoteEither = match({
+			type: info.type,
+			mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+		})
+			.with(
+				{
+					type: when(isStock),
+					mostRecentHistoryRecord: when(isLaterThanNow)
+				},
+				({ mostRecentHistoryRecord }) =>
+					pipe(
+						mostRecentHistoryRecord,
+						Option.map(historyRecordToQuote(info.symbol)),
+						Option.fold(
+							() =>
+								Either.left(
+									new Error(
+										'No history record for history quote'
+									)
+								),
+							(_) => Either.right(_)
+						)
+					)
+			)
+			.otherwise(() => Either.right(quote));
+		return pipe(
+			quoteEither,
+			Either.map((_) => ({
+				quote: _,
+				history
+			}))
+		);
 	};
-};
+
+const handleInvestmentData =
+	(time: MarketTime) =>
+	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
+		const startPrice =
+			quote.previousClose > 0 ? quote.previousClose : history?.[0]?.price;
+
+		// TODO no need for extra history record when already using history for start price
+		const newHistory = match({ time, startPrice })
+			.with(
+				{ time: MarketTime.ONE_DAY, startPrice: quote.previousClose },
+				() => {
+					const date = getFirstHistoryRecordDate(history);
+
+					return RArray.prepend({
+						date: formatDate(date),
+						unixTimestampMillis: date.getTime(),
+						time: formatTime(date),
+						price: startPrice
+					})(history);
+				}
+			)
+			.otherwise(() => history);
+
+		return {
+			startPrice,
+			currentPrice: quote.price,
+			history: newHistory
+		};
+	};
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -244,6 +245,7 @@ export const getInvestmentData = (
 	pipe(
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
-		TaskEither.bind('quote', ({ history }) => getQuote(info, history)),
-		TaskEither.map(handleInvestmentData)
+		TaskEither.bind('quote', () => getQuote(info)),
+		TaskEither.chainEitherK(handleUseQuoteOrHistoryQuote(info)),
+		TaskEither.map(handleInvestmentData(time))
 	);

@@ -60,14 +60,14 @@ const createTradierHistory = (): TradierHistory => ({
 	history: {
 		day: [
 			{
-				date: '1',
+				date: '2022-01-01',
 				open: 2,
 				high: 3,
 				low: 4,
 				close: 5
 			},
 			{
-				date: '2',
+				date: '2022-01-02',
 				open: 6,
 				high: 7,
 				low: 8,
@@ -111,27 +111,27 @@ const createTimesale = (): TradierSeries => ({
 
 const createHistory = (): ReadonlyArray<HistoryRecord> => [
 	{
-		date: '1',
+		date: '2022-01-01',
 		time: '00:00:00',
-		unixTimestampMillis: 0,
+		unixTimestampMillis: 1641013200000,
 		price: 2
 	},
 	{
-		date: '1',
+		date: '2022-01-01',
 		time: '23:59:59',
-		unixTimestampMillis: 0,
+		unixTimestampMillis: 1641099599000,
 		price: 5
 	},
 	{
-		date: '2',
+		date: '2022-01-02',
 		time: '00:00:00',
-		unixTimestampMillis: 0,
+		unixTimestampMillis: 1641099600000,
 		price: 6
 	},
 	{
-		date: '2',
+		date: '2022-01-02',
 		time: '23:59:59',
-		unixTimestampMillis: 0,
+		unixTimestampMillis: 1641185999000,
 		price: 9
 	}
 ];
