@@ -64,24 +64,24 @@ describe('MarketInvestmentService', () => {
 	});
 
 	describe('getInvestmentData', () => {
-		it('gets past history and current quote and combines', async () => {
+		it('gets investment data for past history', async () => {
 			throw new Error();
 		});
 
-		it('No quote available', async () => {
+		it('gets investment data for today', async () => {
 			throw new Error();
 		});
 
-		it('No quote or history available', async () => {
+		it('gets investment data for past history, no quote available', async () => {
+			throw new Error();
+		});
+
+		it('gets investment data for past history, no quote or history available', async () => {
 			throw new Error();
 		});
 
 		it('what is going on with previousClose in my logic???', async () => {
 			// Probably the source of some bugs
-			throw new Error();
-		});
-
-		it('adds special starting history record for previousClose for Today', async () => {
 			throw new Error();
 		});
 	});
