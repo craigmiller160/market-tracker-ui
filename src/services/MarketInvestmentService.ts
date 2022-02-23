@@ -221,7 +221,7 @@ const handleInvestmentData = ({
 
 	const newHistory: ReadonlyArray<HistoryRecord> = RArray.prepend({
 		date,
-		unixTimestampMillis: 0,
+		unixTimestampMillis: 0, // TODO why not give this a timestamp if I have date/time values?
 		time,
 		price: startPrice
 	})(history);
