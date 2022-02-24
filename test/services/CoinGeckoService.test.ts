@@ -20,6 +20,7 @@ import {
 	getOneWeekStartDate,
 	getOneYearStartDate,
 	getThreeMonthStartDate,
+	getTodayEnd,
 	getTodayStart
 } from '../../src/utils/timeUtils';
 
@@ -91,7 +92,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets history for today', async () => {
 		const start = Math.floor(getTodayStart().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
@@ -103,7 +104,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets 1 week history', async () => {
 		const start = Math.floor(getOneWeekStartDate().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
@@ -115,7 +116,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets 1 month history', async () => {
 		const start = Math.floor(getOneMonthStartDate().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
@@ -127,7 +128,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets 3 months history', async () => {
 		const start = Math.floor(getThreeMonthStartDate().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
@@ -139,7 +140,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets 1 year history', async () => {
 		const start = Math.floor(getOneYearStartDate().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
@@ -151,7 +152,7 @@ describe('CoinGeckoService', () => {
 
 	it('gets 5 years history', async () => {
 		const start = Math.floor(getFiveYearStartDate().getTime() / 1000);
-		const end = Math.floor(new Date().getTime() / 1000);
+		const end = Math.floor(getTodayEnd().getTime() / 1000);
 		mockApi
 			.onGet(
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
