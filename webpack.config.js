@@ -54,7 +54,7 @@ const serviceWorkerConfig = {
 	entry: {
 		main: path.join(process.cwd(), 'src'),
 		'service-worker': {
-			import: path.join(process.cwd(), 'src', 'service-worker.ts'),
+			import: path.join(process.cwd(), 'src', 'service-worker.js'),
 			filename: 'service-worker.js'
 		}
 	}
