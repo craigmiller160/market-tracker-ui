@@ -25,6 +25,13 @@ export default {
 				secure: false,
 				rewrite: (path) => path.replace(/^\/market-tracker\/api/, ''),
 				logLevel: 'debug'
+			},
+			'/market-tracker/oauth2': {
+				target: 'https://localhost:7003',
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) => path.replace(/^\/market-tracker\/oauth2/, ''),
+				logLevel: 'debug'
 			}
 		}
 	},
