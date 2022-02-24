@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export default {
 	root: path.join(process.cwd(), 'src'),
-	base: '/market-tracker',
+	// base: '/market-tracker',
 	publicDir: path.join(process.cwd(), 'public'),
 	server: {
 		port: 3000,
@@ -17,7 +17,18 @@ export default {
 				path.join(process.cwd(), 'config', 'localhost.key.pem'),
 				'utf8'
 			)
-		}
+		},
+		proxy: {
+			'/market-tracker/api': {
+				target: 'https://localhost:8080',
+				changeOrigin: true,
+				secure: false,
+				pathRewrite: {
+					'^/market-tracker/api': ''
+				},
+				logLevel: 'debug'
+			}
+		},
 	},
 	plugins: [react()],
 	build: {
