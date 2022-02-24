@@ -13,7 +13,7 @@ import {
 	TradierQuotes,
 	tradierQuotesV
 } from '../types/tradier/quotes';
-import { instanceOf, match, __ } from 'ts-pattern';
+import { instanceOf, match, __, not } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -95,18 +95,17 @@ const tradierHistoryToHistoryRecord = (
 		open: parseInt(`${tHistory.open}`),
 		close: parseInt(`${tHistory.close}`)
 	})
-		.with({ open: __.number, close: __.NaN }, (_) => [
+		.with({ open: not(__.NaN), close: __.NaN }, (_) => [
 			createTradierHistoryRecord(_.date, '00:00:00', _.open)
 		])
-		.with({ open: __.NaN, close: __.number }, (_) => [
+		.with({ open: __.NaN, close: not(__.NaN) }, (_) => [
 			createTradierHistoryRecord(_.date, '23:59:59', _.close)
 		])
 		.with({ open: __.NaN, close: __.NaN }, () => [])
-		.with({ open: __.number, close: __.number }, (_) => [
+		.otherwise((_) => [
 			createTradierHistoryRecord(_.date, '00:00:00', _.open),
 			createTradierHistoryRecord(_.date, '23:59:59', _.close)
-		])
-		.run();
+		]);
 
 const formatTradierHistory = (
 	history: TradierHistory
