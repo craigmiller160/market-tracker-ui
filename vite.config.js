@@ -26,7 +26,7 @@ export default {
 				rewrite: (path) => path.replace(/^\/market-tracker\/api/, ''),
 				logLevel: 'debug'
 			}
-		},
+		}
 	},
 	plugins: [react()],
 	build: {
