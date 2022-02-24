@@ -22,6 +22,7 @@ import {
 	getOneWeekStartDate,
 	getOneYearStartDate,
 	getThreeMonthStartDate,
+	getTodayEnd,
 	getTodayStart,
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
@@ -127,7 +128,7 @@ const getHistoryQuote = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const id = getId(historyQuery.symbol);
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
-	const end = Math.floor(new Date().getTime() / 1000); // TODO this is what needs to change to be standardized
+	const end = Math.floor(getTodayEnd().getTime() / 1000);
 	return pipe(
 		ajaxApi.get<CoinGeckoMarketChart>({
 			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
