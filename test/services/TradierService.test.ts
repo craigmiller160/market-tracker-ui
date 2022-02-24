@@ -186,7 +186,7 @@ describe('TradierService', () => {
 						createTradierHistory().history.day[0],
 						{
 							...createTradierHistory().history.day[1],
-							open: NaN
+							open: 'NaN'
 						}
 					]
 				}
@@ -218,7 +218,7 @@ describe('TradierService', () => {
 						createTradierHistory().history.day[0],
 						{
 							...createTradierHistory().history.day[1],
-							close: NaN
+							close: 'NaN'
 						}
 					]
 				}
@@ -250,8 +250,8 @@ describe('TradierService', () => {
 						createTradierHistory().history.day[0],
 						{
 							...createTradierHistory().history.day[1],
-							open: NaN,
-							close: NaN
+							open: 'NaN',
+							close: 'NaN'
 						}
 					]
 				}

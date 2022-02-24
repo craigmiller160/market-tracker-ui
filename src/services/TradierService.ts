@@ -90,11 +90,11 @@ const createTradierHistoryRecord = (
 const tradierHistoryToHistoryRecord = (
 	tHistory: TradierHistoryDay
 ): ReadonlyArray<HistoryRecord> =>
-	match(tHistory)
-		.with({ open: __.number, close: __.number }, (_) => [
-			createTradierHistoryRecord(_.date, '00:00:00', _.open),
-			createTradierHistoryRecord(_.date, '23:59:59', _.close)
-		])
+	match({
+		date: tHistory.date,
+		open: parseInt(`${tHistory.open}`),
+		close: parseInt(`${tHistory.close}`)
+	})
 		.with({ open: __.number, close: __.NaN }, (_) => [
 			createTradierHistoryRecord(_.date, '00:00:00', _.open)
 		])
@@ -102,6 +102,10 @@ const tradierHistoryToHistoryRecord = (
 			createTradierHistoryRecord(_.date, '23:59:59', _.close)
 		])
 		.with({ open: __.NaN, close: __.NaN }, () => [])
+		.with({ open: __.number, close: __.number }, (_) => [
+			createTradierHistoryRecord(_.date, '00:00:00', _.open),
+			createTradierHistoryRecord(_.date, '23:59:59', _.close)
+		])
 		.run();
 
 const formatTradierHistory = (
