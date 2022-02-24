@@ -13,8 +13,9 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
-import { TimerContext } from './TimerContext';
+import { RefreshTimerContext } from './RefreshTimerContext';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
+import { usePrevious } from '../../../hooks/usePrevious';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -60,7 +61,7 @@ export const useInvestmentData = (
 	info: MarketInvestmentInfo,
 	shouldLoadData: boolean
 ): InvestmentDataState => {
-	const { timestamp } = useContext(TimerContext);
+	const { refreshTimestamp } = useContext(RefreshTimerContext);
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
@@ -81,14 +82,24 @@ export const useInvestmentData = (
 		[setState]
 	);
 
+	const previousTime = usePrevious(time);
+
 	useEffect(() => {
 		if (!shouldLoadData) {
 			return;
 		}
 
-		setState((draft) => {
-			draft.loading = true;
-		});
+		if (time !== previousTime) {
+			setState((draft) => {
+				draft.loading = true;
+			});
+		}
+	}, [setState, shouldLoadData, time, previousTime]);
+
+	useEffect(() => {
+		if (!shouldLoadData) {
+			return;
+		}
 
 		pipe(
 			getInvestmentData(time, info),
@@ -97,11 +108,10 @@ export const useInvestmentData = (
 	}, [
 		time,
 		info,
-		setState,
 		handleGetDataError,
 		handleGetDataSuccess,
 		shouldLoadData,
-		timestamp
+		refreshTimestamp
 	]);
 
 	return state;
