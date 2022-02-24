@@ -2,7 +2,7 @@ import { MarketTime } from '../../../types/MarketTime';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch } from 'react-redux';
 import { Updater, useImmer } from 'use-immer';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import {
 	getInvestmentData,
 	InvestmentData
@@ -13,6 +13,7 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
+import { RefreshTimerContext } from './RefreshTimerContext';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
 import { usePrevious } from '../../../hooks/usePrevious';
 
@@ -60,6 +61,7 @@ export const useInvestmentData = (
 	info: MarketInvestmentInfo,
 	shouldLoadData: boolean
 ): InvestmentDataState => {
+	const { refreshTimestamp } = useContext(RefreshTimerContext);
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
@@ -103,7 +105,14 @@ export const useInvestmentData = (
 			getInvestmentData(time, info),
 			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
 		)();
-	}, [time, info, handleGetDataError, handleGetDataSuccess, shouldLoadData]);
+	}, [
+		time,
+		info,
+		handleGetDataError,
+		handleGetDataSuccess,
+		shouldLoadData,
+		refreshTimestamp
+	]);
 
 	return state;
 };
