@@ -15,6 +15,7 @@ import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 import { TimerContext } from './TimerContext';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
+import { usePrevious } from '../../../hooks/usePrevious';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -81,14 +82,18 @@ export const useInvestmentData = (
 		[setState]
 	);
 
+	const previousTime = usePrevious(time);
+
 	useEffect(() => {
 		if (!shouldLoadData) {
 			return;
 		}
 
-		setState((draft) => {
-			draft.loading = true;
-		});
+		if (time !== previousTime) {
+			setState((draft) => {
+				draft.loading = true;
+			});
+		}
 
 		pipe(
 			getInvestmentData(time, info),
