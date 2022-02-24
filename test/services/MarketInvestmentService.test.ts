@@ -271,7 +271,7 @@ describe('MarketInvestmentService', () => {
 				.reply(200, tradierHistory);
 			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
 			expect(result).toEqualRight({
-				startPrice: 60,
+				startPrice: 50,
 				currentPrice: 100,
 				history: [
 					{

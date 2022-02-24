@@ -211,7 +211,6 @@ const handleUseQuoteOrHistoryQuote =
 const handleInvestmentData =
 	(time: MarketTime) =>
 	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
-		// TODO add new startPrice test if this works
 		const startPrice =
 			quote.previousClose > 0 && MarketTime.ONE_DAY === time
 				? quote.previousClose
