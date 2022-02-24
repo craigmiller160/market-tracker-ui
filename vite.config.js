@@ -45,28 +45,6 @@ export default {
 	plugins: [react()],
 	build: {
 		outDir: path.join(process.cwd(), 'build'),
-		emptyOutDir: true,
-		// rollupOptions: [
-		// 	{
-		// 		input: {
-		// 			main: path.join(process.cwd(), 'src', 'index.html')
-		// 		},
-		// 		output: {
-		// 			entryFileNames: 'assets/[name]-[hash].js'
-		// 		}
-		// 	},
-		// 	{
-		// 		input: {
-		// 			'service-worker': path.join(
-		// 				process.cwd(),
-		// 				'src',
-		// 				'service-worker.js'
-		// 			)
-		// 		},
-		// 		output: {
-		// 			entryFileNames: '[name].js'
-		// 		}
-		// 	}
-		// ]
+		emptyOutDir: true
 	}
 };
