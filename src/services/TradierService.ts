@@ -13,7 +13,7 @@ import {
 	TradierQuotes,
 	tradierQuotesV
 } from '../types/tradier/quotes';
-import { instanceOf, match } from 'ts-pattern';
+import { instanceOf, match, __, not } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -76,32 +76,41 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 	)(tradierQuotes);
 };
 
+const createTradierHistoryRecord = (
+	date: string,
+	time: string,
+	price: number
+): HistoryRecord => ({
+	date,
+	time,
+	unixTimestampMillis: getMillisFromDateTime(`${date} ${time}`),
+	price
+});
+
+const tradierHistoryToHistoryRecord = (
+	tHistory: TradierHistoryDay
+): ReadonlyArray<HistoryRecord> =>
+	match({
+		date: tHistory.date,
+		open: parseInt(`${tHistory.open}`),
+		close: parseInt(`${tHistory.close}`)
+	})
+		.with({ open: not(__.NaN), close: __.NaN }, (_) => [
+			createTradierHistoryRecord(_.date, '00:00:00', _.open)
+		])
+		.with({ open: __.NaN, close: not(__.NaN) }, (_) => [
+			createTradierHistoryRecord(_.date, '23:59:59', _.close)
+		])
+		.with({ open: __.NaN, close: __.NaN }, () => [])
+		.otherwise((_) => [
+			createTradierHistoryRecord(_.date, '00:00:00', _.open),
+			createTradierHistoryRecord(_.date, '23:59:59', _.close)
+		]);
+
 const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryRecord> =>
-	pipe(
-		history.history.day,
-		RArray.chain(
-			(_: TradierHistoryDay): ReadonlyArray<HistoryRecord> => [
-				{
-					date: _.date,
-					time: '00:00:00',
-					unixTimestampMillis: getMillisFromDateTime(
-						`${_.date} 00:00:00`
-					),
-					price: _.open
-				},
-				{
-					date: _.date,
-					time: '23:59:59',
-					unixTimestampMillis: getMillisFromDateTime(
-						`${_.date} 23:59:59`
-					),
-					price: _.close
-				}
-			]
-		)
-	);
+	pipe(history.history.day, RArray.chain(tradierHistoryToHistoryRecord));
 
 const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
 

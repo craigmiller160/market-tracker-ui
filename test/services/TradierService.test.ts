@@ -178,6 +178,104 @@ describe('TradierService', () => {
 		expect(result).toEqualRight([createQuote('VTI'), createQuote('VOO')]);
 	});
 
+	describe('NaN', () => {
+		it('get 1 week history, with NaN open', async () => {
+			const history: TradierHistory = {
+				history: {
+					day: [
+						createTradierHistory().history.day[0],
+						{
+							...createTradierHistory().history.day[1],
+							open: 'NaN'
+						}
+					]
+				}
+			};
+			const today = new Date();
+			const historyQuery: HistoryQuery = {
+				symbol: 'VTI',
+				start: getOneWeekHistoryStartDate(),
+				end: formatDate(today),
+				interval: 'daily'
+			};
+			const queryString = qs.stringify(historyQuery);
+			mockApi
+				.onGet(`/tradier/markets/history?${queryString}`)
+				.reply(200, history);
+
+			const result = await getOneWeekHistory('VTI')();
+			expect(result).toEqualRight([
+				createHistory()[0],
+				createHistory()[1],
+				createHistory()[3]
+			]);
+		});
+
+		it('get 1 week history, with NaN close', async () => {
+			const history: TradierHistory = {
+				history: {
+					day: [
+						createTradierHistory().history.day[0],
+						{
+							...createTradierHistory().history.day[1],
+							close: 'NaN'
+						}
+					]
+				}
+			};
+			const today = new Date();
+			const historyQuery: HistoryQuery = {
+				symbol: 'VTI',
+				start: getOneWeekHistoryStartDate(),
+				end: formatDate(today),
+				interval: 'daily'
+			};
+			const queryString = qs.stringify(historyQuery);
+			mockApi
+				.onGet(`/tradier/markets/history?${queryString}`)
+				.reply(200, history);
+
+			const result = await getOneWeekHistory('VTI')();
+			expect(result).toEqualRight([
+				createHistory()[0],
+				createHistory()[1],
+				createHistory()[2]
+			]);
+		});
+
+		it('get 1 week history, with NaN open and close', async () => {
+			const history: TradierHistory = {
+				history: {
+					day: [
+						createTradierHistory().history.day[0],
+						{
+							...createTradierHistory().history.day[1],
+							open: 'NaN',
+							close: 'NaN'
+						}
+					]
+				}
+			};
+			const today = new Date();
+			const historyQuery: HistoryQuery = {
+				symbol: 'VTI',
+				start: getOneWeekHistoryStartDate(),
+				end: formatDate(today),
+				interval: 'daily'
+			};
+			const queryString = qs.stringify(historyQuery);
+			mockApi
+				.onGet(`/tradier/markets/history?${queryString}`)
+				.reply(200, history);
+
+			const result = await getOneWeekHistory('VTI')();
+			expect(result).toEqualRight([
+				createHistory()[0],
+				createHistory()[1]
+			]);
+		});
+	});
+
 	it('get 1 week history', async () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
