@@ -15,10 +15,10 @@ import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 import { RefreshTimerContext } from './RefreshTimerContext';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
-import { usePrevious } from '../../../hooks/usePrevious';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
+	readonly timeAtLastLoading?: MarketTime;
 	readonly data: InvestmentData;
 	readonly hasError: boolean;
 }
@@ -82,19 +82,18 @@ export const useInvestmentData = (
 		[setState]
 	);
 
-	const previousTime = usePrevious(time);
-
 	useEffect(() => {
 		if (!shouldLoadData) {
 			return;
 		}
 
-		if (time !== previousTime) {
-			setState((draft) => {
+		setState((draft) => {
+			if (draft.timeAtLastLoading !== time) {
 				draft.loading = true;
-			});
-		}
-	}, [setState, shouldLoadData, time, previousTime]);
+				draft.timeAtLastLoading = time;
+			}
+		});
+	}, [setState, shouldLoadData, time]);
 
 	useEffect(() => {
 		if (!shouldLoadData) {
