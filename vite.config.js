@@ -23,9 +23,7 @@ export default {
 				target: 'https://localhost:8080',
 				changeOrigin: true,
 				secure: false,
-				pathRewrite: {
-					'^/market-tracker/api': ''
-				},
+				rewrite: (path) => path.replace(/^\/market-tracker\/api/, ''),
 				logLevel: 'debug'
 			}
 		},
