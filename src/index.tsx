@@ -12,7 +12,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker
-			.register('/market-tracker/service-worker.js')
+			.register('/market-tracker/service-worker.ts')
 			.then((registration) => registration.update())
 			.catch((ex) =>
 				store.dispatch(

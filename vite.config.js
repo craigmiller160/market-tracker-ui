@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export default {
 	root: path.join(process.cwd(), 'src'),
-	// base: '/market-tracker',
+	base: '/market-tracker/',
 	publicDir: path.join(process.cwd(), 'public'),
 	server: {
 		port: 3000,
