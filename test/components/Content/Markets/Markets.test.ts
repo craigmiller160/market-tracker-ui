@@ -88,7 +88,14 @@ const testMarketsPage = (
 						{ type: when(isStock), isCurrentPriceQuote: false },
 						() => setting.timesalePrice1
 					)
-					.with({ type: when(isStock) }, () => setting.prevClosePrice)
+					.with(
+						{ type: when(isStock), isTimesale: true },
+						() => setting.prevClosePrice
+					)
+					.with(
+						{ type: when(isStock), isTimesale: false },
+						() => setting.historyPrice
+					)
 					.with(
 						{ type: when(isCrypto), isTimesale: true },
 						() => setting.timesalePrice1
