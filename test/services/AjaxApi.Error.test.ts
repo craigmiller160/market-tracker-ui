@@ -5,7 +5,7 @@ import { MockStore } from 'redux-mock-store';
 import * as Option from 'fp-ts/es6/Option';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 
-const sleep1s = Sleep.sleep(1000);
+const sleep550ms = Sleep.sleep(550);
 
 jest.mock('../../src/store', () => {
 	const createMockStore = jest.requireActual('redux-mock-store').default;
@@ -42,7 +42,7 @@ describe('AjaxApi Error Handler', () => {
 		await ajaxApi.get({
 			uri: '/foo'
 		})();
-		await sleep1s();
+		await sleep550ms();
 		expect(mockStore.getActions()).toEqual([
 			{
 				type: 'auth/setUserData',
