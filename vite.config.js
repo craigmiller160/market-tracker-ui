@@ -43,6 +43,7 @@ export default {
 	},
 	plugins: [react()],
 	build: {
-		outDir: path.join(process.cwd(), 'build')
+		outDir: path.join(process.cwd(), 'build'),
+		emptyOutDir: true
 	}
 };
