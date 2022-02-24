@@ -1,11 +1,11 @@
-export {};
-
-declare const self: ServiceWorkerGlobalScope;
+// export {};
+//
+// declare const self: ServiceWorkerGlobalScope;
 
 const MARKET_DATA_CACHE = 'market-data-cache';
 const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
 
-const isCacheableStatus = (response: Response): boolean =>
+const isCacheableStatus = (response) =>
 	response.status >= 200 && response.status <= 300;
 
 self.addEventListener('install', (event) => {
