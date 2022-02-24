@@ -9,16 +9,13 @@
     "registry": "https://craigmiller160.ddns.net:30003/repository/npm-private/"
   },
   "scripts": {
-    "start": "craig-webpack-dev",
+    "start": "vite",
     "build": "yarn lint && yarn test && yarn forceBuild",
-    "forceBuild": "craig-webpack",
-    "analyzeBuild": "ANALYZE=true craig-webpack",
+    "forceBuild": "vite build",
     "lint": "craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
-    "validate": "yarn lint && yarn test",
-    "vite": "vite",
-    "viteBuild": "vite build"
+    "validate": "yarn lint && yarn test"
   },
   "lint-staged": {
     "*.{ts,tsx}": "yarn lint"
