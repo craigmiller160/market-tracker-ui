@@ -212,9 +212,10 @@ const handleInvestmentData =
 	(time: MarketTime) =>
 	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
 		const startPrice =
-			quote.previousClose > 0 ? quote.previousClose : history?.[0]?.price;
+			quote.previousClose > 0 && MarketTime.ONE_DAY === time
+				? quote.previousClose
+				: history?.[0]?.price;
 
-		// TODO no need for extra history record when already using history for start price
 		const newHistory = match({ time, startPrice })
 			.with(
 				{ time: MarketTime.ONE_DAY, startPrice: quote.previousClose },
