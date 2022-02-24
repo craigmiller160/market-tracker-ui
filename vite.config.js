@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export default {
 	root: path.join(process.cwd(), 'src'),
-	base: '/market-tracker/',
+	// base: '/market-tracker/',
 	publicDir: path.join(process.cwd(), 'public'),
 	server: {
 		port: 3000,
@@ -32,6 +32,12 @@ export default {
 				secure: false,
 				rewrite: (path) => path.replace(/^\/market-tracker\/oauth2/, ''),
 				logLevel: 'debug'
+			},
+			'/market-tracker/service-worker.js': {
+				target: 'https://localhost:3000',
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) => path.replace(/^\/market-tracker/, '')
 			}
 		}
 	},
