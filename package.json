@@ -16,7 +16,9 @@
     "lint": "craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
-    "validate": "yarn lint && yarn test"
+    "validate": "yarn lint && yarn test",
+    "vite": "vite",
+    "viteBuild": "vite build"
   },
   "lint-staged": {
     "*.{ts,tsx}": "yarn lint"
