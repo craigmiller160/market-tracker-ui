@@ -76,6 +76,17 @@ const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
 	)(tradierQuotes);
 };
 
+const createTradierHistoryRecord = (
+	date: string,
+	time: string,
+	price: number
+): HistoryRecord => ({
+	date,
+	time,
+	unixTimestampMillis: getMillisFromDateTime(`${date} ${time}`),
+	price
+});
+
 const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryRecord> =>
@@ -83,22 +94,8 @@ const formatTradierHistory = (
 		history.history.day,
 		RArray.chain(
 			(_: TradierHistoryDay): ReadonlyArray<HistoryRecord> => [
-				{
-					date: _.date,
-					time: '00:00:00',
-					unixTimestampMillis: getMillisFromDateTime(
-						`${_.date} 00:00:00`
-					),
-					price: _.open
-				},
-				{
-					date: _.date,
-					time: '23:59:59',
-					unixTimestampMillis: getMillisFromDateTime(
-						`${_.date} 23:59:59`
-					),
-					price: _.close
-				}
+				createTradierHistoryRecord(_.date, '00:00:00', _.open),
+				createTradierHistoryRecord(_.date, '23:59:59', _.close)
 			]
 		)
 	);
