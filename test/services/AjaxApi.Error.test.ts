@@ -3,6 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { MockStore } from 'redux-mock-store';
 import * as Option from 'fp-ts/es6/Option';
+import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
+
+const sleep550ms = Sleep.sleep(550);
 
 jest.mock('../../src/store', () => {
 	const createMockStore = jest.requireActual('redux-mock-store').default;
@@ -39,6 +42,7 @@ describe('AjaxApi Error Handler', () => {
 		await ajaxApi.get({
 			uri: '/foo'
 		})();
+		await sleep550ms();
 		expect(mockStore.getActions()).toEqual([
 			{
 				type: 'auth/setUserData',
@@ -46,26 +50,7 @@ describe('AjaxApi Error Handler', () => {
 			},
 			{
 				type: 'notification/addError',
-				payload:
-					'401 - Message: Request failed with status code 401 Body: {}'
-			}
-		]);
-	});
-
-	it('is 401 error, with body', async () => {
-		mockApi.onGet('/foo').reply(401, { hello: 'world' });
-		await ajaxApi.get({
-			uri: '/foo'
-		})();
-		const text = JSON.stringify({ hello: 'world' });
-		expect(mockStore.getActions()).toEqual([
-			{
-				type: 'auth/setUserData',
-				payload: Option.none
-			},
-			{
-				type: 'notification/addError',
-				payload: `401 - Message: Request failed with status code 401 Body: ${text}`
+				payload: 'Unauthorized'
 			}
 		]);
 	});

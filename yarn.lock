@@ -2684,6 +2684,18 @@
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
+"@types/lodash-es@^4.17.6":
+  version "4.17.6"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@types/lodash-es/-/lodash-es-4.17.6.tgz#c2ed4c8320ffa6f11b43eb89e9eaeec65966a0a0"
+  integrity sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.178"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@types/lodash/-/lodash-4.14.178.tgz#341f6d2247db528d4a13ddbb374bcdc80406f4f8"
+  integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
+
 "@types/mapbox-gl@^1.11.2":
   version "1.13.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@types/mapbox-gl/-/mapbox-gl-1.13.2.tgz#d20959d02b9ca17a2a3244387f1da763992ed11d"

@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 import { match, when, not } from 'ts-pattern';
 import * as Json from '@craigmiller160/ts-functions/es/Json';
 import { pipe } from 'fp-ts/es6/function';
+import { debounce } from 'lodash-es';
 
 const isUndefined = (value: string | undefined): boolean => value === undefined;
 
@@ -47,16 +48,22 @@ const getFullErrorMessage = (
 		)
 		.otherwise(() => `${status} - Message: ${error.message}`);
 
+const debouncedUnauthorizedNotification = debounce(
+	() => store.dispatch(notificationSlice.actions.addError('Unauthorized')),
+	500
+);
+
 const ajaxErrorHandler: DefaultErrorHandler = (status, error, message) => {
 	if (status === 401) {
 		store.dispatch(authSlice.actions.setUserData(Option.none));
+		debouncedUnauthorizedNotification();
+	} else {
+		store.dispatch(
+			notificationSlice.actions.addError(
+				getFullErrorMessage(status, message, error)
+			)
+		);
 	}
-
-	store.dispatch(
-		notificationSlice.actions.addError(
-			getFullErrorMessage(status, message, error)
-		)
-	);
 };
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
