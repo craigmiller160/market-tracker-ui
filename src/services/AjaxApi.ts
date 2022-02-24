@@ -50,13 +50,13 @@ const getFullErrorMessage = (
 const ajaxErrorHandler: DefaultErrorHandler = (status, error, message) => {
 	if (status === 401) {
 		store.dispatch(authSlice.actions.setUserData(Option.none));
+	} else {
+		store.dispatch(
+			notificationSlice.actions.addError(
+				getFullErrorMessage(status, message, error)
+			)
+		);
 	}
-
-	store.dispatch(
-		notificationSlice.actions.addError(
-			getFullErrorMessage(status, message, error)
-		)
-	);
 };
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
