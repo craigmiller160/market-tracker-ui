@@ -178,6 +178,20 @@ describe('TradierService', () => {
 		expect(result).toEqualRight([createQuote('VTI'), createQuote('VOO')]);
 	});
 
+	describe('NaN', () => {
+		it('get 1 week history, with NaN open', async () => {
+			throw new Error();
+		});
+
+		it('get 1 week history, with NaN close', async () => {
+			throw new Error();
+		});
+
+		it('get 1 week history, with NaN open and close', async () => {
+			throw new Error();
+		});
+	});
+
 	it('get 1 week history', async () => {
 		const today = new Date();
 		const historyQuery: HistoryQuery = {
