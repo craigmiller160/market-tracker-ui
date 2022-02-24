@@ -324,7 +324,7 @@ export const createMockQueries =
 				timesalesStart.getTime() / 1000
 			).toString();
 			const todayEndMillis = Math.floor(
-				today.getTime() / 1000
+				timesalesEnd.getTime() / 1000
 			).toString();
 			const todayStartPattern = `${todayStartMillis.substring(0, 9)}\\d`;
 			const todayEndPattern = `${todayEndMillis.substring(0, 9)}\\d`;
