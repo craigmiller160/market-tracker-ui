@@ -1,5 +1,5 @@
 import * as ioType from 'io-ts';
-import TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 
 export const tradierHistoryDayV = ioType.readonly(
 	ioType.type({
