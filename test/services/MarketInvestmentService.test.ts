@@ -506,6 +506,23 @@ describe('MarketInvestmentService', () => {
 				history: [
 					{
 						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryTime
+						),
+						price: 60,
+						unixTimestampMillis: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1)
+						).getTime()
+					},
+					{
+						date: pipe(
 							parseTimesaleTime(newTimesaleArray[0].time),
 							formatHistoryDate
 						),
