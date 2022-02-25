@@ -11,7 +11,7 @@
   "scripts": {
     "start": "vite",
     "build": "yarn lint && yarn test && yarn forceBuild",
-    "forceBuild": "vite build && cp src/service-worker.js build",
+    "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "lint": "tsc --noEmit && craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
