@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/components/Content/Markets/MarketCard.tsx",
+    "**/*.d.ts"
+  ],
+  "compilerOptions": {
+    "noResolve": true
+  }
+}

@@ -9,4 +9,4 @@ build
 coverage
 deploy/build
 reports
-.tsconfig-lint.json
+#.tsconfig-lint.json
