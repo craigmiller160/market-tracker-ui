@@ -35,7 +35,7 @@ describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
 		const date = new Date();
 		const actual = setTodayStartTime(date);
-		const actualText = Time.format('yyyy-MM-dd HH:mm:ss')(actual);
+		const actualText = compareFormat(actual);
 		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
 		expect(actualText).toEqual(`${expectedTextDate} 00:00:00`);
 	});
@@ -43,7 +43,7 @@ describe('timeUtils', () => {
 	it('setTodayEndTime', () => {
 		const date = new Date();
 		const actual = setTodayEndTime(date);
-		const actualText = Time.format('yyyy-MM-dd HH:mm:ss')(actual);
+		const actualText = compareFormat(actual);
 		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
 		expect(actualText).toEqual(`${expectedTextDate} 23:00:00`);
 	});
@@ -99,7 +99,7 @@ describe('timeUtils', () => {
 	it('getThreeMonthStartDate', () => {
 		const expected = pipe(new Date(), Time.subMonths(3));
 		const actual = getThreeMonthStartDate();
-		expect(actual).toEqual(expected);
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
 	});
 
 	it('getThreeMonthHistoryStartDate', () => {
@@ -117,7 +117,7 @@ describe('timeUtils', () => {
 	it('getOneYearStartDate', () => {
 		const expected = pipe(new Date(), Time.subYears(1));
 		const actual = getOneYearStartDate();
-		expect(actual).toEqual(expected);
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
 	});
 
 	it('getOneYearHistoryStartDate', () => {
@@ -135,7 +135,7 @@ describe('timeUtils', () => {
 	it('getFiveYearStartDate', () => {
 		const expected = pipe(new Date(), Time.subYears(5));
 		const actual = getFiveYearStartDate();
-		expect(actual).toEqual(expected);
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
 	});
 
 	it('getFiveYearHistoryStartDate', () => {
@@ -161,7 +161,7 @@ describe('timeUtils', () => {
 			})
 		);
 		const actual = getTodayStart();
-		expect(actual).toEqual(expected);
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
 	});
 
 	it('getTodayStartString', () => {
@@ -190,7 +190,7 @@ describe('timeUtils', () => {
 			})
 		);
 		const actual = getTodayEnd();
-		expect(actual).toEqual(expected);
+		expect(compareFormat(actual)).toEqual(compareFormat(expected));
 	});
 
 	it('getTodayEndString', () => {
