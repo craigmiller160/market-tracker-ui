@@ -220,16 +220,26 @@ const updateHistory = (
 		.otherwise(() => Either.right(history));
 };
 
+const priceAndPrevCloseEqual: PredicateT<Quote> = (quote) =>
+	quote.previousClose === quote.price;
+
 const getCurrentPrice = (
 	info: MarketInvestmentInfo,
 	time: MarketTime,
 	quote: Quote,
 	history: ReadonlyArray<HistoryRecord>
-): number =>
-	match({
+): number => {
+	const mostRecentHistoryRecord = getMostRecentHistoryRecord(history);
+	const mostRecentHistoryPrice = pipe(
+		mostRecentHistoryRecord,
+		Option.map((_) => _.price),
+		Option.getOrElse(() => quote.price)
+	);
+	return match({
 		type: info.type,
 		time,
-		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+		quote,
+		mostRecentHistoryRecord
 	})
 		.with(
 			{
@@ -237,14 +247,14 @@ const getCurrentPrice = (
 				time: MarketTime.ONE_DAY,
 				mostRecentHistoryRecord: when(isLaterThanNow)
 			},
-			({ mostRecentHistoryRecord }) =>
-				pipe(
-					mostRecentHistoryRecord,
-					Option.map((_) => _.price),
-					Option.getOrElse(() => quote.price)
-				)
+			() => mostRecentHistoryPrice
+		)
+		.with(
+			{ quote: when(priceAndPrevCloseEqual) },
+			() => mostRecentHistoryPrice
 		)
 		.otherwise(() => quote.price);
+};
 
 const handleInvestmentData =
 	(time: MarketTime, info: MarketInvestmentInfo) =>
