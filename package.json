@@ -18,7 +18,7 @@
     "validate": "yarn lint && yarn test"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "craig-lint"
+    "*.{ts,tsx}": "eslint --fix --max-warnings=0"
   },
   "devDependencies": {
     "@craigmiller160/babel-config": "1.1.0",
