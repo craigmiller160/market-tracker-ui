@@ -268,10 +268,34 @@ const updateHistory = (
 		.otherwise(() => Either.right(history));
 };
 
+const getCurrentPrice = (
+	info: MarketInvestmentInfo,
+	quote: Quote,
+	history: ReadonlyArray<HistoryRecord>
+): number =>
+	match({
+		type: info.type,
+		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
+	})
+		.with(
+			{
+				type: when(isStock),
+				mostRecentHistoryRecord: when(isLaterThanNow)
+			},
+			({ mostRecentHistoryRecord }) =>
+				pipe(
+					mostRecentHistoryRecord,
+					Option.map((_) => _.price),
+					Option.getOrElse(() => quote.price)
+				)
+		)
+		.otherwise(() => quote.price);
+
 const handleInvestmentData =
-	(time: MarketTime) =>
-	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> =>
-		pipe(
+	(time: MarketTime, info: MarketInvestmentInfo) =>
+	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> => {
+		const currentPrice = getCurrentPrice(info, quote, history);
+		return pipe(
 			getStartPrice(time, quote, history),
 			Either.bindTo('startPrice'),
 			Either.bind('newHistory', ({ startPrice }) =>
@@ -280,11 +304,12 @@ const handleInvestmentData =
 			Either.map(
 				({ startPrice, newHistory }): InvestmentData => ({
 					startPrice,
-					currentPrice: quote.price,
+					currentPrice,
 					history: newHistory
 				})
 			)
 		);
+	};
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -294,5 +319,5 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', () => getQuote(info)),
-		TaskEither.chainEitherK(handleInvestmentData(time))
+		TaskEither.chainEitherK(handleInvestmentData(time, info))
 	);
