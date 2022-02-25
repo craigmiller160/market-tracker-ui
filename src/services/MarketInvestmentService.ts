@@ -131,14 +131,6 @@ const getMostRecentHistoryRecord = (
 	history: ReadonlyArray<HistoryRecord>
 ): OptionT<HistoryRecord> => RArray.last(history);
 
-const historyRecordToQuote =
-	(symbol: string) =>
-	(record: HistoryRecord): Quote => ({
-		symbol,
-		price: record.price,
-		previousClose: 0
-	});
-
 const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
 	pipe(
 		getQuoteFn(info.type)([info.symbol]),
@@ -169,46 +161,6 @@ const getFirstHistoryRecordDate = (
 			() => new Error('Unable to get first history record for date')
 		)
 	);
-
-const handleUseQuoteOrHistoryQuote =
-	(info: MarketInvestmentInfo) =>
-	({
-		history,
-		quote
-	}: IntermediateInvestmentData): TryT<IntermediateInvestmentData> => {
-		const quoteEither = match({
-			type: info.type,
-			mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
-		})
-			.with(
-				{
-					type: when(isStock),
-					mostRecentHistoryRecord: when(isLaterThanNow)
-				},
-				({ mostRecentHistoryRecord }) =>
-					pipe(
-						mostRecentHistoryRecord,
-						Option.map(historyRecordToQuote(info.symbol)),
-						Option.fold(
-							() =>
-								Either.left(
-									new Error(
-										'No history record for history quote'
-									)
-								),
-							(_) => Either.right(_)
-						)
-					)
-			)
-			.otherwise(() => Either.right(quote));
-		return pipe(
-			quoteEither,
-			Either.map((_) => ({
-				quote: _,
-				history
-			}))
-		);
-	};
 
 const hasPrevClose: PredicateT<Quote> = (quote) => quote.previousClose > 0;
 
@@ -270,16 +222,19 @@ const updateHistory = (
 
 const getCurrentPrice = (
 	info: MarketInvestmentInfo,
+	time: MarketTime,
 	quote: Quote,
 	history: ReadonlyArray<HistoryRecord>
 ): number =>
 	match({
 		type: info.type,
+		time,
 		mostRecentHistoryRecord: getMostRecentHistoryRecord(history)
 	})
 		.with(
 			{
 				type: when(isStock),
+				time: MarketTime.ONE_DAY,
 				mostRecentHistoryRecord: when(isLaterThanNow)
 			},
 			({ mostRecentHistoryRecord }) =>
@@ -294,7 +249,7 @@ const getCurrentPrice = (
 const handleInvestmentData =
 	(time: MarketTime, info: MarketInvestmentInfo) =>
 	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> => {
-		const currentPrice = getCurrentPrice(info, quote, history);
+		const currentPrice = getCurrentPrice(info, time, quote, history);
 		return pipe(
 			getStartPrice(time, quote, history),
 			Either.bindTo('startPrice'),

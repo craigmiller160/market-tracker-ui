@@ -501,7 +501,7 @@ describe('MarketInvestmentService', () => {
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
 			expect(result).toEqualRight({
-				startPrice: 20,
+				startPrice: 60,
 				currentPrice: 30,
 				history: [
 					{
