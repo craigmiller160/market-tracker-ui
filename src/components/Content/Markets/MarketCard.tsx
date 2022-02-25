@@ -91,6 +91,8 @@ interface TimeInfo {
 	readonly sinceDate: string;
 }
 
+const abc: number = 'abc';
+
 const createTime = (time: MarketTime): ReactNode => {
 	const timeInfo: TimeInfo = match(time)
 		.with(
