@@ -156,7 +156,7 @@ const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
 
 const getFirstHistoryRecordDate = (
 	history: ReadonlyArray<HistoryRecord>
-): Date =>
+): TryT<Date> =>
 	pipe(
 		RArray.head(history),
 		Option.map((record) =>
@@ -165,7 +165,9 @@ const getFirstHistoryRecordDate = (
 				subtractOneHour
 			)
 		),
-		Option.getOrElse(() => new Date())
+		Either.fromOption(
+			() => new Error('Unable to get first history record for date')
+		)
 	);
 
 const handleUseQuoteOrHistoryQuote =
@@ -208,36 +210,81 @@ const handleUseQuoteOrHistoryQuote =
 		);
 	};
 
+const hasPrevClose: PredicateT<Quote> = (quote) => quote.previousClose > 0;
+
+const getStartPrice = (
+	time: MarketTime,
+	quote: Quote,
+	history: ReadonlyArray<HistoryRecord>
+): TryT<number> =>
+	match({ time, quote, history })
+		.with({ time: MarketTime.ONE_DAY, quote: when(hasPrevClose) }, () =>
+			Either.right(quote.previousClose)
+		)
+		.otherwise(() =>
+			pipe(
+				RArray.head(history),
+				Option.map((_) => _.price),
+				Either.fromOption(
+					() => new Error('Unable to get start price from history')
+				)
+			)
+		);
+
+const notEqualToHistoryStartPrice =
+	(historyStartPrice: number): PredicateT<number> =>
+	(startPrice) =>
+		startPrice !== historyStartPrice;
+
+const updateHistory = (
+	time: MarketTime,
+	startPrice: number,
+	history: ReadonlyArray<HistoryRecord>
+): TryT<ReadonlyArray<HistoryRecord>> => {
+	const historyStartPrice = pipe(
+		RArray.head(history),
+		Option.map((_) => _.price),
+		Option.getOrElse(() => -1)
+	);
+	return match({ time, startPrice })
+		.with(
+			{
+				time: MarketTime.ONE_DAY,
+				startPrice: when(notEqualToHistoryStartPrice(historyStartPrice))
+			},
+			() =>
+				pipe(
+					getFirstHistoryRecordDate(history),
+					Either.map((date) =>
+						RArray.prepend({
+							date: formatDate(date),
+							unixTimestampMillis: date.getTime(),
+							time: formatTime(date),
+							price: startPrice
+						})(history)
+					)
+				)
+		)
+		.otherwise(() => Either.right(history));
+};
+
 const handleInvestmentData =
 	(time: MarketTime) =>
-	({ history, quote }: IntermediateInvestmentData): InvestmentData => {
-		const startPrice =
-			quote.previousClose > 0 && MarketTime.ONE_DAY === time
-				? quote.previousClose
-				: history?.[0]?.price;
-
-		const newHistory = match({ time, startPrice })
-			.with(
-				{ time: MarketTime.ONE_DAY, startPrice: quote.previousClose },
-				() => {
-					const date = getFirstHistoryRecordDate(history);
-
-					return RArray.prepend({
-						date: formatDate(date),
-						unixTimestampMillis: date.getTime(),
-						time: formatTime(date),
-						price: startPrice
-					})(history);
-				}
+	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> =>
+		pipe(
+			getStartPrice(time, quote, history),
+			Either.bindTo('startPrice'),
+			Either.bind('newHistory', ({ startPrice }) =>
+				updateHistory(time, startPrice, history)
+			),
+			Either.map(
+				({ startPrice, newHistory }): InvestmentData => ({
+					startPrice,
+					currentPrice: quote.price,
+					history: newHistory
+				})
 			)
-			.otherwise(() => history);
-
-		return {
-			startPrice,
-			currentPrice: quote.price,
-			history: newHistory
-		};
-	};
+		);
 
 export const getInvestmentData = (
 	time: MarketTime,
@@ -247,6 +294,5 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', () => getQuote(info)),
-		TaskEither.chainEitherK(handleUseQuoteOrHistoryQuote(info)),
-		TaskEither.map(handleInvestmentData(time))
+		TaskEither.chainEitherK(handleInvestmentData(time))
 	);
