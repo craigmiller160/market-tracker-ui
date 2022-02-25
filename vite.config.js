@@ -8,6 +8,7 @@ export default {
 	publicDir: path.join(process.cwd(), 'public'),
 	server: {
 		port: 3000,
+		host: true,
 		https: {
 			cert: fs.readFileSync(
 				path.join(process.cwd(), 'config', 'localhost.cert.pem'),
