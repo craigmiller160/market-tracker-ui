@@ -294,6 +294,10 @@ describe('MarketInvestmentService', () => {
 			});
 		});
 
+		it('gets investment data for today when Tradier last and prevclose are the same', async () => {
+			throw new Error();
+		});
+
 		it('gets investment data for today', async () => {
 			mockApi
 				.onGet('/tradier/markets/quotes?symbols=VTI')
