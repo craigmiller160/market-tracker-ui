@@ -294,6 +294,76 @@ describe('MarketInvestmentService', () => {
 			});
 		});
 
+		it('gets investment data for today when Tradier last and prevclose are the same', async () => {
+			const newQuote: TradierQuotes = {
+				quotes: {
+					quote: {
+						...tradierQuote.quotes.quote,
+						last: 60,
+						prevclose: 60
+					}
+				}
+			};
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, newQuote);
+			const start = getTodayStartString();
+			const end = getTodayEndString();
+			mockApi
+				.onGet(
+					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
+				)
+				.reply(200, tradierTimesale);
+			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+			expect(result).toEqualRight({
+				startPrice: 60,
+				currentPrice: timesaleArray[1].price,
+				history: [
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryTime
+						),
+						price: 60,
+						unixTimestampMillis: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1)
+						).getTime()
+					},
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							formatHistoryTime
+						),
+						price: timesaleArray[0].price,
+						unixTimestampMillis: timesaleArray[0].timestamp * 1000
+					},
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[1].time),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[1].time),
+							formatHistoryTime
+						),
+						price: timesaleArray[1].price,
+						unixTimestampMillis: timesaleArray[1].timestamp * 1000
+					}
+				]
+			});
+		});
+
 		it('gets investment data for today', async () => {
 			mockApi
 				.onGet('/tradier/markets/quotes?symbols=VTI')
@@ -431,9 +501,26 @@ describe('MarketInvestmentService', () => {
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
 			expect(result).toEqualRight({
-				startPrice: 20,
+				startPrice: 60,
 				currentPrice: 30,
 				history: [
+					{
+						date: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryDate
+						),
+						time: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1),
+							formatHistoryTime
+						),
+						price: 60,
+						unixTimestampMillis: pipe(
+							parseTimesaleTime(timesaleArray[0].time),
+							Time.subHours(1)
+						).getTime()
+					},
 					{
 						date: pipe(
 							parseTimesaleTime(newTimesaleArray[0].time),

@@ -85,10 +85,6 @@ const testMarketsPage = (
 					isCurrentPriceQuote: config.isCurrentPriceQuote
 				})
 					.with(
-						{ type: when(isStock), isCurrentPriceQuote: false },
-						() => setting.timesalePrice1
-					)
-					.with(
 						{ type: when(isStock), isTimesale: true },
 						() => setting.prevClosePrice
 					)
