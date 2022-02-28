@@ -132,6 +132,7 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
+		// TODO special handling for this one needs to be tested for
 	});
 
 	it('renders for today with market closed', async () => {
@@ -142,6 +143,7 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
+		// TODO special handling for this one needs to be tested for
 	});
 
 	it('renders for 1 week', async () => {
