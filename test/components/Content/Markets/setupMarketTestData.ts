@@ -21,20 +21,21 @@ import {
 	getTodayEndString,
 	getTodayStartString
 } from '../../../../src/utils/timeUtils';
+import { pipe } from 'fp-ts/es6/function';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-const CALENDAR_DATE_FORMAT = 'yyyy-MM-dd';
+const DATE_FORMAT = 'yyyy-MM-dd';
 const CALENDAR_MONTH_FORMAT = 'MM';
 const CALENDAR_YEAR_FORMAT = 'yyyy';
 const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
-const formatCalendarDate = Time.format(CALENDAR_DATE_FORMAT);
+const formatDate = Time.format(DATE_FORMAT);
 const formatCalendarMonth = Time.format(CALENDAR_MONTH_FORMAT);
 const formatCalendarYear = Time.format(CALENDAR_YEAR_FORMAT);
 
-const BASE_LAST_PRICE = 100;
-const BASE_PREV_CLOSE_PRICE = 30;
-const BASE_HISTORY_1_PRICE = 50;
-const BASE_HISTORY_2_PRICE = 60;
+export const BASE_LAST_PRICE = 100;
+export const BASE_PREV_CLOSE_PRICE = 30;
+export const BASE_HISTORY_1_PRICE = 50;
+export const BASE_HISTORY_2_PRICE = 60;
 
 const createTradierQuote = (
 	symbol: string,
@@ -153,7 +154,7 @@ const mockCalenderRequest = (
 	status: TradierCalendarStatus
 ) => {
 	const date = new Date();
-	const formattedDate = formatCalendarDate(date);
+	const formattedDate = formatDate(date);
 	const year = formatCalendarYear(date);
 	const month = formatCalendarMonth(date);
 
@@ -192,6 +193,41 @@ const mockTradierTimesaleRequest = (
 			`/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		)
 		.reply(200, createTradierTimesale(modifier));
+};
+
+const getTradierInterval = (time: MarketTime): string =>
+	match(time)
+		.with(MarketTime.ONE_WEEK, () => 'daily')
+		.with(MarketTime.ONE_MONTH, () => 'daily')
+		.with(MarketTime.THREE_MONTHS, () => 'daily')
+		.with(MarketTime.ONE_YEAR, () => 'weekly')
+		.with(MarketTime.FIVE_YEARS, () => 'monthly')
+		.run();
+
+const getHistoryStart = (time: MarketTime): Date =>
+	match(time)
+		.with(MarketTime.ONE_DAY, () => Time.subDays(1)(new Date()))
+		.with(MarketTime.ONE_WEEK, () => Time.subWeeks(1)(new Date()))
+		.with(MarketTime.ONE_MONTH, () => Time.subMonths(1)(new Date()))
+		.with(MarketTime.THREE_MONTHS, () => Time.subMonths(3)(new Date()))
+		.with(MarketTime.ONE_YEAR, () => Time.subYears(1)(new Date()))
+		.with(MarketTime.FIVE_YEARS, () => Time.subYears(5)(new Date()))
+		.run();
+
+const mockTradierHistoryRequest = (
+	mockApi: MockAdapter,
+	symbol: string,
+	time: MarketTime,
+	modifier: number
+) => {
+	const start = pipe(getHistoryStart(time), formatDate);
+	const end = formatDate(new Date());
+	const interval = getTradierInterval(time);
+	mockApi
+		.onGet(
+			`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${end}&interval=${interval}`
+		)
+		.reply(200, createTradierHistory(modifier));
 };
 
 export const createSetupMockApiCalls =
