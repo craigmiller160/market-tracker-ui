@@ -10,9 +10,17 @@ import { createRenderApp } from '../../../testutils/RenderApp';
 import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
-import { TryT } from '@craigmiller160/ts-functions/es/types';
 import * as Either from 'fp-ts/es6/Either';
 import '@testing-library/jest-dom/extend-expect';
+import { match } from 'ts-pattern';
+import {
+	getFiveYearDisplayStartDate,
+	getOneMonthDisplayStartDate,
+	getOneWeekDisplayStartDate,
+	getOneYearDisplayStartDate,
+	getThreeMonthDisplayStartDate,
+	getTodayDisplayDate
+} from '../../../../src/utils/timeUtils';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -52,27 +60,51 @@ const handleValidationError =
 		return ex;
 	};
 
+const validateCardTitle = (card: HTMLElement, info: MarketInvestmentInfo) => {
+	const title = within(card).queryByText(RegExp(`\\(${info.symbol}\\)`));
+	expect(title).toHaveTextContent(`${info.name} (${info.symbol})`);
+};
+
+const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
+	const startDate = match(time)
+		.with(MarketTime.ONE_DAY, getTodayDisplayDate)
+		.with(MarketTime.ONE_WEEK, getOneWeekDisplayStartDate)
+		.with(MarketTime.ONE_MONTH, getOneMonthDisplayStartDate)
+		.with(MarketTime.THREE_MONTHS, getThreeMonthDisplayStartDate)
+		.with(MarketTime.ONE_YEAR, getOneYearDisplayStartDate)
+		.with(MarketTime.FIVE_YEARS, getFiveYearDisplayStartDate)
+		.run();
+
+	expect(within(card).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
+		`Since ${startDate}`
+	);
+};
+
 const validateInvestmentCard = (
 	marketsPage: HTMLElement,
 	info: MarketInvestmentInfo,
+	config: MarketTestConfig,
 	modifier: number
-): TryT<void> => {
+) => {
 	const maybeCard = within(marketsPage).queryByTestId(
 		`market-card-${info.symbol}`
 	);
-	return pipe(
+	pipe(
 		Try.tryCatch(() => {
 			expect(maybeCard).not.toBeUndefined();
+			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+			validateCardTitle(card, info);
+			validateCardSinceDate(card, config.time);
 		}),
-		Either.mapLeft(handleValidationError(info.symbol, maybeCard))
+		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
+		Try.getOrThrow
 	);
 };
 
 const testMarketsPage = (config: MarketTestConfig) => {
 	const marketsPage = screen.getByTestId('markets-page');
-
 	investmentInfo.forEach((info, index) => {
-		validateInvestmentCard(marketsPage, info, index);
+		validateInvestmentCard(marketsPage, info, config, index);
 	});
 };
 
