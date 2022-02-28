@@ -162,7 +162,7 @@ const validatePriceLine = (
 	const rawInitialPrice = baseInitialPrice + modifier;
 	const rawDiff = rawCurrentPrice - rawInitialPrice;
 	const diff = `$${rawDiff.toLocaleString(undefined, localeOptions)}`;
-	const rawPercent = rawDiff / rawInitialPrice;
+	const rawPercent = (rawDiff / rawInitialPrice) * 100;
 	const percent = `${rawPercent.toLocaleString(undefined, localeOptions)}%`;
 
 	const currentPriceResult = within(card).queryByText(currentPrice);
@@ -173,7 +173,7 @@ const validatePriceLine = (
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-	expect(priceLine).toHaveTextContent(`(${diff}, ${percent})`);
+	expect(priceLine).toHaveTextContent(`(+${diff}, +${percent})`);
 };
 
 const validateInvestmentCard = (
@@ -239,7 +239,6 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY,
 			currentPriceStrategy: CurrentPriceStrategy.HISTORY
 		});
-		// TODO special handling for this one needs to be tested for
 	});
 
 	it('renders for today with market closed', async () => {
@@ -254,7 +253,6 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY,
 			status: MarketStatus.CLOSED
 		});
-		// TODO special handling for this one needs to be tested for
 	});
 
 	it('renders for 1 week', async () => {
