@@ -7,9 +7,11 @@ import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmen
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { createRenderApp } from '../../../testutils/RenderApp';
-import { act, screen } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
+import { TryT } from '@craigmiller160/ts-functions/es/types';
+import * as Either from 'fp-ts/es6/Either';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -38,8 +40,38 @@ interface MarketTestConfig {
 	readonly time: MarketTime;
 }
 
+const handleValidationError =
+	(symbol: string, maybeCard: HTMLElement | null) =>
+	(ex: Error): Error => {
+		console.error('Investment card validation failure for symbol', symbol);
+		if (maybeCard) {
+			screen.debug(maybeCard);
+		}
+		return ex;
+	};
+
+const validateInvestmentCard = (
+	marketsPage: HTMLElement,
+	info: MarketInvestmentInfo,
+	modifier: number
+): TryT<void> => {
+	const maybeCard = within(marketsPage).queryByTestId(
+		`market-card-${info.symbol}`
+	);
+	return pipe(
+		Try.tryCatch(() => {
+			expect(maybeCard).not.toBeUndefined();
+		}),
+		Either.mapLeft(handleValidationError(info.symbol, maybeCard))
+	);
+};
+
 const testMarketsPage = (config: MarketTestConfig) => {
-	throw new Error();
+	const marketsPage = screen.getByTestId('markets-page');
+
+	investmentInfo.forEach((info, index) => {
+		validateInvestmentCard(marketsPage, info, index);
+	});
 };
 
 describe('Markets', () => {
