@@ -18,7 +18,7 @@ import {
 	getThreeMonthStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import { createMockQueries, testDataSettings } from './marketsTestData';
+import { createMockQueries, testDataSettings } from './marketsTestData.old';
 import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import {
