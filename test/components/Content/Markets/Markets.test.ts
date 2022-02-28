@@ -27,6 +27,13 @@ const selectMenuItem = async (text: string) => {
 	menuItemIsSelected(text);
 };
 
+const testPageHeaders = () => {
+	expect(screen.queryByText('All Markets')).toBeInTheDocument();
+	expect(screen.queryByText('US Markets')).toBeInTheDocument();
+	expect(screen.queryByText('International Markets')).toBeInTheDocument();
+	expect(screen.queryByText('Cryptocurrency')).toBeInTheDocument();
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -38,6 +45,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('Today');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -47,6 +55,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('Today');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -57,6 +66,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('Today');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -66,6 +76,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('1 Week');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -75,6 +86,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('1 Month');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -84,6 +96,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('3 Months');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -93,6 +106,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('1 Year');
+		testPageHeaders();
 		throw new Error();
 	});
 
@@ -102,6 +116,7 @@ describe('Markets', () => {
 		});
 		await renderApp();
 		await selectMenuItem('5 Years');
+		testPageHeaders();
 		throw new Error();
 	});
 });
