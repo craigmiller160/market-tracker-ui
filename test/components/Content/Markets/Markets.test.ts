@@ -1,141 +1,222 @@
-import { act, screen, within } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
+import MockAdapter from 'axios-mock-adapter';
+import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
+import { pipe } from 'fp-ts/es6/function';
+import * as Try from '@craigmiller160/ts-functions/es/Try';
+import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import {
+	BASE_HISTORY_1_PRICE,
+	BASE_HISTORY_2_PRICE,
+	BASE_LAST_PRICE,
+	BASE_PREV_CLOSE_PRICE,
+	createSetupMockApiCalls
+} from './setupMarketTestData';
+import { MarketTime } from '../../../../src/types/MarketTime';
 import { createRenderApp } from '../../../testutils/RenderApp';
-import '@testing-library/jest-dom/extend-expect';
-import { menuItemIsSelected } from '../../../testutils/menuUtils';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
+import * as Either from 'fp-ts/es6/Either';
+import '@testing-library/jest-dom/extend-expect';
+import { match, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
-	getFiveYearStartDate,
 	getOneMonthDisplayStartDate,
-	getOneMonthStartDate,
 	getOneWeekDisplayStartDate,
-	getOneWeekStartDate,
 	getOneYearDisplayStartDate,
-	getOneYearStartDate,
 	getThreeMonthDisplayStartDate,
-	getThreeMonthStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import { createMockQueries, testDataSettings } from './marketsTestData';
-import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
-import * as Try from '@craigmiller160/ts-functions/es/Try';
 import {
-	isCrypto,
-	isStock
+	isStock,
+	MarketInvestmentType
 } from '../../../../src/types/data/MarketInvestmentType';
-import { match, when } from 'ts-pattern';
+import { MarketStatus } from '../../../../src/types/MarketStatus';
+
+enum CurrentPriceStrategy {
+	QUOTE,
+	HISTORY
+}
+
+const localeOptions: Intl.NumberFormatOptions = {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2
+};
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
+const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
+	getAllMarketInvestmentInfo(),
+	Try.getOrThrow
+);
 
-interface TestMarketCardsConfig {
-	readonly time: string;
-	readonly startDate: string;
-	readonly isTimesale?: boolean;
-	readonly isCurrentPriceQuote?: boolean;
-	readonly isMarketClosed?: boolean;
-}
+const setupMockApiCalls = createSetupMockApiCalls(mockApi, investmentInfo);
 
-const testMarketsPage = (
-	marketsPage: HTMLElement,
-	config: TestMarketCardsConfig
-) => {
-	const isTimesale = config.isTimesale ?? false;
-	const isCurrentPriceQuote = config.isCurrentPriceQuote ?? true;
-	const marketCards = within(marketsPage).queryAllByRole('listitem');
-	expect(marketCards).toHaveLength(10);
-	testDataSettings.forEach((setting) => {
-		const maybeCard = within(marketsPage).queryByTestId(
-			`market-card-${setting.symbol}`
-		);
-		try {
-			expect(maybeCard).not.toBeUndefined();
-			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-
-			const investmentInfo = Try.getOrThrow(getAllMarketInvestmentInfo());
-
-			const name = investmentInfo.find(
-				(info) => info.symbol === setting.symbol
-			)?.name;
-			expect(name).not.toBeUndefined();
-			const title = within(card).queryByText(
-				RegExp(`\\(${setting.symbol}\\)`)
-			);
-			expect(title).toHaveTextContent(`${name} (${setting.symbol})`);
-
-			expect(within(card).queryByText(config.time)).toBeInTheDocument();
-			expect(
-				within(card).queryByText(/\w{3} \d{2}, \d{4}/)
-			).toHaveTextContent(`Since ${config.startDate}`);
-
-			if (config.isMarketClosed && setting.id === undefined) {
-				expect(
-					within(card).queryByText('Market Closed')
-				).toBeInTheDocument();
-				expect(
-					within(card).queryByText('Chart is Here')
-				).not.toBeInTheDocument();
-			} else {
-				const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-				const initialPrice = match({
-					isTimesale,
-					type: setting.type,
-					isCurrentPriceQuote: config.isCurrentPriceQuote
-				})
-					.with(
-						{ type: when(isStock), isTimesale: true },
-						() => setting.prevClosePrice
-					)
-					.with(
-						{ type: when(isStock), isTimesale: false },
-						() => setting.historyPrice
-					)
-					.with(
-						{ type: when(isCrypto), isTimesale: true },
-						() => setting.timesalePrice1
-					)
-					.with(
-						{ type: when(isCrypto), isTimesale: false },
-						() => setting.historyPrice
-					)
-					.run();
-				const currentPrice =
-					isCurrentPriceQuote || setting.id !== undefined
-						? setting.quotePrice
-						: setting.timesalePrice2;
-				const diff = currentPrice - initialPrice;
-				const expectedPrice = `(+$${diff.toFixed(2)}, +${(
-					(diff / initialPrice) *
-					100
-				).toFixed(2)}%)`;
-				expect(
-					within(card).queryByText(`$${currentPrice.toFixed(2)}`)
-				).toBeInTheDocument();
-				expect(priceLine).toHaveTextContent(expectedPrice);
-
-				expect(
-					within(card).queryByText('Chart is Here')
-				).toBeInTheDocument();
-			}
-		} catch (ex) {
-			console.error('Failed Symbol', setting.symbol);
-			if (maybeCard) {
-				screen.debug(maybeCard);
-			}
-			throw ex;
-		}
+const selectMenuItem = async (text: string) => {
+	const menuItem = getMenuItem(text);
+	await act(async () => {
+		await userEvent.click(menuItem);
 	});
+	menuItemIsSelected(text);
 };
 
 const testPageHeaders = () => {
 	expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	expect(screen.queryByText('US Markets')).toBeInTheDocument();
 	expect(screen.queryByText('International Markets')).toBeInTheDocument();
+	expect(screen.queryByText('Cryptocurrency')).toBeInTheDocument();
 };
 
-const mockQueries = createMockQueries(mockApi);
+interface MarketTestConfig {
+	readonly time: MarketTime;
+	readonly status?: MarketStatus;
+	readonly currentPriceStrategy?: CurrentPriceStrategy;
+}
+
+const handleValidationError =
+	(symbol: string, maybeCard: HTMLElement | null) =>
+	(ex: Error): Error => {
+		console.error('Investment card validation failure for symbol', symbol);
+		if (maybeCard) {
+			screen.debug(maybeCard);
+		}
+		return ex;
+	};
+
+const validateCardTitle = (card: HTMLElement, info: MarketInvestmentInfo) => {
+	const title = within(card).queryByText(RegExp(`\\(${info.symbol}\\)`));
+	expect(title).toHaveTextContent(`${info.name} (${info.symbol})`);
+};
+
+const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
+	const startDate = match(time)
+		.with(MarketTime.ONE_DAY, getTodayDisplayDate)
+		.with(MarketTime.ONE_WEEK, getOneWeekDisplayStartDate)
+		.with(MarketTime.ONE_MONTH, getOneMonthDisplayStartDate)
+		.with(MarketTime.THREE_MONTHS, getThreeMonthDisplayStartDate)
+		.with(MarketTime.ONE_YEAR, getOneYearDisplayStartDate)
+		.with(MarketTime.FIVE_YEARS, getFiveYearDisplayStartDate)
+		.run();
+
+	expect(within(card).queryByText(/\w{3} \d{2}, \d{4}/)).toHaveTextContent(
+		`Since ${startDate}`
+	);
+};
+
+const validateMarketStatus = (
+	card: HTMLElement,
+	type: MarketInvestmentType,
+	status: MarketStatus
+) =>
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+			expect(
+				within(card).queryByText('Market Closed')
+			).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).not.toBeInTheDocument();
+		})
+		.otherwise(() => {
+			expect(
+				within(card).queryByText('Market Closed')
+			).not.toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).toBeInTheDocument();
+		});
+
+const validatePriceLine = (
+	card: HTMLElement,
+	type: MarketInvestmentType,
+	config: MarketTestConfig,
+	modifier: number
+) => {
+	const {
+		time,
+		status = MarketStatus.OPEN,
+		currentPriceStrategy = CurrentPriceStrategy.QUOTE
+	} = config;
+
+	const baseCurrentPrice = match({ type, currentPriceStrategy })
+		.with(
+			{
+				type: when(isStock),
+				currentPriceStrategy: CurrentPriceStrategy.HISTORY
+			},
+			() => BASE_HISTORY_2_PRICE
+		)
+		.otherwise(() => BASE_LAST_PRICE);
+	const rawCurrentPrice = baseCurrentPrice + modifier;
+	const currentPrice = `$${rawCurrentPrice.toLocaleString(
+		undefined,
+		localeOptions
+	)}`;
+
+	const baseInitialPrice = match({ type, time })
+		.with(
+			{ type: when(isStock), time: MarketTime.ONE_DAY },
+			() => BASE_PREV_CLOSE_PRICE
+		)
+		.otherwise(() => BASE_HISTORY_1_PRICE);
+	const rawInitialPrice = baseInitialPrice + modifier;
+	const rawDiff = rawCurrentPrice - rawInitialPrice;
+	const diff = `$${rawDiff.toLocaleString(undefined, localeOptions)}`;
+	const rawPercent = (rawDiff / rawInitialPrice) * 100;
+	const percent = `${rawPercent.toLocaleString(undefined, localeOptions)}%`;
+
+	const expectedPriceLineText = `(+${diff}, +${percent})`;
+
+	const currentPriceResult = within(card).queryByText(currentPrice);
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(currentPriceResult).not.toBeInTheDocument()
+		)
+		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
+
+	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(priceLine).not.toBeInTheDocument()
+		)
+		.otherwise(() =>
+			expect(priceLine).toHaveTextContent(expectedPriceLineText)
+		);
+};
+
+const validateInvestmentCard = (
+	marketsPage: HTMLElement,
+	info: MarketInvestmentInfo,
+	config: MarketTestConfig,
+	modifier: number
+) => {
+	const maybeCard = within(marketsPage).queryByTestId(
+		`market-card-${info.symbol}`
+	);
+	pipe(
+		Try.tryCatch(() => {
+			expect(maybeCard).not.toBeUndefined();
+			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+			validateCardTitle(card, info);
+			validateCardSinceDate(card, config.time);
+			validateMarketStatus(
+				card,
+				info.type,
+				config.status ?? MarketStatus.OPEN
+			);
+			validatePriceLine(card, info.type, config, modifier);
+		}),
+		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
+		Try.getOrThrow
+	);
+};
+
+const testMarketsPage = (config: MarketTestConfig) => {
+	const marketsPage = screen.getByTestId('markets-page');
+	investmentInfo.forEach((info, index) => {
+		validateInvestmentCard(marketsPage, info, config, index);
+	});
+};
 
 describe('Markets', () => {
 	beforeEach(() => {
@@ -143,167 +224,102 @@ describe('Markets', () => {
 	});
 
 	it('renders for today', async () => {
-		mockQueries();
+		setupMockApiCalls({
+			time: MarketTime.ONE_DAY
+		});
 		await renderApp();
-		menuItemIsSelected('Today');
+		await selectMenuItem('Today');
 		testPageHeaders();
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: 'Today',
-			startDate: getTodayDisplayDate(),
-			isTimesale: true
+		testMarketsPage({
+			time: MarketTime.ONE_DAY
 		});
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
-		mockQueries({
-			timesaleTimestamp: new Date().getTime() + 1000
+		setupMockApiCalls({
+			time: MarketTime.ONE_DAY,
+			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
 		await renderApp();
-		menuItemIsSelected('Today');
+		await selectMenuItem('Today');
 		testPageHeaders();
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: 'Today',
-			startDate: getTodayDisplayDate(),
-			isTimesale: true,
-			isCurrentPriceQuote: false
+		testMarketsPage({
+			time: MarketTime.ONE_DAY,
+			currentPriceStrategy: CurrentPriceStrategy.HISTORY
 		});
 	});
 
 	it('renders for today with market closed', async () => {
-		mockQueries({
-			timesaleTimestamp: new Date().getTime() + 1000,
-			isMarketClosed: true
+		setupMockApiCalls({
+			time: MarketTime.ONE_DAY,
+			status: 'closed'
 		});
 		await renderApp();
-		menuItemIsSelected('Today');
+		await selectMenuItem('Today');
 		testPageHeaders();
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: 'Today',
-			startDate: getTodayDisplayDate(),
-			isTimesale: true,
-			isCurrentPriceQuote: false,
-			isMarketClosed: true
+		testMarketsPage({
+			time: MarketTime.ONE_DAY,
+			status: MarketStatus.CLOSED
 		});
 	});
 
 	it('renders for 1 week', async () => {
-		mockQueries({
-			start: getOneWeekStartDate(),
-			tradierInterval: 'daily'
+		setupMockApiCalls({
+			time: MarketTime.ONE_WEEK
 		});
-
 		await renderApp();
+		await selectMenuItem('1 Week');
 		testPageHeaders();
-
-		await act(async () => {
-			await userEvent.click(screen.getByText('1 Week'));
-		});
-
-		menuItemIsSelected('1 Week');
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: '1 Week',
-			startDate: getOneWeekDisplayStartDate(),
-			isTimesale: false
+		testMarketsPage({
+			time: MarketTime.ONE_WEEK
 		});
 	});
 
 	it('renders for 1 month', async () => {
-		mockQueries({
-			start: getOneMonthStartDate(),
-			tradierInterval: 'daily'
+		setupMockApiCalls({
+			time: MarketTime.ONE_MONTH
 		});
-
 		await renderApp();
+		await selectMenuItem('1 Month');
 		testPageHeaders();
-
-		await act(async () => {
-			await userEvent.click(screen.getByText('1 Month'));
-		});
-
-		menuItemIsSelected('1 Month');
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: '1 Month',
-			startDate: getOneMonthDisplayStartDate(),
-			isTimesale: false
+		testMarketsPage({
+			time: MarketTime.ONE_MONTH
 		});
 	});
 
 	it('renders for 3 months', async () => {
-		mockQueries({
-			start: getThreeMonthStartDate(),
-			tradierInterval: 'daily'
+		setupMockApiCalls({
+			time: MarketTime.THREE_MONTHS
 		});
-
 		await renderApp();
+		await selectMenuItem('3 Months');
 		testPageHeaders();
-
-		await act(async () => {
-			await userEvent.click(screen.getByText('3 Months'));
-		});
-
-		menuItemIsSelected('3 Months');
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: '3 Months',
-			startDate: getThreeMonthDisplayStartDate(),
-			isTimesale: false
+		testMarketsPage({
+			time: MarketTime.THREE_MONTHS
 		});
 	});
 
 	it('renders for 1 year', async () => {
-		mockQueries({
-			start: getOneYearStartDate(),
-			tradierInterval: 'weekly'
+		setupMockApiCalls({
+			time: MarketTime.ONE_YEAR
 		});
-
 		await renderApp();
+		await selectMenuItem('1 Year');
 		testPageHeaders();
-
-		await act(async () => {
-			await userEvent.click(screen.getByText('1 Year'));
-		});
-
-		menuItemIsSelected('1 Year');
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: '1 Year',
-			startDate: getOneYearDisplayStartDate(),
-			isTimesale: false
+		testMarketsPage({
+			time: MarketTime.ONE_YEAR
 		});
 	});
 
 	it('renders for 5 years', async () => {
-		mockQueries({
-			start: getFiveYearStartDate(),
-			tradierInterval: 'monthly'
+		setupMockApiCalls({
+			time: MarketTime.FIVE_YEARS
 		});
-
 		await renderApp();
+		await selectMenuItem('5 Years');
 		testPageHeaders();
-
-		await act(async () => {
-			await userEvent.click(screen.getByText('5 Years'));
-		});
-
-		menuItemIsSelected('5 Years');
-
-		const marketsPage = screen.getByTestId('markets-page');
-		testMarketsPage(marketsPage, {
-			time: '5 Years',
-			startDate: getFiveYearDisplayStartDate(),
-			isTimesale: false
+		testMarketsPage({
+			time: MarketTime.FIVE_YEARS
 		});
 	});
 });

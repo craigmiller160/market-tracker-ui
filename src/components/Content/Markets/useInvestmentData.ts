@@ -28,6 +28,7 @@ const createHandleGetDataError =
 	(ex: Error): TaskT<void> =>
 	async () => {
 		if (!isAxiosError(ex)) {
+			console.error('Error getting data', ex);
 			dispatch(
 				notificationSlice.actions.addError(
 					`Error getting data: ${ex.message}`
