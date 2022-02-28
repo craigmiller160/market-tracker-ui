@@ -4,6 +4,8 @@ import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
 import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
+import MockAdapter from 'axios-mock-adapter';
+import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
@@ -93,3 +95,10 @@ const createCoinGeckoPrice = (
 		usd: 100 + modifier
 	}
 });
+
+export const setupMockApiCalls = (
+	mockApi: MockAdapter,
+	investmentInfo: ReadonlyArray<MarketInvestmentInfo>
+) => {
+	throw new Error();
+};

@@ -4,6 +4,7 @@ import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInves
 import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import { setupMockApiCalls } from './setupMarketTestData';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
@@ -14,6 +15,7 @@ const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
+		setupMockApiCalls(mockApi, investmentInfo);
 	});
 
 	it('renders for today', async () => {
