@@ -247,13 +247,35 @@ const mockCoinGeckoPriceRequest = (
 		.reply(200, createCoinGeckoPrice(id, modifier));
 };
 
+const millisToSecs = (millis: number): number => millis / 1000;
+
 const mockCoinGeckoHistoryRequest = (
 	mockApi: MockAdapter,
 	symbol: string,
 	time: MarketTime,
 	modifier: number
 ) => {
-	throw new Error();
+	const id = getCryptoId(symbol);
+	const startSecs = pipe(
+		getHistoryStart(time).getTime(),
+		millisToSecs,
+		Math.floor
+	).toString();
+	const endSecs = pipe(
+		new Date().getTime(),
+		millisToSecs,
+		Math.floor
+	).toString();
+
+	// TODO improve this pattern to make it more reliable
+	const startPattern = `${startSecs.substring(0, 8)}\\d\\d`;
+	const endPattern = `${endSecs.substring(0, 8)}\\d\\d`;
+
+	const urlPattern = RegExp(
+		`\\/coingecko\\/coins\\/${id}\\/market_chart\\/range\\?vs_currency=usd&from=${startPattern}&to=${endPattern}`
+	);
+
+	mockApi.onGet(urlPattern).reply(200, createCoinGeckoMarketChart(modifier));
 };
 
 export const createSetupMockApiCalls =
