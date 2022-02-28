@@ -17,7 +17,10 @@ import {
 	isCrypto,
 	isStock
 } from '../../../../src/types/data/MarketInvestmentType';
-import { getTodayEndString, getTodayStartString } from '../../../../src/utils/timeUtils';
+import {
+	getTodayEndString,
+	getTodayStartString
+} from '../../../../src/utils/timeUtils';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const CALENDAR_DATE_FORMAT = 'yyyy-MM-dd';
@@ -27,6 +30,11 @@ const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
 const formatCalendarDate = Time.format(CALENDAR_DATE_FORMAT);
 const formatCalendarMonth = Time.format(CALENDAR_MONTH_FORMAT);
 const formatCalendarYear = Time.format(CALENDAR_YEAR_FORMAT);
+
+const BASE_LAST_PRICE = 100;
+const BASE_PREV_CLOSE_PRICE = 30;
+const BASE_HISTORY_1_PRICE = 50;
+const BASE_HISTORY_2_PRICE = 60;
 
 const createTradierQuote = (
 	symbol: string,
@@ -42,8 +50,8 @@ const createTradierQuote = (
 			bid: 0,
 			ask: 0,
 			close: 0,
-			last: 100 + modifier,
-			prevclose: 30 + modifier
+			last: BASE_LAST_PRICE + modifier,
+			prevclose: BASE_PREV_CLOSE_PRICE + modifier
 		}
 	}
 });
@@ -53,10 +61,10 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 		day: [
 			{
 				date: '2022-01-01',
-				open: 50 + modifier,
+				open: BASE_HISTORY_1_PRICE + modifier,
 				high: 0,
 				low: 0,
-				close: 0
+				close: BASE_HISTORY_2_PRICE + modifier
 			}
 		]
 	}
@@ -75,7 +83,7 @@ const createTradierTimesale = (
 				{
 					time: firstTime,
 					timestamp: timestampMillis,
-					price: 40 + modifier,
+					price: BASE_HISTORY_1_PRICE + modifier,
 					open: 0,
 					high: 0,
 					low: 0,
@@ -86,7 +94,7 @@ const createTradierTimesale = (
 				{
 					time: secondTime,
 					timestamp: secondTimestampMillis,
-					price: 45 + modifier,
+					price: BASE_HISTORY_2_PRICE + modifier,
 					open: 0,
 					high: 0,
 					low: 0,
@@ -102,7 +110,10 @@ const createTradierTimesale = (
 const createCoinGeckoMarketChart = (
 	modifier: number
 ): CoinGeckoMarketChart => ({
-	prices: [[new Date().getTime(), 50 + modifier]]
+	prices: [
+		[new Date().getTime(), BASE_HISTORY_1_PRICE + modifier],
+		[new Date().getTime(), BASE_HISTORY_2_PRICE + modifier]
+	]
 });
 
 const createCoinGeckoPrice = (
@@ -110,7 +121,7 @@ const createCoinGeckoPrice = (
 	modifier: number
 ): CoinGeckoPrice => ({
 	[id]: {
-		usd: 100 + modifier
+		usd: BASE_LAST_PRICE + modifier
 	}
 });
 
