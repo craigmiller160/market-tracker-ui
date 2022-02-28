@@ -5,8 +5,10 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import {
+	BASE_HISTORY_1_PRICE,
 	BASE_HISTORY_2_PRICE,
 	BASE_LAST_PRICE,
+	BASE_PREV_CLOSE_PRICE,
 	createSetupMockApiCalls
 } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
@@ -127,28 +129,51 @@ const validateMarketStatus = (
 const validatePriceLine = (
 	card: HTMLElement,
 	type: MarketInvestmentType,
-	status: MarketStatus,
-	strategy: CurrentPriceStrategy,
+	config: MarketTestConfig,
 	modifier: number
 ) => {
-	const baseCurrentPrice = match({ type, strategy })
+	const {
+		time,
+		status = MarketStatus.OPEN,
+		currentPriceStrategy = CurrentPriceStrategy.QUOTE
+	} = config;
+
+	const baseCurrentPrice = match({ type, currentPriceStrategy })
 		.with(
-			{ type: when(isStock), strategy: CurrentPriceStrategy.HISTORY },
+			{
+				type: when(isStock),
+				currentPriceStrategy: CurrentPriceStrategy.HISTORY
+			},
 			() => BASE_HISTORY_2_PRICE
 		)
 		.otherwise(() => BASE_LAST_PRICE);
-	const currentPrice = (baseCurrentPrice + modifier).toLocaleString(
+	const rawCurrentPrice = baseCurrentPrice + modifier;
+	const currentPrice = `$${rawCurrentPrice.toLocaleString(
 		undefined,
 		localeOptions
-	);
-	screen.debug(card); // TODO delete this
-	const currentPriceResult = within(card).queryByText(`$${currentPrice}`);
+	)}`;
+
+	const baseInitialPrice = match({ type, time })
+		.with(
+			{ type: when(isStock), time: MarketTime.ONE_DAY },
+			() => BASE_PREV_CLOSE_PRICE
+		)
+		.otherwise(() => BASE_HISTORY_1_PRICE);
+	const rawInitialPrice = baseInitialPrice + modifier;
+	const rawDiff = rawCurrentPrice - rawInitialPrice;
+	const diff = `$${rawDiff.toLocaleString(undefined, localeOptions)}`;
+	const rawPercent = rawDiff / rawInitialPrice;
+	const percent = `${rawPercent.toLocaleString(undefined, localeOptions)}%`;
+
+	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
 		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
 			expect(currentPriceResult).not.toBeInTheDocument()
 		)
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
-	// TODO need to validate diff piece
+
+	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
+	expect(priceLine).toHaveTextContent(`(${diff}, ${percent})`);
 };
 
 const validateInvestmentCard = (
@@ -171,13 +196,7 @@ const validateInvestmentCard = (
 				info.type,
 				config.status ?? MarketStatus.OPEN
 			);
-			validatePriceLine(
-				card,
-				info.type,
-				config.status ?? MarketStatus.OPEN,
-				config.currentPriceStrategy ?? CurrentPriceStrategy.QUOTE,
-				modifier
-			);
+			validatePriceLine(card, info.type, config, modifier);
 		}),
 		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
 		Try.getOrThrow
