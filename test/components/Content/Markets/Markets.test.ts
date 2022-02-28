@@ -5,6 +5,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import {
+	BASE_HISTORY_2_PRICE,
 	BASE_LAST_PRICE,
 	createSetupMockApiCalls
 } from './setupMarketTestData';
@@ -29,6 +30,11 @@ import {
 	MarketInvestmentType
 } from '../../../../src/types/data/MarketInvestmentType';
 import { MarketStatus } from '../../../../src/types/MarketStatus';
+
+enum CurrentPriceStrategy {
+	QUOTE,
+	HISTORY
+}
 
 const localeOptions: Intl.NumberFormatOptions = {
 	minimumFractionDigits: 2,
@@ -62,6 +68,7 @@ const testPageHeaders = () => {
 interface MarketTestConfig {
 	readonly time: MarketTime;
 	readonly status?: MarketStatus;
+	readonly currentPriceStrategy?: CurrentPriceStrategy;
 }
 
 const handleValidationError =
@@ -121,9 +128,16 @@ const validatePriceLine = (
 	card: HTMLElement,
 	type: MarketInvestmentType,
 	status: MarketStatus,
+	strategy: CurrentPriceStrategy,
 	modifier: number
 ) => {
-	const currentPrice = (BASE_LAST_PRICE + modifier).toLocaleString(
+	const baseCurrentPrice = match({ type, strategy })
+		.with(
+			{ type: when(isStock), strategy: CurrentPriceStrategy.HISTORY },
+			() => BASE_HISTORY_2_PRICE
+		)
+		.otherwise(() => BASE_LAST_PRICE);
+	const currentPrice = (baseCurrentPrice + modifier).toLocaleString(
 		undefined,
 		localeOptions
 	);
@@ -160,6 +174,7 @@ const validateInvestmentCard = (
 				card,
 				info.type,
 				config.status ?? MarketStatus.OPEN,
+				config.currentPriceStrategy ?? CurrentPriceStrategy.QUOTE,
 				modifier
 			);
 		}),
@@ -194,13 +209,15 @@ describe('Markets', () => {
 
 	it('renders for today when history has higher millis than current time', async () => {
 		setupMockApiCalls({
-			time: MarketTime.ONE_DAY
+			time: MarketTime.ONE_DAY,
+			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
-			time: MarketTime.ONE_DAY
+			time: MarketTime.ONE_DAY,
+			currentPriceStrategy: CurrentPriceStrategy.HISTORY
 		});
 		// TODO special handling for this one needs to be tested for
 	});

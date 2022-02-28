@@ -160,6 +160,7 @@ export const createMockCalendar = (
 export interface MockApiConfig {
 	readonly time: MarketTime;
 	readonly status?: TradierCalendarStatus;
+	readonly tradierTimesaleBaseMillis?: number;
 }
 
 const mockCalenderRequest = (
@@ -197,7 +198,8 @@ const mockTradierQuoteRequest = (
 const mockTradierTimesaleRequest = (
 	mockApi: MockAdapter,
 	symbol: string,
-	modifier: number
+	modifier: number,
+	timestampMillis?: number
 ) => {
 	const start = getTodayStartString();
 	const end = getTodayEndString();
@@ -205,7 +207,7 @@ const mockTradierTimesaleRequest = (
 		.onGet(
 			`/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		)
-		.reply(200, createTradierTimesale(modifier));
+		.reply(200, createTradierTimesale(modifier, timestampMillis));
 };
 
 const getTradierInterval = (time: MarketTime): string =>
@@ -309,7 +311,12 @@ export const createSetupMockApiCalls =
 				)
 				.with({ info: when(isStockInfo), time: when(isToday) }, () => {
 					mockTradierQuoteRequest(mockApi, info.symbol, index);
-					mockTradierTimesaleRequest(mockApi, info.symbol, index);
+					mockTradierTimesaleRequest(
+						mockApi,
+						info.symbol,
+						index,
+						config.tradierTimesaleBaseMillis
+					);
 				})
 				.with({ info: when(isCryptoInfo) }, () => {
 					mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
