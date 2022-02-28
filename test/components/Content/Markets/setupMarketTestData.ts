@@ -18,7 +18,14 @@ import {
 	isStock
 } from '../../../../src/types/data/MarketInvestmentType';
 import {
+	getFiveYearStartDate,
+	getOneMonthStartDate,
+	getOneWeekStartDate,
+	getOneYearStartDate,
+	getThreeMonthStartDate,
+	getTodayEnd,
 	getTodayEndString,
+	getTodayStart,
 	getTodayStartString
 } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
@@ -212,12 +219,12 @@ const getTradierInterval = (time: MarketTime): string =>
 
 const getHistoryStart = (time: MarketTime): Date =>
 	match(time)
-		.with(MarketTime.ONE_DAY, () => Time.subDays(1)(new Date()))
-		.with(MarketTime.ONE_WEEK, () => Time.subWeeks(1)(new Date()))
-		.with(MarketTime.ONE_MONTH, () => Time.subMonths(1)(new Date()))
-		.with(MarketTime.THREE_MONTHS, () => Time.subMonths(3)(new Date()))
-		.with(MarketTime.ONE_YEAR, () => Time.subYears(1)(new Date()))
-		.with(MarketTime.FIVE_YEARS, () => Time.subYears(5)(new Date()))
+		.with(MarketTime.ONE_DAY, getTodayStart)
+		.with(MarketTime.ONE_WEEK, getOneWeekStartDate)
+		.with(MarketTime.ONE_MONTH, getOneMonthStartDate)
+		.with(MarketTime.THREE_MONTHS, getThreeMonthStartDate)
+		.with(MarketTime.ONE_YEAR, getOneYearStartDate)
+		.with(MarketTime.FIVE_YEARS, getFiveYearStartDate)
 		.run();
 
 const mockTradierHistoryRequest = (
@@ -262,7 +269,7 @@ const mockCoinGeckoHistoryRequest = (
 		Math.floor
 	).toString();
 	const endSecs = pipe(
-		new Date().getTime(),
+		getTodayEnd().getTime(),
 		millisToSecs,
 		Math.floor
 	).toString();
