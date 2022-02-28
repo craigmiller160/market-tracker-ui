@@ -247,6 +247,15 @@ const mockCoinGeckoPriceRequest = (
 		.reply(200, createCoinGeckoPrice(id, modifier));
 };
 
+const mockCoinGeckoHistoryRequest = (
+	mockApi: MockAdapter,
+	symbol: string,
+	time: MarketTime,
+	modifier: number
+) => {
+	throw new Error();
+};
+
 export const createSetupMockApiCalls =
 	(
 		mockApi: MockAdapter,
@@ -273,16 +282,14 @@ export const createSetupMockApiCalls =
 						index
 					);
 				})
-				.with(
-					{ info: when(isCryptoInfo), time: when(isNotToday) },
-					() => {
-						mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
-						throw new Error();
-					}
-				)
-				.with({ info: when(isCryptoInfo), time: when(isToday) }, () => {
+				.with({ info: when(isCryptoInfo) }, () => {
 					mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
-					throw new Error();
+					mockCoinGeckoHistoryRequest(
+						mockApi,
+						info.symbol,
+						config.time,
+						index
+					);
 				})
 				.run();
 		});
