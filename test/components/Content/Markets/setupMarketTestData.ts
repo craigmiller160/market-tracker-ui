@@ -96,7 +96,7 @@ const createTradierTimesale = (
 			data: [
 				{
 					time: firstTime,
-					timestamp: timestampMillis,
+					timestamp: Math.floor(timestampMillis / 1000),
 					price: BASE_HISTORY_1_PRICE + modifier,
 					open: 0,
 					high: 0,
@@ -107,7 +107,7 @@ const createTradierTimesale = (
 				},
 				{
 					time: secondTime,
-					timestamp: secondTimestampMillis,
+					timestamp: Math.floor(secondTimestampMillis / 1000),
 					price: BASE_HISTORY_2_PRICE + modifier,
 					open: 0,
 					high: 0,
