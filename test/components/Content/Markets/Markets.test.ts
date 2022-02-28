@@ -148,6 +148,7 @@ const validatePriceLine = (
 			expect(currentPriceResult).not.toBeInTheDocument()
 		)
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
+	// TODO need to validate diff piece
 };
 
 const validateInvestmentCard = (
