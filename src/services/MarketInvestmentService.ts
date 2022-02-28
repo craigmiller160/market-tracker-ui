@@ -170,10 +170,14 @@ const getStartPrice = (
 	history: ReadonlyArray<HistoryRecord>
 ): TryT<number> =>
 	match({ time, quote, history })
-		.with({ time: MarketTime.ONE_DAY, quote: when(hasPrevClose) }, () =>
-			Either.right(quote.previousClose)
+		.with(
+			{
+				time: MarketTime.ONE_DAY,
+				quote: when(hasPrevClose)
+			},
+			() => Either.right(quote.previousClose)
 		)
-		.otherwise(() =>
+		.with({ history: when(hasHistory) }, () =>
 			pipe(
 				RArray.head(history),
 				Option.map((_) => _.price),
@@ -181,7 +185,8 @@ const getStartPrice = (
 					() => new Error('Unable to get start price from history')
 				)
 			)
-		);
+		)
+		.otherwise(() => Either.left(new Error('Unable to get start price')));
 
 const notEqualToHistoryStartPrice =
 	(historyStartPrice: number): PredicateT<number> =>
@@ -198,10 +203,11 @@ const updateHistory = (
 		Option.map((_) => _.price),
 		Option.getOrElse(() => -1)
 	);
-	return match({ time, startPrice })
+	return match({ time, history, startPrice })
 		.with(
 			{
 				time: MarketTime.ONE_DAY,
+				history: when(hasHistory),
 				startPrice: when(notEqualToHistoryStartPrice(historyStartPrice))
 			},
 			() =>
@@ -222,6 +228,9 @@ const updateHistory = (
 
 const priceAndPrevCloseEqual: PredicateT<Quote> = (quote) =>
 	quote.previousClose === quote.price;
+
+const hasHistory: PredicateT<ReadonlyArray<HistoryRecord>> = (history) =>
+	history.length > 0;
 
 const getCurrentPrice = (
 	info: MarketInvestmentInfo,
