@@ -292,17 +292,17 @@ export const createSetupMockApiCalls =
 					{ info: when(isStockInfo), time: when(isNotToday) },
 					() => {
 						mockTradierQuoteRequest(mockApi, info.symbol, index);
-						mockTradierTimesaleRequest(mockApi, info.symbol, index);
+						mockTradierHistoryRequest(
+							mockApi,
+							info.symbol,
+							config.time,
+							index
+						);
 					}
 				)
 				.with({ info: when(isStockInfo), time: when(isToday) }, () => {
 					mockTradierQuoteRequest(mockApi, info.symbol, index);
-					mockTradierHistoryRequest(
-						mockApi,
-						info.symbol,
-						config.time,
-						index
-					);
+					mockTradierTimesaleRequest(mockApi, info.symbol, index);
 				})
 				.with({ info: when(isCryptoInfo) }, () => {
 					mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
