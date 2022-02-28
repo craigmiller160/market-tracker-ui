@@ -165,6 +165,8 @@ const validatePriceLine = (
 	const rawPercent = (rawDiff / rawInitialPrice) * 100;
 	const percent = `${rawPercent.toLocaleString(undefined, localeOptions)}%`;
 
+	const expectedPriceLineText = `(+${diff}, +${percent})`;
+
 	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
 		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
@@ -173,7 +175,13 @@ const validatePriceLine = (
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
-	expect(priceLine).toHaveTextContent(`(+${diff}, +${percent})`);
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(priceLine).not.toBeInTheDocument()
+		)
+		.otherwise(() =>
+			expect(priceLine).toHaveTextContent(expectedPriceLineText)
+		);
 };
 
 const validateInvestmentCard = (
