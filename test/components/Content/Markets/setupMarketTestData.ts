@@ -17,6 +17,7 @@ import {
 	isCrypto,
 	isStock
 } from '../../../../src/types/data/MarketInvestmentType';
+import { getTodayEndString, getTodayStartString } from '../../../../src/utils/timeUtils';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const CALENDAR_DATE_FORMAT = 'yyyy-MM-dd';
@@ -173,8 +174,8 @@ const mockTradierTimesaleRequest = (
 	symbol: string,
 	modifier: number
 ) => {
-	const start = '';
-	const end = '';
+	const start = getTodayStartString();
+	const end = getTodayEndString();
 	mockApi
 		.onGet(
 			`/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
