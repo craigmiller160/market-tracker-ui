@@ -2,6 +2,8 @@ import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
+import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
@@ -76,3 +78,15 @@ const createTradierTimesale = (
 		}
 	};
 };
+
+const createCoinGeckoMarketChart = (
+	modifier: number
+): CoinGeckoMarketChart => ({
+	prices: [[new Date().getTime(), 50 + modifier]]
+});
+
+const createCoinGeckoPrice = (id: string, modifier: number): CoinGeckoPrice => ({
+	[id]: {
+		usd: 100 + modifier
+	}
+})
