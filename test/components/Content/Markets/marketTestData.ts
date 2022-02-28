@@ -1,6 +1,10 @@
 import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
+
+const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
 
 const createTradierQuote = (
 	symbol: string,
@@ -36,31 +40,39 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 	}
 });
 
-const createTradierTimesale = (modifier: number): TradierSeries => ({
-	series: {
-		data: [
-			{
-				time: '2022-01-01T01:00:00',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 40 + modifier,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			},
-			{
-				time: '2022-01-01T01:01:01',
-				timestamp: timestamp > 0 ? timestamp - 100 : timestamp,
-				price: 45 + modifier,
-				open: 0,
-				high: 0,
-				low: 0,
-				close: 0,
-				volume: 0,
-				vwap: 0
-			}
-		]
-	}
-})
+const createTradierTimesale = (
+	modifier: number,
+	timestampMillis: number = new Date().getTime()
+): TradierSeries => {
+	const secondTimestampMillis = timestampMillis + 60_000;
+	const firstTime = formatTimestamp(new Date(timestampMillis));
+	const secondTime = formatTimestamp(new Date(secondTimestampMillis));
+	return {
+		series: {
+			data: [
+				{
+					time: firstTime,
+					timestamp: timestampMillis,
+					price: 40 + modifier,
+					open: 0,
+					high: 0,
+					low: 0,
+					close: 0,
+					volume: 0,
+					vwap: 0
+				},
+				{
+					time: secondTime,
+					timestamp: secondTimestampMillis,
+					price: 45 + modifier,
+					open: 0,
+					high: 0,
+					low: 0,
+					close: 0,
+					volume: 0,
+					vwap: 0
+				}
+			]
+		}
+	};
+};
