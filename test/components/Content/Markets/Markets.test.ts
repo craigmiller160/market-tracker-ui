@@ -90,7 +90,7 @@ const validateMarketStatus = (
 	card: HTMLElement,
 	type: MarketInvestmentType,
 	status: MarketStatus
-) => {
+) =>
 	match({ type, status })
 		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
 			expect(
@@ -108,7 +108,6 @@ const validateMarketStatus = (
 				within(card).queryByText('Chart is Here')
 			).toBeInTheDocument();
 		});
-};
 
 const validateInvestmentCard = (
 	marketsPage: HTMLElement,
