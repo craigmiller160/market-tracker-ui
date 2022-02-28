@@ -6,14 +6,26 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
+import { createRenderApp } from '../../../testutils/RenderApp';
+import { act, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { menuItemIsSelected } from '../../../testutils/menuUtils';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
+const renderApp = createRenderApp(mockApi);
 const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 	getAllMarketInvestmentInfo(),
 	Try.getOrThrow
 );
 
 const setupMockApiCalls = createSetupMockApiCalls(mockApi, investmentInfo);
+
+const selectMenuItem = async (text: string) => {
+	await act(async () => {
+		await userEvent.click(screen.getByText('1 Week'));
+	});
+	menuItemIsSelected(text);
+};
 
 describe('Markets', () => {
 	beforeEach(() => {
@@ -24,6 +36,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY
 		});
+		await renderApp();
+		await selectMenuItem('Today');
 		throw new Error();
 	});
 
@@ -31,6 +45,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY
 		});
+		await renderApp();
+		await selectMenuItem('Today');
 		throw new Error();
 	});
 
@@ -39,6 +55,8 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY,
 			status: 'closed'
 		});
+		await renderApp();
+		await selectMenuItem('Today');
 		throw new Error();
 	});
 
@@ -46,6 +64,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_WEEK
 		});
+		await renderApp();
+		await selectMenuItem('1 Week');
 		throw new Error();
 	});
 
@@ -53,6 +73,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_MONTH
 		});
+		await renderApp();
+		await selectMenuItem('1 Month');
 		throw new Error();
 	});
 
@@ -60,6 +82,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.THREE_MONTHS
 		});
+		await renderApp();
+		await selectMenuItem('3 Months');
 		throw new Error();
 	});
 
@@ -67,6 +91,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_YEAR
 		});
+		await renderApp();
+		await selectMenuItem('1 Year');
 		throw new Error();
 	});
 
@@ -74,6 +100,8 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.FIVE_YEARS
 		});
+		await renderApp();
+		await selectMenuItem('5 Years');
 		throw new Error();
 	});
 });
