@@ -6,6 +6,7 @@ import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchar
 import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import MockAdapter from 'axios-mock-adapter';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import { MarketTime } from '../../../../src/types/MarketTime';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
@@ -96,9 +97,11 @@ const createCoinGeckoPrice = (
 	}
 });
 
-export const setupMockApiCalls = (
-	mockApi: MockAdapter,
-	investmentInfo: ReadonlyArray<MarketInvestmentInfo>
-) => {
-	throw new Error();
-};
+export const createSetupMockApiCalls =
+	(
+		mockApi: MockAdapter,
+		investmentInfo: ReadonlyArray<MarketInvestmentInfo>
+	) =>
+	(time: MarketTime) => {
+		throw new Error();
+	};
