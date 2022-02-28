@@ -9,7 +9,7 @@
     "registry": "https://craigmiller160.ddns.net:30003/repository/npm-private/"
   },
   "scripts": {
-    "start": "vite",
+    "start": "node scripts/startDev.js",
     "build": "yarn typeCheck && yarn lint && yarn test && yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
