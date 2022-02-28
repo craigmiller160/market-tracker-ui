@@ -7,9 +7,19 @@ import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import MockAdapter from 'axios-mock-adapter';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { MarketTime } from '../../../../src/types/MarketTime';
+import {
+	TradierCalendar,
+	TradierCalendarStatus
+} from '../../../../src/types/tradier/calendar';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+const CALENDAR_DATE_FORMAT = 'yyyy-MM-dd';
+const CALENDAR_MONTH_FORMAT = 'MM';
+const CALENDAR_YEAR_FORMAT = 'yyyy';
 const formatTimestamp = Time.format(TIMESTAMP_FORMAT);
+const formatCalendarDate = Time.format(CALENDAR_DATE_FORMAT);
+const formatCalendarMonth = Time.format(CALENDAR_MONTH_FORMAT);
+const formatCalendarYear = Time.format(CALENDAR_YEAR_FORMAT);
 
 const createTradierQuote = (
 	symbol: string,
@@ -97,11 +107,49 @@ const createCoinGeckoPrice = (
 	}
 });
 
+export const createMockCalendar = (
+	date: string,
+	status: TradierCalendarStatus
+): TradierCalendar => ({
+	calendar: {
+		month: 0,
+		year: 0,
+		days: {
+			day: [
+				{
+					date,
+					status
+				}
+			]
+		}
+	}
+});
+
+export interface MockApiConfig {
+	readonly time: MarketTime;
+	readonly status?: TradierCalendarStatus;
+}
+
+const mockCalenderRequest = (
+	mockApi: MockAdapter,
+	status: TradierCalendarStatus
+) => {
+	const date = new Date();
+	const formattedDate = formatCalendarDate(date);
+	const year = formatCalendarYear(date);
+	const month = formatCalendarMonth(date);
+
+	mockApi
+		.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+		.reply(200, createMockCalendar(formattedDate, status));
+};
+
 export const createSetupMockApiCalls =
 	(
 		mockApi: MockAdapter,
 		investmentInfo: ReadonlyArray<MarketInvestmentInfo>
 	) =>
-	(time: MarketTime) => {
+	(config: MockApiConfig) => {
+		mockCalenderRequest(mockApi, config.status ?? 'open');
 		throw new Error();
 	};
