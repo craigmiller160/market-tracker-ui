@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import * as Either from 'fp-ts/es6/Either';
 import '@testing-library/jest-dom/extend-expect';
-import { match } from 'ts-pattern';
+import { match, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -21,6 +21,11 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
+import {
+	isStock,
+	MarketInvestmentType
+} from '../../../../src/types/data/MarketInvestmentType';
+import { MarketStatus } from '../../../../src/types/MarketStatus';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -48,6 +53,7 @@ const testPageHeaders = () => {
 
 interface MarketTestConfig {
 	readonly time: MarketTime;
+	readonly status?: MarketStatus;
 }
 
 const handleValidationError =
@@ -80,6 +86,30 @@ const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
 	);
 };
 
+const validateMarketStatus = (
+	card: HTMLElement,
+	type: MarketInvestmentType,
+	status: MarketStatus
+) => {
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+			expect(
+				within(card).queryByText('Market Closed')
+			).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).not.toBeInTheDocument();
+		})
+		.otherwise(() => {
+			expect(
+				within(card).queryByText('Market Closed')
+			).not.toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).toBeInTheDocument();
+		});
+};
+
 const validateInvestmentCard = (
 	marketsPage: HTMLElement,
 	info: MarketInvestmentInfo,
@@ -95,6 +125,11 @@ const validateInvestmentCard = (
 			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 			validateCardTitle(card, info);
 			validateCardSinceDate(card, config.time);
+			validateMarketStatus(
+				card,
+				info.type,
+				config.status ?? MarketStatus.OPEN
+			);
 		}),
 		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
 		Try.getOrThrow
@@ -132,6 +167,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
+		testMarketsPage({
+			time: MarketTime.ONE_DAY
+		});
 		// TODO special handling for this one needs to be tested for
 	});
 
@@ -143,6 +181,10 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
+		testMarketsPage({
+			time: MarketTime.ONE_DAY,
+			status: MarketStatus.CLOSED
+		});
 		// TODO special handling for this one needs to be tested for
 	});
 
