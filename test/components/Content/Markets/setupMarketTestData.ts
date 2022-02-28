@@ -86,7 +86,7 @@ const getCryptoId = (symbol: string): string =>
 
 const createTradierTimesale = (
 	modifier: number,
-	timestampMillis: number = new Date().getTime()
+	timestampMillis: number = new Date().getTime() - 120_000
 ): TradierSeries => {
 	const secondTimestampMillis = timestampMillis + 60_000;
 	const firstTime = formatTimestamp(new Date(timestampMillis));

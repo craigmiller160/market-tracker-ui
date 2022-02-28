@@ -4,7 +4,10 @@ import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInves
 import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
-import { createSetupMockApiCalls } from './setupMarketTestData';
+import {
+	BASE_LAST_PRICE,
+	createSetupMockApiCalls
+} from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import { act, screen, within } from '@testing-library/react';
@@ -26,6 +29,11 @@ import {
 	MarketInvestmentType
 } from '../../../../src/types/data/MarketInvestmentType';
 import { MarketStatus } from '../../../../src/types/MarketStatus';
+
+const localeOptions: Intl.NumberFormatOptions = {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2
+};
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -109,6 +117,15 @@ const validateMarketStatus = (
 			).toBeInTheDocument();
 		});
 
+const validatePriceLine = (card: HTMLElement, modifier: number) => {
+	const currentPrice = (BASE_LAST_PRICE + modifier).toLocaleString(
+		undefined,
+		localeOptions
+	);
+	screen.debug(card); // TODO delete this
+	expect(within(card).queryByText(`$${currentPrice}`)).toBeInTheDocument();
+};
+
 const validateInvestmentCard = (
 	marketsPage: HTMLElement,
 	info: MarketInvestmentInfo,
@@ -129,6 +146,7 @@ const validateInvestmentCard = (
 				info.type,
 				config.status ?? MarketStatus.OPEN
 			);
+			validatePriceLine(card, modifier);
 		}),
 		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
 		Try.getOrThrow
