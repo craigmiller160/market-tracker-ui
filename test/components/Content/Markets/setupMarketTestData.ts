@@ -276,7 +276,6 @@ const mockCoinGeckoHistoryRequest = (
 		Math.floor
 	).toString();
 
-	// TODO improve this pattern to make it more reliable
 	const startPattern = `${startSecs.substring(0, 8)}\\d\\d`;
 	const endPattern = `${endSecs.substring(0, 8)}\\d\\d`;
 
