@@ -248,7 +248,13 @@ export const createSetupMockApiCalls =
 					}
 				)
 				.with({ info: when(isStockInfo), time: when(isToday) }, () => {
-					throw new Error();
+					mockTradierQuoteRequest(mockApi, info.symbol, index);
+					mockTradierHistoryRequest(
+						mockApi,
+						info.symbol,
+						config.time,
+						index
+					);
 				})
 				.with(
 					{ info: when(isCryptoInfo), time: when(isNotToday) },
