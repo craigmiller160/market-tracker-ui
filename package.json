@@ -9,14 +9,14 @@
     "registry": "https://craigmiller160.ddns.net:30003/repository/npm-private/"
   },
   "scripts": {
-    "start": "vite",
-    "build": "yarn lint && yarn test && yarn forceBuild",
+    "start": "node scripts/startDev.js",
+    "build": "yarn typeCheck && yarn lint && yarn test && yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
-    "lint": "yarn typeCheck && craig-lint",
+    "lint": "craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
-    "validate": "yarn lint && yarn test"
+    "validate": "yarn typeCheck && yarn lint && yarn test"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
