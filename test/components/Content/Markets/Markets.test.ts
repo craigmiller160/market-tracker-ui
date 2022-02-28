@@ -117,13 +117,23 @@ const validateMarketStatus = (
 			).toBeInTheDocument();
 		});
 
-const validatePriceLine = (card: HTMLElement, modifier: number) => {
+const validatePriceLine = (
+	card: HTMLElement,
+	type: MarketInvestmentType,
+	status: MarketStatus,
+	modifier: number
+) => {
 	const currentPrice = (BASE_LAST_PRICE + modifier).toLocaleString(
 		undefined,
 		localeOptions
 	);
 	screen.debug(card); // TODO delete this
-	expect(within(card).queryByText(`$${currentPrice}`)).toBeInTheDocument();
+	const currentPriceResult = within(card).queryByText(`$${currentPrice}`);
+	match({ type, status })
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(currentPriceResult).not.toBeInTheDocument()
+		)
+		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 };
 
 const validateInvestmentCard = (
@@ -146,7 +156,12 @@ const validateInvestmentCard = (
 				info.type,
 				config.status ?? MarketStatus.OPEN
 			);
-			validatePriceLine(card, modifier);
+			validatePriceLine(
+				card,
+				info.type,
+				config.status ?? MarketStatus.OPEN,
+				modifier
+			);
 		}),
 		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
 		Try.getOrThrow
