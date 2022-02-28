@@ -30,6 +30,8 @@ import { match, when } from 'ts-pattern';
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
 
+// TODO delete this file
+
 interface TestMarketCardsConfig {
 	readonly time: string;
 	readonly startDate: string;

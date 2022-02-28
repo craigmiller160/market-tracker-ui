@@ -85,8 +85,11 @@ const createCoinGeckoMarketChart = (
 	prices: [[new Date().getTime(), 50 + modifier]]
 });
 
-const createCoinGeckoPrice = (id: string, modifier: number): CoinGeckoPrice => ({
+const createCoinGeckoPrice = (
+	id: string,
+	modifier: number
+): CoinGeckoPrice => ({
 	[id]: {
 		usd: 100 + modifier
 	}
-})
+});
