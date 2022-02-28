@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
-const getMenuItem = (text: string) => {
+export const getMenuItem = (text: string): HTMLElement => {
 	const navbar = screen.getByTestId('navbar');
 	return within(navbar).getByText(text);
 };

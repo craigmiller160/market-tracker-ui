@@ -9,7 +9,7 @@ import { MarketTime } from '../../../../src/types/MarketTime';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { menuItemIsSelected } from '../../../testutils/menuUtils';
+import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import { TryT } from '@craigmiller160/ts-functions/es/types';
 import * as Either from 'fp-ts/es6/Either';
 import '@testing-library/jest-dom/extend-expect';
@@ -24,8 +24,9 @@ const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 const setupMockApiCalls = createSetupMockApiCalls(mockApi, investmentInfo);
 
 const selectMenuItem = async (text: string) => {
+	const menuItem = getMenuItem(text);
 	await act(async () => {
-		await userEvent.click(screen.getByText('1 Week'));
+		await userEvent.click(menuItem);
 	});
 	menuItemIsSelected(text);
 };
