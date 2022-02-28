@@ -12,6 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { menuItemIsSelected } from '../../../testutils/menuUtils';
 import { TryT } from '@craigmiller160/ts-functions/es/types';
 import * as Either from 'fp-ts/es6/Either';
+import '@testing-library/jest-dom/extend-expect';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
