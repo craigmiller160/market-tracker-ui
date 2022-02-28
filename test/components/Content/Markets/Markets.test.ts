@@ -100,7 +100,6 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
-		throw new Error();
 	});
 
 	it('renders for today with market closed', async () => {
@@ -111,7 +110,6 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
-		throw new Error();
 	});
 
 	it('renders for 1 week', async () => {
