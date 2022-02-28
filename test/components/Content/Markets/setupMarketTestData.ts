@@ -11,7 +11,7 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
-import { match } from 'ts-pattern';
+import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
 	isCrypto,
@@ -154,6 +154,33 @@ const isStockInfo: PredicateT<MarketInvestmentInfo> = (info) =>
 	isStock(info.type);
 const isCryptoInfo: PredicateT<MarketInvestmentInfo> = (info) =>
 	isCrypto(info.type);
+const isNotToday: PredicateT<MarketTime> = (time) =>
+	MarketTime.ONE_DAY !== time;
+const isToday: PredicateT<MarketTime> = (time) => MarketTime.ONE_DAY === time;
+
+const mockTradierQuoteRequest = (
+	mockApi: MockAdapter,
+	symbol: string,
+	modifier: number
+) => {
+	mockApi
+		.onGet(`/tradier/markets/quotes?symbols=${symbol}`)
+		.reply(200, createTradierQuote(symbol, modifier));
+};
+
+const mockTradierTimesaleRequest = (
+	mockApi: MockAdapter,
+	symbol: string,
+	modifier: number
+) => {
+	const start = '';
+	const end = '';
+	mockApi
+		.onGet(
+			`/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
+		)
+		.reply(200, createTradierTimesale(modifier));
+};
 
 export const createSetupMockApiCalls =
 	(
@@ -163,7 +190,27 @@ export const createSetupMockApiCalls =
 	(config: MockApiConfig) => {
 		mockCalenderRequest(mockApi, config.status ?? 'open');
 
-		investmentInfo.forEach((info) => {
-			match({ info, time: config.time });
+		investmentInfo.forEach((info, index) => {
+			match({ info, time: config.time })
+				.with(
+					{ info: when(isStockInfo), time: when(isNotToday) },
+					() => {
+						mockTradierQuoteRequest(mockApi, info.symbol, index);
+						mockTradierTimesaleRequest(mockApi, info.symbol, index);
+					}
+				)
+				.with({ info: when(isStockInfo), time: when(isToday) }, () => {
+					throw new Error();
+				})
+				.with(
+					{ info: when(isCryptoInfo), time: when(isNotToday) },
+					() => {
+						throw new Error();
+					}
+				)
+				.with({ info: when(isCryptoInfo), time: when(isToday) }, () => {
+					throw new Error();
+				})
+				.run();
 		});
 	};
