@@ -34,6 +34,14 @@ const testPageHeaders = () => {
 	expect(screen.queryByText('Cryptocurrency')).toBeInTheDocument();
 };
 
+interface MarketTestConfig {
+	readonly time: MarketTime;
+}
+
+const testMarketsPage = (config: MarketTestConfig) => {
+	throw new Error();
+};
+
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -46,7 +54,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('Today');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.ONE_DAY
+		});
 	});
 
 	it('renders for today when history has higher millis than current time', async () => {
@@ -77,7 +87,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('1 Week');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.ONE_WEEK
+		});
 	});
 
 	it('renders for 1 month', async () => {
@@ -87,7 +99,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('1 Month');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.ONE_MONTH
+		});
 	});
 
 	it('renders for 3 months', async () => {
@@ -97,7 +111,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('3 Months');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.THREE_MONTHS
+		});
 	});
 
 	it('renders for 1 year', async () => {
@@ -107,7 +123,9 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('1 Year');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.ONE_YEAR
+		});
 	});
 
 	it('renders for 5 years', async () => {
@@ -117,6 +135,8 @@ describe('Markets', () => {
 		await renderApp();
 		await selectMenuItem('5 Years');
 		testPageHeaders();
-		throw new Error();
+		testMarketsPage({
+			time: MarketTime.FIVE_YEARS
+		});
 	});
 });
