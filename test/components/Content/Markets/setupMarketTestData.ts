@@ -11,6 +11,12 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
+import { match } from 'ts-pattern';
+import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import {
+	isCrypto,
+	isStock
+} from '../../../../src/types/data/MarketInvestmentType';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const CALENDAR_DATE_FORMAT = 'yyyy-MM-dd';
@@ -144,6 +150,11 @@ const mockCalenderRequest = (
 		.reply(200, createMockCalendar(formattedDate, status));
 };
 
+const isStockInfo: PredicateT<MarketInvestmentInfo> = (info) =>
+	isStock(info.type);
+const isCryptoInfo: PredicateT<MarketInvestmentInfo> = (info) =>
+	isCrypto(info.type);
+
 export const createSetupMockApiCalls =
 	(
 		mockApi: MockAdapter,
@@ -151,5 +162,8 @@ export const createSetupMockApiCalls =
 	) =>
 	(config: MockApiConfig) => {
 		mockCalenderRequest(mockApi, config.status ?? 'open');
-		throw new Error();
+
+		investmentInfo.forEach((info) => {
+			match({ info, time: config.time });
+		});
 	};
