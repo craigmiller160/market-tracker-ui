@@ -284,5 +284,11 @@ export const getInvestmentData = (
 		getHistoryFn(time, info.type)(info.symbol),
 		TaskEither.bindTo('history'),
 		TaskEither.bind('quote', () => getQuote(info)),
-		TaskEither.chainEitherK(handleInvestmentData(time, info))
+		TaskEither.chainEitherK(handleInvestmentData(time, info)),
+		TaskEither.mapLeft(
+			(ex) =>
+				new Error(
+					`Error getting data for ${info.symbol}: ${ex.message}`
+				)
+		)
 	);
