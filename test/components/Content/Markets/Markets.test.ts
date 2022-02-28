@@ -1,7 +1,15 @@
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
+import { getAllMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
+import { pipe } from 'fp-ts/es6/function';
+import * as Try from '@craigmiller160/ts-functions/es/Try';
+import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
+const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
+	getAllMarketInvestmentInfo(),
+	Try.getOrThrow
+);
 
 describe('Markets', () => {
 	beforeEach(() => {
