@@ -71,6 +71,12 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 	}
 });
 
+const getCryptoId = (symbol: string): string =>
+	match(symbol)
+		.with('BTC', () => 'bitcoin')
+		.with('ETH', () => 'ethereum')
+		.run();
+
 const createTradierTimesale = (
 	modifier: number,
 	timestampMillis: number = new Date().getTime()
@@ -230,6 +236,17 @@ const mockTradierHistoryRequest = (
 		.reply(200, createTradierHistory(modifier));
 };
 
+const mockCoinGeckoPriceRequest = (
+	mockApi: MockAdapter,
+	symbol: string,
+	modifier: number
+) => {
+	const id = getCryptoId(symbol);
+	mockApi
+		.onGet(`/coingecko/simple/price?ids=${id}&vs_currencies=usd`)
+		.reply(200, createCoinGeckoPrice(id, modifier));
+};
+
 export const createSetupMockApiCalls =
 	(
 		mockApi: MockAdapter,
@@ -259,10 +276,12 @@ export const createSetupMockApiCalls =
 				.with(
 					{ info: when(isCryptoInfo), time: when(isNotToday) },
 					() => {
+						mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
 						throw new Error();
 					}
 				)
 				.with({ info: when(isCryptoInfo), time: when(isToday) }, () => {
+					mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
 					throw new Error();
 				})
 				.run();
