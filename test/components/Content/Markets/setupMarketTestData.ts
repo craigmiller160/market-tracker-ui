@@ -78,12 +78,6 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 	}
 });
 
-const getCryptoId = (symbol: string): string =>
-	match(symbol)
-		.with('BTC', () => 'bitcoin')
-		.with('ETH', () => 'ethereum')
-		.run();
-
 const createTradierTimesale = (
 	modifier: number,
 	timestampMillis: number = new Date().getTime() - 120_000

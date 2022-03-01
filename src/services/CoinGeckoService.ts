@@ -46,18 +46,6 @@ export interface HistoryQuery {
 	readonly start: Date;
 }
 
-const getId = (symbol: string): string =>
-	match(symbol.toLowerCase())
-		.with('btc', () => 'bitcoin')
-		.with('eth', () => 'ethereum')
-		.run();
-
-const getSymbol = (id: string): string =>
-	match(id)
-		.with('bitcoin', () => 'BTC')
-		.with('ethereum', () => 'ETH')
-		.run();
-
 const getMarketChartDate: (millis: number) => string = flow(
 	Time.fromMillis,
 	Time.format('yyyy-MM-dd')
