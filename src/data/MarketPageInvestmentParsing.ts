@@ -19,8 +19,6 @@ import {
 	altInvestmentIdsV
 } from '../types/data/AltInvestmentIds';
 
-// TODO write unit tests for some of these functions
-
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
@@ -88,6 +86,7 @@ export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
 	Either.map(groupInvestmentsByType)
 );
 
+// TODO return Try
 export const getAltIdForSymbol = (symbol: string): string =>
 	pipe(
 		altInvestmentIds,
@@ -99,6 +98,7 @@ export const getAltIdForSymbol = (symbol: string): string =>
 		)
 	);
 
+// TODO return Try
 export const getSymbolForAltId = (id: string): string =>
 	pipe(
 		altInvestmentIds,
