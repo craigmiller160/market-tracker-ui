@@ -60,6 +60,13 @@ const getMarketChartTime: (millis: number) => string = flow(
 	Time.format('HH:mm:ss')
 );
 
+const getPrice = (id: string, price: CoinGeckoPrice): TryT<string> =>
+	pipe(
+		Option.fromNullable(price[id as keyof CoinGeckoPrice]),
+		Option.map((_) => _.usd.toString()),
+		Either.fromOption(() => new Error(`Unable to find price for ID: ${id}`))
+	);
+
 const formatPrice =
 	(ids: ReadonlyArray<string>) =>
 	(price: CoinGeckoPrice): TryT<ReadonlyArray<Quote>> =>
@@ -67,38 +74,45 @@ const formatPrice =
 			ids,
 			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
-					Option.map((price) => ({
-						symbol: getSymbolForAltId(id),
-						price: price.usd,
-						previousClose: 0
-					}))
+					[getPrice(id, price), getSymbolForAltId(id)],
+					Either.sequenceArray,
+					Either.map(
+						([price, symbol]): Quote => ({
+							symbol,
+							price: parseFloat(price),
+							previousClose: 0
+						})
+					)
 				)
 			),
-			Option.sequenceArray,
-			Either.fromOption(
-				() =>
-					new Error(
-						`Unable to find all symbols in quote response. ${ids}`
-					)
-			)
+			Either.sequenceArray
 		);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> => {
-	const ids = pipe(symbols, RArray.map(getAltIdForSymbol));
-	const idString = pipe(ids, Monoid.concatAll(quoteSymbolMonoid));
-
-	return pipe(
-		ajaxApi.get<CoinGeckoPrice>({
-			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
-		}),
-		TaskEither.map(getResponseData),
-		TaskEither.chainEitherK(decodePrice),
-		TaskEither.chainEitherK(formatPrice(ids))
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		symbols,
+		RArray.map(getAltIdForSymbol),
+		Either.sequenceArray,
+		TaskEither.fromEither,
+		TaskEither.bindTo('ids'),
+		TaskEither.bind('idString', ({ ids }) =>
+			TaskEither.right(Monoid.concatAll(quoteSymbolMonoid)(ids))
+		),
+		TaskEither.bind('response', ({ idString }) =>
+			pipe(
+				ajaxApi.get<CoinGeckoPrice>({
+					uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
+				}),
+				TaskEither.map(getResponseData),
+				TaskEither.chainEitherK(decodePrice)
+			)
+		),
+		TaskEither.chainEitherK(({ ids, response }) =>
+			formatPrice(ids)(response)
+		)
 	);
-};
 
 const formatMarketChart = (
 	chart: CoinGeckoMarketChart
