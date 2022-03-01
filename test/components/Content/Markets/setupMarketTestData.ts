@@ -11,6 +11,7 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
+import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
@@ -245,7 +246,7 @@ const mockCoinGeckoPriceRequest = (
 	symbol: string,
 	modifier: number
 ) => {
-	const id = getAltIdForSymbol(symbol);
+	const id = pipe(getAltIdForSymbol(symbol), Try.getOrThrow);
 	mockApi
 		.onGet(`/coingecko/simple/price?ids=${id}&vs_currencies=usd`)
 		.reply(200, createCoinGeckoPrice(id, modifier));

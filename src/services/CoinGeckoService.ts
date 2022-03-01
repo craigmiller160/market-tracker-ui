@@ -132,13 +132,16 @@ const formatMarketChart = (
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
-	const id = getAltIdForSymbol(historyQuery.symbol);
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
 	const end = Math.floor(getTodayEnd().getTime() / 1000);
 	return pipe(
-		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
-		}),
+		getAltIdForSymbol(historyQuery.symbol),
+		TaskEither.fromEither,
+		TaskEither.chain((id) =>
+			ajaxApi.get<CoinGeckoMarketChart>({
+				uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
+			})
+		),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeMarketChart),
 		TaskEither.map(formatMarketChart)
