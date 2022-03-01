@@ -12,11 +12,14 @@ import * as Monoid from 'fp-ts/es6/Monoid';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { match } from 'ts-pattern';
 import * as Either from 'fp-ts/es6/Either';
+import * as Option from 'fp-ts/es6/Option';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 import {
 	AltInvestmentIds,
 	altInvestmentIdsV
 } from '../types/data/AltInvestmentIds';
+
+// TODO write unit tests for some of these functions
 
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
@@ -84,3 +87,25 @@ export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
 	allMarketInvestmentInfo,
 	Either.map(groupInvestmentsByType)
 );
+
+export const getAltIdForSymbol = (symbol: string): string =>
+	pipe(
+		altInvestmentIds,
+		Either.map((altIds) => altIds.symbolToId[symbol]),
+		Either.map(Option.fromNullable),
+		Either.fold(
+			() => symbol,
+			Option.getOrElse(() => symbol)
+		)
+	);
+
+export const getSymbolForAltId = (altId: string): string =>
+	pipe(
+		altInvestmentIds,
+		Either.map((altIds) => altIds.idToSymbol[altIds]),
+		Either.map(Option.fromNullable),
+		Either.fold(
+			() => altId,
+			Option.getOrElse(() => altId)
+		)
+	);

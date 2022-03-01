@@ -27,6 +27,10 @@ import {
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import {
+	getAltIdForSymbol,
+	getSymbolForAltId
+} from '../data/MarketPageInvestmentParsing';
 
 const decodePrice = TypeValidation.decode(coinGeckoPriceV);
 const decodeMarketChart = TypeValidation.decode(coinGeckoMarketChartV);
@@ -65,7 +69,7 @@ const formatPrice =
 				pipe(
 					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
 					Option.map((price) => ({
-						symbol: getSymbol(id),
+						symbol: getSymbolForAltId(id),
 						price: price.usd,
 						previousClose: 0
 					}))
@@ -83,7 +87,7 @@ const formatPrice =
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> => {
-	const ids = pipe(symbols, RArray.map(getId));
+	const ids = pipe(symbols, RArray.map(getAltIdForSymbol));
 	const idString = pipe(ids, Monoid.concatAll(quoteSymbolMonoid));
 
 	return pipe(
@@ -114,7 +118,7 @@ const formatMarketChart = (
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
-	const id = getId(historyQuery.symbol);
+	const id = getAltIdForSymbol(historyQuery.symbol);
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
 	const end = Math.floor(getTodayEnd().getTime() / 1000);
 	return pipe(
