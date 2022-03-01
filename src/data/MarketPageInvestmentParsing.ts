@@ -1,4 +1,5 @@
 import marketDataJson from './marketsPageInvestments.json';
+import altInvestmentIdsJson from './altInvestmentIds.json';
 import {
 	MarketInvestmentInfo,
 	MarketInvestmentInfoArray,
@@ -11,20 +12,21 @@ import * as Monoid from 'fp-ts/es6/Monoid';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { match } from 'ts-pattern';
 import * as Either from 'fp-ts/es6/Either';
+import * as Option from 'fp-ts/es6/Option';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
+import {
+	AltInvestmentIds,
+	altInvestmentIdsV
+} from '../types/data/AltInvestmentIds';
 
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
-export const getAllMarketInvestmentInfo = (): TryT<MarketInvestmentInfoArray> =>
-	pipe(
-		marketInvestmentInfoArrayV.decode(marketDataJson),
-		TypeValidation.handleResult
-	);
-
-export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
-	pipe(getAllMarketInvestmentInfo(), Either.map(groupInvestmentsByType));
+export const allMarketInvestmentInfo: TryT<MarketInvestmentInfoArray> =
+	TypeValidation.decode(marketInvestmentInfoArrayV)(marketDataJson);
+export const altInvestmentIds: TryT<AltInvestmentIds> =
+	TypeValidation.decode(altInvestmentIdsV)(altInvestmentIdsJson);
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	empty: {
@@ -77,4 +79,25 @@ const groupInvestmentsByType = (
 		infoArray,
 		RArray.map(infoToInvestmentByType),
 		Monoid.concatAll(groupByTypeMonoid)
+	);
+
+export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
+	allMarketInvestmentInfo,
+	Either.map(groupInvestmentsByType)
+);
+
+export const getAltIdForSymbol = (symbol: string): TryT<string> =>
+	pipe(
+		altInvestmentIds,
+		Either.map((altIds) => altIds.symbolToId[symbol]),
+		Either.map(Option.fromNullable),
+		Either.map(Option.getOrElse(() => symbol))
+	);
+
+export const getSymbolForAltId = (id: string): TryT<string> =>
+	pipe(
+		altInvestmentIds,
+		Either.map((altIds) => altIds.idToSymbol[id]),
+		Either.map(Option.fromNullable),
+		Either.map(Option.getOrElse(() => id))
 	);

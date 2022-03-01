@@ -27,6 +27,10 @@ import {
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import {
+	getAltIdForSymbol,
+	getSymbolForAltId
+} from '../data/MarketPageInvestmentParsing';
 
 const decodePrice = TypeValidation.decode(coinGeckoPriceV);
 const decodeMarketChart = TypeValidation.decode(coinGeckoMarketChartV);
@@ -46,18 +50,6 @@ export interface HistoryQuery {
 	readonly start: Date;
 }
 
-const getId = (symbol: string): string =>
-	match(symbol.toLowerCase())
-		.with('btc', () => 'bitcoin')
-		.with('eth', () => 'ethereum')
-		.run();
-
-const getSymbol = (id: string): string =>
-	match(id)
-		.with('bitcoin', () => 'BTC')
-		.with('ethereum', () => 'ETH')
-		.run();
-
 const getMarketChartDate: (millis: number) => string = flow(
 	Time.fromMillis,
 	Time.format('yyyy-MM-dd')
@@ -68,6 +60,13 @@ const getMarketChartTime: (millis: number) => string = flow(
 	Time.format('HH:mm:ss')
 );
 
+const getPrice = (id: string, price: CoinGeckoPrice): TryT<string> =>
+	pipe(
+		Option.fromNullable(price[id as keyof CoinGeckoPrice]),
+		Option.map((_) => _.usd.toString()),
+		Either.fromOption(() => new Error(`Unable to find price for ID: ${id}`))
+	);
+
 const formatPrice =
 	(ids: ReadonlyArray<string>) =>
 	(price: CoinGeckoPrice): TryT<ReadonlyArray<Quote>> =>
@@ -75,38 +74,45 @@ const formatPrice =
 			ids,
 			RArray.map((id) =>
 				pipe(
-					Option.fromNullable(price[id as keyof CoinGeckoPrice]),
-					Option.map((price) => ({
-						symbol: getSymbol(id),
-						price: price.usd,
-						previousClose: 0
-					}))
+					[getPrice(id, price), getSymbolForAltId(id)],
+					Either.sequenceArray,
+					Either.map(
+						([price, symbol]): Quote => ({
+							symbol,
+							price: parseFloat(price),
+							previousClose: 0
+						})
+					)
 				)
 			),
-			Option.sequenceArray,
-			Either.fromOption(
-				() =>
-					new Error(
-						`Unable to find all symbols in quote response. ${ids}`
-					)
-			)
+			Either.sequenceArray
 		);
 
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> => {
-	const ids = pipe(symbols, RArray.map(getId));
-	const idString = pipe(ids, Monoid.concatAll(quoteSymbolMonoid));
-
-	return pipe(
-		ajaxApi.get<CoinGeckoPrice>({
-			uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
-		}),
-		TaskEither.map(getResponseData),
-		TaskEither.chainEitherK(decodePrice),
-		TaskEither.chainEitherK(formatPrice(ids))
+): TaskTryT<ReadonlyArray<Quote>> =>
+	pipe(
+		symbols,
+		RArray.map(getAltIdForSymbol),
+		Either.sequenceArray,
+		TaskEither.fromEither,
+		TaskEither.bindTo('ids'),
+		TaskEither.bind('idString', ({ ids }) =>
+			TaskEither.right(Monoid.concatAll(quoteSymbolMonoid)(ids))
+		),
+		TaskEither.bind('response', ({ idString }) =>
+			pipe(
+				ajaxApi.get<CoinGeckoPrice>({
+					uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
+				}),
+				TaskEither.map(getResponseData),
+				TaskEither.chainEitherK(decodePrice)
+			)
+		),
+		TaskEither.chainEitherK(({ ids, response }) =>
+			formatPrice(ids)(response)
+		)
 	);
-};
 
 const formatMarketChart = (
 	chart: CoinGeckoMarketChart
@@ -126,13 +132,16 @@ const formatMarketChart = (
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
-	const id = getId(historyQuery.symbol);
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
 	const end = Math.floor(getTodayEnd().getTime() / 1000);
 	return pipe(
-		ajaxApi.get<CoinGeckoMarketChart>({
-			uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
-		}),
+		getAltIdForSymbol(historyQuery.symbol),
+		TaskEither.fromEither,
+		TaskEither.chain((id) =>
+			ajaxApi.get<CoinGeckoMarketChart>({
+				uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
+			})
+		),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeMarketChart),
 		TaskEither.map(formatMarketChart)

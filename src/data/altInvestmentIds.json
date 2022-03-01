@@ -1,0 +1,10 @@
+{
+  "symbolToId": {
+    "BTC": "bitcoin",
+    "ETH": "ethereum"
+  },
+  "idToSymbol": {
+    "bitcoin": "BTC",
+    "ethereum": "ETH"
+  }
+}

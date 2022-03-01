@@ -1,8 +1,8 @@
 import { Typography } from 'antd';
 import './Markets.scss';
 import {
-	getMarketInvestmentByType,
-	InvestmentsByType
+	InvestmentsByType,
+	marketInvestmentsByType
 } from '../../../data/MarketPageInvestmentParsing';
 import { pipe } from 'fp-ts/es6/function';
 import * as Either from 'fp-ts/es6/Either';
@@ -30,7 +30,7 @@ const emptyInvestmentsByType: InvestmentsByType = {
 
 const getInvestmentResult = (): InvestmentResult =>
 	pipe(
-		getMarketInvestmentByType(),
+		marketInvestmentsByType,
 		Either.fold(
 			(ex) => ({
 				investments: emptyInvestmentsByType,

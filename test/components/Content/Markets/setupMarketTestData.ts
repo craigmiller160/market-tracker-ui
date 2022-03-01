@@ -11,6 +11,7 @@ import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../../../src/types/tradier/calendar';
+import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
@@ -29,6 +30,7 @@ import {
 	getTodayStartString
 } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
+import { getAltIdForSymbol } from '../../../../src/data/MarketPageInvestmentParsing';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DATE_FORMAT = 'yyyy-MM-dd';
@@ -77,12 +79,6 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 		]
 	}
 });
-
-const getCryptoId = (symbol: string): string =>
-	match(symbol)
-		.with('BTC', () => 'bitcoin')
-		.with('ETH', () => 'ethereum')
-		.run();
 
 const createTradierTimesale = (
 	modifier: number,
@@ -250,7 +246,7 @@ const mockCoinGeckoPriceRequest = (
 	symbol: string,
 	modifier: number
 ) => {
-	const id = getCryptoId(symbol);
+	const id = pipe(getAltIdForSymbol(symbol), Try.getOrThrow);
 	mockApi
 		.onGet(`/coingecko/simple/price?ids=${id}&vs_currencies=usd`)
 		.reply(200, createCoinGeckoPrice(id, modifier));
@@ -264,7 +260,7 @@ const mockCoinGeckoHistoryRequest = (
 	time: MarketTime,
 	modifier: number
 ) => {
-	const id = getCryptoId(symbol);
+	const id = pipe(getAltIdForSymbol(symbol), Try.getOrThrow);
 	const startSecs = pipe(
 		getHistoryStart(time).getTime(),
 		millisToSecs,
