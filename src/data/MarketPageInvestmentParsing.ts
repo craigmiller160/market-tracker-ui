@@ -1,4 +1,5 @@
 import marketDataJson from './marketsPageInvestments.json';
+import altInvestmentIdsJson from './altInvestmentIds.json';
 import {
 	MarketInvestmentInfo,
 	MarketInvestmentInfoArray,
@@ -12,10 +13,15 @@ import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import { match } from 'ts-pattern';
 import * as Either from 'fp-ts/es6/Either';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
+import {
+	AltInvestmentIds,
+	altInvestmentIdsV
+} from '../types/data/AltInvestmentIds';
 
 const decodeMarketInvestmentInfo = TypeValidation.decode(
 	marketInvestmentInfoArrayV
 );
+const decodeAltInvestmentIds = TypeValidation.decode(altInvestmentIdsV);
 
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
@@ -26,6 +32,9 @@ export const getAllMarketInvestmentInfo = (): TryT<MarketInvestmentInfoArray> =>
 
 export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
 	pipe(getAllMarketInvestmentInfo(), Either.map(groupInvestmentsByType));
+
+export const getAltInvestmentIds = (): TryT<AltInvestmentIds> =>
+	decodeAltInvestmentIds(altInvestmentIdsJson);
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	empty: {
