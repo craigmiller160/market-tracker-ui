@@ -260,7 +260,7 @@ const mockCoinGeckoHistoryRequest = (
 	time: MarketTime,
 	modifier: number
 ) => {
-	const id = getAltIdForSymbol(symbol);
+	const id = pipe(getAltIdForSymbol(symbol), Try.getOrThrow);
 	const startSecs = pipe(
 		getHistoryStart(time).getTime(),
 		millisToSecs,
