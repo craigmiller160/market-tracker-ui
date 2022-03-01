@@ -13,15 +13,16 @@ import { match } from 'ts-pattern';
 import * as Either from 'fp-ts/es6/Either';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 
+const decodeMarketInvestmentInfo = TypeValidation.decode(
+	marketInvestmentInfoArrayV
+);
+
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
 export const getAllMarketInvestmentInfo = (): TryT<MarketInvestmentInfoArray> =>
-	pipe(
-		marketInvestmentInfoArrayV.decode(marketDataJson),
-		TypeValidation.handleResult
-	);
+	decodeMarketInvestmentInfo(marketDataJson);
 
 export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
 	pipe(getAllMarketInvestmentInfo(), Either.map(groupInvestmentsByType));
