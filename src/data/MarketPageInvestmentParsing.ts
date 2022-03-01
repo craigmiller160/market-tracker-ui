@@ -18,23 +18,14 @@ import {
 	altInvestmentIdsV
 } from '../types/data/AltInvestmentIds';
 
-const decodeMarketInvestmentInfo = TypeValidation.decode(
-	marketInvestmentInfoArrayV
-);
-const decodeAltInvestmentIds = TypeValidation.decode(altInvestmentIdsV);
-
 export type InvestmentsByType = {
 	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
-export const getAllMarketInvestmentInfo = (): TryT<MarketInvestmentInfoArray> =>
-	decodeMarketInvestmentInfo(marketDataJson);
-
-export const getMarketInvestmentByType = (): TryT<InvestmentsByType> =>
-	pipe(getAllMarketInvestmentInfo(), Either.map(groupInvestmentsByType));
-
-export const getAltInvestmentIds = (): TryT<AltInvestmentIds> =>
-	decodeAltInvestmentIds(altInvestmentIdsJson);
+export const allMarketInvestmentInfo: TryT<MarketInvestmentInfoArray> =
+	TypeValidation.decode(marketInvestmentInfoArrayV)(marketDataJson);
+export const altInvestmentIds: TryT<AltInvestmentIds> =
+	TypeValidation.decode(altInvestmentIdsV)(altInvestmentIdsJson);
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
 	empty: {
@@ -88,3 +79,8 @@ const groupInvestmentsByType = (
 		RArray.map(infoToInvestmentByType),
 		Monoid.concatAll(groupByTypeMonoid)
 	);
+
+export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
+	allMarketInvestmentInfo,
+	Either.map(groupInvestmentsByType)
+);
