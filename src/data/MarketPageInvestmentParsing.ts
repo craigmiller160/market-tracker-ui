@@ -102,7 +102,7 @@ export const getAltIdForSymbol = (symbol: string): string =>
 export const getSymbolForAltId = (altId: string): string =>
 	pipe(
 		altInvestmentIds,
-		Either.map((altIds) => altIds.idToSymbol[altIds]),
+		Either.map((altIds) => altIds.idToSymbol[altId]),
 		Either.map(Option.fromNullable),
 		Either.fold(
 			() => altId,
