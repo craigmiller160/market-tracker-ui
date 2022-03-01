@@ -86,26 +86,18 @@ export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
 	Either.map(groupInvestmentsByType)
 );
 
-// TODO return Try
-export const getAltIdForSymbol = (symbol: string): string =>
+export const getAltIdForSymbol = (symbol: string): TryT<string> =>
 	pipe(
 		altInvestmentIds,
 		Either.map((altIds) => altIds.symbolToId[symbol]),
 		Either.map(Option.fromNullable),
-		Either.fold(
-			() => symbol,
-			Option.getOrElse(() => symbol)
-		)
+		Either.map(Option.getOrElse(() => symbol))
 	);
 
-// TODO return Try
-export const getSymbolForAltId = (id: string): string =>
+export const getSymbolForAltId = (id: string): TryT<string> =>
 	pipe(
 		altInvestmentIds,
 		Either.map((altIds) => altIds.idToSymbol[id]),
 		Either.map(Option.fromNullable),
-		Either.fold(
-			() => id,
-			Option.getOrElse(() => id)
-		)
+		Either.map(Option.getOrElse(() => id))
 	);
