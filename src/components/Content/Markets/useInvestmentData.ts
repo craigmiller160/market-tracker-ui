@@ -14,7 +14,7 @@ import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 import { RefreshTimerContext } from './RefreshTimerContext';
-import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
+import { isNestedAxiosError } from '../../../services/AjaxApi';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -27,7 +27,7 @@ const createHandleGetDataError =
 	(dispatch: Dispatch, setState: Updater<InvestmentDataState>) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
-		if (!isAxiosError(ex)) {
+		if (!isNestedAxiosError(ex)) {
 			console.error('Error getting data', ex);
 			dispatch(
 				notificationSlice.actions.addError(
