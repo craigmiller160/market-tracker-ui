@@ -26,7 +26,9 @@ export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
 				Option.getOrElse(() => false)
 			)
 		)
-		.otherwise((error) => (error as unknown as any).response !== undefined);
+		.otherwise((error) =>
+			Object.prototype.hasOwnProperty.call(error, 'response')
+		);
 
 const getAxiosErrorBody = (error: AxiosError<unknown>): string =>
 	pipe(
