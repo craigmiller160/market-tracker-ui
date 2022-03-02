@@ -24,6 +24,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Either from 'fp-ts/es6/Either';
+import TraceError from 'trace-error';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
@@ -296,8 +297,9 @@ export const getInvestmentData = (
 		TaskEither.chainEitherK(handleInvestmentData(time, info)),
 		TaskEither.mapLeft(
 			(ex) =>
-				new Error(
-					`Error getting data for ${info.symbol}: ${ex.message}`
+				new TraceError(
+					`Error getting data for ${info.symbol}: ${ex.message}`,
+					ex
 				)
 		)
 	);

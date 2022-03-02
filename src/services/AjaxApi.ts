@@ -9,12 +9,28 @@ import { authSlice } from '../store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { notificationSlice } from '../store/notification/slice';
 import { AxiosError } from 'axios';
-import { match, when, not } from 'ts-pattern';
+import { match, when, not, instanceOf } from 'ts-pattern';
 import * as Json from '@craigmiller160/ts-functions/es/Json';
 import { pipe } from 'fp-ts/es6/function';
 import { debounce } from 'lodash-es';
+import TraceError from 'trace-error';
 
 const isUndefined = (value: string | undefined): boolean => value === undefined;
+
+export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
+	match(ex)
+		.with(instanceOf(TraceError), (traceError) =>
+			pipe(
+				Option.fromNullable(traceError.cause()),
+				Option.map(isNestedAxiosError),
+				Option.getOrElse(() => false)
+			)
+		)
+		.otherwise(
+			(error) =>
+				Object.prototype.hasOwnProperty.call(error, 'isAxiosError') &&
+				Object.prototype.hasOwnProperty.call(error, 'config')
+		);
 
 const getAxiosErrorBody = (error: AxiosError<unknown>): string =>
 	pipe(

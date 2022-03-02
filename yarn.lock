@@ -4282,6 +4282,11 @@ core-js-pure@^3.20.2:
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/core-js-pure/-/core-js-pure-3.20.2.tgz#5d263565f0e34ceeeccdc4422fae3e84ca6b8c0f"
   integrity sha512-CmWHvSKn2vNL6p6StNp1EmMIfVY/pqn3JLAjfZQ8WZGPOlGoO92EkX9/Mk81i6GxvoPXjUqEQnpM3rJ5QxxIOg==
 
+core-js@3:
+  version "3.21.1"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/core-js/-/core-js-3.21.1.tgz#f2e0ddc1fc43da6f904706e8e955bc19d06a0d94"
+  integrity sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==
+
 core-js@^3.20.2:
   version "3.20.2"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/core-js/-/core-js-3.20.2.tgz#46468d8601eafc8b266bd2dd6bf9dee622779581"
@@ -10493,6 +10498,14 @@ tr46@^2.1.0:
   dependencies:
     punycode "^2.1.1"
 
+trace-error@^1.0.3:
+  version "1.0.3"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/trace-error/-/trace-error-1.0.3.tgz#66b0b6892950fd478b2a12b9fc0b4cb63c8127e8"
+  integrity sha512-bA+HEtqNhk4dPGYsS3yfguEI4EhS/qojoPZh4Td7Wl6wPINYATPCan6wSwf2Y0IHcTVU6SS8InlX2Fg20g57zw==
+  dependencies:
+    core-js "3"
+    weakmap "0.0.6"
+
 ts-easing@^0.2.0:
   version "0.2.0"
   resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/ts-easing/-/ts-easing-0.2.0.tgz#c8a8a35025105566588d87dbda05dd7fbfa5a4ec"
@@ -10790,6 +10803,11 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   integrity sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==
   dependencies:
     minimalistic-assert "^1.0.0"
+
+weakmap@0.0.6:
+  version "0.0.6"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/weakmap/-/weakmap-0.0.6.tgz#0c4fbde02e3b371f9222013fc6632a5c45419b29"
+  integrity sha1-DE+94C47Nx+SIgE/xmMqXEVBmyk=
 
 webidl-conversions@^5.0.0:
   version "5.0.0"
