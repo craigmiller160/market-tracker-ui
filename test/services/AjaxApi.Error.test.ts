@@ -1,9 +1,11 @@
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApi, isNestedAxiosError } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { MockStore } from 'redux-mock-store';
 import * as Option from 'fp-ts/es6/Option';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
+import { AxiosError } from 'axios';
+import TraceError from 'trace-error';
 
 const sleep550ms = Sleep.sleep(550);
 
@@ -17,6 +19,14 @@ jest.mock('../../src/store', () => {
 const mockApi = new MockAdapter(ajaxApi.instance);
 const mockStore = store as MockStore;
 
+const axiosError: AxiosError = {
+	config: {},
+	isAxiosError: true,
+	toJSON: () => ({}),
+	name: 'AxiosError',
+	message: ''
+};
+
 describe('AjaxApi Error Handling', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -25,19 +35,25 @@ describe('AjaxApi Error Handling', () => {
 
 	describe('isNestedAxiosError', () => {
 		it('is axios error', () => {
-			throw new Error();
+			const result = isNestedAxiosError(axiosError);
+			expect(result).toEqual(true);
 		});
 
 		it('is not axios error', () => {
-			throw new Error();
+			const result = isNestedAxiosError(new Error());
+			expect(result).toEqual(false);
 		});
 
 		it('is trace error with axios error cause', () => {
-			throw new Error();
+			const traceError = new TraceError('', axiosError);
+			const result = isNestedAxiosError(traceError);
+			expect(result).toEqual(true);
 		});
 
 		it('is trace error without axios error cause', () => {
-			throw new Error();
+			const traceError = new TraceError('', new Error());
+			const result = isNestedAxiosError(traceError);
+			expect(result).toEqual(false);
 		});
 	});
 
