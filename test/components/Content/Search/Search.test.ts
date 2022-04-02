@@ -10,12 +10,21 @@ import {
 	getHistoryStart,
 	getTradierInterval
 } from '../../../testutils/testDataUtils';
+import { TradierCalendarStatus } from '../../../../src/types/tradier/calendar';
+import { createMockCalendar } from '../Markets/setupMarketTestData';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
 
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
+
+const mockCalendarRequest = (status?: TradierCalendarStatus) => {
+	const theStatus: TradierCalendarStatus = status ?? 'open';
+	mockApi
+		.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+		.reply(200, createMockCalendar(formattedDate, status));
+}
 
 const mockTradierQuote = (symbol: string) =>
 	mockApi.onGet(`/tradier/markets/quotes?symbols=${symbol}`).reply(200, {
@@ -101,6 +110,10 @@ describe('Search', () => {
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for Today, with the market closed', async () => {
 		throw new Error();
 	});
 
