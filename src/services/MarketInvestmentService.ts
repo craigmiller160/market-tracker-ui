@@ -11,13 +11,7 @@ import { match, when } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
-import {
-	isCrypto,
-	isStock,
-	MarketInvestmentType
-} from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
-import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
@@ -25,6 +19,12 @@ import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Either from 'fp-ts/es6/Either';
 import TraceError from 'trace-error';
+import {
+	InvestmentType,
+	isCrypto,
+	isStock
+} from '../types/data/InvestmentType';
+import { InvestmentInfo } from '../types/data/InvestmentInfo';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
@@ -46,14 +46,14 @@ interface IntermediateInvestmentData {
 	readonly quote: Quote;
 }
 
-export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
+export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 	match(type)
 		.with(when(isStock), () => tradierService.getQuotes)
 		.otherwise(() => coinGeckoService.getQuotes);
 
 export const getHistoryFn = (
 	time: MarketTime,
-	type: MarketInvestmentType
+	type: InvestmentType
 ): HistoryFn =>
 	match({ time, type })
 		.with(
@@ -132,7 +132,7 @@ const getMostRecentHistoryRecord = (
 	history: ReadonlyArray<HistoryRecord>
 ): OptionT<HistoryRecord> => RArray.last(history);
 
-const getQuote = (info: MarketInvestmentInfo): TaskTryT<Quote> =>
+const getQuote = (info: InvestmentInfo): TaskTryT<Quote> =>
 	pipe(
 		getQuoteFn(info.type)([info.symbol]),
 		TaskEither.map(RArray.head),
@@ -234,7 +234,7 @@ const hasHistory: PredicateT<ReadonlyArray<HistoryRecord>> = (history) =>
 	history.length > 0;
 
 const getCurrentPrice = (
-	info: MarketInvestmentInfo,
+	info: InvestmentInfo,
 	time: MarketTime,
 	quote: Quote,
 	history: ReadonlyArray<HistoryRecord>
@@ -267,7 +267,7 @@ const getCurrentPrice = (
 };
 
 const handleInvestmentData =
-	(time: MarketTime, info: MarketInvestmentInfo) =>
+	(time: MarketTime, info: InvestmentInfo) =>
 	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> => {
 		const currentPrice = getCurrentPrice(info, time, quote, history);
 		return pipe(
@@ -288,7 +288,7 @@ const handleInvestmentData =
 
 export const getInvestmentData = (
 	time: MarketTime,
-	info: MarketInvestmentInfo
+	info: InvestmentInfo
 ): TaskTryT<InvestmentData> =>
 	pipe(
 		getHistoryFn(time, info.type)(info.symbol),

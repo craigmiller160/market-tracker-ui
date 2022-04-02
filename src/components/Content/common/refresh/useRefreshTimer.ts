@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
-import { timeValueSelector } from '../../../store/marketSettings/selectors';
+import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import { useEffect } from 'react';
-import { MarketTime } from '../../../types/MarketTime';
+import { MarketTime } from '../../../../types/MarketTime';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { useImmer } from 'use-immer';
 

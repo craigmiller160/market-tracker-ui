@@ -26,12 +26,12 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import {
-	isStock,
-	MarketInvestmentType
-} from '../../../../src/types/data/MarketInvestmentType';
 import { MarketStatus } from '../../../../src/types/MarketStatus';
 import { allMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
+import {
+	InvestmentType,
+	isStock
+} from '../../../../src/types/data/InvestmentType';
 
 enum CurrentPriceStrategy {
 	QUOTE,
@@ -105,7 +105,7 @@ const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
 
 const validateMarketStatus = (
 	card: HTMLElement,
-	type: MarketInvestmentType,
+	type: InvestmentType,
 	status: MarketStatus
 ) =>
 	match({ type, status })
@@ -128,7 +128,7 @@ const validateMarketStatus = (
 
 const validatePriceLine = (
 	card: HTMLElement,
-	type: MarketInvestmentType,
+	type: InvestmentType,
 	config: MarketTestConfig,
 	modifier: number
 ) => {

@@ -9,23 +9,21 @@ import {
 	getOneYearDisplayStartDate,
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
-} from '../../../utils/timeUtils';
-import './MarketCard.scss';
-import { ScreenContext } from '../../ScreenContext';
-import { getBreakpointName } from '../../utils/Breakpoints';
-import { MarketTime } from '../../../types/MarketTime';
-import { MarketStatus } from '../../../types/MarketStatus';
-import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+} from '../../../../utils/timeUtils';
+import './InvestmentCard.scss';
+import { ScreenContext } from '../../../ScreenContext';
+import { getBreakpointName } from '../../../utils/Breakpoints';
+import { MarketTime } from '../../../../types/MarketTime';
+import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import {
 	marketStatusSelector,
 	timeValueSelector
-} from '../../../store/marketSettings/selectors';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
-import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
-import { InvestmentData } from '../../../services/MarketInvestmentService';
-import { Chart as ChartComp } from '../../UI/Chart';
-import { useInvestmentData } from './useInvestmentData';
+} from '../../../../store/marketSettings/selectors';
+import { InvestmentData } from '../../../../services/MarketInvestmentService';
+import { Chart as ChartComp } from '../../../UI/Chart';
+import { useInvestmentData } from '../../../hooks/useInvestmentData';
+import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -34,10 +32,11 @@ const Spinner = (
 );
 
 interface Props {
-	readonly info: MarketInvestmentInfo;
+	readonly info: InvestmentInfo;
+	readonly shouldRespectMarketStatus: () => boolean;
 }
 
-const createTitle = (info: MarketInvestmentInfo): ReactNode => (
+const createTitle = (info: InvestmentInfo): ReactNode => (
 	<h3>
 		<strong>{`${info.name} (${info.symbol})`}</strong>
 	</h3>
@@ -145,9 +144,6 @@ const createTime = (time: MarketTime): ReactNode => {
 	);
 };
 
-const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
-	info.type !== MarketInvestmentType.CRYPTO;
-
 const ErrorMsg = (
 	<Typography.Title className="ErrorMsg" level={3}>
 		Error: Unable to Get Data
@@ -191,14 +187,14 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-export const MarketCard = ({ info }: Props) => {
+export const InvestmentCard = ({ info, shouldRespectMarketStatus }: Props) => {
 	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
-	const respectMarketStatus = shouldRespectMarketStatus(info);
+	const respectMarketStatus = shouldRespectMarketStatus();
 	const shouldLoadData =
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
@@ -226,7 +222,7 @@ export const MarketCard = ({ info }: Props) => {
 		<Card
 			title={FullTitle}
 			extra={Time}
-			className={`MarketCard ${breakpointName}`}
+			className={`InvestmentCard ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
 		>

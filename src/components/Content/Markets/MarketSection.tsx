@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { MarketCard } from './MarketCard';
+import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import './MarketSection.scss';
 import {
 	getMarketInvestmentTypeTitle,
@@ -7,14 +7,22 @@ import {
 } from '../../../types/data/MarketInvestmentType';
 import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+import { InvestmentType } from '../../../types/data/InvestmentType';
 
 interface Props {
 	readonly type: MarketInvestmentType;
 	readonly data: InvestmentsByType;
 }
 
+const shouldRespectMarketStatus = (info: MarketInvestmentInfo) => () =>
+	info.type !== InvestmentType.CRYPTO;
+
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
-	<MarketCard key={info.symbol} info={info} />
+	<InvestmentCard
+		key={info.symbol}
+		info={info}
+		shouldRespectMarketStatus={shouldRespectMarketStatus(info)}
+	/>
 );
 
 export const MarketSection = (props: Props) => {

@@ -14,8 +14,8 @@ import { MarketSection } from './MarketSection';
 import {
 	RefreshTimerContextValue,
 	RefreshTimerContext
-} from './RefreshTimerContext';
-import { useRefreshTimer } from './useRefreshTimer';
+} from '../common/refresh/RefreshTimerContext';
+import { useRefreshTimer } from '../common/refresh/useRefreshTimer';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
