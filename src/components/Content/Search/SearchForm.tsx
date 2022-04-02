@@ -3,6 +3,7 @@ import './SearchForm.scss';
 import { useMemo } from 'react';
 import { SearchValues } from './constants';
 import { InvestmentType } from '../../../types/data/InvestmentType';
+import { toNameCase } from '../../../utils/stringUtils';
 
 type DoSearchFn = (values: SearchValues) => void;
 
@@ -19,7 +20,7 @@ interface SearchTypeRadioProps {
 	readonly searchType: InvestmentType;
 }
 const SearchTypeRadio = ({ searchType }: SearchTypeRadioProps) => (
-	<Radio.Button value={searchType}>{searchType}</Radio.Button>
+	<Radio.Button value={searchType}>{toNameCase(searchType)}</Radio.Button>
 );
 
 const toUpperCase = (value?: string) => value?.toUpperCase() ?? '';
