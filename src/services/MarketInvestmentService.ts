@@ -11,11 +11,6 @@ import { match, when } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
-import {
-	isMarketTypeCrypto,
-	isMarketTypeStock,
-	MarketInvestmentType
-} from '../types/data/MarketInvestmentType';
 import { HistoryRecord } from '../types/history';
 import { MarketInvestmentInfo } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/es6/function';
@@ -25,6 +20,11 @@ import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Either from 'fp-ts/es6/Either';
 import TraceError from 'trace-error';
+import {
+	InvestmentType,
+	isCrypto,
+	isStock
+} from '../types/data/InvestmentType';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
@@ -46,62 +46,62 @@ interface IntermediateInvestmentData {
 	readonly quote: Quote;
 }
 
-export const getQuoteFn = (type: MarketInvestmentType): QuoteFn =>
+export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 	match(type)
-		.with(when(isMarketTypeStock), () => tradierService.getQuotes)
+		.with(when(isStock), () => tradierService.getQuotes)
 		.otherwise(() => coinGeckoService.getQuotes);
 
 export const getHistoryFn = (
 	time: MarketTime,
-	type: MarketInvestmentType
+	type: InvestmentType
 ): HistoryFn =>
 	match({ time, type })
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isMarketTypeStock) },
+			{ time: MarketTime.ONE_DAY, type: when(isStock) },
 			() => tradierService.getTimesales
 		)
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.ONE_DAY, type: when(isCrypto) },
 			() => coinGeckoService.getTodayHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isMarketTypeStock) },
+			{ time: MarketTime.ONE_WEEK, type: when(isStock) },
 			() => tradierService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.ONE_WEEK, type: when(isCrypto) },
 			() => coinGeckoService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isMarketTypeStock) },
+			{ time: MarketTime.ONE_MONTH, type: when(isStock) },
 			() => tradierService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.ONE_MONTH, type: when(isCrypto) },
 			() => coinGeckoService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isMarketTypeStock) },
+			{ time: MarketTime.THREE_MONTHS, type: when(isStock) },
 			() => tradierService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.THREE_MONTHS, type: when(isCrypto) },
 			() => coinGeckoService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isMarketTypeStock) },
+			{ time: MarketTime.ONE_YEAR, type: when(isStock) },
 			() => tradierService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.ONE_YEAR, type: when(isCrypto) },
 			() => coinGeckoService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isMarketTypeStock) },
+			{ time: MarketTime.FIVE_YEARS, type: when(isStock) },
 			() => tradierService.getFiveYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isMarketTypeCrypto) },
+			{ time: MarketTime.FIVE_YEARS, type: when(isCrypto) },
 			() => coinGeckoService.getFiveYearHistory
 		)
 		.run();
@@ -253,7 +253,7 @@ const getCurrentPrice = (
 	})
 		.with(
 			{
-				type: when(isMarketTypeStock),
+				type: when(isStock),
 				time: MarketTime.ONE_DAY,
 				mostRecentHistoryRecord: when(isLaterThanNow)
 			},
