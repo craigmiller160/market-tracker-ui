@@ -24,6 +24,10 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 			element: <Markets />
 		},
 		{
+			path: 'search',
+			element: <Search />
+		},
+		{
 			path: 'recognition',
 			element: <Recognition />
 		}
@@ -40,10 +44,6 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 	];
 	const envDependentRoutes = match(env)
 		.with(when(isNotProd), () => [
-			{
-				path: 'search',
-				element: <Search />
-			},
 			{
 				path: 'portfolios',
 				element: <Portfolios />

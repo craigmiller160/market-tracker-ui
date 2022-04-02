@@ -10,15 +10,15 @@ const createMainNavItems = () => {
 		.with('production', () => <></>)
 		.otherwise(() => (
 			<>
-				<Menu.Item key="page.search">Search</Menu.Item>
-				<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
 				<Menu.Item key="page.watchlists">Watchlists</Menu.Item>
+				<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
 			</>
 		));
 
 	return (
 		<>
 			<Menu.Item key="page.markets">Markets</Menu.Item>
+			<Menu.Item key="page.search">Search</Menu.Item>
 			{NonProdItems}
 			<Menu.Item key="page.recognition">Recognition</Menu.Item>
 		</>

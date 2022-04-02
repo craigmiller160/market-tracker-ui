@@ -74,6 +74,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Markets')).toBeInTheDocument();
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
+		expect(screen.queryByText('Search')).toBeInTheDocument();
 
 		const navbar = screen.getByTestId('desktop-navbar');
 
@@ -87,7 +88,6 @@ describe('Navbar', () => {
 		menuItemIsSelected('Markets');
 		menuItemIsSelected('Today');
 
-		expect(screen.queryByText('Search')).not.toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
