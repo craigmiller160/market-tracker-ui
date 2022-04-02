@@ -20,6 +20,8 @@ import {
 	getInvestmentNotFoundMessage,
 	isNestedInvestmentNotFoundError
 } from '../../error/InvestmentNotFoundError';
+import { MarketStatus } from '../../types/MarketStatus';
+import { InvestmentType } from '../../types/data/InvestmentType';
 
 export interface ErrorInfo {
 	readonly name: string;
@@ -32,6 +34,7 @@ export interface InvestmentDataState {
 	readonly timeAtLastLoading?: MarketTime;
 	readonly data: InvestmentData;
 	readonly error: ErrorInfo | undefined;
+	readonly respectMarketStatus: boolean;
 }
 
 const createHandleGetDataError =
@@ -92,13 +95,17 @@ const createHandleGetDataSuccess =
 		});
 	};
 
+const shouldRespectMarketStatus = (info: InvestmentInfo) =>
+	info.type !== InvestmentType.CRYPTO;
+
 export const useInvestmentData = (
 	time: MarketTime,
 	info: InvestmentInfo,
-	shouldLoadHistoryData: boolean
+	status: MarketStatus
 ): InvestmentDataState => {
 	const { refreshTimestamp } = useContext(RefreshTimerContext);
 	const dispatch = useDispatch();
+	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
 		data: {
@@ -107,7 +114,8 @@ export const useInvestmentData = (
 			currentPrice: 0,
 			history: []
 		},
-		error: undefined
+		error: undefined,
+		respectMarketStatus
 	});
 
 	const handleGetDataError = useMemo(
@@ -136,9 +144,15 @@ export const useInvestmentData = (
 			draft.loading = true;
 			draft.error = undefined;
 		});
-	}, [setState, shouldLoadHistoryData, time, info.symbol]);
+	}, [setState, time, info.symbol]);
 
 	useEffect(() => {
+		if (MarketStatus.UNKNOWN === status) {
+			return;
+		}
+		const shouldLoadHistoryData =
+			status === MarketStatus.OPEN ||
+			(status === MarketStatus.CLOSED && !respectMarketStatus);
 		pipe(
 			getInvestmentData(time, info, shouldLoadHistoryData),
 			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
@@ -148,8 +162,9 @@ export const useInvestmentData = (
 		info,
 		handleGetDataError,
 		handleGetDataSuccess,
-		shouldLoadHistoryData,
-		refreshTimestamp
+		status,
+		refreshTimestamp,
+		respectMarketStatus
 	]);
 
 	return state;

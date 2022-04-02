@@ -24,7 +24,6 @@ import { InvestmentData } from '../../../../services/MarketInvestmentService';
 import { Chart as ChartComp } from '../../../UI/Chart';
 import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
-import { InvestmentType } from '../../../../types/data/InvestmentType';
 import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 
 const Spinner = (
@@ -209,24 +208,17 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-const shouldRespectMarketStatus = (info: InvestmentInfo) =>
-	info.type !== InvestmentType.CRYPTO;
-
 export const InvestmentCard = ({ info }: Props) => {
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
-	const respectMarketStatus = shouldRespectMarketStatus(info);
-	const shouldLoadHistoryData =
-		status === MarketStatus.OPEN ||
-		(status === MarketStatus.CLOSED && !respectMarketStatus);
 
-	const { loading, data, error } = useInvestmentData(
+	const { loading, data, error, respectMarketStatus } = useInvestmentData(
 		time,
 		info,
-		shouldLoadHistoryData
+		status
 	);
 
 	const { Price, Body } = getPriceAndBody(
