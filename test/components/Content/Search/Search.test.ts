@@ -39,4 +39,12 @@ describe('Search', () => {
 		await waitFor(() => expect(getSymbolField()).toHaveValue(''));
 		expect(getSearchBtn()).toBeDisabled();
 	});
+
+	it('searches for and finds a stock', async () => {
+		throw new Error();
+	});
+
+	it('searches for but cannot find a stock', async () => {
+		throw new Error();
+	});
 });
