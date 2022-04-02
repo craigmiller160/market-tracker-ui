@@ -37,9 +37,11 @@ interface Props {
 }
 
 const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
-	<h3>
-		<strong>{`${data.name} (${info.symbol})`}</strong>
-	</h3>
+	<div className="Title">
+		<h3>
+			<strong>{`${data.name} (${info.symbol})`}</strong>
+		</h3>
+	</div>
 );
 
 const localeOptions: Intl.NumberFormatOptions = {
