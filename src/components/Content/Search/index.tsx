@@ -7,10 +7,13 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { Updater, useImmer } from 'use-immer';
 import { SearchValues } from './constants';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../../../store/marketSettings/selectors';
 
 interface State {
 	readonly info: InvestmentInfo;
+	readonly showCard: boolean;
 }
 
 const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
@@ -24,20 +27,31 @@ const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
 };
 
 export const Search = () => {
+	const marketTime = useSelector(timeValueSelector);
 	const [state, setState] = useImmer<State>({
 		info: {
 			type: InvestmentType.STOCK,
 			symbol: '',
 			name: ''
-		}
+		},
+		showCard: false
 	});
 	const doSearch = useMemo(() => createDoSearch(setState), [setState]);
+
+	useEffect(() => {
+		if (state.info.symbol.length > 0) {
+			setState((draft) => {
+				draft.showCard = true;
+			});
+		}
+	}, [marketTime, state.info.symbol, setState]);
+
 	return (
 		<RefreshProvider>
 			<div className="SearchPage">
 				<Typography.Title>Search For Investment</Typography.Title>
 				<SearchForm doSearch={doSearch} />
-				<InvestmentCard info={state.info} />
+				{state.showCard && <InvestmentCard info={state.info} />}
 			</div>
 		</RefreshProvider>
 	);
