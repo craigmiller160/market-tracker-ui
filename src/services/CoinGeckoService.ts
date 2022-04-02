@@ -79,6 +79,7 @@ const formatPrice =
 					Either.map(
 						([price, symbol]): Quote => ({
 							symbol,
+							name: '',
 							price: parseFloat(price),
 							previousClose: 0
 						})

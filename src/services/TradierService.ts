@@ -79,6 +79,7 @@ const formatTradierQuotes = (
 			RArray.map(
 				(_: TradierQuote): Quote => ({
 					symbol: _.symbol,
+					name: _.description,
 					price: _.last ?? 0,
 					previousClose: _.prevclose ?? 0
 				})

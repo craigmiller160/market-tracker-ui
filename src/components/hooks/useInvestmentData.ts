@@ -74,6 +74,7 @@ const createHandleGetDataError =
 			draft.error = errorInfo;
 			draft.data = {
 				startPrice: 0,
+				name: '',
 				currentPrice: 0,
 				history: []
 			};
@@ -102,6 +103,7 @@ export const useInvestmentData = (
 		loading: false,
 		data: {
 			startPrice: 0,
+			name: '',
 			currentPrice: 0,
 			history: []
 		},
