@@ -57,13 +57,13 @@ export const SearchForm = (props: Props) => {
 				<Input placeholder="Symbol" />
 			</Form.Item>
 			<Form.Item shouldUpdate>
-				{() => (
+				{(innerForm) => (
 					<Button
 						type="primary"
 						htmlType="submit"
 						disabled={
-							!form.isFieldsTouched(true) ||
-							!!form
+							!innerForm.isFieldsTouched() ||
+							!!innerForm
 								.getFieldsError()
 								.filter(({ errors }) => errors.length).length
 						}
