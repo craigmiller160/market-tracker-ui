@@ -1,9 +1,11 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { SearchValues } from './constants';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { toNameCase } from '../../../utils/stringUtils';
+import { ScreenContext } from '../../ScreenContext';
+import { getBreakpointName } from '../../utils/Breakpoints';
 
 type DoSearchFn = (values: SearchValues) => void;
 
@@ -31,40 +33,49 @@ export const SearchForm = (props: Props) => {
 		() => createSearchForSymbol(props.doSearch),
 		[props.doSearch]
 	);
+	const { breakpoints } = useContext(ScreenContext);
+	const breakpointName = getBreakpointName(breakpoints);
+	const rootClassName = `SearchForm ${breakpointName}`;
 	return (
 		<Form
-			className="SearchForm"
+			className={rootClassName}
 			form={form}
 			onFinish={searchForSymbol}
 			initialValues={{
 				searchType: InvestmentType.STOCK
 			}}
 		>
-			<Form.Item name="searchType">
-				<Radio.Group>
-					<SearchTypeRadio searchType={InvestmentType.STOCK} />
-					{process.env.NODE_ENV !== 'production' && (
-						<SearchTypeRadio searchType={InvestmentType.CRYPTO} />
+			<div className="SearchType">
+				<Form.Item name="searchType">
+					<Radio.Group>
+						<SearchTypeRadio searchType={InvestmentType.STOCK} />
+						{process.env.NODE_ENV !== 'production' && (
+							<SearchTypeRadio
+								searchType={InvestmentType.CRYPTO}
+							/>
+						)}
+					</Radio.Group>
+				</Form.Item>
+			</div>
+			<div className="SearchFieldAndButton">
+				<Form.Item name="symbol" normalize={toUpperCase}>
+					<Input placeholder="Symbol" allowClear />
+				</Form.Item>
+				<Form.Item shouldUpdate>
+					{(innerForm) => (
+						<Button
+							type="primary"
+							htmlType="submit"
+							disabled={
+								(innerForm.getFieldsValue()?.symbol?.length ??
+									0) === 0
+							}
+						>
+							Search
+						</Button>
 					)}
-				</Radio.Group>
-			</Form.Item>
-			<Form.Item name="symbol" normalize={toUpperCase}>
-				<Input placeholder="Symbol" allowClear />
-			</Form.Item>
-			<Form.Item shouldUpdate>
-				{(innerForm) => (
-					<Button
-						type="primary"
-						htmlType="submit"
-						disabled={
-							(innerForm.getFieldsValue()?.symbol?.length ??
-								0) === 0
-						}
-					>
-						Search
-					</Button>
-				)}
-			</Form.Item>
+				</Form.Item>
+			</div>
 		</Form>
 	);
 };
