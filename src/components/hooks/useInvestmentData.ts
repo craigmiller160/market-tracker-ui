@@ -20,6 +20,8 @@ import {
 	getInvestmentNotFoundMessage,
 	isNestedInvestmentNotFoundError
 } from '../../error/InvestmentNotFoundError';
+import { MarketStatus } from '../../types/MarketStatus';
+import { InvestmentType } from '../../types/data/InvestmentType';
 
 export interface ErrorInfo {
 	readonly name: string;
@@ -32,6 +34,7 @@ export interface InvestmentDataState {
 	readonly timeAtLastLoading?: MarketTime;
 	readonly data: InvestmentData;
 	readonly error: ErrorInfo | undefined;
+	readonly respectMarketStatus: boolean;
 }
 
 const createHandleGetDataError =
@@ -74,6 +77,7 @@ const createHandleGetDataError =
 			draft.error = errorInfo;
 			draft.data = {
 				startPrice: 0,
+				name: '',
 				currentPrice: 0,
 				history: []
 			};
@@ -91,21 +95,27 @@ const createHandleGetDataSuccess =
 		});
 	};
 
+const shouldRespectMarketStatus = (info: InvestmentInfo) =>
+	info.type !== InvestmentType.CRYPTO;
+
 export const useInvestmentData = (
 	time: MarketTime,
 	info: InvestmentInfo,
-	shouldLoadData: boolean
+	status: MarketStatus
 ): InvestmentDataState => {
 	const { refreshTimestamp } = useContext(RefreshTimerContext);
 	const dispatch = useDispatch();
+	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const [state, setState] = useImmer<InvestmentDataState>({
 		loading: false,
 		data: {
 			startPrice: 0,
+			name: '',
 			currentPrice: 0,
 			history: []
 		},
-		error: undefined
+		error: undefined,
+		respectMarketStatus
 	});
 
 	const handleGetDataError = useMemo(
@@ -117,27 +127,34 @@ export const useInvestmentData = (
 		[setState]
 	);
 
-	useEffect(() => {
-		if (!shouldLoadData) {
-			return;
-		}
+	// TODO refresh still triggers quotes, need to prevent that somehow. Probably at the refresh provider level
 
+	useEffect(() => {
 		setState((draft) => {
 			if (draft.timeAtLastLoading !== time) {
 				draft.timeAtLastLoading = time;
+			} else {
+				draft.data = {
+					startPrice: 0,
+					name: '',
+					currentPrice: 0,
+					history: []
+				};
 			}
 			draft.loading = true;
 			draft.error = undefined;
 		});
-	}, [setState, shouldLoadData, time, info.symbol]);
+	}, [setState, time, info.symbol]);
 
 	useEffect(() => {
-		if (!shouldLoadData) {
+		if (MarketStatus.UNKNOWN === status) {
 			return;
 		}
-
+		const shouldLoadHistoryData =
+			status === MarketStatus.OPEN ||
+			(status === MarketStatus.CLOSED && !respectMarketStatus);
 		pipe(
-			getInvestmentData(time, info),
+			getInvestmentData(time, info, shouldLoadHistoryData),
 			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
 		)();
 	}, [
@@ -145,8 +162,9 @@ export const useInvestmentData = (
 		info,
 		handleGetDataError,
 		handleGetDataSuccess,
-		shouldLoadData,
-		refreshTimestamp
+		status,
+		refreshTimestamp,
+		respectMarketStatus
 	]);
 
 	return state;

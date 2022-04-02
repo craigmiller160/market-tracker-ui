@@ -52,6 +52,7 @@ const createTradierQuote = (symbol: string): TradierQuote => ({
 });
 
 const createQuote = (symbol: string): Quote => ({
+	name: '',
 	symbol,
 	price: 6,
 	previousClose: 7
