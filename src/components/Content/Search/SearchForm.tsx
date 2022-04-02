@@ -1,4 +1,4 @@
-import { Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 
 const onFinish = (values: any) => {
 	console.log('OnFinish', values);
@@ -9,10 +9,16 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 export const SearchForm = () => {
+	const [form] = Form.useForm();
 	return (
-		<Form>
-			<Form.Item label="Symbol" name="symbol">
-				<Input />
+		<Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+			<Form.Item name="symbol">
+				<Input placeholder="Symbol" />
+			</Form.Item>
+			<Form.Item>
+				<Button type="primary" htmlType="submit">
+					Search
+				</Button>
 			</Form.Item>
 		</Form>
 	);
