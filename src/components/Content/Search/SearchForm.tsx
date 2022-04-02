@@ -1,4 +1,5 @@
 import { Button, Form, Input } from 'antd';
+import './SearchForm.scss';
 
 const onFinish = (values: any) => {
 	console.log('OnFinish', values);
@@ -11,7 +12,7 @@ const onFinishFailed = (errorInfo: any) => {
 export const SearchForm = () => {
 	const [form] = Form.useForm();
 	return (
-		<Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+		<Form className="SearchForm" form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
 			<Form.Item name="symbol">
 				<Input placeholder="Symbol" />
 			</Form.Item>
