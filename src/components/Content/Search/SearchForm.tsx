@@ -1,15 +1,12 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
 import { useMemo } from 'react';
-
-export const SEARCH_TYPE_STOCK = 'Stock';
-export const SEARCH_TYPE_CRYPTO = 'Crypto';
-export type SEARCH_TYPE = typeof SEARCH_TYPE_STOCK | typeof SEARCH_TYPE_CRYPTO;
-
-interface SearchValues {
-	readonly searchType: string;
-	readonly symbol: string;
-}
+import {
+	SEARCH_TYPE,
+	SEARCH_TYPE_CRYPTO,
+	SEARCH_TYPE_STOCK,
+	SearchValues
+} from './constants';
 
 type DoSearchFn = (values: SearchValues) => void;
 
