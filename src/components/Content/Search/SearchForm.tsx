@@ -7,7 +7,6 @@ export const SEARCH_TYPE_CRYPTO = 'Crypto';
 export type SEARCH_TYPE = typeof SEARCH_TYPE_STOCK | typeof SEARCH_TYPE_CRYPTO;
 
 interface SearchValues {
-	// TODO search type needs to be constant
 	readonly searchType: string;
 	readonly symbol: string;
 }
