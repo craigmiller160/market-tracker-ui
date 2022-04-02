@@ -7,6 +7,7 @@ import { InvestmentData } from '../../../../src/services/MarketInvestmentService
 
 const marketData: InvestmentData = {
 	currentPrice: 50,
+	name: '',
 	startPrice: 12,
 	history: [
 		{

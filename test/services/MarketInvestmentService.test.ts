@@ -239,6 +239,7 @@ describe('MarketInvestmentService', () => {
 				.reply(200, tradierHistory);
 			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
 			expect(result).toEqualRight({
+				name: info.name,
 				startPrice: 50,
 				currentPrice: 100,
 				history: [
@@ -285,6 +286,7 @@ describe('MarketInvestmentService', () => {
 				.reply(200, tradierTimesale);
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 			expect(result).toEqualRight({
+				name: info.name,
 				startPrice: 60,
 				currentPrice: timesaleArray[1].price,
 				history: [
@@ -347,6 +349,7 @@ describe('MarketInvestmentService', () => {
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
 			expect(result).toEqualRight({
+				name: info.name,
 				startPrice: 60,
 				currentPrice: 100,
 				history: [
@@ -417,6 +420,7 @@ describe('MarketInvestmentService', () => {
 				.reply(200, tradierHistory);
 			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
 			expect(result).toEqualRight({
+				name: info.name,
 				startPrice: tradierHistory.history!.day[0].open,
 				currentPrice: 100,
 				history: [
@@ -471,6 +475,7 @@ describe('MarketInvestmentService', () => {
 			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
 
 			expect(result).toEqualRight({
+				name: info.name,
 				startPrice: 60,
 				currentPrice: 30,
 				history: [
