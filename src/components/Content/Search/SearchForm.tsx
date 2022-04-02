@@ -53,7 +53,7 @@ export const SearchForm = (props: Props) => {
 				normalize={toUpperCase}
 				rules={[{ required: true, message: 'Must provide symbol' }]}
 			>
-				<Input placeholder="Symbol" />
+				<Input placeholder="Symbol" allowClear />
 			</Form.Item>
 			<Form.Item shouldUpdate>
 				{(innerForm) => (
