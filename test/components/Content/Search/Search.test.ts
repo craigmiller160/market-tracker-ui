@@ -6,9 +6,11 @@ import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import {
 	mockCalenderRequest,
+	mockTradierHistoryRequest,
 	mockTradierQuoteRequest,
 	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
+import { MarketTime } from '../../../../src/types/MarketTime';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -73,7 +75,27 @@ describe('Search', () => {
 	});
 
 	it('searches for and finds a stock for One Week', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
+		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_WEEK, 1);
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.click(screen.getByText('1 Week'));
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/98/)).toHaveTextContent(
+			'(+$50.00, +98.04%)'
+		);
 	});
 
 	it('searches for and finds a stock for One Month', async () => {
