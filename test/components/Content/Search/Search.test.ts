@@ -2,6 +2,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { screen } from '@testing-library/react';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
+import '@testing-library/jest-dom/extend-expect';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
