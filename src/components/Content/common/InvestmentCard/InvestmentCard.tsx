@@ -9,21 +9,21 @@ import {
 	getOneYearDisplayStartDate,
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
-} from '../../../utils/timeUtils';
-import './MarketCard.scss';
-import { ScreenContext } from '../../ScreenContext';
-import { getBreakpointName } from '../../utils/Breakpoints';
-import { MarketTime } from '../../../types/MarketTime';
-import { MarketStatus } from '../../../types/MarketStatus';
+} from '../../../../utils/timeUtils';
+import './InvestmentCard.scss';
+import { ScreenContext } from '../../../ScreenContext';
+import { getBreakpointName } from '../../../utils/Breakpoints';
+import { MarketTime } from '../../../../types/MarketTime';
+import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import {
 	marketStatusSelector,
 	timeValueSelector
-} from '../../../store/marketSettings/selectors';
-import { InvestmentData } from '../../../services/MarketInvestmentService';
-import { Chart as ChartComp } from '../../UI/Chart';
-import { useInvestmentData } from '../../hooks/useInvestmentData';
-import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
+} from '../../../../store/marketSettings/selectors';
+import { InvestmentData } from '../../../../services/MarketInvestmentService';
+import { Chart as ChartComp } from '../../../UI/Chart';
+import { useInvestmentData } from '../../../hooks/useInvestmentData';
+import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -187,7 +187,7 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-export const MarketCard = ({ info, shouldRespectMarketStatus }: Props) => {
+export const InvestmentCard = ({ info, shouldRespectMarketStatus }: Props) => {
 	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
@@ -222,7 +222,7 @@ export const MarketCard = ({ info, shouldRespectMarketStatus }: Props) => {
 		<Card
 			title={FullTitle}
 			extra={Time}
-			className={`MarketCard ${breakpointName}`}
+			className={`InvestmentCard ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
 		>

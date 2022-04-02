@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { MarketCard } from './MarketCard';
+import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import './MarketSection.scss';
 import {
 	getMarketInvestmentTypeTitle,
@@ -18,7 +18,7 @@ const shouldRespectMarketStatus = (info: MarketInvestmentInfo) => () =>
 	info.type !== InvestmentType.CRYPTO;
 
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
-	<MarketCard
+	<InvestmentCard
 		key={info.symbol}
 		info={info}
 		shouldRespectMarketStatus={shouldRespectMarketStatus(info)}
