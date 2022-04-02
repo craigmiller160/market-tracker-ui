@@ -1,7 +1,7 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match, not, when } from 'ts-pattern';
+import { match, not } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -25,10 +25,7 @@ import { Chart as ChartComp } from '../../../UI/Chart';
 import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../../types/data/InvestmentType';
-import {
-	getInvestmentNotFoundMessage,
-	isNestedInvestmentNotFoundError
-} from '../../../../error/InvestmentNotFoundError';
+import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -150,10 +147,7 @@ const createTime = (time: MarketTime): ReactNode => {
 
 const createErrorMessage = (error: ErrorInfo): ReactNode => {
 	const message = match(error)
-		.with(
-			when(isNestedInvestmentNotFoundError),
-			getInvestmentNotFoundMessage
-		)
+		.with({ name: 'InvestmentNotFoundError' }, getInvestmentNotFoundMessage)
 		.otherwise(() => 'Unable to Get Data');
 	return (
 		<Typography.Title className="ErrorMsg" level={3}>

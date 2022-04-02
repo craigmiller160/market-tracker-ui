@@ -15,8 +15,11 @@ import { castDraft } from 'immer';
 import { RefreshTimerContext } from '../Content/common/refresh/RefreshTimerContext';
 import { isNestedAxiosError } from '../../services/AjaxApi';
 import { InvestmentInfo } from '../../types/data/InvestmentInfo';
-import { match, not, when } from 'ts-pattern';
-import { isNestedInvestmentNotFoundError } from '../../error/InvestmentNotFoundError';
+import { match, when } from 'ts-pattern';
+import {
+	getInvestmentNotFoundMessage,
+	isNestedInvestmentNotFoundError
+} from '../../error/InvestmentNotFoundError';
 
 export interface ErrorInfo {
 	readonly name: string;
@@ -44,21 +47,21 @@ const createHandleGetDataError =
 					isAxios: true
 				})
 			)
-			.with(not(when(isNestedInvestmentNotFoundError)), () => {
+			.with(when(isNestedInvestmentNotFoundError), () => {
+				console.error('Error getting data', ex);
+				return {
+					name: 'InvestmentNotFoundError',
+					message: getInvestmentNotFoundMessage(ex),
+					isAxios: false
+				};
+			})
+			.otherwise((): ErrorInfo => {
 				console.error('Error getting data', ex);
 				dispatch(
 					notificationSlice.actions.addError(
 						`Error getting data: ${ex.message}`
 					)
 				);
-				return {
-					name: ex.name,
-					message: ex.message,
-					isAxios: false
-				};
-			})
-			.otherwise((): ErrorInfo => {
-				console.error('Error getting data', ex);
 				return {
 					name: ex.name,
 					message: ex.message,
