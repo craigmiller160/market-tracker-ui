@@ -7,6 +7,7 @@ import { Watchlists } from '../components/Content/Watchlists/Watchlists';
 import { Markets } from '../components/Content/Markets';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { Recognition } from '../components/Content/Recognition';
+import { Search } from '../components/Content/Search';
 
 export interface RouteRules {
 	isAuthorized: boolean;
@@ -39,6 +40,10 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 	];
 	const envDependentRoutes = match(env)
 		.with(when(isNotProd), () => [
+			{
+				path: 'search',
+				element: <Search />
+			},
 			{
 				path: 'portfolios',
 				element: <Portfolios />
