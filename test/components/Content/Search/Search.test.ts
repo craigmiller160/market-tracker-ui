@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event';
 import {
 	mockCalenderRequest,
 	mockTradierHistoryRequest,
+	mockTradierQuoteNotFound,
 	mockTradierQuoteRequest,
 	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
@@ -208,6 +209,19 @@ describe('Search', () => {
 	});
 
 	it('searches for but cannot find a stock', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteNotFound(mockApi, 'VTI');
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/Error/)).toHaveTextContent(
+			'Error: Investment not found. Symbol: VTI'
+		);
 	});
 });

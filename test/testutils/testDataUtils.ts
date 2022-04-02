@@ -92,6 +92,15 @@ export const createTradierQuote = (
 	}
 });
 
+export const createTradierQuoteNotFound = (symbol: string): TradierQuotes => ({
+	quotes: {
+		quote: undefined,
+		unmatched_symbols: {
+			symbol
+		}
+	}
+});
+
 const createTradierHistory = (modifier: number): TradierHistory => ({
 	history: {
 		day: [
@@ -167,6 +176,14 @@ export const mockTradierQuoteRequest = (
 		.onGet(`/tradier/markets/quotes?symbols=${symbol}`)
 		.reply(200, createTradierQuote(symbol, modifier));
 };
+
+export const mockTradierQuoteNotFound = (
+	mockApi: MockAdapter,
+	symbol: string
+) =>
+	mockApi
+		.onGet(`/tradier/markets/quotes?symbols=${symbol}`)
+		.reply(200, createTradierQuoteNotFound(symbol));
 
 export const mockTradierTimesaleRequest = (
 	mockApi: MockAdapter,
