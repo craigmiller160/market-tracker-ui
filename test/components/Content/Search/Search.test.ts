@@ -5,7 +5,7 @@ describe('Search', () => {
 		throw new Error();
 	});
 
-	it('enables/disables search button based on symbol content', () => {
+	it('formats text and enables/disables search button when symbol input provided', () => {
 		throw new Error();
 	});
 });
