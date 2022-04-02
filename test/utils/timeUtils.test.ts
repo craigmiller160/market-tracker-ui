@@ -183,16 +183,20 @@ describe('timeUtils', () => {
 	});
 
 	it('getTodayStartString', () => {
+		const expectedHours = match(new Date().getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => 1)
+			.run();
 		const expected = pipe(
 			new Date(),
 			Time.set({
-				hours: 0,
+				hours: expectedHours,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
 			}),
 			formatTimesalesDate
 		);
+
 		const actual = getTodayStartString();
 		expect(actual).toEqual(expected);
 	});
