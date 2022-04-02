@@ -146,7 +146,7 @@ const createTime = (time: MarketTime): ReactNode => {
 };
 
 const shouldRespectMarketStatus: PredicateT<MarketInvestmentInfo> = (info) =>
-	info.type !== MarketInvestmentType.CRYPTO;
+	info.type !== MarketInvestmentType.CRYPTO; // TODO only place where MarketInvestmentType matters
 
 const ErrorMsg = (
 	<Typography.Title className="ErrorMsg" level={3}>
