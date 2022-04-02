@@ -71,7 +71,20 @@ describe('Search', () => {
 	});
 
 	it('searches for and finds a stock for Today, with the market closed', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi, 'closed');
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).not.toBeInTheDocument();
+		expect(within(card).queryByText(/101/)).not.toBeInTheDocument();
+		expect(within(card).queryByText('Market Closed')).toBeInTheDocument();
 	});
 
 	it('searches for and finds a stock for One Week', async () => {
