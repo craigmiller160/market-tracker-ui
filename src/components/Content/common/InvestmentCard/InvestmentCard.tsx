@@ -201,6 +201,7 @@ export const InvestmentCard = ({ info }: Props) => {
 	const shouldLoadData =
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
+
 	const { loading, data, hasError } = useInvestmentData(
 		time,
 		info,
