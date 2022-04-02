@@ -119,7 +119,7 @@ export const useInvestmentData = (
 		[setState]
 	);
 
-	// TODO make sure the refresh doesn't trigger anything
+	// TODO refresh still triggers quotes, need to prevent that somehow. Probably at the refresh provider level
 
 	useEffect(() => {
 		setState((draft) => {

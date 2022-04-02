@@ -1,7 +1,7 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match, not } from 'ts-pattern';
+import { match, not, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -48,7 +48,9 @@ const localeOptions: Intl.NumberFormatOptions = {
 	maximumFractionDigits: 2
 };
 
-const createPrice = (data: InvestmentData) => {
+const gt0 = (value: number) => value > 0;
+
+const createPrice = (data: InvestmentData, status: MarketStatus) => {
 	const oldestPrice = data.startPrice;
 	const priceChange = data.currentPrice - oldestPrice;
 
@@ -65,7 +67,10 @@ const createPrice = (data: InvestmentData) => {
 		undefined,
 		localeOptions
 	)}%`;
-	const priceClassName = priceChange >= 0 ? 'up' : 'down';
+	const priceClassName = match({ priceChange, status })
+		.with({ status: MarketStatus.CLOSED }, () => '')
+		.with({ priceChange: when(gt0) }, () => 'up')
+		.otherwise(() => 'down');
 	const ChangeIcon =
 		priceChange >= 0 ? <CaretUpFilled /> : <CaretDownFilled />;
 
@@ -73,12 +78,16 @@ const createPrice = (data: InvestmentData) => {
 		<p className={priceClassName}>
 			<span className="Price">
 				<span>
-					<span className="Icon">{ChangeIcon}</span>
+					{status !== MarketStatus.CLOSED && (
+						<span className="Icon">{ChangeIcon}</span>
+					)}
 					{formattedPrice}{' '}
 				</span>
-				<span>
-					({formattedPriceChange}, {formattedPercentChange})
-				</span>
+				{status !== MarketStatus.CLOSED && (
+					<span>
+						({formattedPriceChange}, {formattedPercentChange})
+					</span>
+				)}
 			</span>
 		</p>
 	);
@@ -156,6 +165,13 @@ const createErrorMessage = (error: ErrorInfo): ReactNode => {
 	);
 };
 
+const createMarketClosed = (data: InvestmentData): ReactNode => (
+	<div>
+		{createPrice(data, MarketStatus.CLOSED)}
+		{MarketClosed}
+	</div>
+);
+
 const getPriceAndBody = (
 	status: MarketStatus,
 	respectMarketStatus: boolean,
@@ -184,12 +200,12 @@ const getPriceAndBody = (
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
 			() => ({
-				Price: MarketClosed,
+				Price: createMarketClosed(data),
 				Body: <div />
 			})
 		)
 		.otherwise(() => ({
-			Price: createPrice(data),
+			Price: createPrice(data, MarketStatus.OPEN),
 			Body: <ChartComp data={data} />
 		}));
 
