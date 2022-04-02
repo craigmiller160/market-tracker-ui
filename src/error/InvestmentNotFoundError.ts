@@ -23,3 +23,15 @@ export const isNestedInvestmentNotFoundError = (
 			)
 		)
 		.otherwise((error) => error.name === 'InvestmentNotFoundError');
+
+export const getInvestmentNotFoundMessage = (ex: Error): string =>
+	match(ex)
+		.with(instanceOf(TraceError), (traceError) =>
+			pipe(
+				Option.fromNullable(traceError.cause()),
+				Option.map(getInvestmentNotFoundMessage),
+				Option.getOrElse(() => '')
+			)
+		)
+		.with({ name: 'InvestmentNotFoundError' }, (error) => error.message)
+		.otherwise(() => '');

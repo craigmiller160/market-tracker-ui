@@ -1,7 +1,7 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match, not } from 'ts-pattern';
+import { match, not, when } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -25,6 +25,10 @@ import { Chart as ChartComp } from '../../../UI/Chart';
 import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../../types/data/InvestmentType';
+import {
+	getInvestmentNotFoundMessage,
+	isNestedInvestmentNotFoundError
+} from '../../../../error/InvestmentNotFoundError';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -144,11 +148,19 @@ const createTime = (time: MarketTime): ReactNode => {
 	);
 };
 
-const ErrorMsg = (
-	<Typography.Title className="ErrorMsg" level={3}>
-		Error: Unable to Get Data
-	</Typography.Title>
-);
+const createErrorMessage = (error: ErrorInfo): ReactNode => {
+	const message = match(error)
+		.with(
+			when(isNestedInvestmentNotFoundError),
+			getInvestmentNotFoundMessage
+		)
+		.otherwise(() => 'Unable to Get Data');
+	return (
+		<Typography.Title className="ErrorMsg" level={3}>
+			Error: {message}
+		</Typography.Title>
+	);
+};
 
 const getPriceAndBody = (
 	status: MarketStatus,
@@ -171,9 +183,9 @@ const getPriceAndBody = (
 			Price: <div />,
 			Body: Spinner
 		}))
-		.with({ error: not(undefined) }, () => ({
+		.with({ error: not(undefined) }, ({ error: errorInfo }) => ({
 			Price: <div />,
-			Body: ErrorMsg
+			Body: createErrorMessage(errorInfo)
 		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
