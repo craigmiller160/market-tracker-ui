@@ -37,6 +37,7 @@ type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
 type QuoteFn = (s: ReadonlyArray<string>) => TaskTryT<ReadonlyArray<Quote>>;
 
 export interface InvestmentData {
+	readonly name: string;
 	readonly startPrice: number;
 	readonly currentPrice: number;
 	readonly history: ReadonlyArray<HistoryRecord>;
@@ -267,6 +268,11 @@ const getCurrentPrice = (
 		.otherwise(() => quote.price);
 };
 
+const getInvestmentName = (info: InvestmentInfo, quote: Quote): string => {
+	// TODO FINISH THIS
+	throw new Error();
+};
+
 const handleInvestmentData =
 	(time: MarketTime, info: InvestmentInfo) =>
 	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> => {
@@ -279,6 +285,7 @@ const handleInvestmentData =
 			),
 			Either.map(
 				({ startPrice, newHistory }): InvestmentData => ({
+					name: getInvestmentName(info, quote),
 					startPrice,
 					currentPrice,
 					history: newHistory
