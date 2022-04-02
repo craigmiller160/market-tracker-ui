@@ -24,7 +24,7 @@ describe('Search', () => {
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
-		expect(screen.queryByText('Search For Investment')).toBeInTheDocument();
+		expect(screen.queryAllByText('Search')).toHaveLength(3);
 		expect(screen.queryByText('Stock')).toBeInTheDocument();
 		expect(screen.queryByText('Crypto')).toBeInTheDocument();
 		expect(

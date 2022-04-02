@@ -49,7 +49,7 @@ export const Search = () => {
 	return (
 		<RefreshProvider>
 			<div className="SearchPage">
-				<Typography.Title>Search For Investment</Typography.Title>
+				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
 				{state.showCard && <InvestmentCard info={state.info} />}
 			</div>
