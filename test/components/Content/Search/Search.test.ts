@@ -62,8 +62,10 @@ describe('Search', () => {
 		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
 			'Chart is Here'
 		);
-		screen.debug(card);
-		// TODO finish the test
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/225/)).toHaveTextContent(
+			'(+$70.00, +225.81%)'
+		);
 	});
 
 	it('searches for and finds a stock for Today, with the market closed', async () => {
