@@ -78,11 +78,13 @@ describe('CoinGeckoService', () => {
 		const result = await getQuotes(symbols)();
 		expect(result).toEqualRight([
 			{
+				name: '',
 				symbol: 'BTC',
 				price: 100.5,
 				previousClose: 0
 			},
 			{
+				name: '',
 				symbol: 'ETH',
 				price: 50.75,
 				previousClose: 0
