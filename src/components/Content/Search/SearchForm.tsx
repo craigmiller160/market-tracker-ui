@@ -27,7 +27,9 @@ export const SearchForm = () => {
 					<Radio.Button value="crypto">Crypto</Radio.Button>
 				</Radio.Group>
 			</Form.Item>
-			<Form.Item name="symbol">
+			<Form.Item name="symbol" rules={[
+                { required: true, message: 'Must provide symbol' }
+            ]}>
 				<Input placeholder="Symbol" />
 			</Form.Item>
 			<Form.Item>
