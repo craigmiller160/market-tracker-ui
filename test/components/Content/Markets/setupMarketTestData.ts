@@ -15,8 +15,8 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
-	isCrypto,
-	isStock
+	isMarketTypeCrypto,
+	isMarketTypeStock
 } from '../../../../src/types/data/MarketInvestmentType';
 import {
 	getFiveYearStartDate,
@@ -174,9 +174,9 @@ const mockCalenderRequest = (
 };
 
 const isStockInfo: PredicateT<MarketInvestmentInfo> = (info) =>
-	isStock(info.type);
+	isMarketTypeStock(info.type);
 const isCryptoInfo: PredicateT<MarketInvestmentInfo> = (info) =>
-	isCrypto(info.type);
+	isMarketTypeCrypto(info.type);
 const isNotToday: PredicateT<MarketTime> = (time) =>
 	MarketTime.ONE_DAY !== time;
 const isToday: PredicateT<MarketTime> = (time) => MarketTime.ONE_DAY === time;

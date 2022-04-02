@@ -27,7 +27,7 @@ import {
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
 import {
-	isStock,
+	isMarketTypeStock,
 	MarketInvestmentType
 } from '../../../../src/types/data/MarketInvestmentType';
 import { MarketStatus } from '../../../../src/types/MarketStatus';
@@ -109,14 +109,17 @@ const validateMarketStatus = (
 	status: MarketStatus
 ) =>
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
-			expect(
-				within(card).queryByText('Market Closed')
-			).toBeInTheDocument();
-			expect(
-				within(card).queryByText('Chart is Here')
-			).not.toBeInTheDocument();
-		})
+		.with(
+			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
+			() => {
+				expect(
+					within(card).queryByText('Market Closed')
+				).toBeInTheDocument();
+				expect(
+					within(card).queryByText('Chart is Here')
+				).not.toBeInTheDocument();
+			}
+		)
 		.otherwise(() => {
 			expect(
 				within(card).queryByText('Market Closed')
@@ -141,7 +144,7 @@ const validatePriceLine = (
 	const baseCurrentPrice = match({ type, currentPriceStrategy })
 		.with(
 			{
-				type: when(isStock),
+				type: when(isMarketTypeStock),
 				currentPriceStrategy: CurrentPriceStrategy.HISTORY
 			},
 			() => BASE_HISTORY_2_PRICE
@@ -155,7 +158,7 @@ const validatePriceLine = (
 
 	const baseInitialPrice = match({ type, time })
 		.with(
-			{ type: when(isStock), time: MarketTime.ONE_DAY },
+			{ type: when(isMarketTypeStock), time: MarketTime.ONE_DAY },
 			() => BASE_PREV_CLOSE_PRICE
 		)
 		.otherwise(() => BASE_HISTORY_1_PRICE);
@@ -169,15 +172,17 @@ const validatePriceLine = (
 
 	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
-			expect(currentPriceResult).not.toBeInTheDocument()
+		.with(
+			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
+			() => expect(currentPriceResult).not.toBeInTheDocument()
 		)
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
-			expect(priceLine).not.toBeInTheDocument()
+		.with(
+			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
+			() => expect(priceLine).not.toBeInTheDocument()
 		)
 		.otherwise(() =>
 			expect(priceLine).toHaveTextContent(expectedPriceLineText)

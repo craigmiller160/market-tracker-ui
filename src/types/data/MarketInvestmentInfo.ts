@@ -1,11 +1,13 @@
 import * as ioType from 'io-ts';
 import { marketInvestmentTypeV } from './MarketInvestmentType';
+import { investmentTypeV } from './InvestmentType';
 
 export const marketInvestmentInfoV = ioType.readonly(
 	ioType.type({
 		symbol: ioType.string,
 		name: ioType.string,
-		type: marketInvestmentTypeV
+		type: investmentTypeV,
+		marketType: marketInvestmentTypeV
 	})
 );
 export type MarketInvestmentInfo = ioType.TypeOf<typeof marketInvestmentInfoV>;
