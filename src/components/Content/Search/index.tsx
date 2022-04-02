@@ -26,6 +26,8 @@ const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
 	});
 };
 
+// TODO spinner isn't aligning properly in Card
+
 export const Search = () => {
 	const marketTime = useSelector(timeValueSelector);
 	const [state, setState] = useImmer<State>({

@@ -124,11 +124,12 @@ export const useInvestmentData = (
 
 		setState((draft) => {
 			if (draft.timeAtLastLoading !== time) {
-				draft.loading = true;
 				draft.timeAtLastLoading = time;
 			}
+			draft.loading = true;
+			draft.error = undefined;
 		});
-	}, [setState, shouldLoadData, time]);
+	}, [setState, shouldLoadData, time, info.symbol]);
 
 	useEffect(() => {
 		if (!shouldLoadData) {
