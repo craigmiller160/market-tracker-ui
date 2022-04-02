@@ -11,7 +11,7 @@ const onFinishFailed = (errorInfo: any) => {
 export const SearchForm = () => {
 	return (
 		<Form>
-			<Form.Item label="Search" name="search">
+			<Form.Item label="Symbol" name="symbol">
 				<Input />
 			</Form.Item>
 		</Form>
