@@ -3,13 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
-import {
-	BASE_HISTORY_1_PRICE,
-	BASE_HISTORY_2_PRICE,
-	BASE_LAST_PRICE,
-	BASE_PREV_CLOSE_PRICE,
-	createSetupMockApiCalls
-} from './setupMarketTestData';
+import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import { act, screen, within } from '@testing-library/react';
@@ -32,6 +26,12 @@ import {
 	InvestmentType,
 	isStock
 } from '../../../../src/types/data/InvestmentType';
+import {
+	BASE_HISTORY_1_PRICE,
+	BASE_HISTORY_2_PRICE,
+	BASE_LAST_PRICE,
+	BASE_PREV_CLOSE_PRICE
+} from '../../../testutils/testDataUtils';
 
 enum CurrentPriceStrategy {
 	QUOTE,
