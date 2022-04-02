@@ -78,7 +78,7 @@ export const createTradierQuote = (
 	quotes: {
 		quote: {
 			symbol,
-			description: '',
+			description: 'My Stock',
 			open: 0,
 			high: 0,
 			low: 0,
