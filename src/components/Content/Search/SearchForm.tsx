@@ -1,26 +1,38 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
+import { useMemo } from 'react';
 
-const onFinish = (values: any) => {
-	console.log('OnFinish', values);
-};
+interface SearchValues {
+	// TODO search type needs to be constant
+	readonly searchType: string;
+	readonly symbol: string;
+}
 
-const onFinishFailed = (errorInfo: any) => {
-	console.log('OnFinishFailed', errorInfo);
-};
+type DoSearchFn = (values: SearchValues) => void;
 
-export const SearchForm = () => {
+interface Props {
+	readonly doSearch: DoSearchFn;
+}
+
+const createSearchForSymbol =
+	(doSearch: DoSearchFn) => (values: SearchValues) => {
+		doSearch(values);
+	};
+
+export const SearchForm = (props: Props) => {
 	const [form] = Form.useForm();
-	console.log('Form', form);
+	const searchForSymbol = useMemo(
+		() => createSearchForSymbol(props.doSearch),
+		[props.doSearch]
+	);
 	return (
 		<Form
 			className="SearchForm"
 			form={form}
-			onFinish={onFinish}
+			onFinish={searchForSymbol}
 			initialValues={{
 				searchType: 'stock'
 			}}
-			onFinishFailed={onFinishFailed}
 		>
 			<Form.Item name="searchType">
 				<Radio.Group>
