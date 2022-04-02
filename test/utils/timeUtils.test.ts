@@ -169,10 +169,14 @@ describe('timeUtils', () => {
 	});
 
 	it('getTodayStart', () => {
+		const expectedHours = match(new Date().getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => 1)
+			.run();
+
 		const expected = pipe(
 			new Date(),
 			Time.set({
-				hours: 0,
+				hours: expectedHours,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
@@ -202,10 +206,20 @@ describe('timeUtils', () => {
 	});
 
 	it('getTodayEnd', () => {
+		const adjustDate: (d: Date) => Date = match(
+			new Date().getTimezoneOffset()
+		)
+			.with(UTC_OFFSET_4, () => Time.addDays(1))
+			.otherwise(() => identity);
+		const expectedHours = match(new Date().getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => 0)
+			.run();
+
 		const expected = pipe(
 			new Date(),
+			adjustDate,
 			Time.set({
-				hours: 23,
+				hours: expectedHours,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
