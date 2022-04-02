@@ -4,6 +4,12 @@ import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
+import { MarketTime } from '../../../../src/types/MarketTime';
+import { formatHistoryDate } from '../../../../src/utils/timeUtils';
+import {
+	getHistoryStart,
+	getTradierInterval
+} from '../../../testutils/testDataUtils';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 const renderApp = createRenderApp(mockApi);
@@ -31,11 +37,12 @@ const mockTradierQuote = (symbol: string) =>
 	});
 const mockTradierHistory = (
 	symbol: string,
-	start: string,
-	end: string,
+	startDate: Date,
 	interval: string
-) =>
-	mockApi
+) => {
+	const start = formatHistoryDate(startDate);
+	const end = formatHistoryDate(new Date());
+	return mockApi
 		.onGet(
 			`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${end}&interval=${interval}`
 		)
@@ -52,6 +59,7 @@ const mockTradierHistory = (
 				]
 			}
 		});
+};
 
 describe('Search', () => {
 	it('renders initial layout correctly', async () => {
@@ -83,8 +91,13 @@ describe('Search', () => {
 	});
 
 	it('searches for and finds a stock for Today', async () => {
+		const time = MarketTime.ONE_DAY;
 		mockTradierQuote('VTI');
-		mockTradierHistory('VTI', '', '', '');
+		mockTradierHistory(
+			'VTI',
+			getHistoryStart(time),
+			getTradierInterval(time)
+		);
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});

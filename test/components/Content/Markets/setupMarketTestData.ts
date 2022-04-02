@@ -16,19 +16,17 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
-	getFiveYearStartDate,
-	getOneMonthStartDate,
-	getOneWeekStartDate,
-	getOneYearStartDate,
-	getThreeMonthStartDate,
 	getTodayEnd,
 	getTodayEndString,
-	getTodayStart,
 	getTodayStartString
 } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
 import { getAltIdForSymbol } from '../../../../src/data/MarketPageInvestmentParsing';
 import { isCrypto, isStock } from '../../../../src/types/data/InvestmentType';
+import {
+	getHistoryStart,
+	getTradierInterval
+} from '../../../testutils/testDataUtils';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DATE_FORMAT = 'yyyy-MM-dd';
@@ -204,25 +202,6 @@ const mockTradierTimesaleRequest = (
 		)
 		.reply(200, createTradierTimesale(modifier, timestampMillis));
 };
-
-const getTradierInterval = (time: MarketTime): string =>
-	match(time)
-		.with(MarketTime.ONE_WEEK, () => 'daily')
-		.with(MarketTime.ONE_MONTH, () => 'daily')
-		.with(MarketTime.THREE_MONTHS, () => 'daily')
-		.with(MarketTime.ONE_YEAR, () => 'weekly')
-		.with(MarketTime.FIVE_YEARS, () => 'monthly')
-		.run();
-
-const getHistoryStart = (time: MarketTime): Date =>
-	match(time)
-		.with(MarketTime.ONE_DAY, getTodayStart)
-		.with(MarketTime.ONE_WEEK, getOneWeekStartDate)
-		.with(MarketTime.ONE_MONTH, getOneMonthStartDate)
-		.with(MarketTime.THREE_MONTHS, getThreeMonthStartDate)
-		.with(MarketTime.ONE_YEAR, getOneYearStartDate)
-		.with(MarketTime.FIVE_YEARS, getFiveYearStartDate)
-		.run();
 
 const mockTradierHistoryRequest = (
 	mockApi: MockAdapter,
