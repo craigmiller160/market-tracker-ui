@@ -344,7 +344,20 @@ describe('MarketInvestmentService', () => {
 		});
 
 		it('gets investment data without history', async () => {
-			throw new Error();
+			mockApi
+				.onGet('/tradier/markets/quotes?symbols=VTI')
+				.reply(200, tradierQuote);
+			const result = await getInvestmentData(
+				MarketTime.ONE_DAY,
+				info,
+				false
+			)();
+			expect(result).toEqualRight({
+				name: info.name,
+				startPrice: 60,
+				currentPrice: 100,
+				history: []
+			});
 		});
 
 		it('gets investment data for today', async () => {
