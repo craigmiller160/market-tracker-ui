@@ -145,8 +145,9 @@ const createTradierTimesale = (
 
 export const mockCalenderRequest = (
 	mockApi: MockAdapter,
-	status: TradierCalendarStatus
+	status?: TradierCalendarStatus
 ) => {
+	const theStatus = status ?? 'open';
 	const date = new Date();
 	const formattedDate = formatDate(date);
 	const year = formatCalendarYear(date);
@@ -154,7 +155,7 @@ export const mockCalenderRequest = (
 
 	mockApi
 		.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
-		.reply(200, createMockCalendar(formattedDate, status));
+		.reply(200, createMockCalendar(formattedDate, theStatus));
 };
 
 export const mockTradierQuoteRequest = (

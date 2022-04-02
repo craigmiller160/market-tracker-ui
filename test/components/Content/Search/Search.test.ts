@@ -1,13 +1,13 @@
 import MockAdapter from 'axios-mock-adapter';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { ajaxApi } from '../../../../src/services/AjaxApi';
 import { createRenderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
-import { MarketTime } from '../../../../src/types/MarketTime';
 import {
-	mockTradierHistoryRequest,
-	mockTradierQuoteRequest
+	mockCalenderRequest,
+	mockTradierQuoteRequest,
+	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
@@ -46,13 +46,24 @@ describe('Search', () => {
 	});
 
 	it('searches for and finds a stock for Today', async () => {
-		const time = MarketTime.ONE_DAY;
+		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
-		mockTradierHistoryRequest(mockApi, 'VTI', time, 1);
+		mockTradierTimesaleRequest(mockApi, 'VTI', 1);
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
-		throw new Error();
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		screen.debug(card);
+		// TODO finish the test
 	});
 
 	it('searches for and finds a stock for Today, with the market closed', async () => {
