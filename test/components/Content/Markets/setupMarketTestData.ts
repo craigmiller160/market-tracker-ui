@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TradierQuotes } from '../../../../src/types/tradier/quotes';
 import { TradierHistory } from '../../../../src/types/tradier/history';
 import { TradierSeries } from '../../../../src/types/tradier/timesales';
@@ -59,7 +60,8 @@ const createTradierQuote = (
 			close: 0,
 			last: BASE_LAST_PRICE + modifier,
 			prevclose: BASE_PREV_CLOSE_PRICE + modifier
-		}
+		},
+		unmatched_symbols: undefined
 	}
 });
 

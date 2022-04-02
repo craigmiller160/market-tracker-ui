@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
 	getHistoryFn,
 	getInvestmentData,
@@ -59,7 +60,8 @@ const tradierQuote: TradierQuotes = {
 			close: 0,
 			last: 100,
 			prevclose: 60
-		}
+		},
+		unmatched_symbols: undefined
 	}
 };
 
@@ -241,19 +243,19 @@ describe('MarketInvestmentService', () => {
 				currentPrice: 100,
 				history: [
 					{
-						date: tradierHistory.history.day[0].date,
+						date: tradierHistory.history!.day[0].date,
 						time: '00:00:00',
-						price: tradierHistory.history.day[0].open,
+						price: tradierHistory.history!.day[0].open,
 						unixTimestampMillis: getMillisFromDateTime(
-							`${tradierHistory.history.day[0].date} 00:00:00`
+							`${tradierHistory.history!.day[0].date} 00:00:00`
 						)
 					},
 					{
-						date: tradierHistory.history.day[0].date,
+						date: tradierHistory.history!.day[0].date,
 						time: '23:59:59',
-						price: tradierHistory.history.day[0].close,
+						price: tradierHistory.history!.day[0].close,
 						unixTimestampMillis: getMillisFromDateTime(
-							`${tradierHistory.history.day[0].date} 23:59:59`
+							`${tradierHistory.history!.day[0].date} 23:59:59`
 						)
 					}
 				]
@@ -264,10 +266,11 @@ describe('MarketInvestmentService', () => {
 			const newQuote: TradierQuotes = {
 				quotes: {
 					quote: {
-						...tradierQuote.quotes.quote,
+						...tradierQuote.quotes.quote!,
 						last: 60,
 						prevclose: 60
-					}
+					},
+					unmatched_symbols: undefined
 				}
 			};
 			mockApi
@@ -396,9 +399,10 @@ describe('MarketInvestmentService', () => {
 			const newQuote: TradierQuotes = {
 				quotes: {
 					quote: {
-						...tradierQuote.quotes.quote,
+						...tradierQuote.quotes.quote!,
 						prevclose: 0
-					}
+					},
+					unmatched_symbols: undefined
 				}
 			};
 			mockApi
@@ -413,23 +417,23 @@ describe('MarketInvestmentService', () => {
 				.reply(200, tradierHistory);
 			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
 			expect(result).toEqualRight({
-				startPrice: tradierHistory.history.day[0].open,
+				startPrice: tradierHistory.history!.day[0].open,
 				currentPrice: 100,
 				history: [
 					{
-						date: tradierHistory.history.day[0].date,
+						date: tradierHistory.history!.day[0].date,
 						time: '00:00:00',
-						price: tradierHistory.history.day[0].open,
+						price: tradierHistory.history!.day[0].open,
 						unixTimestampMillis: getMillisFromDateTime(
-							`${tradierHistory.history.day[0].date} 00:00:00`
+							`${tradierHistory.history!.day[0].date} 00:00:00`
 						)
 					},
 					{
-						date: tradierHistory.history.day[0].date,
+						date: tradierHistory.history!.day[0].date,
 						time: '23:59:59',
-						price: tradierHistory.history.day[0].close,
+						price: tradierHistory.history!.day[0].close,
 						unixTimestampMillis: getMillisFromDateTime(
-							`${tradierHistory.history.day[0].date} 23:59:59`
+							`${tradierHistory.history!.day[0].date} 23:59:59`
 						)
 					}
 				]
