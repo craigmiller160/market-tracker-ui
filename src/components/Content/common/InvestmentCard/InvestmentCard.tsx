@@ -1,7 +1,7 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match } from 'ts-pattern';
+import { match, not } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -154,14 +154,14 @@ const getPriceAndBody = (
 	status: MarketStatus,
 	respectMarketStatus: boolean,
 	loading: boolean,
-	hasError: boolean,
+	error: boolean,
 	data: InvestmentData
 ): { Price: ReactNode; Body: ReactNode } =>
 	match({
 		status,
 		respectMarketStatus,
 		loading,
-		hasError
+		error
 	})
 		.with({ status: MarketStatus.UNKNOWN }, () => ({
 			Price: <div />,
@@ -171,7 +171,7 @@ const getPriceAndBody = (
 			Price: <div />,
 			Body: Spinner
 		}))
-		.with({ hasError: true }, () => ({
+		.with({ error: not(undefined) }, () => ({
 			Price: <div />,
 			Body: ErrorMsg
 		}))
@@ -202,7 +202,7 @@ export const InvestmentCard = ({ info }: Props) => {
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
 
-	const { loading, data, hasError } = useInvestmentData(
+	const { loading, data, error } = useInvestmentData(
 		time,
 		info,
 		shouldLoadData
@@ -212,7 +212,7 @@ export const InvestmentCard = ({ info }: Props) => {
 		status,
 		respectMarketStatus,
 		loading,
-		hasError,
+		error,
 		data
 	);
 

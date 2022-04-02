@@ -6,7 +6,7 @@ import {
 	getInvestmentData,
 	InvestmentData
 } from '../../services/MarketInvestmentService';
-import { constVoid, pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
@@ -18,32 +18,57 @@ import { InvestmentInfo } from '../../types/data/InvestmentInfo';
 import { match, not, when } from 'ts-pattern';
 import { isInvestmentNotFoundError } from '../../error/InvestmentNotFoundError';
 
+export interface ErrorInfo {
+	readonly name: string;
+	readonly message: string;
+	readonly isAxios: boolean;
+}
+
 export interface InvestmentDataState {
 	readonly loading: boolean;
 	readonly timeAtLastLoading?: MarketTime;
 	readonly data: InvestmentData;
-	readonly hasError: boolean;
+	readonly error: ErrorInfo | undefined;
 }
 
 const createHandleGetDataError =
 	(dispatch: Dispatch, setState: Updater<InvestmentDataState>) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
-		match(ex)
-			.with(not(when(isNestedAxiosError)), () => {
+		const errorInfo = match(ex)
+			.with(
+				when(isNestedAxiosError),
+				(): ErrorInfo => ({
+					name: '',
+					message: '',
+					isAxios: true
+				})
+			)
+			.with(not(when(isInvestmentNotFoundError)), () => {
 				console.error('Error getting data', ex);
 				dispatch(
 					notificationSlice.actions.addError(
 						`Error getting data: ${ex.message}`
 					)
 				);
+				return {
+					name: ex.name,
+					message: ex.message,
+					isAxios: false
+				};
 			})
-			.with(when(isInvestmentNotFoundError), constVoid)
-			.otherwise(constVoid);
+			.otherwise((): ErrorInfo => {
+				console.error('Error getting data', ex);
+				return {
+					name: ex.name,
+					message: ex.message,
+					isAxios: false
+				};
+			});
 
 		setState((draft) => {
 			draft.loading = false;
-			draft.hasError = true;
+			draft.error = errorInfo;
 			draft.data = {
 				startPrice: 0,
 				currentPrice: 0,
@@ -58,7 +83,7 @@ const createHandleGetDataSuccess =
 	async () => {
 		setState((draft) => {
 			draft.loading = false;
-			draft.hasError = false;
+			draft.error = undefined;
 			draft.data = castDraft(data);
 		});
 	};
@@ -77,7 +102,7 @@ export const useInvestmentData = (
 			currentPrice: 0,
 			history: []
 		},
-		hasError: false
+		error: undefined
 	});
 
 	const handleGetDataError = useMemo(
