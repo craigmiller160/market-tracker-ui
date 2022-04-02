@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { TradierQuote } from '../../src/types/tradier/quotes';
@@ -183,9 +184,9 @@ describe('TradierService', () => {
 			const history: TradierHistory = {
 				history: {
 					day: [
-						createTradierHistory().history.day[0],
+						createTradierHistory().history!.day[0],
 						{
-							...createTradierHistory().history.day[1],
+							...createTradierHistory().history!.day[1],
 							open: 'NaN'
 						}
 					]
@@ -215,9 +216,9 @@ describe('TradierService', () => {
 			const history: TradierHistory = {
 				history: {
 					day: [
-						createTradierHistory().history.day[0],
+						createTradierHistory().history!.day[0],
 						{
-							...createTradierHistory().history.day[1],
+							...createTradierHistory().history!.day[1],
 							close: 'NaN'
 						}
 					]
@@ -247,9 +248,9 @@ describe('TradierService', () => {
 			const history: TradierHistory = {
 				history: {
 					day: [
-						createTradierHistory().history.day[0],
+						createTradierHistory().history!.day[0],
 						{
-							...createTradierHistory().history.day[1],
+							...createTradierHistory().history!.day[1],
 							open: 'NaN',
 							close: 'NaN'
 						}

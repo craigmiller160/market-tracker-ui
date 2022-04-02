@@ -16,13 +16,24 @@ export const tradierQuoteV = ioType.readonly(
 );
 export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
 
+export const tradierUnmatchedV = ioType.readonly(
+	ioType.type({
+		symbol: ioType.string
+	})
+);
+
 export const tradierQuotesV = ioType.readonly(
 	ioType.type({
 		quotes: ioType.readonly(
 			ioType.type({
 				quote: ioType.union([
 					tradierQuoteV,
-					ioType.readonlyArray(tradierQuoteV)
+					ioType.readonlyArray(tradierQuoteV),
+					ioType.undefined
+				]),
+				unmatched_symbols: ioType.union([
+					tradierUnmatchedV,
+					ioType.undefined
 				])
 			})
 		)

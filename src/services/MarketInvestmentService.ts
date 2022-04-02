@@ -25,6 +25,7 @@ import {
 	isStock
 } from '../types/data/InvestmentType';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';
+import { InvestmentNotFoundError } from '../error/InvestmentNotFoundError';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
@@ -139,10 +140,10 @@ const getQuote = (info: InvestmentInfo): TaskTryT<Quote> =>
 		TaskEither.chain(
 			Option.fold(
 				() =>
-					TaskEither.left(
-						new Error(`No quote found for symbol: ${info.symbol}`)
+					TaskEither.left<Error>(
+						new InvestmentNotFoundError(info.symbol)
 					),
-				TaskEither.right
+				(_) => TaskEither.right(_)
 			)
 		)
 	);
@@ -291,9 +292,11 @@ export const getInvestmentData = (
 	info: InvestmentInfo
 ): TaskTryT<InvestmentData> =>
 	pipe(
-		getHistoryFn(time, info.type)(info.symbol),
-		TaskEither.bindTo('history'),
-		TaskEither.bind('quote', () => getQuote(info)),
+		getQuote(info),
+		TaskEither.bindTo('quote'),
+		TaskEither.bind('history', () =>
+			getHistoryFn(time, info.type)(info.symbol)
+		),
 		TaskEither.chainEitherK(handleInvestmentData(time, info)),
 		TaskEither.mapLeft(
 			(ex) =>

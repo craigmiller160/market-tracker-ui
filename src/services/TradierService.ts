@@ -1,4 +1,4 @@
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApi, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -42,6 +42,8 @@ import {
 	tradierCalendarV
 } from '../types/tradier/calendar';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import * as Either from 'fp-ts/es6/Either';
+import { InvestmentNotFoundError } from '../error/InvestmentNotFoundError';
 
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
@@ -60,20 +62,29 @@ export interface HistoryQuery {
 	readonly end: string;
 }
 
-const formatTradierQuotes = (quotes: TradierQuotes): ReadonlyArray<Quote> => {
-	const tradierQuotes = match(quotes.quotes.quote)
-		.with(
-			instanceOf(Array),
-			() => quotes.quotes.quote as ReadonlyArray<TradierQuote>
+const formatTradierQuotes = (
+	quotes: TradierQuotes
+): TryT<ReadonlyArray<Quote>> => {
+	const tradierQuotesEither = match(quotes.quotes)
+		.with({ unmatched_symbols: not(undefined) }, (_) =>
+			Either.left(new InvestmentNotFoundError(_.unmatched_symbols.symbol))
 		)
-		.otherwise(() => [quotes.quotes.quote as TradierQuote]);
-	return RArray.map(
-		(_: TradierQuote): Quote => ({
-			symbol: _.symbol,
-			price: _.last ?? 0,
-			previousClose: _.prevclose ?? 0
-		})
-	)(tradierQuotes);
+		.with({ quote: instanceOf(Array) }, () =>
+			Either.right(quotes.quotes.quote as ReadonlyArray<TradierQuote>)
+		)
+		.otherwise(() => Either.right([quotes.quotes.quote as TradierQuote]));
+	return pipe(
+		tradierQuotesEither,
+		Either.map(
+			RArray.map(
+				(_: TradierQuote): Quote => ({
+					symbol: _.symbol,
+					price: _.last ?? 0,
+					previousClose: _.prevclose ?? 0
+				})
+			)
+		)
+	);
 };
 
 const createTradierHistoryRecord = (
@@ -110,7 +121,12 @@ const tradierHistoryToHistoryRecord = (
 const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryRecord> =>
-	pipe(history.history.day, RArray.chain(tradierHistoryToHistoryRecord));
+	pipe(
+		Option.fromNullable(history.history),
+		Option.map((_) => _.day),
+		Option.getOrElse((): ReadonlyArray<TradierHistoryDay> => []),
+		RArray.chain(tradierHistoryToHistoryRecord)
+	);
 
 const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -175,7 +191,7 @@ export const getQuotes = (
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeQuotes),
-		TaskEither.map(formatTradierQuotes)
+		TaskEither.chainEitherK(formatTradierQuotes)
 	);
 
 const getHistoryQuote = (

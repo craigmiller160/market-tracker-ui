@@ -1,7 +1,7 @@
 import { Card, Space, Spin, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match } from 'ts-pattern';
+import { match, not } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -22,8 +22,10 @@ import {
 } from '../../../../store/marketSettings/selectors';
 import { InvestmentData } from '../../../../services/MarketInvestmentService';
 import { Chart as ChartComp } from '../../../UI/Chart';
-import { useInvestmentData } from '../../../hooks/useInvestmentData';
+import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
+import { InvestmentType } from '../../../../types/data/InvestmentType';
+import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -33,7 +35,6 @@ const Spinner = (
 
 interface Props {
 	readonly info: InvestmentInfo;
-	readonly shouldRespectMarketStatus: () => boolean;
 }
 
 const createTitle = (info: InvestmentInfo): ReactNode => (
@@ -144,24 +145,29 @@ const createTime = (time: MarketTime): ReactNode => {
 	);
 };
 
-const ErrorMsg = (
-	<Typography.Title className="ErrorMsg" level={3}>
-		Error: Unable to Get Data
-	</Typography.Title>
-);
+const createErrorMessage = (error: ErrorInfo): ReactNode => {
+	const message = match(error)
+		.with({ name: 'InvestmentNotFoundError' }, getInvestmentNotFoundMessage)
+		.otherwise(() => 'Unable to Get Data');
+	return (
+		<Typography.Title className="ErrorMsg" level={3}>
+			Error: {message}
+		</Typography.Title>
+	);
+};
 
 const getPriceAndBody = (
 	status: MarketStatus,
 	respectMarketStatus: boolean,
 	loading: boolean,
-	hasError: boolean,
+	error: ErrorInfo | undefined,
 	data: InvestmentData
 ): { Price: ReactNode; Body: ReactNode } =>
 	match({
 		status,
 		respectMarketStatus,
 		loading,
-		hasError
+		error
 	})
 		.with({ status: MarketStatus.UNKNOWN }, () => ({
 			Price: <div />,
@@ -171,9 +177,9 @@ const getPriceAndBody = (
 			Price: <div />,
 			Body: Spinner
 		}))
-		.with({ hasError: true }, () => ({
+		.with({ error: not(undefined) }, ({ error: errorInfo }) => ({
 			Price: <div />,
-			Body: ErrorMsg
+			Body: createErrorMessage(errorInfo)
 		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
@@ -187,18 +193,22 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-export const InvestmentCard = ({ info, shouldRespectMarketStatus }: Props) => {
+const shouldRespectMarketStatus = (info: InvestmentInfo) =>
+	info.type !== InvestmentType.CRYPTO;
+
+export const InvestmentCard = ({ info }: Props) => {
 	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
-	const respectMarketStatus = shouldRespectMarketStatus();
+	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const shouldLoadData =
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
-	const { loading, data, hasError } = useInvestmentData(
+
+	const { loading, data, error } = useInvestmentData(
 		time,
 		info,
 		shouldLoadData
@@ -208,7 +218,7 @@ export const InvestmentCard = ({ info, shouldRespectMarketStatus }: Props) => {
 		status,
 		respectMarketStatus,
 		loading,
-		hasError,
+		error,
 		data
 	);
 

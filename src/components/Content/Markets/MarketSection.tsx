@@ -7,22 +7,14 @@ import {
 } from '../../../types/data/MarketInvestmentType';
 import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
-import { InvestmentType } from '../../../types/data/InvestmentType';
 
 interface Props {
 	readonly marketType: MarketInvestmentType;
 	readonly data: InvestmentsByType;
 }
 
-const shouldRespectMarketStatus = (info: MarketInvestmentInfo) => () =>
-	info.type !== InvestmentType.CRYPTO;
-
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
-	<InvestmentCard
-		key={info.symbol}
-		info={info}
-		shouldRespectMarketStatus={shouldRespectMarketStatus(info)}
-	/>
+	<InvestmentCard key={info.symbol} info={info} />
 );
 
 export const MarketSection = (props: Props) => {
