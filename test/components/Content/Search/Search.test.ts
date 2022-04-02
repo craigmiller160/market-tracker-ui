@@ -99,19 +99,99 @@ describe('Search', () => {
 	});
 
 	it('searches for and finds a stock for One Month', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
+		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_MONTH, 1);
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.click(screen.getByText('1 Month'));
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/98/)).toHaveTextContent(
+			'(+$50.00, +98.04%)'
+		);
 	});
 
 	it('searches for and finds a stock for Three Months', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
+		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.THREE_MONTHS, 1);
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.click(screen.getByText('3 Months'));
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/98/)).toHaveTextContent(
+			'(+$50.00, +98.04%)'
+		);
 	});
 
 	it('searches for and finds a stock for One Year', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
+		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_YEAR, 1);
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.click(screen.getByText('1 Year'));
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/98/)).toHaveTextContent(
+			'(+$50.00, +98.04%)'
+		);
 	});
 
 	it('searches for and finds a stock for Five Years', async () => {
-		throw new Error();
+		mockCalenderRequest(mockApi);
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
+		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.FIVE_YEARS, 1);
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		userEvent.click(screen.getByText('5 Years'));
+		userEvent.type(getSymbolField(), 'VTI');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-VTI');
+		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
+		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+			'Chart is Here'
+		);
+		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		expect(within(card).queryByText(/98/)).toHaveTextContent(
+			'(+$50.00, +98.04%)'
+		);
 	});
 
 	it('searches for but cannot find a stock', async () => {
