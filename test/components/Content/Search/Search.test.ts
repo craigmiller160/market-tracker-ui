@@ -26,7 +26,7 @@ describe('Search', () => {
 		expect(screen.queryByPlaceholderText('Symbol')).toBeInTheDocument();
 	});
 
-	it('formats value, changes button status, and shows errors in response to symbol input', async () => {
+	it('formats value and changes button status when text input happens', async () => {
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
@@ -38,6 +38,5 @@ describe('Search', () => {
 		userEvent.clear(getSymbolField());
 		await waitFor(() => expect(getSymbolField()).toHaveValue(''));
 		expect(getSearchBtn()).toBeDisabled();
-		expect(screen.queryByText('Must provide symbol')).toBeInTheDocument();
 	});
 });
