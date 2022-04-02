@@ -110,7 +110,12 @@ const tradierHistoryToHistoryRecord = (
 const formatTradierHistory = (
 	history: TradierHistory
 ): ReadonlyArray<HistoryRecord> =>
-	pipe(history.history.day, RArray.chain(tradierHistoryToHistoryRecord));
+	pipe(
+		Option.fromNullable(history.history),
+		Option.map((_) => _.day),
+		Option.getOrElse((): ReadonlyArray<TradierHistoryDay> => []),
+		RArray.chain(tradierHistoryToHistoryRecord)
+	);
 
 const parseTimesaleTimestamp = Time.parse("yyyy-MM-dd'T'HH:mm:ss");
 

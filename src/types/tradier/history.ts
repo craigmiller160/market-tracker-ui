@@ -13,11 +13,14 @@ export type TradierHistoryDay = ioType.TypeOf<typeof tradierHistoryDayV>;
 
 export const tradierHistoryV = ioType.readonly(
 	ioType.type({
-		history: ioType.readonly(
-			ioType.type({
-				day: ioType.readonlyArray(tradierHistoryDayV)
-			})
-		)
+		history: ioType.union([
+			ioType.readonly(
+				ioType.type({
+					day: ioType.readonlyArray(tradierHistoryDayV)
+				})
+			),
+			ioType.null
+		])
 	})
 );
 export type TradierHistory = ioType.TypeOf<typeof tradierHistoryV>;
