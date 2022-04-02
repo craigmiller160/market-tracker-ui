@@ -12,7 +12,7 @@ import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { notificationSlice } from '../../store/notification/slice';
 import { castDraft } from 'immer';
-import { RefreshTimerContext } from '../Content/Markets/RefreshTimerContext';
+import { RefreshTimerContext } from '../Content/common/refresh/RefreshTimerContext';
 import { isNestedAxiosError } from '../../services/AjaxApi';
 import { InvestmentInfo } from '../../types/data/InvestmentInfo';
 
