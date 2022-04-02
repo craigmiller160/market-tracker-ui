@@ -268,10 +268,12 @@ const getCurrentPrice = (
 		.otherwise(() => quote.price);
 };
 
-const getInvestmentName = (info: InvestmentInfo, quote: Quote): string => {
-	// TODO FINISH THIS
-	throw new Error();
-};
+const notEmpty = (value?: string): boolean => (value?.length ?? 0) > 0;
+
+const getInvestmentName = (info: InvestmentInfo, quote: Quote): string =>
+	match({ info, quote })
+		.with({ info: { name: when(notEmpty) } }, () => quote.name)
+		.otherwise(() => quote.name);
 
 const handleInvestmentData =
 	(time: MarketTime, info: InvestmentInfo) =>
