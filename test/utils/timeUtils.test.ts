@@ -26,7 +26,7 @@ import {
 	getOneYearStartDate,
 	getFiveYearStartDate
 } from '../../src/utils/timeUtils';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe, identity } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
 
@@ -216,10 +216,20 @@ describe('timeUtils', () => {
 	});
 
 	it('getTodayEndString', () => {
+		const adjustDate: (d: Date) => Date = match(
+			new Date().getTimezoneOffset()
+		)
+			.with(UTC_OFFSET_4, () => Time.addDays(1))
+			.otherwise(() => identity);
+		const expectedHours = match(new Date().getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => 0)
+			.run();
+
 		const expected = pipe(
 			new Date(),
+			adjustDate,
 			Time.set({
-				hours: 23,
+				hours: expectedHours,
 				minutes: 0,
 				seconds: 0,
 				milliseconds: 0
