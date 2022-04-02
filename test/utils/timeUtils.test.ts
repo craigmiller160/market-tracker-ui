@@ -28,8 +28,10 @@ import {
 } from '../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { match } from 'ts-pattern';
 
 const compareFormat = Time.format('yyyy-MM-dd HH:mm:ss');
+const UTC_OFFSET_4 = 240;
 
 describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
@@ -37,15 +39,31 @@ describe('timeUtils', () => {
 		const actual = setTodayStartTime(date);
 		const actualText = compareFormat(actual);
 		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
-		expect(actualText).toEqual(`${expectedTextDate} 00:00:00`);
+
+		const expectedTime = match(date.getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => '01:00:00')
+			.run();
+
+		expect(actualText).toEqual(`${expectedTextDate} ${expectedTime}`);
 	});
 
 	it('setTodayEndTime', () => {
 		const date = new Date();
 		const actual = setTodayEndTime(date);
 		const actualText = compareFormat(actual);
-		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
-		expect(actualText).toEqual(`${expectedTextDate} 23:00:00`);
+
+		const [expectedDate, expectedTime] = match(date.getTimezoneOffset())
+			.with(UTC_OFFSET_4, () => {
+				const dateText = pipe(
+					date,
+					Time.addDays(1),
+					Time.format('yyyy-MM-dd')
+				);
+				return [dateText, '00:00:00'];
+			})
+			.run();
+
+		expect(actualText).toEqual(`${expectedDate} ${expectedTime}`);
 	});
 
 	it('getTodayHistoryDate', () => {
