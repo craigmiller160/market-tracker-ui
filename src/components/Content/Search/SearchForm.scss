@@ -13,8 +13,10 @@
 
     .SearchType {
       margin: 1rem auto;
+      width: 100%;
       .ant-radio-group {
         width: 100%;
+        text-align: center;
         .ant-radio-button-wrapper {
           width: 50%;
         }

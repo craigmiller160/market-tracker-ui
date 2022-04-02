@@ -49,7 +49,7 @@ export const SearchForm = (props: Props) => {
 				<Form.Item name="searchType">
 					<Radio.Group>
 						<SearchTypeRadio searchType={InvestmentType.STOCK} />
-						{process.env.NODE_ENV !== 'production' && (
+						{process.env.NODE_ENV !== 'development' && (
 							<SearchTypeRadio
 								searchType={InvestmentType.CRYPTO}
 							/>
