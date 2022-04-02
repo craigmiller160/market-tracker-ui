@@ -13,8 +13,15 @@ interface Props {
 	readonly data: InvestmentsByType;
 }
 
+const shouldRespectMarketStatus = (info: MarketInvestmentInfo) => () =>
+	info.type !== MarketInvestmentType.CRYPTO;
+
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
-	<MarketCard key={info.symbol} info={info} />
+	<MarketCard
+		key={info.symbol}
+		info={info}
+		shouldRespectMarketStatus={shouldRespectMarketStatus(info)}
+	/>
 );
 
 export const MarketSection = (props: Props) => {
