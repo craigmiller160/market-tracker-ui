@@ -203,14 +203,14 @@ export const InvestmentCard = ({ info }: Props) => {
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
 	const respectMarketStatus = shouldRespectMarketStatus(info);
-	const shouldLoadData =
+	const shouldLoadHistoryData =
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
 
 	const { loading, data, error } = useInvestmentData(
 		time,
 		info,
-		shouldLoadData
+		shouldLoadHistoryData
 	);
 
 	const { Price, Body } = getPriceAndBody(

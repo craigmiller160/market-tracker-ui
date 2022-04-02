@@ -95,7 +95,7 @@ const createHandleGetDataSuccess =
 export const useInvestmentData = (
 	time: MarketTime,
 	info: InvestmentInfo,
-	shouldLoadData: boolean
+	shouldLoadHistoryData: boolean
 ): InvestmentDataState => {
 	const { refreshTimestamp } = useContext(RefreshTimerContext);
 	const dispatch = useDispatch();
@@ -119,11 +119,9 @@ export const useInvestmentData = (
 		[setState]
 	);
 
-	useEffect(() => {
-		if (!shouldLoadData) {
-			return;
-		}
+	// TODO make sure the refresh doesn't trigger anything
 
+	useEffect(() => {
 		setState((draft) => {
 			if (draft.timeAtLastLoading !== time) {
 				draft.timeAtLastLoading = time;
@@ -138,15 +136,11 @@ export const useInvestmentData = (
 			draft.loading = true;
 			draft.error = undefined;
 		});
-	}, [setState, shouldLoadData, time, info.symbol]);
+	}, [setState, shouldLoadHistoryData, time, info.symbol]);
 
 	useEffect(() => {
-		if (!shouldLoadData) {
-			return;
-		}
-
 		pipe(
-			getInvestmentData(time, info),
+			getInvestmentData(time, info, shouldLoadHistoryData),
 			TaskEither.fold(handleGetDataError, handleGetDataSuccess)
 		)();
 	}, [
@@ -154,7 +148,7 @@ export const useInvestmentData = (
 		info,
 		handleGetDataError,
 		handleGetDataSuccess,
-		shouldLoadData,
+		shouldLoadHistoryData,
 		refreshTimestamp
 	]);
 

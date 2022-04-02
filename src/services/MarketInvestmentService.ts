@@ -298,13 +298,16 @@ const handleInvestmentData =
 
 export const getInvestmentData = (
 	time: MarketTime,
-	info: InvestmentInfo
+	info: InvestmentInfo,
+	shouldLoadHistoryData: boolean
 ): TaskTryT<InvestmentData> =>
 	pipe(
 		getQuote(info),
 		TaskEither.bindTo('quote'),
 		TaskEither.bind('history', () =>
-			getHistoryFn(time, info.type)(info.symbol)
+			match(shouldLoadHistoryData)
+				.with(true, () => getHistoryFn(time, info.type)(info.symbol))
+				.otherwise(() => TaskEither.right([]))
 		),
 		TaskEither.chainEitherK(handleInvestmentData(time, info)),
 		TaskEither.mapLeft(
