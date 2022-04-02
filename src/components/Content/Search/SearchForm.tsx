@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
 
 const onFinish = (values: any) => {
@@ -12,7 +12,18 @@ const onFinishFailed = (errorInfo: any) => {
 export const SearchForm = () => {
 	const [form] = Form.useForm();
 	return (
-		<Form className="SearchForm" form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+		<Form
+			className="SearchForm"
+			form={form}
+			onFinish={onFinish}
+			onFinishFailed={onFinishFailed}
+		>
+			<Form.Item name="searchType">
+				<Radio.Group>
+					<Radio.Button value="stock">Stock</Radio.Button>
+					<Radio.Button value="crypto">Crypto</Radio.Button>
+				</Radio.Group>
+			</Form.Item>
 			<Form.Item name="symbol">
 				<Input placeholder="Symbol" />
 			</Form.Item>
