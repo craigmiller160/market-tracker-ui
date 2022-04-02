@@ -26,12 +26,12 @@ import {
 	getThreeMonthDisplayStartDate,
 	getTodayDisplayDate
 } from '../../../../src/utils/timeUtils';
-import {
-	isMarketTypeStock,
-	MarketInvestmentType
-} from '../../../../src/types/data/MarketInvestmentType';
 import { MarketStatus } from '../../../../src/types/MarketStatus';
 import { allMarketInvestmentInfo } from '../../../../src/data/MarketPageInvestmentParsing';
+import {
+	InvestmentType,
+	isStock
+} from '../../../../src/types/data/InvestmentType';
 
 enum CurrentPriceStrategy {
 	QUOTE,
@@ -105,21 +105,18 @@ const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
 
 const validateMarketStatus = (
 	card: HTMLElement,
-	type: MarketInvestmentType,
+	type: InvestmentType,
 	status: MarketStatus
 ) =>
 	match({ type, status })
-		.with(
-			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
-			() => {
-				expect(
-					within(card).queryByText('Market Closed')
-				).toBeInTheDocument();
-				expect(
-					within(card).queryByText('Chart is Here')
-				).not.toBeInTheDocument();
-			}
-		)
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+			expect(
+				within(card).queryByText('Market Closed')
+			).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Chart is Here')
+			).not.toBeInTheDocument();
+		})
 		.otherwise(() => {
 			expect(
 				within(card).queryByText('Market Closed')
@@ -131,7 +128,7 @@ const validateMarketStatus = (
 
 const validatePriceLine = (
 	card: HTMLElement,
-	type: MarketInvestmentType,
+	type: InvestmentType,
 	config: MarketTestConfig,
 	modifier: number
 ) => {
@@ -144,7 +141,7 @@ const validatePriceLine = (
 	const baseCurrentPrice = match({ type, currentPriceStrategy })
 		.with(
 			{
-				type: when(isMarketTypeStock),
+				type: when(isStock),
 				currentPriceStrategy: CurrentPriceStrategy.HISTORY
 			},
 			() => BASE_HISTORY_2_PRICE
@@ -158,7 +155,7 @@ const validatePriceLine = (
 
 	const baseInitialPrice = match({ type, time })
 		.with(
-			{ type: when(isMarketTypeStock), time: MarketTime.ONE_DAY },
+			{ type: when(isStock), time: MarketTime.ONE_DAY },
 			() => BASE_PREV_CLOSE_PRICE
 		)
 		.otherwise(() => BASE_HISTORY_1_PRICE);
@@ -172,17 +169,15 @@ const validatePriceLine = (
 
 	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
-		.with(
-			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
-			() => expect(currentPriceResult).not.toBeInTheDocument()
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(currentPriceResult).not.toBeInTheDocument()
 		)
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
 	match({ type, status })
-		.with(
-			{ type: when(isMarketTypeStock), status: MarketStatus.CLOSED },
-			() => expect(priceLine).not.toBeInTheDocument()
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+			expect(priceLine).not.toBeInTheDocument()
 		)
 		.otherwise(() =>
 			expect(priceLine).toHaveTextContent(expectedPriceLineText)
