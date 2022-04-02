@@ -7,6 +7,7 @@ import {
 } from '../../../types/data/MarketInvestmentType';
 import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
 import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+import { InvestmentType } from '../../../types/data/InvestmentType';
 
 interface Props {
 	readonly type: MarketInvestmentType;
@@ -14,7 +15,7 @@ interface Props {
 }
 
 const shouldRespectMarketStatus = (info: MarketInvestmentInfo) => () =>
-	info.type !== MarketInvestmentType.CRYPTO;
+	info.type !== InvestmentType.CRYPTO;
 
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
 	<MarketCard
