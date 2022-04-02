@@ -60,6 +60,7 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 
 		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
+		expect(screen.queryByText('Search')).not.toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
 		expect(screen.queryByText('Recognition')).not.toBeInTheDocument();
@@ -86,6 +87,7 @@ describe('Navbar', () => {
 		menuItemIsSelected('Markets');
 		menuItemIsSelected('Today');
 
+		expect(screen.queryByText('Search')).not.toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
@@ -95,6 +97,7 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		expect(screen.queryByText('Search')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
@@ -141,6 +144,28 @@ describe('Navbar', () => {
 		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
+	});
+
+	it('starts on portfolios page due to route, then navigates to search page', async () => {
+		await renderApp({
+			initialPath: '/market-tracker/portfolios'
+		});
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/portfolios'
+		);
+		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
+			expect.stringContaining(SELECTED_CLASS)
+		);
+		userEvent.click(screen.getByText('Search'));
+
+		expect(window.location.href).toEqual(
+			'http://localhost/market-tracker/search'
+		);
+		const navbar = screen.getByTestId('desktop-navbar');
+		expect(
+			within(navbar).getByText('Search').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
 	});
 
 	it('starts on portfolios page due to route, then navigates to recognition page', async () => {
