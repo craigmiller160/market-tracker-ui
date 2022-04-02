@@ -11,6 +11,7 @@ const onFinishFailed = (errorInfo: any) => {
 
 export const SearchForm = () => {
 	const [form] = Form.useForm();
+	console.log('Form', form);
 	return (
 		<Form
 			className="SearchForm"
@@ -27,15 +28,27 @@ export const SearchForm = () => {
 					<Radio.Button value="crypto">Crypto</Radio.Button>
 				</Radio.Group>
 			</Form.Item>
-			<Form.Item name="symbol" rules={[
-                { required: true, message: 'Must provide symbol' }
-            ]}>
+			<Form.Item
+				name="symbol"
+				rules={[{ required: true, message: 'Must provide symbol' }]}
+			>
 				<Input placeholder="Symbol" />
 			</Form.Item>
-			<Form.Item>
-				<Button type="primary" htmlType="submit">
-					Search
-				</Button>
+			<Form.Item shouldUpdate>
+				{() => (
+					<Button
+						type="primary"
+						htmlType="submit"
+						disabled={
+							!form.isFieldsTouched(true) ||
+							!!form
+								.getFieldsError()
+								.filter(({ errors }) => errors.length).length
+						}
+					>
+						Search
+					</Button>
+				)}
 			</Form.Item>
 		</Form>
 	);
