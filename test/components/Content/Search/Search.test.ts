@@ -13,6 +13,10 @@ describe('Search', () => {
 			initialPath: '/market-tracker/search'
 		});
 		expect(screen.queryByText('Search For Investment')).toBeInTheDocument();
+		expect(screen.queryByText('Stock')).toBeInTheDocument();
+		expect(screen.queryByText('Crypto')).toBeInTheDocument();
+		expect(screen.queryAllByText('Search')).toHaveLength(2);
+		expect(screen.queryByPlaceholderText('Symbol')).toBeInTheDocument();
 	});
 
 	it('formats text and enables/disables search button when symbol input provided', async () => {
