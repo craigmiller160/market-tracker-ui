@@ -127,6 +127,13 @@ export const useInvestmentData = (
 		setState((draft) => {
 			if (draft.timeAtLastLoading !== time) {
 				draft.timeAtLastLoading = time;
+			} else {
+				draft.data = {
+					startPrice: 0,
+					name: '',
+					currentPrice: 0,
+					history: []
+				};
 			}
 			draft.loading = true;
 			draft.error = undefined;
