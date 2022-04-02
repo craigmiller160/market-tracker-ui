@@ -5,3 +5,7 @@ export class InvestmentNotFoundError extends Error {
 		super(`Investment not found. Symbol: ${symbol}`);
 	}
 }
+
+export const isInvestmentNotFoundError = (
+	error: Error
+): error is InvestmentNotFoundError => error.name === 'InvestmentNotFoundError';

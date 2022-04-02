@@ -6,7 +6,7 @@ import {
 	getInvestmentData,
 	InvestmentData
 } from '../../services/MarketInvestmentService';
-import { pipe } from 'fp-ts/es6/function';
+import { constVoid, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { Dispatch } from 'redux';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
@@ -15,6 +15,8 @@ import { castDraft } from 'immer';
 import { RefreshTimerContext } from '../Content/common/refresh/RefreshTimerContext';
 import { isNestedAxiosError } from '../../services/AjaxApi';
 import { InvestmentInfo } from '../../types/data/InvestmentInfo';
+import { match, not, when } from 'ts-pattern';
+import { isInvestmentNotFoundError } from '../../error/InvestmentNotFoundError';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -27,14 +29,18 @@ const createHandleGetDataError =
 	(dispatch: Dispatch, setState: Updater<InvestmentDataState>) =>
 	(ex: Error): TaskT<void> =>
 	async () => {
-		if (!isNestedAxiosError(ex)) {
-			console.error('Error getting data', ex);
-			dispatch(
-				notificationSlice.actions.addError(
-					`Error getting data: ${ex.message}`
-				)
-			);
-		}
+		match(ex)
+			.with(not(when(isNestedAxiosError)), () => {
+				console.error('Error getting data', ex);
+				dispatch(
+					notificationSlice.actions.addError(
+						`Error getting data: ${ex.message}`
+					)
+				);
+			})
+			.with(when(isInvestmentNotFoundError), constVoid)
+			.otherwise(constVoid);
+
 		setState((draft) => {
 			draft.loading = false;
 			draft.hasError = true;
