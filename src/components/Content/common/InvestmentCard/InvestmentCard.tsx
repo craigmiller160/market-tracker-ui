@@ -37,9 +37,9 @@ interface Props {
 	readonly info: InvestmentInfo;
 }
 
-const createTitle = (info: InvestmentInfo): ReactNode => (
+const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
 	<h3>
-		<strong>{`${info.name} (${info.symbol})`}</strong>
+		<strong>{`${data.name} (${info.symbol})`}</strong>
 	</h3>
 );
 
@@ -197,7 +197,6 @@ const shouldRespectMarketStatus = (info: InvestmentInfo) =>
 	info.type !== InvestmentType.CRYPTO;
 
 export const InvestmentCard = ({ info }: Props) => {
-	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
@@ -221,6 +220,8 @@ export const InvestmentCard = ({ info }: Props) => {
 		error,
 		data
 	);
+
+	const Title = createTitle(info, data);
 
 	const FullTitle = (
 		<>
