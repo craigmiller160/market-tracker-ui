@@ -6,6 +6,7 @@ import { SearchForm } from './SearchForm';
 import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../types/data/InvestmentType';
+import { RefreshProvider } from '../common/refresh/RefreshProvider';
 
 export const Search = () => {
 	const info: InvestmentInfo = {
@@ -14,10 +15,12 @@ export const Search = () => {
 		name: ''
 	};
 	return (
-		<div className="SearchPage">
-			<Typography.Title>Search For Investment</Typography.Title>
-			<SearchForm doSearch={() => {}} />
-			<InvestmentCard info={info} />
-		</div>
+		<RefreshProvider>
+			<div className="SearchPage">
+				<Typography.Title>Search For Investment</Typography.Title>
+				<SearchForm doSearch={() => {}} />
+				<InvestmentCard info={info} />
+			</div>
+		</RefreshProvider>
 	);
 };
