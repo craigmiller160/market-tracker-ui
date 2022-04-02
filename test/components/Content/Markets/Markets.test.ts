@@ -169,9 +169,12 @@ const validatePriceLine = (
 
 	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
-			expect(currentPriceResult).not.toBeInTheDocument()
-		)
+		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+			expect(currentPriceResult).toBeInTheDocument();
+			expect(
+				within(card).queryByText('Market Closed')
+			).toBeInTheDocument();
+		})
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
