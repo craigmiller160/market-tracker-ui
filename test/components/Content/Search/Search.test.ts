@@ -11,6 +11,48 @@ const renderApp = createRenderApp(mockApi);
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 
+const mockTradierQuote = (symbol: string) =>
+	mockApi.onGet(`/tradier/markets/quotes?symbols=${symbol}`).reply(200, {
+		quotes: {
+			quote: {
+				symbol,
+				description: 'My Stock',
+				open: 0,
+				high: 0,
+				low: 0,
+				bid: 0,
+				ask: 0,
+				close: 0,
+				last: 100,
+				prevclose: 200
+			},
+			unmatched_symbols: undefined
+		}
+	});
+const mockTradierHistory = (
+	symbol: string,
+	start: string,
+	end: string,
+	interval: string
+) =>
+	mockApi
+		.onGet(
+			`/tradier/markets/history?symbol=${symbol}&start=${start}&end=${end}&interval=${interval}`
+		)
+		.reply(200, {
+			history: {
+				day: [
+					{
+						date: '2022-01-01',
+						open: 100,
+						high: 0,
+						low: 0,
+						close: 200
+					}
+				]
+			}
+		});
+
 describe('Search', () => {
 	it('renders initial layout correctly', async () => {
 		await renderApp({
@@ -40,7 +82,32 @@ describe('Search', () => {
 		expect(getSearchBtn()).toBeDisabled();
 	});
 
-	it('searches for and finds a stock', async () => {
+	it('searches for and finds a stock for Today', async () => {
+		mockTradierQuote('VTI');
+		mockTradierHistory('VTI', '', '', '');
+		await renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for One Week', async () => {
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for One Month', async () => {
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for Three Months', async () => {
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for One Year', async () => {
+		throw new Error();
+	});
+
+	it('searches for and finds a stock for Five Years', async () => {
 		throw new Error();
 	});
 
