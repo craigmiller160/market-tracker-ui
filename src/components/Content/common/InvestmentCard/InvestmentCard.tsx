@@ -24,6 +24,7 @@ import { InvestmentData } from '../../../../services/MarketInvestmentService';
 import { Chart as ChartComp } from '../../../UI/Chart';
 import { useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
+import { InvestmentType } from '../../../../types/data/InvestmentType';
 
 const Spinner = (
 	<Space size="middle" className="Spinner">
@@ -33,7 +34,6 @@ const Spinner = (
 
 interface Props {
 	readonly info: InvestmentInfo;
-	readonly shouldRespectMarketStatus: () => boolean;
 }
 
 const createTitle = (info: InvestmentInfo): ReactNode => (
@@ -187,14 +187,17 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-export const InvestmentCard = ({ info, shouldRespectMarketStatus }: Props) => {
+const shouldRespectMarketStatus = (info: InvestmentInfo) =>
+	info.type !== InvestmentType.CRYPTO;
+
+export const InvestmentCard = ({ info }: Props) => {
 	const Title = createTitle(info);
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
-	const respectMarketStatus = shouldRespectMarketStatus();
+	const respectMarketStatus = shouldRespectMarketStatus(info);
 	const shouldLoadData =
 		status === MarketStatus.OPEN ||
 		(status === MarketStatus.CLOSED && !respectMarketStatus);
