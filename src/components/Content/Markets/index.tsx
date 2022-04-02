@@ -12,8 +12,8 @@ import { notificationSlice } from '../../../store/notification/slice';
 import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
 import { MarketSection } from './MarketSection';
 import {
-	RefreshTimerContextValue,
-	RefreshTimerContext
+	RefreshTimerContext,
+	RefreshTimerContextValue
 } from '../common/refresh/RefreshTimerContext';
 import { useRefreshTimer } from '../common/refresh/useRefreshTimer';
 
@@ -65,15 +65,15 @@ export const Markets = () => {
 			<div className="GlobalMarkets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
 				<MarketSection
-					type={MarketInvestmentType.USA_ETF}
+					marketType={MarketInvestmentType.USA_ETF}
 					data={investmentResult.investments}
 				/>
 				<MarketSection
-					type={MarketInvestmentType.INTERNATIONAL_ETF}
+					marketType={MarketInvestmentType.INTERNATIONAL_ETF}
 					data={investmentResult.investments}
 				/>
 				<MarketSection
-					type={MarketInvestmentType.CRYPTO}
+					marketType={MarketInvestmentType.CRYPTO}
 					data={investmentResult.investments}
 				/>
 			</div>

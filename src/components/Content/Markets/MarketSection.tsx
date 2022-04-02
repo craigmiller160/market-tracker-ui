@@ -10,7 +10,7 @@ import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 
 interface Props {
-	readonly type: MarketInvestmentType;
+	readonly marketType: MarketInvestmentType;
 	readonly data: InvestmentsByType;
 }
 
@@ -26,9 +26,9 @@ const investmentInfoToCard = (info: MarketInvestmentInfo) => (
 );
 
 export const MarketSection = (props: Props) => {
-	const { type, data } = props;
-	const title = getMarketInvestmentTypeTitle(type);
-	const cards = data[type].map(investmentInfoToCard);
+	const { marketType, data } = props;
+	const title = getMarketInvestmentTypeTitle(marketType);
+	const cards = data[marketType].map(investmentInfoToCard);
 
 	return (
 		<section className="MarketSection">
