@@ -1,12 +1,8 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
 import { useMemo } from 'react';
-import {
-	SEARCH_TYPE,
-	SEARCH_TYPE_CRYPTO,
-	SEARCH_TYPE_STOCK,
-	SearchValues
-} from './constants';
+import { SearchValues } from './constants';
+import { InvestmentType } from '../../../types/data/InvestmentType';
 
 type DoSearchFn = (values: SearchValues) => void;
 
@@ -20,7 +16,7 @@ const createSearchForSymbol =
 	};
 
 interface SearchTypeRadioProps {
-	readonly searchType: SEARCH_TYPE;
+	readonly searchType: InvestmentType;
 }
 const SearchTypeRadio = ({ searchType }: SearchTypeRadioProps) => (
 	<Radio.Button value={searchType}>{searchType}</Radio.Button>
@@ -40,14 +36,14 @@ export const SearchForm = (props: Props) => {
 			form={form}
 			onFinish={searchForSymbol}
 			initialValues={{
-				searchType: SEARCH_TYPE_STOCK
+				searchType: InvestmentType.STOCK
 			}}
 		>
 			<Form.Item name="searchType">
 				<Radio.Group>
-					<SearchTypeRadio searchType={SEARCH_TYPE_STOCK} />
+					<SearchTypeRadio searchType={InvestmentType.STOCK} />
 					{process.env.NODE_ENV !== 'production' && (
-						<SearchTypeRadio searchType={SEARCH_TYPE_CRYPTO} />
+						<SearchTypeRadio searchType={InvestmentType.CRYPTO} />
 					)}
 				</Radio.Group>
 			</Form.Item>
