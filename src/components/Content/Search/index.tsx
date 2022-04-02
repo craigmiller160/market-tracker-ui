@@ -6,7 +6,7 @@ import { SearchForm } from './SearchForm';
 
 export const Search = () => (
 	<div className="SearchPage">
-		<Typography.Title>Search</Typography.Title>
+		<Typography.Title>Search For Investment</Typography.Title>
 		<SearchForm doSearch={() => {}} />
 	</div>
 );
