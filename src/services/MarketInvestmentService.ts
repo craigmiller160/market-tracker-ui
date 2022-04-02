@@ -272,7 +272,7 @@ const notEmpty = (value?: string): boolean => (value?.length ?? 0) > 0;
 
 const getInvestmentName = (info: InvestmentInfo, quote: Quote): string =>
 	match({ info, quote })
-		.with({ info: { name: when(notEmpty) } }, () => quote.name)
+		.with({ info: { name: when(notEmpty) } }, () => info.name)
 		.otherwise(() => quote.name);
 
 const handleInvestmentData =
