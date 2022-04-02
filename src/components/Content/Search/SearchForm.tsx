@@ -48,11 +48,7 @@ export const SearchForm = (props: Props) => {
 					)}
 				</Radio.Group>
 			</Form.Item>
-			<Form.Item
-				name="symbol"
-				normalize={toUpperCase}
-				rules={[{ required: true, message: 'Must provide symbol' }]}
-			>
+			<Form.Item name="symbol" normalize={toUpperCase}>
 				<Input placeholder="Symbol" allowClear />
 			</Form.Item>
 			<Form.Item shouldUpdate>
@@ -61,10 +57,8 @@ export const SearchForm = (props: Props) => {
 						type="primary"
 						htmlType="submit"
 						disabled={
-							!innerForm.isFieldsTouched() ||
-							!!innerForm
-								.getFieldsError()
-								.filter(({ errors }) => errors.length).length
+							(innerForm.getFieldsValue()?.symbol?.length ??
+								0) === 0
 						}
 					>
 						Search
