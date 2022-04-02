@@ -15,10 +15,6 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, when } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import {
-	isMarketTypeCrypto,
-	isMarketTypeStock
-} from '../../../../src/types/data/MarketInvestmentType';
-import {
 	getFiveYearStartDate,
 	getOneMonthStartDate,
 	getOneWeekStartDate,
@@ -31,6 +27,7 @@ import {
 } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
 import { getAltIdForSymbol } from '../../../../src/data/MarketPageInvestmentParsing';
+import { isCrypto, isStock } from '../../../../src/types/data/InvestmentType';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 const DATE_FORMAT = 'yyyy-MM-dd';
@@ -174,9 +171,9 @@ const mockCalenderRequest = (
 };
 
 const isStockInfo: PredicateT<MarketInvestmentInfo> = (info) =>
-	isMarketTypeStock(info.type);
+	isStock(info.type);
 const isCryptoInfo: PredicateT<MarketInvestmentInfo> = (info) =>
-	isMarketTypeCrypto(info.type);
+	isCrypto(info.type);
 const isNotToday: PredicateT<MarketTime> = (time) =>
 	MarketTime.ONE_DAY !== time;
 const isToday: PredicateT<MarketTime> = (time) => MarketTime.ONE_DAY === time;
