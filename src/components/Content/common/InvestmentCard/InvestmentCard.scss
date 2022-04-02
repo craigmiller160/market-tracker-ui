@@ -33,6 +33,15 @@
     text-align: left;
   }
 
+  .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    * {
+      width: 100%;
+    }
+  }
+
   p {
     margin: 0;
     &.up {
