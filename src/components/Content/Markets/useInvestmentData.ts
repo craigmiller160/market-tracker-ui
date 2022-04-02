@@ -1,5 +1,4 @@
 import { MarketTime } from '../../../types/MarketTime';
-import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 import { useDispatch } from 'react-redux';
 import { Updater, useImmer } from 'use-immer';
 import { useContext, useEffect, useMemo } from 'react';
@@ -15,6 +14,7 @@ import { notificationSlice } from '../../../store/notification/slice';
 import { castDraft } from 'immer';
 import { RefreshTimerContext } from './RefreshTimerContext';
 import { isNestedAxiosError } from '../../../services/AjaxApi';
+import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
 
 export interface InvestmentDataState {
 	readonly loading: boolean;
@@ -59,7 +59,7 @@ const createHandleGetDataSuccess =
 
 export const useInvestmentData = (
 	time: MarketTime,
-	info: MarketInvestmentInfo,
+	info: InvestmentInfo,
 	shouldLoadData: boolean
 ): InvestmentDataState => {
 	const { refreshTimestamp } = useContext(RefreshTimerContext);
