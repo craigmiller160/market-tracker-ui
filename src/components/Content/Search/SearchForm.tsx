@@ -16,6 +16,9 @@ export const SearchForm = () => {
 			className="SearchForm"
 			form={form}
 			onFinish={onFinish}
+			initialValues={{
+				searchType: 'stock'
+			}}
 			onFinishFailed={onFinishFailed}
 		>
 			<Form.Item name="searchType">
