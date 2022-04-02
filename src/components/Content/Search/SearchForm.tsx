@@ -29,6 +29,8 @@ const SearchTypeRadio = ({ searchType }: SearchTypeRadioProps) => (
 	<Radio.Button value={searchType}>{searchType}</Radio.Button>
 );
 
+const toUpperCase = (value?: string) => value?.toUpperCase() ?? '';
+
 export const SearchForm = (props: Props) => {
 	const [form] = Form.useForm();
 	const searchForSymbol = useMemo(
@@ -52,6 +54,7 @@ export const SearchForm = (props: Props) => {
 			</Form.Item>
 			<Form.Item
 				name="symbol"
+				normalize={toUpperCase}
 				rules={[{ required: true, message: 'Must provide symbol' }]}
 			>
 				<Input placeholder="Symbol" />
