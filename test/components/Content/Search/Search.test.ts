@@ -26,7 +26,7 @@ describe('Search', () => {
 		expect(screen.queryByPlaceholderText('Symbol')).toBeInTheDocument();
 	});
 
-	it('formats text and enables/disables search button when symbol input provided', async () => {
+	it('formats value, changes button status, and shows errors in response to symbol input', async () => {
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
@@ -34,5 +34,10 @@ describe('Search', () => {
 		userEvent.type(getSymbolField(), 'hello');
 		await waitFor(() => expect(getSymbolField()).toHaveValue('HELLO'));
 		expect(getSearchBtn()).toBeEnabled();
+
+		userEvent.clear(getSymbolField());
+		await waitFor(() => expect(getSymbolField()).toHaveValue(''));
+		expect(getSearchBtn()).toBeDisabled();
+		expect(screen.queryByText('Must provide symbol')).toBeInTheDocument();
 	});
 });
