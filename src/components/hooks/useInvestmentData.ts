@@ -16,7 +16,7 @@ import { RefreshTimerContext } from '../Content/common/refresh/RefreshTimerConte
 import { isNestedAxiosError } from '../../services/AjaxApi';
 import { InvestmentInfo } from '../../types/data/InvestmentInfo';
 import { match, not, when } from 'ts-pattern';
-import { isInvestmentNotFoundError } from '../../error/InvestmentNotFoundError';
+import { isNestedInvestmentNotFoundError } from '../../error/InvestmentNotFoundError';
 
 export interface ErrorInfo {
 	readonly name: string;
@@ -44,7 +44,7 @@ const createHandleGetDataError =
 					isAxios: true
 				})
 			)
-			.with(not(when(isInvestmentNotFoundError)), () => {
+			.with(not(when(isNestedInvestmentNotFoundError)), () => {
 				console.error('Error getting data', ex);
 				dispatch(
 					notificationSlice.actions.addError(
