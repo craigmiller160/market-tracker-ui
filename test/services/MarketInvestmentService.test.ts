@@ -4,10 +4,8 @@ import {
 	getQuoteFn
 } from '../../src/services/MarketInvestmentService';
 import { MarketTime } from '../../src/types/MarketTime';
-import { MarketInvestmentType } from '../../src/types/data/MarketInvestmentType';
 import * as tradierService from '../../src/services/TradierService';
 import * as coinGeckoService from '../../src/services/CoinGeckoService';
-import { MarketInvestmentInfo } from '../../src/types/data/MarketInvestmentInfo';
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
@@ -25,6 +23,8 @@ import {
 import { TradierQuotes } from '../../src/types/tradier/quotes';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { pipe } from 'fp-ts/es6/function';
+import { InvestmentType } from '../../src/types/data/InvestmentType';
+import { InvestmentInfo } from '../../src/types/data/InvestmentInfo';
 
 const parseTimesaleTime: (time: string) => Date = Time.parse(
 	"yyyy-MM-dd'T'HH:mm:ss"
@@ -109,127 +109,97 @@ describe('MarketInvestmentService', () => {
 
 	describe('getHistoryFn', () => {
 		it('Tradier One Day', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.ONE_DAY,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.ONE_DAY,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getTimesales);
-			expect(intResult).toEqual(tradierService.getTimesales);
+			expect(stockResult).toEqual(tradierService.getTimesales);
 		});
 
 		it('CoinGecko One Day', () => {
 			const result = getHistoryFn(
 				MarketTime.ONE_DAY,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getTodayHistory);
 		});
 
 		it('Tradier One Week', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.ONE_WEEK,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.ONE_WEEK,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getOneWeekHistory);
-			expect(intResult).toEqual(tradierService.getOneWeekHistory);
+			expect(stockResult).toEqual(tradierService.getOneWeekHistory);
 		});
 
 		it('CoinGecko One Week', () => {
 			const result = getHistoryFn(
 				MarketTime.ONE_WEEK,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getOneWeekHistory);
 		});
 
 		it('Tradier One Month', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.ONE_MONTH,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.ONE_MONTH,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getOneMonthHistory);
-			expect(intResult).toEqual(tradierService.getOneMonthHistory);
+			expect(stockResult).toEqual(tradierService.getOneMonthHistory);
 		});
 
 		it('CoinGecko One Month', () => {
 			const result = getHistoryFn(
 				MarketTime.ONE_MONTH,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getOneMonthHistory);
 		});
 
 		it('Tradier Three Months', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.THREE_MONTHS,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.THREE_MONTHS,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getThreeMonthHistory);
-			expect(intResult).toEqual(tradierService.getThreeMonthHistory);
+			expect(stockResult).toEqual(tradierService.getThreeMonthHistory);
 		});
 
 		it('CoinGecko Three Months', () => {
 			const result = getHistoryFn(
 				MarketTime.THREE_MONTHS,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getThreeMonthHistory);
 		});
 
 		it('Tradier One Year', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.ONE_YEAR,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.ONE_YEAR,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getOneYearHistory);
-			expect(intResult).toEqual(tradierService.getOneYearHistory);
+			expect(stockResult).toEqual(tradierService.getOneYearHistory);
 		});
 
 		it('CoinGecko One Year', () => {
 			const result = getHistoryFn(
 				MarketTime.ONE_YEAR,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getOneYearHistory);
 		});
 
 		it('Tradier Five Years', () => {
-			const usResult = getHistoryFn(
+			const stockResult = getHistoryFn(
 				MarketTime.FIVE_YEARS,
-				MarketInvestmentType.USA_ETF
+				InvestmentType.STOCK
 			);
-			const intResult = getHistoryFn(
-				MarketTime.FIVE_YEARS,
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getFiveYearHistory);
-			expect(intResult).toEqual(tradierService.getFiveYearHistory);
+			expect(stockResult).toEqual(tradierService.getFiveYearHistory);
 		});
 
 		it('CoinGecko Five Years', () => {
 			const result = getHistoryFn(
 				MarketTime.FIVE_YEARS,
-				MarketInvestmentType.CRYPTO
+				InvestmentType.CRYPTO
 			);
 			expect(result).toEqual(coinGeckoService.getFiveYearHistory);
 		});
@@ -237,25 +207,21 @@ describe('MarketInvestmentService', () => {
 
 	describe('getQuoteFn', () => {
 		it('Tradier Quote', () => {
-			const usResult = getQuoteFn(MarketInvestmentType.USA_ETF);
-			const intResult = getQuoteFn(
-				MarketInvestmentType.INTERNATIONAL_ETF
-			);
-			expect(usResult).toEqual(tradierService.getQuotes);
-			expect(intResult).toEqual(tradierService.getQuotes);
+			const stockResult = getQuoteFn(InvestmentType.STOCK);
+			expect(stockResult).toEqual(tradierService.getQuotes);
 		});
 
 		it('CoinGecko Quote', () => {
-			const result = getQuoteFn(MarketInvestmentType.CRYPTO);
+			const result = getQuoteFn(InvestmentType.CRYPTO);
 			expect(result).toEqual(coinGeckoService.getQuotes);
 		});
 	});
 
 	describe('getInvestmentData', () => {
-		const info: MarketInvestmentInfo = {
+		const info: InvestmentInfo = {
 			symbol: 'VTI',
 			name: 'US Total Market',
-			type: MarketInvestmentType.USA_ETF
+			type: InvestmentType.STOCK
 		};
 
 		it('gets investment data for past history', async () => {

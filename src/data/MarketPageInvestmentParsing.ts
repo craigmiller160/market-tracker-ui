@@ -61,13 +61,13 @@ const infoToInvestmentByType = (
 	info: MarketInvestmentInfo
 ): InvestmentsByType =>
 	match(info)
-		.with({ type: MarketInvestmentType.USA_ETF }, (_) =>
+		.with({ marketType: MarketInvestmentType.USA_ETF }, (_) =>
 			createInvestmentsByType([_], [], [])
 		)
-		.with({ type: MarketInvestmentType.INTERNATIONAL_ETF }, (_) =>
+		.with({ marketType: MarketInvestmentType.INTERNATIONAL_ETF }, (_) =>
 			createInvestmentsByType([], [_], [])
 		)
-		.with({ type: MarketInvestmentType.CRYPTO }, (_) =>
+		.with({ marketType: MarketInvestmentType.CRYPTO }, (_) =>
 			createInvestmentsByType([], [], [_])
 		)
 		.run();
