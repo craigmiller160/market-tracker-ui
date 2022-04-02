@@ -22,7 +22,7 @@ import {
 } from '../../../../store/marketSettings/selectors';
 import { InvestmentData } from '../../../../services/MarketInvestmentService';
 import { Chart as ChartComp } from '../../../UI/Chart';
-import { useInvestmentData } from '../../../hooks/useInvestmentData';
+import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../../types/data/InvestmentType';
 
@@ -154,7 +154,7 @@ const getPriceAndBody = (
 	status: MarketStatus,
 	respectMarketStatus: boolean,
 	loading: boolean,
-	error: boolean,
+	error: ErrorInfo | undefined,
 	data: InvestmentData
 ): { Price: ReactNode; Body: ReactNode } =>
 	match({
