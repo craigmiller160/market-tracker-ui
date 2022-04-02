@@ -237,7 +237,11 @@ describe('MarketInvestmentService', () => {
 					`/tradier/markets/history?symbol=VTI&start=${start}&end=${end}&interval=daily`
 				)
 				.reply(200, tradierHistory);
-			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
+			const result = await getInvestmentData(
+				MarketTime.ONE_WEEK,
+				info,
+				true
+			)();
 			expect(result).toEqualRight({
 				name: info.name,
 				startPrice: 50,
@@ -284,7 +288,11 @@ describe('MarketInvestmentService', () => {
 					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
 				)
 				.reply(200, tradierTimesale);
-			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+			const result = await getInvestmentData(
+				MarketTime.ONE_DAY,
+				info,
+				true
+			)();
 			expect(result).toEqualRight({
 				name: info.name,
 				startPrice: 60,
@@ -335,6 +343,10 @@ describe('MarketInvestmentService', () => {
 			});
 		});
 
+		it('gets investment data without history', async () => {
+			throw new Error();
+		});
+
 		it('gets investment data for today', async () => {
 			mockApi
 				.onGet('/tradier/markets/quotes?symbols=VTI')
@@ -346,7 +358,11 @@ describe('MarketInvestmentService', () => {
 					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
 				)
 				.reply(200, tradierTimesale);
-			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+			const result = await getInvestmentData(
+				MarketTime.ONE_DAY,
+				info,
+				true
+			)();
 
 			expect(result).toEqualRight({
 				name: info.name,
@@ -418,7 +434,11 @@ describe('MarketInvestmentService', () => {
 					`/tradier/markets/history?symbol=VTI&start=${start}&end=${end}&interval=daily`
 				)
 				.reply(200, tradierHistory);
-			const result = await getInvestmentData(MarketTime.ONE_WEEK, info)();
+			const result = await getInvestmentData(
+				MarketTime.ONE_WEEK,
+				info,
+				true
+			)();
 			expect(result).toEqualRight({
 				name: info.name,
 				startPrice: tradierHistory.history!.day[0].open,
@@ -472,7 +492,11 @@ describe('MarketInvestmentService', () => {
 					`/tradier/markets/timesales?symbol=VTI&start=${start}&end=${end}&interval=1min`
 				)
 				.reply(200, newTimesale);
-			const result = await getInvestmentData(MarketTime.ONE_DAY, info)();
+			const result = await getInvestmentData(
+				MarketTime.ONE_DAY,
+				info,
+				true
+			)();
 
 			expect(result).toEqualRight({
 				name: info.name,
