@@ -5,4 +5,4 @@ interface Props {
 	readonly cryptos: ReadonlyArray<WatchlistItem>;
 }
 
-export const Watchlist = (props: Props) => <h3>The Watchlist</h3>;
+export const WatchlistSection = (props: Props) => <h3>The Watchlist</h3>;

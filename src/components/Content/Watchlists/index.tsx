@@ -11,6 +11,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import { WatchlistSection } from './WatchlistSection';
 
 interface State {
 	readonly watchlists: ReadonlyArray<Watchlist>;
@@ -31,7 +32,10 @@ const createPanels = (watchlists: ReadonlyArray<Watchlist>): ReactNode =>
 				</Typography.Title>
 			}
 		>
-			<h3>This is the Watchlist</h3>
+			<WatchlistSection
+				stocks={watchlist.stocks}
+				cryptos={watchlist.cryptos}
+			/>
 		</Collapse.Panel>
 	));
 
