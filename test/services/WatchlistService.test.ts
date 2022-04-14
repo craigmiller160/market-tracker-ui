@@ -29,7 +29,7 @@ describe('WatchlistService', () => {
 	});
 
 	it('getAllWatchlists', async () => {
-		mockApi.onGet('/watchlists/all', [200, watchlists]);
+		mockApi.onGet('/watchlists/all').reply(200, watchlists);
 		const result = await WatchlistService.getAllWatchlists()();
 		expect(result).toEqualRight(watchlists);
 	});
