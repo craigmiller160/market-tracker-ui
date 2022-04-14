@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
 import { match, when } from 'ts-pattern';
 import { Portfolios } from '../components/Content/Portfolios';
-import { Watchlists } from '../components/Content/Watchlists/Watchlists';
+import { Watchlists } from '../components/Content/Watchlists';
 import { Markets } from '../components/Content/Markets';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { Recognition } from '../components/Content/Recognition';
