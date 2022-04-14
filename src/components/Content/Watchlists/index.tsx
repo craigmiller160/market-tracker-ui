@@ -13,6 +13,7 @@ import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { WatchlistSection } from './WatchlistSection';
 import { Spinner } from '../../UI/Spinner';
+import { RefreshProvider } from '../common/refresh/RefreshProvider';
 
 interface State {
 	readonly loading: boolean;
@@ -81,14 +82,16 @@ export const Watchlists = () => {
 		));
 
 	return (
-		<div
-			className={`WatchlistsPage ${breakpointName}`}
-			data-testid="watchlist-page"
-		>
-			<Typography.Title>
-				Investment{titleSpace}Watchlists
-			</Typography.Title>
-			{body}
-		</div>
+		<RefreshProvider>
+			<div
+				className={`WatchlistsPage ${breakpointName}`}
+				data-testid="watchlist-page"
+			>
+				<Typography.Title>
+					Investment{titleSpace}Watchlists
+				</Typography.Title>
+				{body}
+			</div>
+		</RefreshProvider>
 	);
 };
