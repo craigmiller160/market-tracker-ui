@@ -2,6 +2,7 @@ import { WatchlistItem } from '../../../types/Watchlist';
 import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../types/data/InvestmentType';
+import './WatchlistSection.scss';
 
 interface Props {
 	readonly stocks: ReadonlyArray<WatchlistItem>;
