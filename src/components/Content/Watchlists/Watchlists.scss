@@ -2,4 +2,15 @@
 
 .WatchlistsPage {
   @include PageRoot;
+  &:not(.xs) {
+    width: 80%;
+  }
+
+  &.xs {
+    width: 95%;
+  }
+
+  .ant-collapse {
+    width: 100%;
+  }
 }
