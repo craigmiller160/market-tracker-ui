@@ -1,3 +1,5 @@
-.WatchlistsPage {
+@import "../../../styles/page";
 
+.WatchlistsPage {
+  @include PageRoot;
 }
