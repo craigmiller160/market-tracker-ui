@@ -76,7 +76,7 @@ export const Watchlists = () => {
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
 		.otherwise(() => (
-			<Collapse className="Accordion" accordion>
+			<Collapse className="Accordion" accordion destroyInactivePanel>
 				{panels}
 			</Collapse>
 		));
