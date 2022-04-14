@@ -4,14 +4,20 @@ import { useContext } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
 
-export const Watchlists = () => {
+const useTitleSpace = () => {
 	const { breakpoints } = useContext(ScreenContext);
-	const space = match(breakpoints)
+	return match(breakpoints)
 		.with({ xs: true }, () => <br />)
 		.otherwise(() => ' ');
+};
+
+export const Watchlists = () => {
+	const titleSpace = useTitleSpace();
 	return (
 		<div className="WatchlistsPage" data-testid="watchlist-page">
-			<Typography.Title>Investment{space}Watchlists</Typography.Title>
+			<Typography.Title>
+				Investment{titleSpace}Watchlists
+			</Typography.Title>
 		</div>
 	);
 };
