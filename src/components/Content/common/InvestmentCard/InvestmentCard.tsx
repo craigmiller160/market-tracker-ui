@@ -1,4 +1,4 @@
-import { Card, Space, Spin, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
 import { match, not, when } from 'ts-pattern';
@@ -25,12 +25,7 @@ import { Chart as ChartComp } from '../../../UI/Chart';
 import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
-
-const Spinner = (
-	<Space size="middle" className="Spinner">
-		<Spin size="large" />
-	</Space>
-);
+import { Spinner } from '../../../UI/Spinner';
 
 interface Props {
 	readonly info: InvestmentInfo;
@@ -192,7 +187,7 @@ const getPriceAndBody = (
 		}))
 		.with({ loading: true }, () => ({
 			Price: <div />,
-			Body: Spinner
+			Body: <Spinner />
 		}))
 		.with({ error: not(undefined) }, ({ error: errorInfo }) => ({
 			Price: <div />,

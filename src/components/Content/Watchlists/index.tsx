@@ -1,5 +1,5 @@
 import './Watchlists.scss';
-import { Collapse, Space, Spin, Typography } from 'antd';
+import { Collapse, Typography } from 'antd';
 import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
@@ -12,17 +12,12 @@ import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { WatchlistSection } from './WatchlistSection';
+import { Spinner } from '../../UI/Spinner';
 
 interface State {
 	readonly loading: boolean;
 	readonly watchlists: ReadonlyArray<Watchlist>;
 }
-
-const Spinner = (
-	<Space size="middle" className="Spinner">
-		<Spin size="large" />
-	</Space>
-);
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 	match(breakpoints)
@@ -78,7 +73,7 @@ export const Watchlists = () => {
 	const panels = createPanels(state.watchlists);
 
 	const body = match(state)
-		.with({ loading: true }, () => Spinner)
+		.with({ loading: true }, () => <Spinner />)
 		.otherwise(() => (
 			<Collapse className="Accordion" accordion>
 				{panels}
