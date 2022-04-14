@@ -69,7 +69,7 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
 		);
-		expect(screen.queryByText('Watchlists Page')).toBeInTheDocument();
+		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
 	});
 
 	it('renders recognition route', async () => {
