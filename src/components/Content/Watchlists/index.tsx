@@ -23,10 +23,20 @@ export const Watchlists = () => {
 				Investment{titleSpace}Watchlists
 			</Typography.Title>
 			<Collapse className="Accordion" accordion>
-				<Collapse.Panel key="1" header="Panel 1">
+				<Collapse.Panel
+					key="1"
+					header={
+						<Typography.Title level={4}>Panel 1</Typography.Title>
+					}
+				>
 					<p>This is Panel 1</p>
 				</Collapse.Panel>
-				<Collapse.Panel key="2" header="Panel 2">
+				<Collapse.Panel
+					key="2"
+					header={
+						<Typography.Title level={4}>Panel 2</Typography.Title>
+					}
+				>
 					<p>This is Panel 2</p>
 				</Collapse.Panel>
 			</Collapse>
