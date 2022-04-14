@@ -1,5 +1,5 @@
 import './Watchlists.scss';
-import { Collapse, Typography } from 'antd';
+import { Collapse, Space, Spin, Typography } from 'antd';
 import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
@@ -14,8 +14,15 @@ import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { WatchlistSection } from './WatchlistSection';
 
 interface State {
+	readonly loading: boolean;
 	readonly watchlists: ReadonlyArray<Watchlist>;
 }
+
+const Spinner = (
+	<Space size="middle" className="Spinner">
+		<Spin size="large" />
+	</Space>
+);
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 	match(breakpoints)
@@ -45,12 +52,14 @@ const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 		TaskEither.map((watchlists) =>
 			setState((draft) => {
 				draft.watchlists = castDraft(watchlists);
+				draft.loading = false;
 			})
 		)
 	);
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
+		loading: true,
 		watchlists: []
 	});
 
@@ -67,6 +76,15 @@ export const Watchlists = () => {
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
 	const panels = createPanels(state.watchlists);
+
+	const body = match(state)
+		.with({ loading: true }, () => Spinner)
+		.otherwise(() => (
+			<Collapse className="Accordion" accordion>
+				{panels}
+			</Collapse>
+		));
+
 	return (
 		<div
 			className={`WatchlistsPage ${breakpointName}`}
@@ -75,9 +93,7 @@ export const Watchlists = () => {
 			<Typography.Title>
 				Investment{titleSpace}Watchlists
 			</Typography.Title>
-			<Collapse className="Accordion" accordion>
-				{panels}
-			</Collapse>
+			{body}
 		</div>
 	);
 };
