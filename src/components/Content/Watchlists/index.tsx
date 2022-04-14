@@ -1,15 +1,16 @@
 import './Watchlists.scss';
-import { Typography, Collapse } from 'antd';
-import { ReactNode, useContext, useEffect } from 'react';
+import { Collapse, Typography } from 'antd';
+import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { Watchlist } from '../../../types/Watchlist';
-import { useImmer } from 'use-immer';
+import { Updater, useImmer } from 'use-immer';
 import { getAllWatchlists } from '../../../services/WatchlistService';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
+import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 
 interface State {
 	readonly watchlists: ReadonlyArray<Watchlist>;
@@ -34,21 +35,29 @@ const createPanels = (watchlists: ReadonlyArray<Watchlist>): ReactNode =>
 		</Collapse.Panel>
 	));
 
+const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
+	pipe(
+		getAllWatchlists(),
+		TaskEither.map((watchlists) =>
+			setState((draft) => {
+				draft.watchlists = castDraft(watchlists);
+			})
+		)
+	);
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		watchlists: []
 	});
 
+	const getWatchlists = useMemo(
+		() => createGetWatchlists(setState),
+		[setState]
+	);
+
 	useEffect(() => {
-		pipe(
-			getAllWatchlists(),
-			TaskEither.map((watchlists) =>
-				setState((draft) => {
-					draft.watchlists = castDraft(watchlists);
-				})
-			)
-		)();
-	}, [setState]);
+		getWatchlists();
+	}, [getWatchlists]);
 
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
