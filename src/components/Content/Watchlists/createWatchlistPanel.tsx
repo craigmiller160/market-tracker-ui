@@ -5,8 +5,6 @@ import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 
-// TODO form buttons same height as text field
-
 interface PanelTitleProps {
 	readonly breakpoints: Breakpoints;
 	readonly watchlist: Watchlist;
