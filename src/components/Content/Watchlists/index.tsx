@@ -48,6 +48,27 @@ const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 		)
 	);
 
+const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
+	setState((draft) => {
+		draft.renameWatchlistId = id;
+	});
+
+const createOnSaveRenamedWatchlist =
+	(setState: Updater<State>) => (id: string, newName: string) =>
+		setState((draft) => {
+			const watchlistToChangeIndex = draft.watchlists.findIndex(
+				(watchlist) => watchlist._id === id
+			);
+			const watchlistToChange = draft.watchlists[watchlistToChangeIndex];
+			const oldName = watchlistToChange.watchlistName;
+			draft.renameWatchlistId = undefined;
+			draft.watchlists[watchlistToChangeIndex] = castDraft({
+				...watchlistToChange,
+				watchlistName: newName
+			});
+			renameWatchlist(oldName, newName)();
+		});
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
@@ -63,27 +84,8 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
-	// TODO move outside of component
-	const onRenameWatchlist = (id?: string) => {
-		setState((draft) => {
-			draft.renameWatchlistId = id;
-		});
-	};
-	const onSaveRenamedWatchlist = (id: string, newName: string) => {
-		const watchlistToChangeIndex = state.watchlists.findIndex(
-			(watchlist) => watchlist._id === id
-		);
-		const watchlistToChange = state.watchlists[watchlistToChangeIndex];
-		const oldName = watchlistToChange.watchlistName;
-		setState((draft) => {
-			draft.renameWatchlistId = undefined;
-			draft.watchlists[watchlistToChangeIndex] = castDraft({
-				...watchlistToChange,
-				watchlistName: newName
-			});
-		});
-		renameWatchlist(oldName, newName)();
-	};
+	const onRenameWatchlist = createOnRenameWatchlist(setState);
+	const onSaveRenamedWatchlist = createOnSaveRenamedWatchlist(setState);
 
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
