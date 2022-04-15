@@ -33,4 +33,10 @@ describe('WatchlistService', () => {
 		const result = await WatchlistService.getAllWatchlists()();
 		expect(result).toEqualRight(watchlists);
 	});
+
+	it('renameWatchlist', async () => {
+		mockApi.onPut('/watchlists/old/rename/new').reply(204);
+		const result = await WatchlistService.renameWatchlist('old', 'new')();
+		expect(result).toBeRight();
+	});
 });
