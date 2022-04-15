@@ -1,5 +1,12 @@
 .WatchlistPanel {
-
+  &.ant-collapse-item {
+    >.ant-collapse-header {
+      align-items: center;
+      h4 {
+        margin: 0;
+      }
+    }
+  }
   .PanelTitleForm {
     width: 90%;
     display: flex;

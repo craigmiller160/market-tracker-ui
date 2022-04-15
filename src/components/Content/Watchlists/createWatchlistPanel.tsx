@@ -6,7 +6,6 @@ import './WatchlistPanel.scss';
 
 // TODO on mobile put buttons below text, if possible
 // TODO form buttons same height as text field
-// TODO make re-usable stopPropagation wrapper
 
 interface PanelTitleProps {
 	readonly watchlist: Watchlist;
@@ -25,7 +24,7 @@ const createOnSaveRenamedTitle =
 		onSaveRenamedWatchlist: (newName: string) => void
 	) =>
 	(event: MouseEvent) => {
-		event?.stopPropagation();
+		event.stopPropagation();
 		onSaveRenamedWatchlist(form.getFieldsValue().watchlistName);
 	};
 const createOnCancelRenamedTitle =
