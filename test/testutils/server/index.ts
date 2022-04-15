@@ -17,5 +17,9 @@ export const newTestServer = (): Server =>
 
 			// TODO how to properly type schema.db?
 			this.get('/movies', (schema) => schema.db.movies);
+			this.post('/movies', (schema, request) => {
+				const movie = JSON.parse(request.requestBody);
+				return schema.db.movies.insert(movie);
+			});
 		}
 	});
