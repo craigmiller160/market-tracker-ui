@@ -56,7 +56,7 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 			}}
 		>
 			<Form.Item name="watchlistName">
-				<Input allowClear />
+				<Input allowClear onClick={(e) => e.stopPropagation()} />
 			</Form.Item>
 			<Button onClick={onCancelClick}>Cancel</Button>
 			<Button htmlType="submit" type="primary" onClick={onSaveClick}>

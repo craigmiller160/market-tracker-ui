@@ -82,7 +82,7 @@ export const Watchlists = () => {
 				watchlistName: newName
 			});
 		});
-		renameWatchlist(oldName, newName);
+		renameWatchlist(oldName, newName)();
 	};
 
 	const { breakpoints } = useContext(ScreenContext);
