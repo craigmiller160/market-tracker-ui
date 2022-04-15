@@ -91,6 +91,7 @@ export const Watchlists = () => {
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
 	const panelConfig: WatchlistPanelConfig = {
+		breakpoints,
 		renameWatchlistId: state.renameWatchlistId,
 		onRenameWatchlist,
 		onSaveRenamedWatchlist

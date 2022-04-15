@@ -4,14 +4,27 @@
       align-items: center;
       h4 {
         margin: 0;
+        overflow: auto;
       }
     }
   }
   .PanelTitleForm {
     width: 90%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    &:not(.xs) {
+      flex-direction: row;
+      align-items: center;
+    }
+    &.xs {
+      flex-direction: column;
+    }
+
+    .TitleFormActions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
     .ant-form-item {
       margin: 0;
       width: 100%;

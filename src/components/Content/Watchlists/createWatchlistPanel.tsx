@@ -3,11 +3,13 @@ import { Watchlist } from '../../../types/Watchlist';
 import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
+import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 
 // TODO on mobile put buttons below text, if possible
 // TODO form buttons same height as text field
 
 interface PanelTitleProps {
+	readonly breakpoints: Breakpoints;
 	readonly watchlist: Watchlist;
 	readonly renameWatchlistId?: string;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
@@ -53,10 +55,11 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	const onCancelRenamedTitle = createOnCancelRenamedTitle(
 		props.onClearRenamedWatchlistId
 	);
+	const breakpointName = getBreakpointName(props.breakpoints);
 
 	return (
 		<Form
-			className="PanelTitleForm"
+			className={`PanelTitleForm ${breakpointName}`}
 			form={form}
 			initialValues={{
 				watchlistName: watchlist.watchlistName
@@ -65,14 +68,16 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear onClick={(e) => e.stopPropagation()} />
 			</Form.Item>
-			<Button onClick={onCancelRenamedTitle}>Cancel</Button>
-			<Button
-				htmlType="submit"
-				type="primary"
-				onClick={onSaveRenamedTitle}
-			>
-				Save
-			</Button>
+			<div className={`TitleFormActions ${breakpointName}`}>
+				<Button onClick={onCancelRenamedTitle}>Cancel</Button>
+				<Button
+					htmlType="submit"
+					type="primary"
+					onClick={onSaveRenamedTitle}
+				>
+					Save
+				</Button>
+			</div>
 		</Form>
 	);
 };
@@ -94,6 +99,7 @@ const WatchlistPanelActions = (props: ActionsProps) => {
 };
 
 export interface WatchlistPanelConfig {
+	readonly breakpoints: Breakpoints;
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
@@ -116,6 +122,7 @@ export const createWatchlistPanel =
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
+						breakpoints={config.breakpoints}
 						onClearRenamedWatchlistId={() =>
 							config.onRenameWatchlist(undefined)
 						}
