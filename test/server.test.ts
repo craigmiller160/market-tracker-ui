@@ -14,7 +14,11 @@ describe('mirage server', () => {
 			}),
 			TaskEither.map(getResponseData)
 		)();
-		expect(result).toEqualRight(['LOTR', 'Marvel', 'Star Wars']);
+		expect(result).toEqualRight([
+			{ id: '1', title: 'LOTR' },
+			{ id: '2', title: 'Marvel' },
+			{ id: '3', title: 'Star Wars' }
+		]);
 	});
 
 	it('modifies mirage data with request', () => {
