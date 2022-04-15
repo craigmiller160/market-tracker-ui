@@ -13,7 +13,7 @@ import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { useImmer } from 'use-immer';
 
-// TODO buttons should be same height as text field
+// TODO on mobile put buttons below text, if possible
 
 interface TitleState {
 	readonly isEditing: boolean;
@@ -69,12 +69,18 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	);
 };
 
+const WatchlistPanelActions = () => (
+	<div>
+		<Button>Rename</Button>
+	</div>
+);
+
 export const createWatchlistPanel =
 	(renameWatchlistId?: string) => (watchlist: Watchlist) => {
 		return (
 			<Collapse.Panel
 				key={watchlist._id}
-				extra="FooBar"
+				extra={<WatchlistPanelActions />}
 				className="WatchlistPanel"
 				header={
 					<WatchlistPanelTitle
