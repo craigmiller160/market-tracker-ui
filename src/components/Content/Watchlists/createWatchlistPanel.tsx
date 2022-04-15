@@ -19,13 +19,13 @@ interface TitleState {
 	readonly isEditing: boolean;
 }
 
-const TitleFormMenu = (
-	<Menu onClick={(info) => info.domEvent.stopPropagation()}>
-		<Menu.Item key="cancel">Cancel</Menu.Item>
-	</Menu>
-);
+interface PanelTitleProps {
+	readonly watchlist: Watchlist;
+	readonly renameWatchlistId?: string;
+}
 
-const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
+const WatchlistPanelTitle = (props: PanelTitleProps) => {
+	const { watchlist, renameWatchlistId } = props;
 	const [form] = Form.useForm();
 	const [state, setState] = useImmer<TitleState>({
 		isEditing: false
@@ -40,10 +40,7 @@ const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 
 	if (!state.isEditing) {
 		return (
-			<Typography.Title
-				onClick={doEditTitle}
-				level={4}
-			>
+			<Typography.Title onClick={doEditTitle} level={4}>
 				{watchlist.watchlistName}
 			</Typography.Title>
 		);
@@ -51,6 +48,7 @@ const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 
 	const onSaveClick = (event?: MouseEvent) => {
 		event?.stopPropagation();
+		// TODO do save action
 	};
 
 	return (
@@ -63,25 +61,32 @@ const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear />
 			</Form.Item>
-			<Dropdown.Button onClick={onSaveClick} overlay={TitleFormMenu}>
+			<Button>Cancel</Button>
+			<Button htmlType="submit" type="primary" onClick={onSaveClick}>
 				Save
-			</Dropdown.Button>
+			</Button>
 		</Form>
 	);
 };
 
-export const createWatchlistPanel = (watchlist: Watchlist) => {
-	return (
-		<Collapse.Panel
-			key={watchlist._id}
-			extra="FooBar"
-			className="WatchlistPanel"
-			header={<WatchlistPanelTitle watchlist={watchlist} />}
-		>
-			<WatchlistSection
-				stocks={watchlist.stocks}
-				cryptos={watchlist.cryptos}
-			/>
-		</Collapse.Panel>
-	);
-};
+export const createWatchlistPanel =
+	(renameWatchlistId?: string) => (watchlist: Watchlist) => {
+		return (
+			<Collapse.Panel
+				key={watchlist._id}
+				extra="FooBar"
+				className="WatchlistPanel"
+				header={
+					<WatchlistPanelTitle
+						watchlist={watchlist}
+						renameWatchlistId={renameWatchlistId}
+					/>
+				}
+			>
+				<WatchlistSection
+					stocks={watchlist.stocks}
+					cryptos={watchlist.cryptos}
+				/>
+			</Collapse.Panel>
+		);
+	};

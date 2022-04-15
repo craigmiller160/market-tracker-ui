@@ -18,6 +18,7 @@ import { createWatchlistPanel } from './createWatchlistPanel';
 interface State {
 	readonly loading: boolean;
 	readonly watchlists: ReadonlyArray<Watchlist>;
+	readonly renameWatchlistId?: string;
 }
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
@@ -25,8 +26,10 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 		.with({ xs: true }, () => <br />)
 		.otherwise(() => ' ');
 
-const createPanels = (watchlists: ReadonlyArray<Watchlist>): ReactNode =>
-	watchlists.map(createWatchlistPanel);
+const createPanels = (
+	watchlists: ReadonlyArray<Watchlist>,
+	renameWatchlistId?: string
+): ReactNode => watchlists.map(createWatchlistPanel(renameWatchlistId));
 
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
@@ -57,7 +60,7 @@ export const Watchlists = () => {
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
-	const panels = createPanels(state.watchlists);
+	const panels = createPanels(state.watchlists, state.renameWatchlistId);
 
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
