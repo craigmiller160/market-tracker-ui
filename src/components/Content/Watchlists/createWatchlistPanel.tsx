@@ -3,7 +3,7 @@ import { Collapse, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 
-const createTitle = (watchlist: Watchlist) => {
+const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 	return (
 		<Typography.Title className="PanelTitle" level={4}>
 			{watchlist.watchlistName}
@@ -12,12 +12,11 @@ const createTitle = (watchlist: Watchlist) => {
 };
 
 export const createWatchlistPanel = (watchlist: Watchlist) => {
-	const title = createTitle(watchlist);
 	return (
 		<Collapse.Panel
 			key={watchlist._id}
 			className="WatchlistPanel"
-			header={title}
+			header={<WatchlistPanelTitle watchlist={watchlist} />}
 		>
 			<WatchlistSection
 				stocks={watchlist.stocks}
