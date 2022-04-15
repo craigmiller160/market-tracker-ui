@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { Watchlist } from '../../../types/Watchlist';
-import { Button, Collapse, Form, Input, Typography } from 'antd';
+import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 
@@ -19,6 +19,21 @@ interface TitleForm {
 	readonly watchlistName: string;
 }
 
+const createOnSaveRenamedTitle =
+	(
+		form: FormInstance<TitleForm>,
+		onSaveRenamedWatchlist: (newName: string) => void
+	) =>
+	(event: MouseEvent) => {
+		event?.stopPropagation();
+		onSaveRenamedWatchlist(form.getFieldsValue().watchlistName);
+	};
+const createOnCancelRenamedTitle =
+	(onClearRenamedWatchlistId: () => void) => (event: MouseEvent) => {
+		event.stopPropagation();
+		onClearRenamedWatchlistId();
+	};
+
 const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	const { watchlist, renameWatchlistId } = props;
 	const [form] = Form.useForm<TitleForm>();
@@ -33,19 +48,12 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 		);
 	}
 
-	// TODO move outside of component
-	const onSaveClick = (event?: MouseEvent) => {
-		event?.stopPropagation();
-		props.onSaveRenamedWatchlist(
-			watchlist._id,
-			form.getFieldsValue().watchlistName
-		);
-	};
-	// TODO move outside of component
-	const onCancelClick = (event?: MouseEvent) => {
-		event?.stopPropagation();
-		props.onClearRenamedWatchlistId();
-	};
+	const onSaveRenamedTitle = createOnSaveRenamedTitle(form, (newName) =>
+		props.onSaveRenamedWatchlist(watchlist._id, newName)
+	);
+	const onCancelRenamedTitle = createOnCancelRenamedTitle(
+		props.onClearRenamedWatchlistId
+	);
 
 	return (
 		<Form
@@ -58,8 +66,12 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear onClick={(e) => e.stopPropagation()} />
 			</Form.Item>
-			<Button onClick={onCancelClick}>Cancel</Button>
-			<Button htmlType="submit" type="primary" onClick={onSaveClick}>
+			<Button onClick={onCancelRenamedTitle}>Cancel</Button>
+			<Button
+				htmlType="submit"
+				type="primary"
+				onClick={onSaveRenamedTitle}
+			>
 				Save
 			</Button>
 		</Form>
