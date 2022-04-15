@@ -5,11 +5,14 @@ import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 
 // TODO on mobile put buttons below text, if possible
+// TODO form buttons same height as text field
+// TODO make re-usable stopPropagation wrapper
 
 interface PanelTitleProps {
 	readonly watchlist: Watchlist;
 	readonly renameWatchlistId?: string;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+	readonly onClearRenamedWatchlistId: () => void;
 }
 
 interface TitleForm {
@@ -38,6 +41,11 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 			form.getFieldsValue().watchlistName
 		);
 	};
+	// TODO move outside of component
+	const onCancelClick = (event?: MouseEvent) => {
+		event?.stopPropagation();
+		props.onClearRenamedWatchlistId();
+	};
 
 	return (
 		<Form
@@ -50,7 +58,7 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear />
 			</Form.Item>
-			<Button>Cancel</Button>
+			<Button onClick={onCancelClick}>Cancel</Button>
 			<Button htmlType="submit" type="primary" onClick={onSaveClick}>
 				Save
 			</Button>
@@ -62,15 +70,21 @@ interface ActionsProps {
 	readonly onRenameWatchlist: () => void;
 }
 
-const WatchlistPanelActions = (props: ActionsProps) => (
-	<div>
-		<Button onClick={props.onRenameWatchlist}>Rename</Button>
-	</div>
-);
+const WatchlistPanelActions = (props: ActionsProps) => {
+	const onRenameClick = (event: MouseEvent) => {
+		event.stopPropagation();
+		props.onRenameWatchlist();
+	};
+	return (
+		<div>
+			<Button onClick={onRenameClick}>Rename</Button>
+		</div>
+	);
+};
 
 export interface WatchlistPanelConfig {
 	readonly renameWatchlistId?: string;
-	readonly onRenameWatchlist: (id: string) => void;
+	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
 }
 
@@ -91,6 +105,9 @@ export const createWatchlistPanel =
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
+						onClearRenamedWatchlistId={() =>
+							config.onRenameWatchlist(undefined)
+						}
 						renameWatchlistId={config.renameWatchlistId}
 						onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
 					/>

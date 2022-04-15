@@ -60,10 +60,16 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
+	// TODO move outside of component
 	const onRenameWatchlist = (id: string) => {
-		// TODO finish this
+		setState((draft) => {
+			draft.renameWatchlistId = id;
+		});
 	};
 	const onSaveRenamedWatchlist = (id: string, newName: string) => {
+		setState((draft) => {
+			draft.renameWatchlistId = undefined;
+		});
 		// TODO finish this
 	};
 
