@@ -14,8 +14,8 @@ const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 		isEditing: false
 	});
 
-	const doEditTitle = (event: MouseEvent) => {
-		event.stopPropagation();
+	const doEditTitle = (event?: MouseEvent<HTMLDivElement>) => {
+		event?.stopPropagation();
 		setState((draft) => {
 			draft.isEditing = true;
 		});
