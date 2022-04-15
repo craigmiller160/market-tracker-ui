@@ -11,9 +11,9 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { WatchlistSection } from './WatchlistSection';
 import { Spinner } from '../../UI/Spinner';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
+import { createWatchlistPanel } from './createWatchlistPanel';
 
 interface State {
 	readonly loading: boolean;
@@ -26,21 +26,7 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 		.otherwise(() => ' ');
 
 const createPanels = (watchlists: ReadonlyArray<Watchlist>): ReactNode =>
-	watchlists.map((watchlist) => (
-		<Collapse.Panel
-			key={watchlist._id}
-			header={
-				<Typography.Title level={4}>
-					{watchlist.watchlistName}
-				</Typography.Title>
-			}
-		>
-			<WatchlistSection
-				stocks={watchlist.stocks}
-				cryptos={watchlist.cryptos}
-			/>
-		</Collapse.Panel>
-	));
+	watchlists.map(createWatchlistPanel);
 
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
