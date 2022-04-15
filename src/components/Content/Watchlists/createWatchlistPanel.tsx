@@ -1,14 +1,6 @@
 import { MouseEvent } from 'react';
 import { Watchlist } from '../../../types/Watchlist';
-import {
-	Button,
-	Collapse,
-	Dropdown,
-	Form,
-	Input,
-	Menu,
-	Typography
-} from 'antd';
+import { Button, Collapse, Form, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { useImmer } from 'use-immer';
@@ -54,6 +46,7 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	return (
 		<Form
 			className="PanelTitleForm"
+			form={form}
 			initialValues={{
 				watchlistName: watchlist.watchlistName
 			}}
@@ -76,6 +69,7 @@ const WatchlistPanelActions = () => (
 );
 
 export const createWatchlistPanel =
+	// eslint-disable-next-line react/display-name
 	(renameWatchlistId?: string) => (watchlist: Watchlist) => {
 		return (
 			<Collapse.Panel
