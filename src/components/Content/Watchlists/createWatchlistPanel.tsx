@@ -1,14 +1,39 @@
+import { MouseEvent } from 'react';
 import { Watchlist } from '../../../types/Watchlist';
 import { Collapse, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
+import { useImmer } from 'use-immer';
+
+interface TitleState {
+	readonly isEditing: boolean;
+}
 
 const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
-	return (
-		<Typography.Title className="PanelTitle" level={4}>
-			{watchlist.watchlistName}
-		</Typography.Title>
-	);
+	const [state, setState] = useImmer<TitleState>({
+		isEditing: false
+	});
+
+	const doEditTitle = (event: MouseEvent) => {
+		event.stopPropagation();
+		setState((draft) => {
+			draft.isEditing = true;
+		});
+	};
+
+	if (!state.isEditing) {
+		return (
+			<Typography.Title
+				onClick={doEditTitle}
+				className="PanelTitle"
+				level={4}
+			>
+				{watchlist.watchlistName}
+			</Typography.Title>
+		);
+	}
+
+	return <div />;
 };
 
 export const createWatchlistPanel = (watchlist: Watchlist) => {
