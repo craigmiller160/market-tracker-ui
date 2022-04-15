@@ -58,9 +58,13 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	);
 };
 
-const WatchlistPanelActions = () => (
+interface ActionsProps {
+	readonly onRenameWatchlist: () => void;
+}
+
+const WatchlistPanelActions = (props: ActionsProps) => (
 	<div>
-		<Button>Rename</Button>
+		<Button onClick={props.onRenameWatchlist}>Rename</Button>
 	</div>
 );
 
@@ -76,7 +80,13 @@ export const createWatchlistPanel =
 		return (
 			<Collapse.Panel
 				key={watchlist._id}
-				extra={<WatchlistPanelActions />}
+				extra={
+					<WatchlistPanelActions
+						onRenameWatchlist={() =>
+							config.onRenameWatchlist(watchlist._id)
+						}
+					/>
+				}
 				className="WatchlistPanel"
 				header={
 					<WatchlistPanelTitle
