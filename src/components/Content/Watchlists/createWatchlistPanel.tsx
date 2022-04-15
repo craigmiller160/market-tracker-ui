@@ -3,44 +3,40 @@ import { Watchlist } from '../../../types/Watchlist';
 import { Button, Collapse, Form, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
-import { useImmer } from 'use-immer';
 
 // TODO on mobile put buttons below text, if possible
-
-interface TitleState {
-	readonly isEditing: boolean;
-}
 
 interface PanelTitleProps {
 	readonly watchlist: Watchlist;
 	readonly renameWatchlistId?: string;
+	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+}
+
+interface TitleForm {
+	readonly watchlistName: string;
 }
 
 const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	const { watchlist, renameWatchlistId } = props;
-	const [form] = Form.useForm();
-	const [state, setState] = useImmer<TitleState>({
-		isEditing: false
-	});
+	const [form] = Form.useForm<TitleForm>();
 
-	const doEditTitle = (event?: MouseEvent<HTMLDivElement>) => {
-		event?.stopPropagation();
-		setState((draft) => {
-			draft.isEditing = true;
-		});
-	};
+	const isEditing = watchlist._id === renameWatchlistId;
 
-	if (!state.isEditing) {
+	if (!isEditing) {
 		return (
-			<Typography.Title onClick={doEditTitle} level={4}>
+			<Typography.Title level={4}>
 				{watchlist.watchlistName}
 			</Typography.Title>
 		);
 	}
 
+	// TODO move outside of component
 	const onSaveClick = (event?: MouseEvent) => {
 		event?.stopPropagation();
-		// TODO do save action
+		props.onSaveRenamedWatchlist(
+			watchlist._id,
+			form.getFieldsValue().watchlistName
+		);
 	};
 
 	return (
@@ -85,7 +81,8 @@ export const createWatchlistPanel =
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
-						renameWatchlistId={renameWatchlistId}
+						renameWatchlistId={config.renameWatchlistId}
+						onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
 					/>
 				}
 			>
