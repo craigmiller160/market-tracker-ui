@@ -42,7 +42,6 @@ const WatchlistPanelTitle = ({ watchlist }: { watchlist: Watchlist }) => {
 		return (
 			<Typography.Title
 				onClick={doEditTitle}
-				className="PanelTitle"
 				level={4}
 			>
 				{watchlist.watchlistName}
@@ -75,6 +74,7 @@ export const createWatchlistPanel = (watchlist: Watchlist) => {
 	return (
 		<Collapse.Panel
 			key={watchlist._id}
+			extra="FooBar"
 			className="WatchlistPanel"
 			header={<WatchlistPanelTitle watchlist={watchlist} />}
 		>
