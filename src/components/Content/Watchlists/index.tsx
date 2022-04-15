@@ -6,7 +6,10 @@ import { match } from 'ts-pattern';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { Watchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
-import { getAllWatchlists } from '../../../services/WatchlistService';
+import {
+	getAllWatchlists,
+	renameWatchlist
+} from '../../../services/WatchlistService';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
@@ -61,16 +64,25 @@ export const Watchlists = () => {
 	}, [getWatchlists]);
 
 	// TODO move outside of component
-	const onRenameWatchlist = (id: string) => {
+	const onRenameWatchlist = (id?: string) => {
 		setState((draft) => {
 			draft.renameWatchlistId = id;
 		});
 	};
 	const onSaveRenamedWatchlist = (id: string, newName: string) => {
+		const watchlistToChangeIndex = state.watchlists.findIndex(
+			(watchlist) => watchlist._id === id
+		);
+		const watchlistToChange = state.watchlists[watchlistToChangeIndex];
+		const oldName = watchlistToChange.watchlistName;
 		setState((draft) => {
 			draft.renameWatchlistId = undefined;
+			draft.watchlists[watchlistToChangeIndex] = castDraft({
+				...watchlistToChange,
+				watchlistName: newName
+			});
 		});
-		// TODO finish this
+		renameWatchlist(oldName, newName);
 	};
 
 	const { breakpoints } = useContext(ScreenContext);
