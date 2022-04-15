@@ -1,8 +1,10 @@
 import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
+import { NanoidIdentityManager } from './NanoidIdentityManager';
 
 export const newTestServer = (): Server =>
 	createServer({
+		identityManagers: new NanoidIdentityManager(),
 		seeds(server) {
 			server.db.loadData({
 				movies: [
