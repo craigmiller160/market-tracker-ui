@@ -13,7 +13,10 @@ import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { Spinner } from '../../UI/Spinner';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
-import { createWatchlistPanel } from './createWatchlistPanel';
+import {
+	createWatchlistPanel,
+	WatchlistPanelConfig
+} from './createWatchlistPanel';
 
 interface State {
 	readonly loading: boolean;
@@ -28,8 +31,8 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 
 const createPanels = (
 	watchlists: ReadonlyArray<Watchlist>,
-	renameWatchlistId?: string
-): ReactNode => watchlists.map(createWatchlistPanel(renameWatchlistId));
+	panelConfig: WatchlistPanelConfig
+): ReactNode => watchlists.map(createWatchlistPanel(panelConfig));
 
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
@@ -57,10 +60,22 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
+	const onRenameWatchlist = (id: string) => {
+		// TODO finish this
+	};
+	const onSaveRenamedWatchlist = (id: string, newName: string) => {
+		// TODO finish this
+	};
+
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
-	const panels = createPanels(state.watchlists, state.renameWatchlistId);
+	const panelConfig: WatchlistPanelConfig = {
+		renameWatchlistId: state.renameWatchlistId,
+		onRenameWatchlist,
+		onSaveRenamedWatchlist
+	};
+	const panels = createPanels(state.watchlists, panelConfig);
 
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)

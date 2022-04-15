@@ -68,9 +68,15 @@ const WatchlistPanelActions = () => (
 	</div>
 );
 
+export interface WatchlistPanelConfig {
+	readonly renameWatchlistId?: string;
+	readonly onRenameWatchlist: (id: string) => void;
+	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+}
+
 export const createWatchlistPanel =
 	// eslint-disable-next-line react/display-name
-	(renameWatchlistId?: string) => (watchlist: Watchlist) => {
+	(config: WatchlistPanelConfig) => (watchlist: Watchlist) => {
 		return (
 			<Collapse.Panel
 				key={watchlist._id}
