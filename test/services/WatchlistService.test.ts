@@ -44,4 +44,8 @@ describe('WatchlistService', () => {
 		)();
 		expect(result).toBeRight();
 	});
+
+	it('addStockToWatchlist', async () => {
+		mockApi.onPut('/watchlists/First%20Watchlist/stock/VTI');
+	});
 });
