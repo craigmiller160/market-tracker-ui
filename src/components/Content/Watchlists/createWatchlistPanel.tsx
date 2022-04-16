@@ -4,6 +4,8 @@ import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
+import { useDispatch } from 'react-redux';
+import { notificationSlice } from '../../../store/notification/slice';
 
 interface PanelTitleProps {
 	readonly breakpoints: Breakpoints;
@@ -34,6 +36,7 @@ const createOnCancelRenamedTitle =
 
 const WatchlistPanelTitle = (props: PanelTitleProps) => {
 	const { watchlist, renameWatchlistId } = props;
+	const dispatch = useDispatch();
 	const [form] = Form.useForm<TitleForm>();
 
 	const isEditing = watchlist._id === renameWatchlistId;
@@ -46,9 +49,14 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 		);
 	}
 
-	const onSaveRenamedTitle = createOnSaveRenamedTitle(form, (newName) =>
-		props.onSaveRenamedWatchlist(watchlist._id, newName)
-	);
+	const onSaveRenamedTitle = createOnSaveRenamedTitle(form, (newName) => {
+		props.onSaveRenamedWatchlist(watchlist._id, newName);
+		dispatch(
+			notificationSlice.actions.addSuccess(
+				'Successfully renamed watchlist'
+			)
+		);
+	});
 	const onCancelRenamedTitle = createOnCancelRenamedTitle(
 		props.onClearRenamedWatchlistId
 	);
