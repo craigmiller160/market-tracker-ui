@@ -9,7 +9,11 @@ interface Props {
 
 export const AddToWatchlistModal = (props: Props) => {
 	return (
-		<Modal title="Add to Watchlist" visible={props.show}>
+		<Modal
+			title="Add to Watchlist"
+			visible={props.show}
+			onCancel={props.onClose}
+		>
 			<div>
 				<p>Radio & Select Box</p>
 				<p>Radio & Input Field</p>
