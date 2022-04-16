@@ -28,9 +28,9 @@ const resetStore = () => {
 	store.dispatch(authSlice.actions.reset());
 };
 
-export const renderApp = async (
+export const renderApp = (
 	renderConfig?: Partial<RenderConfig>
-): Promise<RenderResult> => {
+): RenderResult => {
 	window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
 	const screenContextValue: ScreenContextValue =
 		renderConfig?.screenContextValue ?? {
