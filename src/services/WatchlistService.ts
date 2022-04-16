@@ -11,9 +11,12 @@ export const getAllWatchlists = () =>
 		TaskEither.map(getResponseData)
 	);
 
-export const renameWatchlist = (oldName: string, newName: string) =>
-	pipe(
+export const renameWatchlist = (oldName: string, newName: string) => {
+	const encodedOldName = encodeURIComponent(oldName);
+	const encodedNewName = encodeURIComponent(newName);
+	return pipe(
 		ajaxApi.put<void, void>({
-			uri: `/watchlists/${oldName}/rename/${newName}`
+			uri: `/watchlists/${encodedOldName}/rename/${encodedNewName}`
 		})
 	);
+};
