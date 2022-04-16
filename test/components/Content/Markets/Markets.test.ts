@@ -6,7 +6,7 @@ import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmen
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { renderApp } from '../../../testutils/RenderApp';
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import * as Either from 'fp-ts/es6/Either';
@@ -32,6 +32,7 @@ import {
 	BASE_LAST_PRICE,
 	BASE_PREV_CLOSE_PRICE
 } from '../../../testutils/testDataUtils';
+import { ApiServer, newApiServer } from '../../../testutils/server';
 
 enum CurrentPriceStrategy {
 	QUOTE,
@@ -221,9 +222,15 @@ const testMarketsPage = (config: MarketTestConfig) => {
 };
 
 describe('Markets', () => {
+	let apiServer: ApiServer;
 	beforeEach(() => {
+		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
+	});
+
+	afterEach(() => {
+		apiServer.server.shutdown();
 	});
 
 	it('renders for today', async () => {
@@ -231,6 +238,9 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -244,6 +254,9 @@ describe('Markets', () => {
 			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -258,6 +271,9 @@ describe('Markets', () => {
 			status: 'closed'
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -271,6 +287,9 @@ describe('Markets', () => {
 			time: MarketTime.ONE_WEEK
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('1 Week');
 		testPageHeaders();
 		testMarketsPage({
@@ -283,6 +302,9 @@ describe('Markets', () => {
 			time: MarketTime.ONE_MONTH
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('1 Month');
 		testPageHeaders();
 		testMarketsPage({
@@ -295,6 +317,9 @@ describe('Markets', () => {
 			time: MarketTime.THREE_MONTHS
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('3 Months');
 		testPageHeaders();
 		testMarketsPage({
@@ -307,6 +332,9 @@ describe('Markets', () => {
 			time: MarketTime.ONE_YEAR
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('1 Year');
 		testPageHeaders();
 		testMarketsPage({
@@ -319,6 +347,9 @@ describe('Markets', () => {
 			time: MarketTime.FIVE_YEARS
 		});
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await selectMenuItem('5 Years');
 		testPageHeaders();
 		testMarketsPage({
