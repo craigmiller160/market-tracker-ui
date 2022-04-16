@@ -13,7 +13,10 @@ type AppSchema = Schema<AppRegistry>;
 
 export const newTestServer = (): Server =>
 	createServer({
-		identityManagers: new NanoidIdentityManager(),
+		identityManagers: {
+			// @ts-ignore
+			application: NanoidIdentityManager
+		},
 		models: {
 			movies: Model
 		},
