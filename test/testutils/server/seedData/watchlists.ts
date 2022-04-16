@@ -6,12 +6,26 @@ export const seedWatchlists: DataUpdater = (draft) => {
 	draft.watchlists = castDraft([
 		ensureDbUserRecord<Watchlist>({
 			watchlistName: 'First Watchlist',
-			stocks: [],
+			stocks: [
+				{
+					symbol: 'VTI'
+				},
+				{
+					symbol: 'VOO'
+				}
+			],
 			cryptos: []
 		}),
 		ensureDbUserRecord<Watchlist>({
 			watchlistName: 'Second Watchlist',
-			stocks: [],
+			stocks: [
+				{
+					symbol: 'AAPL'
+				},
+				{
+					symbol: 'GOOG'
+				}
+			],
 			cryptos: []
 		})
 	]);
