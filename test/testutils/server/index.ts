@@ -6,6 +6,7 @@ import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/es6/Option';
 import { createOAuthRoutes } from './routes/oauth';
 import { createTradierRoutes } from './routes/tradier';
+import { seedTradier } from './seedData/tradier';
 
 interface ApiServerActions {
 	readonly clearDefaultUser: () => void;
@@ -29,6 +30,7 @@ export const newApiServer = (): ApiServer => {
 			userId: 1
 		});
 		seedWatchlists(draft);
+		seedTradier(draft);
 	});
 
 	const server: Server = createServer({

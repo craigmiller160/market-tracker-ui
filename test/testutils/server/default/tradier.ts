@@ -1,4 +1,5 @@
 import { TradierCalendar } from '../../../../src/types/tradier/calendar';
+import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 export const defaultTradierCalendar: TradierCalendar = {
 	calendar: {
@@ -7,7 +8,7 @@ export const defaultTradierCalendar: TradierCalendar = {
 		days: {
 			day: [
 				{
-					date: '2022-02-02',
+					date: Time.format('yyyy-MM-dd')(new Date()),
 					status: 'open'
 				}
 			]

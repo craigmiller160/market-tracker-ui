@@ -50,7 +50,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 				}`
 			);
 		}
-		return new Response(200, {}, database.data.tradier.calendar);
+		return database.data.tradier.calendar;
 	});
 
 	server.get('/tradier/markets/timesales', (schema, request) => {
