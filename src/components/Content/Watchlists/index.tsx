@@ -33,7 +33,7 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 		.otherwise(() => ' ');
 
 const createPanels = (
-	watchlists: ReadonlyArray<Watchlist>,
+	watchlists: ReadonlyArray<DbWatchlist>,
 	panelConfig: WatchlistPanelConfig
 ): ReactNode => watchlists.map(createWatchlistPanel(panelConfig));
 

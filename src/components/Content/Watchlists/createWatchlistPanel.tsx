@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { Watchlist } from '../../../types/Watchlist';
+import { DbWatchlist } from '../../../types/Watchlist';
 import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
@@ -7,7 +7,7 @@ import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 
 interface PanelTitleProps {
 	readonly breakpoints: Breakpoints;
-	readonly watchlist: Watchlist;
+	readonly watchlist: DbWatchlist;
 	readonly renameWatchlistId?: string;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
 	readonly onClearRenamedWatchlistId: () => void;
@@ -107,7 +107,7 @@ export interface WatchlistPanelConfig {
 
 export const createWatchlistPanel =
 	// eslint-disable-next-line react/display-name
-	(config: WatchlistPanelConfig) => (watchlist: Watchlist) => {
+	(config: WatchlistPanelConfig) => (watchlist: DbWatchlist) => {
 		return (
 			<Collapse.Panel
 				key={watchlist._id}
