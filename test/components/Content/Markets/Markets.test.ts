@@ -44,7 +44,6 @@ const localeOptions: Intl.NumberFormatOptions = {
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
-const renderApp = renderApp(mockApi);
 const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 	allMarketInvestmentInfo,
 	Try.getOrThrow
@@ -224,6 +223,7 @@ const testMarketsPage = (config: MarketTestConfig) => {
 describe('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
+		mockApi.onGet('/oauth/user').passThrough();
 	});
 
 	it('renders for today', async () => {

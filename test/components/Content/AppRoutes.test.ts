@@ -5,11 +5,11 @@ import { renderApp } from '../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
-const renderApp = renderApp(mockApi);
 
 describe('AppRoutes', () => {
 	beforeEach(() => {
 		mockApi.reset();
+		mockApi.onGet('/oauth/user').passThrough();
 	});
 
 	it('shows correct initial route for un-authenticated user', async () => {
