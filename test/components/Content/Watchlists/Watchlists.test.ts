@@ -30,4 +30,8 @@ describe('Watchlists', () => {
 			).toBeInTheDocument();
 		});
 	});
+
+	it('renames a watchlist', async () => {
+		throw new Error();
+	});
 });
