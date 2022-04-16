@@ -55,6 +55,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 
 	server.get('/tradier/markets/timesales', (schema, request) => {
 		const query = request.queryParams as unknown as TimesaleQuery;
+		console.log('TIMESALE', query.symbol);
 		if (!query.start) {
 			return validationError(`Missing start param`);
 		}
@@ -70,6 +71,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 
 	server.get('/tradier/markets/quotes', (schema, request) => {
 		const query = request.queryParams as unknown as QuoteQuery;
+		console.log('QUOTE', query.symbols);
 		const quote = database.data.tradier.timesales[query.symbols];
 		if (!quote) {
 			return validationError(`No quote for symbol: ${query.symbols}`);

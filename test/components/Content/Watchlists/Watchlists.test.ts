@@ -3,6 +3,7 @@ import { renderApp } from '../../../testutils/RenderApp';
 import { waitFor } from '@testing-library/react';
 import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event';
 
 describe('Watchlists', () => {
 	let apiServer: ApiServer;
@@ -33,6 +34,11 @@ describe('Watchlists', () => {
 				screen.queryByText(watchlist.watchlistName)
 			).toBeInTheDocument();
 		});
+
+		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
+		await waitFor(() =>
+			expect(screen.queryByText('Chart is Here')).toBeInTheDocument()
+		);
 	});
 
 	it('renames a watchlist', async () => {
