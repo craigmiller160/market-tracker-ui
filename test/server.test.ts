@@ -7,12 +7,8 @@ import { Server } from 'miragejs/server';
 
 // TODO delete this in the end
 
-interface MovieInput {
+export interface Movie {
 	readonly title: string;
-}
-
-interface Movie extends MovieInput {
-	readonly id: string;
 }
 
 describe('mirage server', () => {
@@ -40,11 +36,11 @@ describe('mirage server', () => {
 	});
 
 	it('modifies mirage data with request', async () => {
-		const movieInput: MovieInput = {
+		const movieInput: Movie = {
 			title: 'Disney'
 		};
 		const result = await pipe(
-			ajaxApi.post<MovieInput, ReadonlyArray<Movie>>({
+			ajaxApi.post<Movie, ReadonlyArray<Movie>>({
 				uri: '/movies',
 				body: movieInput
 			}),
