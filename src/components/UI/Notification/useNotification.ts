@@ -16,7 +16,7 @@ const useHandleShowingNotifications = (dispatch: Dispatch) =>
 					antNotification[notification.type]({
 						message: notification.message,
 						description: notification.description,
-						duration: null,
+						duration: 6,
 						onClose: () => {
 							dispatch(
 								notificationSlice.actions.hide(notification.id)
