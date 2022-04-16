@@ -1,4 +1,4 @@
-import { newApiServer } from './testutils/server2';
+import { newApiServer } from './testutils/server';
 import { ajaxApi, getResponseData } from '../src/services/AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';

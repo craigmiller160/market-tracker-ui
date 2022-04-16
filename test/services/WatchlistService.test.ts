@@ -1,8 +1,8 @@
 import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
-import { ApiServer, newApiServer } from '../testutils/server2';
-import { ensureDbUserRecord } from '../testutils/server2/Database';
+import { ApiServer, newApiServer } from '../testutils/server';
+import { ensureDbUserRecord } from '../testutils/server/Database';
 import { castDraft } from 'immer';
 
 // TODO move to special seed data in the server directly
