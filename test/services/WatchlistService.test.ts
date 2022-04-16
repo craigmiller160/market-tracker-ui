@@ -5,6 +5,7 @@ import { ApiServer, newApiServer } from '../testutils/server2';
 import { ensureDbUserRecord } from '../testutils/server2/Database';
 import { castDraft } from 'immer';
 
+// TODO move to special seed data in the server directly
 const watchlists: ReadonlyArray<DbWatchlist> = [
 	ensureDbUserRecord<Watchlist>({
 		watchlistName: 'Watchlist',
