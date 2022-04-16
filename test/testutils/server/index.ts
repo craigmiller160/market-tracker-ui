@@ -4,6 +4,7 @@ import { Database } from './Database';
 import { createWatchlistRoutes } from './routes/watchlists';
 import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/es6/Option';
+import { createOAuthRoutes } from './routes/oauth';
 
 interface ApiServerActions {
 	readonly setDefaultUser: () => void;
@@ -31,7 +32,7 @@ export const newApiServer = (): ApiServer => {
 	const server: Server = createServer({
 		routes() {
 			this.namespace = '/market-tracker/api';
-
+			createOAuthRoutes(database, this);
 			createWatchlistRoutes(database, this);
 		}
 	});
