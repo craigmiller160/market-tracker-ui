@@ -4,7 +4,7 @@ import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
-import { DbWatchlist, Watchlist } from '../../../types/Watchlist';
+import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
 import {
 	getAllWatchlists,
