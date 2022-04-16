@@ -4,7 +4,7 @@ import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
-import { Watchlist } from '../../../types/Watchlist';
+import { DbWatchlist, Watchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
 import {
 	getAllWatchlists,
@@ -23,7 +23,7 @@ import {
 
 interface State {
 	readonly loading: boolean;
-	readonly watchlists: ReadonlyArray<Watchlist>;
+	readonly watchlists: ReadonlyArray<DbWatchlist>;
 	readonly renameWatchlistId?: string;
 }
 
