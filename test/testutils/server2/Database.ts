@@ -1,12 +1,15 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer/dist/types/types-external';
 import produce from 'immer';
+import { DbWatchlist } from '../../../src/types/Watchlist';
 
 export interface DbRecord {
 	readonly _id: string;
 }
 
-export interface Data {}
+export interface Data {
+	readonly watchlists: ReadonlyArray<DbWatchlist>;
+}
 
 export const ensureDbRecord = <T extends object>(record: T): T & DbRecord => {
 	if (
@@ -23,12 +26,10 @@ export const ensureDbRecord = <T extends object>(record: T): T & DbRecord => {
 
 export class Database {
 	data: Data = {
-		movies: []
+		watchlists: []
 	};
 
 	updateData(updater: (draft: WritableDraft<Data>) => void) {
 		this.data = produce(this.data, updater);
 	}
 }
-
-export const database = new Database();
