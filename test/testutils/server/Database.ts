@@ -8,11 +8,17 @@ import { AuthUser } from '../../../src/types/auth';
 import * as Option from 'fp-ts/es6/Option';
 import { TradierCalendar } from '../../../src/types/tradier/calendar';
 import { defaultTradierCalendar } from './default/tradier';
+import { TradierQuotes } from '../../../src/types/tradier/quotes';
+import { TradierSeries } from '../../../src/types/tradier/timesales';
+import { TradierHistory } from '../../../src/types/tradier/history';
 
 const USER_ID = 1;
 
 export interface TradierData {
 	readonly calendar: TradierCalendar;
+	readonly quotes: Record<string, TradierQuotes>;
+	readonly timesales: Record<string, TradierSeries>;
+	readonly history: Record<string, TradierHistory>;
 }
 
 export interface Data {
@@ -58,7 +64,10 @@ export class Database {
 		authUser: Option.none,
 		watchlists: [],
 		tradier: {
-			calendar: defaultTradierCalendar
+			calendar: defaultTradierCalendar,
+			quotes: {},
+			history: {},
+			timesales: {}
 		}
 	};
 
