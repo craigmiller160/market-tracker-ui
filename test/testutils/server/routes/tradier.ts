@@ -1,5 +1,5 @@
 import { Database } from '../Database';
-import { Server } from 'miragejs/server';
+import { Server } from 'miragejs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { validationError } from '../utils/validate';
 
