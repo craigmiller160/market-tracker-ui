@@ -50,7 +50,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 				}`
 			);
 		}
-		return new Response(200, {}, database.data.tradier.calendar);
+		return database.data.tradier.calendar;
 	});
 
 	server.get('/tradier/markets/timesales', (schema, request) => {
@@ -65,7 +65,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 		if (!timesale) {
 			return validationError(`No timesale for symbol: ${query.symbol}`);
 		}
-		return new Response(200, {}, timesale);
+		return timesale;
 	});
 
 	server.get('/tradier/markets/quotes', (schema, request) => {
@@ -74,7 +74,7 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 		if (!quote) {
 			return validationError(`No quote for symbol: ${query.symbols}`);
 		}
-		return new Response(200, {}, quote);
+		return quote;
 	});
 
 	server.get('/tradier/markets/history', (schema, request) => {
@@ -92,6 +92,6 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 		if (!history) {
 			return validationError(`No history for symbol: ${query.symbol}`);
 		}
-		return new Response(200, {}, history);
+		return history;
 	});
 };
