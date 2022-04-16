@@ -2,18 +2,32 @@ import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
 import produce from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
+import { nanoid } from '@reduxjs/toolkit';
 
-export interface MovieInput {
+export interface Movie {
 	readonly title: string;
 }
 
-export interface Movie extends MovieInput {
+interface DbRecord {
 	readonly _id: string;
 }
 
 interface Data {
-	readonly movies: ReadonlyArray<Movie>;
+	readonly movies: ReadonlyArray<Movie & DbRecord>;
 }
+
+const ensureDbRecord = <T extends object>(record: T): T & DbRecord => {
+	if (
+		Object.prototype.hasOwnProperty.call(record, '_id') &&
+		(record as T & DbRecord)._id
+	) {
+		return record as T & DbRecord;
+	}
+	return {
+		...record,
+		_id: nanoid()
+	};
+};
 
 class Database {
 	data: Data = {
@@ -25,7 +39,7 @@ class Database {
 	}
 }
 
-const movies: ReadonlyArray<Movie> = [];
+const database = new Database();
 
 export const newApiServer = (): Server =>
 	createServer({
