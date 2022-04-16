@@ -1,23 +1,31 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { renderApp } from '../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
+import { ApiServer, newApiServer } from '../../testutils/server';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 describe('AppRoutes', () => {
+	let apiServer: ApiServer;
 	beforeEach(() => {
+		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
 	});
 
+	afterEach(() => {
+		apiServer.server.shutdown();
+	});
+
 	it('shows correct initial route for un-authenticated user', async () => {
-		await renderApp({
-			isAuthorized: false
-		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/welcome'
+		apiServer.actions.clearDefaultUser();
+		await renderApp();
+		await waitFor(() =>
+			expect(window.location.href).toEqual(
+				'http://localhost/market-tracker/welcome'
+			)
 		);
 		expect(
 			screen.queryByText('Welcome to Market Tracker')
@@ -26,8 +34,10 @@ describe('AppRoutes', () => {
 
 	it('shows correct initial route for authenticated user', async () => {
 		await renderApp();
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
+		await waitFor(() =>
+			expect(window.location.href).toEqual(
+				'http://localhost/market-tracker/markets'
+			)
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
@@ -36,8 +46,10 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/auth-management/'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
+		await waitFor(() =>
+			expect(window.location.href).toEqual(
+				'http://localhost/market-tracker/markets'
+			)
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
@@ -49,7 +61,9 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('All Markets')).toBeInTheDocument()
+		);
 	});
 
 	it('renders portfolios route', async () => {
@@ -59,7 +73,9 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
 		);
-		expect(screen.queryByText('Portfolios Page')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Portfolios Page')).toBeInTheDocument()
+		);
 	});
 
 	it('renders watchlists route', async () => {
@@ -69,7 +85,11 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
 		);
-		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(
+				screen.queryByText('Investment Watchlists')
+			).toBeInTheDocument()
+		);
 	});
 
 	it('renders recognition route', async () => {
@@ -79,9 +99,11 @@ describe('AppRoutes', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/recognition'
 		);
-		expect(
-			screen.queryByText('Data Source Recognition')
-		).toBeInTheDocument();
+		await waitFor(() =>
+			expect(
+				screen.queryByText('Data Source Recognition')
+			).toBeInTheDocument()
+		);
 	});
 
 	it('will not render portfolios route in prod', async () => {
@@ -89,8 +111,10 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
+		await waitFor(() =>
+			expect(window.location.href).toEqual(
+				'http://localhost/market-tracker/markets'
+			)
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
@@ -100,8 +124,10 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
+		await waitFor(() =>
+			expect(window.location.href).toEqual(
+				'http://localhost/market-tracker/markets'
+			)
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
