@@ -4,6 +4,7 @@ import { Server } from 'miragejs/server';
 import { NanoidIdentityManager } from './NanoidIdentityManager';
 import { ModelDefinition, Registry } from 'miragejs/-types';
 import Schema from 'miragejs/orm/schema';
+import { MongoSerializer } from './MongoSerializer';
 
 export interface Movie extends ModelDefinition<Movie> {
 	readonly title: string;
@@ -17,6 +18,9 @@ export const newTestServer = (): Server =>
 		identityManagers: {
 			// @ts-ignore
 			application: NanoidIdentityManager
+		},
+		serializers: {
+			application: MongoSerializer
 		},
 		models: {
 			movies: Model

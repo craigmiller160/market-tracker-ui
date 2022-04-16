@@ -33,9 +33,9 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result).toEqualRight([
-			{ id: '1', title: 'LOTR' },
-			{ id: '2', title: 'Marvel' },
-			{ id: '3', title: 'Star Wars' }
+			{ id: expect.any(String), title: 'LOTR' },
+			{ id: expect.any(String), title: 'Marvel' },
+			{ id: expect.any(String), title: 'Star Wars' }
 		]);
 	});
 
@@ -51,7 +51,7 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result).toEqualRight({
-			id: '4',
+			id: expect.any(String),
 			title: 'Disney'
 		});
 
@@ -62,10 +62,10 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result2).toEqualRight([
-			{ id: '1', title: 'LOTR' },
-			{ id: '2', title: 'Marvel' },
-			{ id: '3', title: 'Star Wars' },
-			{ id: '4', title: 'Disney' }
+			{ id: expect.any(String), title: 'LOTR' },
+			{ id: expect.any(String), title: 'Marvel' },
+			{ id: expect.any(String), title: 'Star Wars' },
+			{ id: expect.any(String), title: 'Disney' }
 		]);
 	});
 });
