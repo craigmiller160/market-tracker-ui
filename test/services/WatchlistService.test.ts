@@ -3,17 +3,18 @@ import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
+import { nanoid } from '@reduxjs/toolkit';
 
 const watchlists: ReadonlyArray<DbWatchlist> = [
 	{
-		_id: '1',
+		_id: nanoid(),
 		userId: 2,
 		watchlistName: 'Watchlist',
 		stocks: [],
 		cryptos: []
 	},
 	{
-		_id: '2',
+		_id: nanoid(),
 		userId: 2,
 		watchlistName: 'Watchlist2',
 		stocks: [],
