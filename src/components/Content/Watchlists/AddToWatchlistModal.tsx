@@ -12,6 +12,7 @@ interface ModalForm {
 }
 
 // TODO don't forget alert message on success
+// TODO make sure it resets when re-opened
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
@@ -28,12 +29,14 @@ export const AddToWatchlistModal = (props: Props) => {
 						watchlistSelectionType: 'existing'
 					}}
 				>
-					<Radio.Group defaultValue="existing">
-						<Space direction="vertical">
-							<Radio value="existing">Select Box</Radio>
-							<Radio value="new">Input Field</Radio>
-						</Space>
-					</Radio.Group>
+					<Form.Item name="watchlistSelectionType">
+						<Radio.Group>
+							<Space direction="vertical">
+								<Radio value="existing">Select Box</Radio>
+								<Radio value="new">Input Field</Radio>
+							</Space>
+						</Radio.Group>
+					</Form.Item>
 				</Form>
 			</div>
 		</Modal>
