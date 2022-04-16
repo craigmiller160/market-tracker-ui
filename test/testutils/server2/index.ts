@@ -1,10 +1,10 @@
 import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
 import { Database } from './Database';
+import { createWatchlistRoutes } from './routes/watchlists';
 
 export interface ApiServer {
 	readonly server: Server;
-	readonly shutdown: () => void;
 	readonly database: Database;
 }
 
@@ -14,12 +14,11 @@ export const newApiServer = (): ApiServer => {
 		routes() {
 			this.namespace = '/market-tracker/api';
 
-			this.get('/watchlists/all', () => database.data.watchlists);
+			createWatchlistRoutes(database, this);
 		}
 	});
 	return {
 		server,
-		database,
-		shutdown: server.shutdown
+		database
 	};
 };

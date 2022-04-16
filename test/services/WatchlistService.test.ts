@@ -29,7 +29,7 @@ describe('WatchlistService', () => {
 	});
 
 	afterEach(() => {
-		apiServer.shutdown;
+		apiServer.server.shutdown();
 	});
 
 	it('getAllWatchlists', async () => {
@@ -38,7 +38,15 @@ describe('WatchlistService', () => {
 	});
 
 	it('renameWatchlist', async () => {
-		const result = await WatchlistService.renameWatchlist('old', 'new')();
+		const result = await WatchlistService.renameWatchlist(
+			'Watchlist',
+			'NewWatchlist'
+		)();
 		expect(result).toBeRight();
+		const firstWatchlist = apiServer.database.data.watchlists[0];
+		expect(firstWatchlist).toEqual({
+			...watchlists[0],
+			watchlistName: 'NewWatchlist'
+		});
 	});
 });
