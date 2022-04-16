@@ -1,5 +1,9 @@
 import { Data, DataUpdater } from '../Database';
-import { createTradierQuote } from '../../testDataUtils';
+import {
+	createTradierHistory,
+	createTradierQuote,
+	createTradierTimesale
+} from '../../testDataUtils';
 import { castDraft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
 
@@ -10,10 +14,27 @@ const createAddQuote =
 		);
 	};
 
+const createAddHistory =
+	(draft: WritableDraft<Data>) => (symbol: string, modifier: number) => {
+		draft.tradier.history[symbol] = castDraft(
+			createTradierHistory(modifier)
+		);
+	};
+
+const createAddTimesale =
+	(draft: WritableDraft<Data>) => (symbol: string, modifier: number) => {
+		draft.tradier.timesales[symbol] = castDraft(
+			createTradierTimesale(modifier)
+		);
+	};
+
 export const seedTradier: DataUpdater = (draft) => {
 	const addQuote = createAddQuote(draft);
-	addQuote('VTI', 1);
-	addQuote('VOO', 2);
-	addQuote('AAPL', 3);
-	addQuote('GOOG', 4);
+	const addHistory = createAddHistory(draft);
+	const addTimesale = createAddTimesale(draft);
+	['VTI', 'VOO', 'AAPL', 'GOOG'].forEach((symbol, index) => {
+		addQuote(symbol, index);
+		addHistory(symbol, index);
+		addTimesale(symbol, index);
+	});
 };

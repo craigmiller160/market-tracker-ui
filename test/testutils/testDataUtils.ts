@@ -101,7 +101,7 @@ export const createTradierQuoteNotFound = (symbol: string): TradierQuotes => ({
 	}
 });
 
-const createTradierHistory = (modifier: number): TradierHistory => ({
+export const createTradierHistory = (modifier: number): TradierHistory => ({
 	history: {
 		day: [
 			{
@@ -115,7 +115,7 @@ const createTradierHistory = (modifier: number): TradierHistory => ({
 	}
 });
 
-const createTradierTimesale = (
+export const createTradierTimesale = (
 	modifier: number,
 	timestampMillis: number = new Date().getTime() - 120_000
 ): TradierSeries => {
