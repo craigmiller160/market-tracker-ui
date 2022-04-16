@@ -35,7 +35,6 @@ describe('Watchlists', () => {
 				screen.queryByText('Investment Watchlists')
 			).toBeInTheDocument()
 		);
-		expect(apiServer.database.data.watchlists).toHaveLength(2);
 		await waitFor(() =>
 			expect(
 				screen.queryAllByTestId('watchlist-panel-title')
@@ -64,6 +63,41 @@ describe('Watchlists', () => {
 	});
 
 	it('renames a watchlist', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(
+				screen.queryAllByTestId('watchlist-panel-title')
+			).toHaveLength(2)
+		);
+		expect(screen.queryAllByText('Rename')).toHaveLength(2);
+		expect(screen.queryByText('Save')).not.toBeInTheDocument();
+		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+
+		userEvent.click(screen.queryAllByText('Rename')[0]);
+		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
+		expect(
+			screen.queryByDisplayValue('First Watchlist')
+		).toBeInTheDocument();
+		expect(screen.queryByText('Rename')).not.toBeInTheDocument();
+		expect(screen.queryByText('Save')).toBeInTheDocument();
+		expect(screen.queryByText('Cancel')).toBeInTheDocument();
+
+		userEvent.click(screen.getByText('Cancel'));
+		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.queryAllByText('Rename')).toHaveLength(2);
+
+		userEvent.click(screen.queryAllByText('Rename')[0]);
+		const input = screen.getByDisplayValue('First Watchlist');
+		userEvent.clear(input);
+		userEvent.type(input, 'New Watchlist');
+
+		userEvent.click(screen.getByText('Save'));
+		await waitFor(() =>
+			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
+		);
+		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 });
