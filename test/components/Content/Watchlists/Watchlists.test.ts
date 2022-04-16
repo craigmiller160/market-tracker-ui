@@ -22,5 +22,12 @@ describe('Watchlists', () => {
 				screen.queryByText('Investment Watchlists')
 			).toBeInTheDocument()
 		);
+		expect(apiServer.database.data.watchlists).toHaveLength(2);
+		screen.debug(); // TODO delete this
+		apiServer.database.data.watchlists.forEach((watchlist) => {
+			expect(
+				screen.queryByText(watchlist.watchlistName)
+			).toBeInTheDocument();
+		});
 	});
 });
