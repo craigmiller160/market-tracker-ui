@@ -1,6 +1,6 @@
 import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
-import produce from 'immer';
+import produce, { castDraft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
 import { nanoid } from '@reduxjs/toolkit';
 
@@ -40,10 +40,25 @@ class Database {
 }
 
 const database = new Database();
+database.updateData((draft) => {
+	draft.movies = castDraft([
+		ensureDbRecord({
+			title: 'LOTR'
+		}),
+		ensureDbRecord({
+			title: 'Marvel'
+		}),
+		ensureDbRecord({
+			title: 'Star Wars'
+		})
+	]);
+});
 
 export const newApiServer = (): Server =>
 	createServer({
 		routes() {
 			this.namespace = '/market-tracker/api';
+
+			this.get('/movies', () => database.data.movies);
 		}
 	});

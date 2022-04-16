@@ -1,4 +1,4 @@
-import { newTestServer } from './testutils/server';
+import { newApiServer } from './testutils/server2';
 import { ajaxApi, getResponseData } from '../src/services/AjaxApi';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -18,7 +18,7 @@ interface Movie extends MovieInput {
 describe('mirage server', () => {
 	let server: Server;
 	beforeEach(() => {
-		server = newTestServer();
+		server = newApiServer();
 	});
 
 	afterEach(() => {
@@ -33,9 +33,9 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result).toEqualRight([
-			{ id: expect.any(String), title: 'LOTR' },
-			{ id: expect.any(String), title: 'Marvel' },
-			{ id: expect.any(String), title: 'Star Wars' }
+			{ _id: expect.any(String), title: 'LOTR' },
+			{ _id: expect.any(String), title: 'Marvel' },
+			{ _id: expect.any(String), title: 'Star Wars' }
 		]);
 	});
 
