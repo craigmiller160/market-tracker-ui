@@ -10,10 +10,12 @@ import { SearchValues } from './constants';
 import { ReactNode, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
+import { AddToWatchlistModal } from '../Watchlists/AddToWatchlistModal';
 
 interface State {
 	readonly info: InvestmentInfo;
 	readonly showCard: boolean;
+	readonly showAddToWatchlistModal: boolean;
 }
 
 const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
@@ -44,7 +46,8 @@ export const Search = () => {
 			symbol: '',
 			name: ''
 		},
-		showCard: false
+		showCard: false,
+		showAddToWatchlistModal: false
 	});
 	const doSearch = useMemo(() => createDoSearch(setState), [setState]);
 
@@ -57,8 +60,16 @@ export const Search = () => {
 	}, [marketTime, state.info.symbol, setState]);
 
 	const CardActions = useCardActions({
-		addToWatchlist: () => null
+		addToWatchlist: () =>
+			setState((draft) => {
+				draft.showAddToWatchlistModal = true;
+			})
 	});
+
+	const closeAddToWatchlistModal = () =>
+		setState((draft) => {
+			draft.showAddToWatchlistModal = false;
+		});
 
 	return (
 		<RefreshProvider>
@@ -69,6 +80,10 @@ export const Search = () => {
 					<InvestmentCard info={state.info} actions={CardActions} />
 				)}
 			</div>
+			<AddToWatchlistModal
+				show={state.showAddToWatchlistModal}
+				onClose={closeAddToWatchlistModal}
+			/>
 		</RefreshProvider>
 	);
 };

@@ -2,6 +2,7 @@ import { Modal } from 'antd';
 
 interface Props {
 	readonly show: boolean;
+	readonly onClose: () => void;
 }
 
 // TODO don't forget alert message on success
