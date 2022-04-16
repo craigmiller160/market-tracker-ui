@@ -1,10 +1,10 @@
-import { Watchlist } from '../../src/types/Watchlist';
+import { DbWatchlist } from '../../src/types/Watchlist';
 import { ajaxApi } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
 
-const watchlists: ReadonlyArray<Watchlist> = [
+const watchlists: ReadonlyArray<DbWatchlist> = [
 	{
 		_id: '1',
 		userId: 2,
