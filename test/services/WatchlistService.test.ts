@@ -46,6 +46,21 @@ describe('WatchlistService', () => {
 	});
 
 	it('addStockToWatchlist', async () => {
-		mockApi.onPut('/watchlists/First%20Watchlist/stock/VTI');
+		const newWatchlist: DbWatchlist = {
+			...watchlists[0],
+			stocks: [
+				{
+					symbol: 'VTI'
+				}
+			]
+		};
+		mockApi
+			.onPut('/watchlists/First%20Watchlist/stock/VTI')
+			.reply(200, newWatchlist);
+		const result = await WatchlistService.addStockToWatchlist(
+			'First Watchlist',
+			'VTI'
+		)();
+		expect(result).toEqualRight(newWatchlist);
 	});
 });
