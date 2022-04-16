@@ -5,7 +5,7 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
-import { createRenderApp } from '../../../testutils/RenderApp';
+import { renderApp } from '../../../testutils/RenderApp';
 import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
@@ -44,7 +44,7 @@ const localeOptions: Intl.NumberFormatOptions = {
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
-const renderApp = createRenderApp(mockApi);
+const renderApp = renderApp(mockApi);
 const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 	allMarketInvestmentInfo,
 	Try.getOrThrow

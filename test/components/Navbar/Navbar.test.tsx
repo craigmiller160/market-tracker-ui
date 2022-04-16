@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
-import { createRenderApp } from '../../testutils/RenderApp';
+import { renderApp } from '../../testutils/RenderApp';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
 	menuItemIsNotSelected,
@@ -22,7 +22,7 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const renderApp = createRenderApp(mockApi);
+const renderApp = renderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
 
 describe('Navbar', () => {

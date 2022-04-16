@@ -6,6 +6,7 @@ import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/es6/Option';
 import { createOAuthRoutes } from './routes/oauth';
 
+// TODO going to be super, SUPER common, maybe should change it to clear user instead?
 interface ApiServerActions {
 	readonly setDefaultUser: () => void;
 }
