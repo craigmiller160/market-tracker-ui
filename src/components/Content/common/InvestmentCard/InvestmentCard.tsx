@@ -243,7 +243,7 @@ export const InvestmentCard = (props: Props) => {
 			className={`InvestmentCard ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
-			actions={actions}
+			actions={loading ? [] : actions}
 		>
 			{Body}
 		</Card>
