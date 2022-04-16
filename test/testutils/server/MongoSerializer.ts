@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { RestSerializer } from 'miragejs';
 
 export const MongoSerializer = RestSerializer.extend({
@@ -7,6 +8,6 @@ export const MongoSerializer = RestSerializer.extend({
 	},
 	serialize(primaryResource: any, request: any): any {
 		console.log('SERIALIZING');
-        return null;
+		return null;
 	}
 });

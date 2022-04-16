@@ -32,7 +32,6 @@ describe('mirage server', () => {
 			}),
 			TaskEither.map(getResponseData)
 		)();
-		console.log(result);
 		expect(result).toEqualRight([
 			{ id: expect.any(String), title: 'LOTR' },
 			{ id: expect.any(String), title: 'Marvel' },
