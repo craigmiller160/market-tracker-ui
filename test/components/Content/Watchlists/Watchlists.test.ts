@@ -54,6 +54,13 @@ describe('Watchlists', () => {
 
 		testCard('VTI', '$100.00');
 		testCard('VOO', '$101.00');
+
+		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[1]);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
+		);
+		testCard('AAPL', '$102.00');
+		testCard('GOOG', '$103.00');
 	});
 
 	it('renames a watchlist', async () => {
