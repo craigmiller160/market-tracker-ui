@@ -4,7 +4,7 @@ import {
 	ScreenContextValue
 } from '../../src/components/ScreenContext';
 import { EnhancedStore } from '@reduxjs/toolkit';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { RootLayout } from '../../src/components/RootLayout';
@@ -41,16 +41,14 @@ export const renderApp = async (
 
 	resetStore();
 
-	await waitFor(() =>
-		render(
-			<Provider store={store}>
-				<ScreenContext.Provider value={screenContextValue}>
-					<BrowserRouter basename="/">
-						<RootLayout />
-					</BrowserRouter>
-				</ScreenContext.Provider>
-			</Provider>
-		)
+	render(
+		<Provider store={store}>
+			<ScreenContext.Provider value={screenContextValue}>
+				<BrowserRouter basename="/">
+					<RootLayout />
+				</BrowserRouter>
+			</ScreenContext.Provider>
+		</Provider>
 	);
 	return {
 		store
