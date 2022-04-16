@@ -51,7 +51,7 @@ const createHandleGetDataError =
 				})
 			)
 			.with(when(isNestedInvestmentNotFoundError), () => {
-				console.error('Error getting data', ex);
+				console.error('Error getting data', ex.stack);
 				return {
 					name: 'InvestmentNotFoundError',
 					message: getInvestmentNotFoundMessage(ex),
@@ -59,7 +59,7 @@ const createHandleGetDataError =
 				};
 			})
 			.otherwise((): ErrorInfo => {
-				console.error('Error getting data', ex);
+				console.error('Error getting data', ex.stack);
 				dispatch(
 					notificationSlice.actions.addError(
 						`Error getting data: ${ex.message}`

@@ -1,36 +1,35 @@
-import { Watchlist } from '../../src/types/Watchlist';
-import { ajaxApi } from '../../src/services/AjaxApi';
-import MockAdapter from 'axios-mock-adapter';
+import { DbWatchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
-
-const watchlists: ReadonlyArray<Watchlist> = [
-	{
-		_id: '1',
-		userId: 2,
-		watchlistName: 'Watchlist',
-		stocks: [],
-		cryptos: []
-	},
-	{
-		_id: '2',
-		userId: 2,
-		watchlistName: 'Watchlist2',
-		stocks: [],
-		cryptos: []
-	}
-];
-
-const mockApi = new MockAdapter(ajaxApi.instance);
+import { ApiServer, newApiServer } from '../testutils/server';
 
 describe('WatchlistService', () => {
+	let apiServer: ApiServer;
+	let seedWatchlists: ReadonlyArray<DbWatchlist>;
 	beforeEach(() => {
-		mockApi.reset();
+		apiServer = newApiServer();
+		seedWatchlists = apiServer.database.data.watchlists;
+	});
+
+	afterEach(() => {
+		apiServer.server.shutdown();
 	});
 
 	it('getAllWatchlists', async () => {
-		mockApi.onGet('/watchlists/all').reply(200, watchlists);
 		const result = await WatchlistService.getAllWatchlists()();
-		expect(result).toEqualRight(watchlists);
+		expect(result).toEqualRight(seedWatchlists);
+	});
+
+	it('renameWatchlist', async () => {
+		const result = await WatchlistService.renameWatchlist(
+			'First Watchlist',
+			'NewWatchlist'
+		)();
+		expect(result).toBeRight();
+		const firstWatchlist = apiServer.database.data.watchlists[0];
+		expect(firstWatchlist).toEqual({
+			...seedWatchlists[0],
+			watchlistName: 'NewWatchlist'
+		});
 	});
 });

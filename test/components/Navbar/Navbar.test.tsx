@@ -1,4 +1,4 @@
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
@@ -7,12 +7,13 @@ import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
 import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
-import { createRenderApp } from '../../testutils/RenderApp';
+import { renderApp } from '../../testutils/RenderApp';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
 	menuItemIsNotSelected,
 	menuItemIsSelected
 } from '../../testutils/menuUtils';
+import { ApiServer, newApiServer } from '../../testutils/server';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -22,17 +23,20 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const renderApp = createRenderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
 
 describe('Navbar', () => {
+	let apiServer: ApiServer;
 	let location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
+		mockApi.onGet('/oauth/user').passThrough();
+		apiServer = newApiServer();
 	});
 
 	afterEach(() => {
 		Option.map(restoreLocation)(location);
+		apiServer.server.shutdown();
 	});
 
 	it('renders for desktop', async () => {
@@ -53,11 +57,12 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for un-authenticated user', async () => {
-		await renderApp({
-			isAuthorized: false
-		});
+		apiServer.actions.clearDefaultUser();
+		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Login')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Login')).toBeInTheDocument()
+		);
 
 		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
 		expect(screen.queryByText('Search')).not.toBeInTheDocument();
@@ -71,7 +76,9 @@ describe('Navbar', () => {
 		process.env.NODE_ENV = 'production';
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 		expect(screen.queryByText('Search')).toBeInTheDocument();
@@ -96,7 +103,9 @@ describe('Navbar', () => {
 	it('shows correct items for authenticated user', async () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		expect(screen.queryByText('Search')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
@@ -122,6 +131,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -150,6 +162,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -172,6 +187,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -194,6 +212,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/recognition'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/recognition'
@@ -216,6 +237,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -244,6 +268,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -269,10 +296,12 @@ describe('Navbar', () => {
 	});
 
 	it('sends login request', async () => {
+		apiServer.actions.clearDefaultUser();
 		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
-		await renderApp({
-			isAuthorized: false
-		});
+		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Login')).toBeInTheDocument()
+		);
 		location = Option.some(mockLocation());
 		await act(async () => {
 			await userEvent.click(screen.getByText('Login'));
@@ -284,6 +313,9 @@ describe('Navbar', () => {
 	it('sends logout request', async () => {
 		mockApi.onGet('/oauth/logout').reply(200);
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
 			await sleep100();
@@ -293,6 +325,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Week', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Week'));
@@ -302,6 +337,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Month', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Month'));
@@ -311,6 +349,9 @@ describe('Navbar', () => {
 
 	it('selects Today', async () => {
 		const { store } = await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
 		menuItemIsSelected('1 Week');
 		menuItemIsNotSelected('Today');
@@ -322,6 +363,9 @@ describe('Navbar', () => {
 
 	it('selects 3 Months', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('3 Months'));
@@ -331,6 +375,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Year', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Year'));
@@ -340,6 +387,9 @@ describe('Navbar', () => {
 
 	it('selects 5 Years', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('5 Years'));

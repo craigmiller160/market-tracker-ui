@@ -4,20 +4,27 @@ import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
-import { Watchlist } from '../../../types/Watchlist';
+import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
-import { getAllWatchlists } from '../../../services/WatchlistService';
+import {
+	getAllWatchlists,
+	renameWatchlist
+} from '../../../services/WatchlistService';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { WatchlistSection } from './WatchlistSection';
 import { Spinner } from '../../UI/Spinner';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
+import {
+	createWatchlistPanel,
+	WatchlistPanelConfig
+} from './createWatchlistPanel';
 
 interface State {
 	readonly loading: boolean;
-	readonly watchlists: ReadonlyArray<Watchlist>;
+	readonly watchlists: ReadonlyArray<DbWatchlist>;
+	readonly renameWatchlistId?: string;
 }
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
@@ -25,22 +32,10 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 		.with({ xs: true }, () => <br />)
 		.otherwise(() => ' ');
 
-const createPanels = (watchlists: ReadonlyArray<Watchlist>): ReactNode =>
-	watchlists.map((watchlist) => (
-		<Collapse.Panel
-			key={watchlist._id}
-			header={
-				<Typography.Title level={4}>
-					{watchlist.watchlistName}
-				</Typography.Title>
-			}
-		>
-			<WatchlistSection
-				stocks={watchlist.stocks}
-				cryptos={watchlist.cryptos}
-			/>
-		</Collapse.Panel>
-	));
+const createPanels = (
+	watchlists: ReadonlyArray<DbWatchlist>,
+	panelConfig: WatchlistPanelConfig
+): ReactNode => watchlists.map(createWatchlistPanel(panelConfig));
 
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
@@ -52,6 +47,27 @@ const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 			})
 		)
 	);
+
+const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
+	setState((draft) => {
+		draft.renameWatchlistId = id;
+	});
+
+const createOnSaveRenamedWatchlist =
+	(setState: Updater<State>) => (id: string, newName: string) =>
+		setState((draft) => {
+			const watchlistToChangeIndex = draft.watchlists.findIndex(
+				(watchlist) => watchlist._id === id
+			);
+			const watchlistToChange = draft.watchlists[watchlistToChangeIndex];
+			const oldName = watchlistToChange.watchlistName;
+			draft.renameWatchlistId = undefined;
+			draft.watchlists[watchlistToChangeIndex] = castDraft({
+				...watchlistToChange,
+				watchlistName: newName
+			});
+			renameWatchlist(oldName, newName)();
+		});
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
@@ -68,10 +84,19 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
+	const onRenameWatchlist = createOnRenameWatchlist(setState);
+	const onSaveRenamedWatchlist = createOnSaveRenamedWatchlist(setState);
+
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
-	const panels = createPanels(state.watchlists);
+	const panelConfig: WatchlistPanelConfig = {
+		breakpoints,
+		renameWatchlistId: state.renameWatchlistId,
+		onRenameWatchlist,
+		onSaveRenamedWatchlist
+	};
+	const panels = createPanels(state.watchlists, panelConfig);
 
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
