@@ -6,12 +6,19 @@ import { DbRecord, UserRecord } from '../../../src/types/db';
 import { OptionT } from '@craigmiller160/ts-functions/es/types';
 import { AuthUser } from '../../../src/types/auth';
 import * as Option from 'fp-ts/es6/Option';
+import { TradierCalendar } from '../../../src/types/tradier/calendar';
+import { defaultTradierCalendar } from './default/tradier';
 
 const USER_ID = 1;
+
+export interface TradierData {
+	readonly calendar: TradierCalendar;
+}
 
 export interface Data {
 	readonly authUser: OptionT<AuthUser>;
 	readonly watchlists: ReadonlyArray<DbWatchlist>;
+	readonly tradier: TradierData;
 }
 
 export const ensureDbRecord = <T extends object>(record: T): T & DbRecord => {
@@ -49,7 +56,10 @@ export type DataUpdater = (draft: WritableDraft<Data>) => void;
 export class Database {
 	data: Data = {
 		authUser: Option.none,
-		watchlists: []
+		watchlists: [],
+		tradier: {
+			calendar: defaultTradierCalendar
+		}
 	};
 
 	updateData(updater: DataUpdater) {
