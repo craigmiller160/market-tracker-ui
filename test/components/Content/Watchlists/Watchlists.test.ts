@@ -100,4 +100,12 @@ describe('Watchlists', () => {
 		);
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
+
+	it('adds stock to existing watchlist', async () => {
+		throw new Error();
+	});
+
+	it('adds stock to new watchlist', async () => {
+		throw new Error();
+	});
 });
