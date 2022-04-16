@@ -38,7 +38,6 @@ describe('Search', () => {
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
 		);
-		screen.debug(); // TODO delete this
 		expect(screen.queryByText('Stock')).toBeInTheDocument();
 		expect(screen.queryByText('Crypto')).toBeInTheDocument();
 		expect(
