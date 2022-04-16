@@ -7,5 +7,12 @@ interface Props {
 // TODO don't forget alert message on success
 
 export const AddToWatchlistModal = (props: Props) => {
-	return <Modal visible={props.show}></Modal>;
+	return (
+		<Modal title="Add to Watchlist" visible={props.show}>
+			<div>
+				<p>Radio & Select Box</p>
+				<p>Radio & Input Field</p>
+			</div>
+		</Modal>
+	);
 };
