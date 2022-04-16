@@ -1,7 +1,7 @@
 import { Database } from '../Database';
 import { Server } from 'miragejs/server';
-import { Response } from 'miragejs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { validationError } from '../utils/validate';
 
 interface CalendarQuery {
 	readonly year: string;
@@ -27,11 +27,6 @@ interface HistoryQuery {
 
 const getTodayYear = () => Time.format('yyyy')(new Date());
 const getTodayMonth = () => Time.format('MM')(new Date());
-
-const validationError = (message: string): Response => {
-	console.error(message);
-	return new Response(400, {}, 'Request Validation Failed');
-};
 
 export const createTradierRoutes = (database: Database, server: Server) => {
 	server.get('/tradier/markets/calendar', (schema, request) => {
