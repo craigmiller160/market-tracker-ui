@@ -40,12 +40,14 @@ export const ensureDbUserRecord = <T extends object>(
 	};
 };
 
+export type DataUpdater = (draft: WritableDraft<Data>) => void;
+
 export class Database {
 	data: Data = {
 		watchlists: []
 	};
 
-	updateData(updater: (draft: WritableDraft<Data>) => void) {
+	updateData(updater: DataUpdater) {
 		this.data = produce(this.data, updater);
 	}
 }

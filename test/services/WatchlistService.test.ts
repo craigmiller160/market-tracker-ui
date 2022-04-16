@@ -1,31 +1,14 @@
-import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
+import { DbWatchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
 import { ApiServer, newApiServer } from '../testutils/server';
-import { ensureDbUserRecord } from '../testutils/server/Database';
-import { castDraft } from 'immer';
-
-// TODO move to special seed data in the server directly
-const watchlists: ReadonlyArray<DbWatchlist> = [
-	ensureDbUserRecord<Watchlist>({
-		watchlistName: 'Watchlist',
-		stocks: [],
-		cryptos: []
-	}),
-	ensureDbUserRecord<Watchlist>({
-		watchlistName: 'Watchlist2',
-		stocks: [],
-		cryptos: []
-	})
-];
 
 describe('WatchlistService', () => {
 	let apiServer: ApiServer;
+	let seedWatchlists: ReadonlyArray<DbWatchlist>;
 	beforeEach(() => {
 		apiServer = newApiServer();
-		apiServer.database.updateData((draft) => {
-			draft.watchlists = castDraft(watchlists);
-		});
+		seedWatchlists = apiServer.database.data.watchlists;
 	});
 
 	afterEach(() => {
@@ -34,18 +17,18 @@ describe('WatchlistService', () => {
 
 	it('getAllWatchlists', async () => {
 		const result = await WatchlistService.getAllWatchlists()();
-		expect(result).toEqualRight(watchlists);
+		expect(result).toEqualRight(seedWatchlists);
 	});
 
 	it('renameWatchlist', async () => {
 		const result = await WatchlistService.renameWatchlist(
-			'Watchlist',
+			'First Watchlist',
 			'NewWatchlist'
 		)();
 		expect(result).toBeRight();
 		const firstWatchlist = apiServer.database.data.watchlists[0];
 		expect(firstWatchlist).toEqual({
-			...watchlists[0],
+			...seedWatchlists[0],
 			watchlistName: 'NewWatchlist'
 		});
 	});
