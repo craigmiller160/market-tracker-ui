@@ -51,7 +51,7 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result).toEqualRight({
-			id: expect.any(String),
+			_id: expect.any(String),
 			title: 'Disney'
 		});
 
@@ -62,10 +62,10 @@ describe('mirage server', () => {
 			TaskEither.map(getResponseData)
 		)();
 		expect(result2).toEqualRight([
-			{ id: expect.any(String), title: 'LOTR' },
-			{ id: expect.any(String), title: 'Marvel' },
-			{ id: expect.any(String), title: 'Star Wars' },
-			{ id: expect.any(String), title: 'Disney' }
+			{ _id: expect.any(String), title: 'LOTR' },
+			{ _id: expect.any(String), title: 'Marvel' },
+			{ _id: expect.any(String), title: 'Star Wars' },
+			{ _id: expect.any(String), title: 'Disney' }
 		]);
 	});
 });

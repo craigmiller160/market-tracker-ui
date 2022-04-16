@@ -60,5 +60,13 @@ export const newApiServer = (): Server =>
 			this.namespace = '/market-tracker/api';
 
 			this.get('/movies', () => database.data.movies);
+			this.post('/movies', (schema, request) => {
+				const movie = JSON.parse(request.requestBody) as Movie;
+				const movieRecord = ensureDbRecord(movie);
+				database.updateData((draft) => {
+					draft.movies.push(movieRecord);
+				});
+				return movieRecord;
+			});
 		}
 	});
