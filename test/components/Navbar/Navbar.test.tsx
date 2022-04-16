@@ -57,9 +57,8 @@ describe('Navbar', () => {
 	});
 
 	it('shows correct items for un-authenticated user', async () => {
-		await renderApp({
-			isAuthorized: false
-		});
+		apiServer.actions.clearDefaultUser();
+		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).toBeInTheDocument();
 
@@ -273,10 +272,9 @@ describe('Navbar', () => {
 	});
 
 	it('sends login request', async () => {
+		apiServer.actions.clearDefaultUser();
 		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
-		await renderApp({
-			isAuthorized: false
-		});
+		await renderApp();
 		location = Option.some(mockLocation());
 		await act(async () => {
 			await userEvent.click(screen.getByText('Login'));
