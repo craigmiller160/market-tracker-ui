@@ -5,13 +5,17 @@ import { createWatchlistRoutes } from './routes/watchlists';
 import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/es6/Option';
 
+interface ApiServerActions {
+	readonly setDefaultUser: () => void;
+}
+
 export interface ApiServer {
 	readonly server: Server;
 	readonly database: Database;
-	readonly authenticate: () => void;
+	readonly actions: ApiServerActions;
 }
 
-const createAuthenticate = (database: Database) => () =>
+const createSetDefaultUser = (database: Database) => () =>
 	database.updateData((draft) => {
 		draft.authUser = Option.some({
 			userId: 1
@@ -34,6 +38,8 @@ export const newApiServer = (): ApiServer => {
 	return {
 		server,
 		database,
-		authenticate: createAuthenticate(database)
+		actions: {
+			setDefaultUser: createSetDefaultUser(database)
+		}
 	};
 };
