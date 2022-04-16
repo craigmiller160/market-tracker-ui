@@ -3,11 +3,20 @@ import { Server } from 'miragejs/server';
 import { Database } from './Database';
 import { createWatchlistRoutes } from './routes/watchlists';
 import { seedWatchlists } from './seedData/watchlists';
+import * as Option from 'fp-ts/es6/Option';
 
 export interface ApiServer {
 	readonly server: Server;
 	readonly database: Database;
+	readonly authenticate: () => void;
 }
+
+const createAuthenticate = (database: Database) => () =>
+	database.updateData((draft) => {
+		draft.authUser = Option.some({
+			userId: 1
+		});
+	});
 
 export const newApiServer = (): ApiServer => {
 	const database = new Database();
@@ -24,6 +33,7 @@ export const newApiServer = (): ApiServer => {
 	});
 	return {
 		server,
-		database
+		database,
+		authenticate: createAuthenticate(database)
 	};
 };

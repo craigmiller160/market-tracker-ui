@@ -1,7 +1,7 @@
 export {};
 
 describe('Watchlists', () => {
-	it('test', () => {
+	it('renders all watchlists', () => {
 		throw new Error();
 	});
 });

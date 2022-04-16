@@ -3,10 +3,14 @@ import { WritableDraft } from 'immer/dist/types/types-external';
 import produce from 'immer';
 import { DbWatchlist } from '../../../src/types/Watchlist';
 import { DbRecord, UserRecord } from '../../../src/types/db';
+import { OptionT } from '@craigmiller160/ts-functions/es/types';
+import { AuthUser } from '../../../src/types/auth';
+import * as Option from 'fp-ts/es6/Option';
 
 const USER_ID = 1;
 
 export interface Data {
+	readonly authUser: OptionT<AuthUser>;
 	readonly watchlists: ReadonlyArray<DbWatchlist>;
 }
 
@@ -44,6 +48,7 @@ export type DataUpdater = (draft: WritableDraft<Data>) => void;
 
 export class Database {
 	data: Data = {
+		authUser: Option.none,
 		watchlists: []
 	};
 
