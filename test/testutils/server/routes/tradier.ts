@@ -50,12 +50,11 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 				}`
 			);
 		}
-		return database.data.tradier.calendar;
+		return new Response(200, {}, database.data.tradier.calendar);
 	});
 
 	server.get('/tradier/markets/timesales', (schema, request) => {
 		const query = request.queryParams as unknown as TimesaleQuery;
-		console.log('TIMESALE', query.symbol);
 		if (!query.start) {
 			return validationError(`Missing start param`);
 		}
@@ -66,17 +65,16 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 		if (!timesale) {
 			return validationError(`No timesale for symbol: ${query.symbol}`);
 		}
-		return timesale;
+		return new Response(200, {}, timesale);
 	});
 
 	server.get('/tradier/markets/quotes', (schema, request) => {
 		const query = request.queryParams as unknown as QuoteQuery;
-		console.log('QUOTE', query.symbols);
-		const quote = database.data.tradier.timesales[query.symbols];
+		const quote = database.data.tradier.quotes[query.symbols];
 		if (!quote) {
 			return validationError(`No quote for symbol: ${query.symbols}`);
 		}
-		return quote;
+		return new Response(200, {}, quote);
 	});
 
 	server.get('/tradier/markets/history', (schema, request) => {
@@ -94,6 +92,6 @@ export const createTradierRoutes = (database: Database, server: Server) => {
 		if (!history) {
 			return validationError(`No history for symbol: ${query.symbol}`);
 		}
-		return history;
+		return new Response(200, {}, history);
 	});
 };

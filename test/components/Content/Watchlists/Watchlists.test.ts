@@ -37,10 +37,7 @@ describe('Watchlists', () => {
 
 		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
 		await waitFor(() =>
-			expect(screen.getByTestId('market-card-VTI')).toBeInTheDocument()
-		);
-		await waitFor(() =>
-			expect(screen.queryAllByText('Chart is Here')).toBeInTheDocument()
+			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
 		);
 	});
 
