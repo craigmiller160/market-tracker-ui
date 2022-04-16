@@ -7,6 +7,16 @@ import userEvent from '@testing-library/user-event';
 
 const PRICE_REGEX = /\$\d+\.\d{2}/;
 
+const testCard = (symbol: string, price: string) => {
+	const card = screen.getByTestId(`market-card-${symbol}`);
+	expect(within(card).queryByText(new RegExp(symbol))).toHaveTextContent(
+		`My Stock (${symbol})`
+	);
+	const priceNodes = within(card).getAllByText(PRICE_REGEX);
+	expect(priceNodes).toHaveLength(2);
+	expect(priceNodes[0]).toHaveTextContent(price);
+};
+
 describe('Watchlists', () => {
 	let apiServer: ApiServer;
 	beforeEach(() => {
@@ -42,21 +52,8 @@ describe('Watchlists', () => {
 			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
 		);
 
-		const vtiCard = screen.getByTestId('market-card-VTI');
-		expect(within(vtiCard).queryByText(/VTI/)).toHaveTextContent(
-			'My Stock (VTI)'
-		);
-		const vtiPriceNodes = within(vtiCard).getAllByText(PRICE_REGEX);
-		expect(vtiPriceNodes).toHaveLength(2);
-		expect(vtiPriceNodes[0]).toHaveTextContent('$100.00');
-
-		const vooCard = screen.getByTestId('market-card-VOO');
-		expect(within(vooCard).queryByText(/VOO/)).toHaveTextContent(
-			'My Stock (VOO)'
-		);
-		const vooPriceNodes = within(vooCard).getAllByText(PRICE_REGEX);
-		expect(vooPriceNodes).toHaveLength(2);
-		expect(vooPriceNodes[0]).toHaveTextContent('$101.00');
+		testCard('VTI', '$100.00');
+		testCard('VOO', '$101.00');
 	});
 
 	it('renames a watchlist', async () => {
