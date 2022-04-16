@@ -40,7 +40,7 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 
 	if (!isEditing) {
 		return (
-			<Typography.Title level={4}>
+			<Typography.Title level={4} data-testid="watchlist-panel-title">
 				{watchlist.watchlistName}
 			</Typography.Title>
 		);

@@ -8,7 +8,7 @@ interface CalendarQuery {
 	readonly month: string;
 }
 
-const getTodayYear = () => Time.format('YYYY')(new Date());
+const getTodayYear = () => Time.format('yyyy')(new Date());
 const getTodayMonth = () => Time.format('MM')(new Date());
 
 export const createTradierRoutes = (database: Database, server: Server) => {
