@@ -20,7 +20,8 @@ export const newTestServer = (): Server =>
 			application: NanoidIdentityManager
 		},
 		serializers: {
-			application: MongoSerializer
+			application: MongoSerializer,
+			movies: MongoSerializer
 		},
 		models: {
 			movies: Model
@@ -38,7 +39,10 @@ export const newTestServer = (): Server =>
 			this.namespace = '/market-tracker/api';
 
 			// TODO how to properly type schema.db?
-			this.get('/movies', (schema: AppSchema) => schema.db.movies);
+			this.get('/movies', function (schema: AppSchema) {
+				// @ts-ignore
+				return this.serialize(schema.db.movies);
+			});
 			this.post('/movies', (schema: AppSchema, request) => {
 				const movie = JSON.parse(request.requestBody);
 				return schema.db.movies.insert(movie);
