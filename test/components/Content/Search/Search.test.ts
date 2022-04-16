@@ -93,6 +93,7 @@ describe('Search', () => {
 
 	it('searches for and finds a stock for Today, with the market closed', async () => {
 		mockCalenderRequest(mockApi, 'closed');
+		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		await renderApp({
 			initialPath: '/market-tracker/search'
 		});
