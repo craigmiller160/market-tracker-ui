@@ -4,6 +4,7 @@ import MockAdapter from 'axios-mock-adapter';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
 import { nanoid } from '@reduxjs/toolkit';
+import { ApiServer, newApiServer } from '../testutils/server2';
 
 const watchlists: ReadonlyArray<DbWatchlist> = [
 	{
@@ -25,8 +26,14 @@ const watchlists: ReadonlyArray<DbWatchlist> = [
 const mockApi = new MockAdapter(ajaxApi.instance);
 
 describe('WatchlistService', () => {
+	let apiServer: ApiServer;
 	beforeEach(() => {
+		apiServer = newApiServer();
 		mockApi.reset();
+	});
+
+	afterEach(() => {
+		apiServer.shutdown;
 	});
 
 	it('getAllWatchlists', async () => {
