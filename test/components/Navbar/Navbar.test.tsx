@@ -1,4 +1,4 @@
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
@@ -60,7 +60,9 @@ describe('Navbar', () => {
 		apiServer.actions.clearDefaultUser();
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Login')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Login')).toBeInTheDocument()
+		);
 
 		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
 		expect(screen.queryByText('Search')).not.toBeInTheDocument();
@@ -74,7 +76,9 @@ describe('Navbar', () => {
 		process.env.NODE_ENV = 'production';
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 		expect(screen.queryByText('Search')).toBeInTheDocument();
@@ -99,7 +103,9 @@ describe('Navbar', () => {
 	it('shows correct items for authenticated user', async () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		expect(screen.queryByText('Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		expect(screen.queryByText('Search')).toBeInTheDocument();
 		expect(screen.queryByText('Portfolios')).toBeInTheDocument();
 		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
@@ -125,6 +131,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -153,6 +162,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -175,6 +187,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -197,6 +212,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/recognition'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/recognition'
@@ -219,6 +237,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -247,6 +268,9 @@ describe('Navbar', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/portfolios'
@@ -275,6 +299,9 @@ describe('Navbar', () => {
 		apiServer.actions.clearDefaultUser();
 		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Login')).toBeInTheDocument()
+		);
 		location = Option.some(mockLocation());
 		await act(async () => {
 			await userEvent.click(screen.getByText('Login'));
@@ -286,6 +313,9 @@ describe('Navbar', () => {
 	it('sends logout request', async () => {
 		mockApi.onGet('/oauth/logout').reply(200);
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		await act(async () => {
 			await userEvent.click(screen.getByText('Logout'));
 			await sleep100();
@@ -295,6 +325,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Week', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Week'));
@@ -304,6 +337,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Month', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Month'));
@@ -313,6 +349,9 @@ describe('Navbar', () => {
 
 	it('selects Today', async () => {
 		const { store } = await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
 		menuItemIsSelected('1 Week');
 		menuItemIsNotSelected('Today');
@@ -324,6 +363,9 @@ describe('Navbar', () => {
 
 	it('selects 3 Months', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('3 Months'));
@@ -333,6 +375,9 @@ describe('Navbar', () => {
 
 	it('selects 1 Year', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('1 Year'));
@@ -342,6 +387,9 @@ describe('Navbar', () => {
 
 	it('selects 5 Years', async () => {
 		await renderApp();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
 		menuItemIsSelected('Today');
 
 		userEvent.click(screen.getByText('5 Years'));
