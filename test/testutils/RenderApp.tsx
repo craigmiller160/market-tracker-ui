@@ -16,7 +16,7 @@ import { notificationSlice } from '../../src/store/notification/slice';
 interface RenderConfig {
 	readonly initialPath: string;
 	readonly screenContextValue: ScreenContextValue;
-	readonly isAuthorized: boolean;
+	readonly isAuthorized: boolean; // TODO delete this
 }
 
 interface RenderResult {

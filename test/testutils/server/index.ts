@@ -6,9 +6,8 @@ import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/es6/Option';
 import { createOAuthRoutes } from './routes/oauth';
 
-// TODO going to be super, SUPER common, maybe should change it to clear user instead?
 interface ApiServerActions {
-	readonly setDefaultUser: () => void;
+	readonly clearDefaultUser: () => void;
 }
 
 export interface ApiServer {
@@ -17,16 +16,17 @@ export interface ApiServer {
 	readonly actions: ApiServerActions;
 }
 
-const createSetDefaultUser = (database: Database) => () =>
+const createClearDefaultUser = (database: Database) => () =>
 	database.updateData((draft) => {
-		draft.authUser = Option.some({
-			userId: 1
-		});
+		draft.authUser = Option.none;
 	});
 
 export const newApiServer = (): ApiServer => {
 	const database = new Database();
 	database.updateData((draft) => {
+		draft.authUser = Option.some({
+			userId: 1
+		});
 		seedWatchlists(draft);
 	});
 
@@ -41,7 +41,7 @@ export const newApiServer = (): ApiServer => {
 		server,
 		database,
 		actions: {
-			setDefaultUser: createSetDefaultUser(database)
+			clearDefaultUser: createClearDefaultUser(database)
 		}
 	};
 };

@@ -15,7 +15,6 @@ import { MarketTime } from '../../../../src/types/MarketTime';
 import { ApiServer, newApiServer } from '../../../testutils/server';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
-mockApi.onGet('/oauth/user').passThrough();
 
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
@@ -24,7 +23,8 @@ describe('Search', () => {
 	let apiServer: ApiServer;
 	beforeEach(() => {
 		apiServer = newApiServer();
-		apiServer.actions.setDefaultUser();
+		mockApi.reset();
+		mockApi.onGet('/oauth/user').passThrough();
 	});
 
 	afterEach(() => {

@@ -13,6 +13,7 @@ import {
 	menuItemIsNotSelected,
 	menuItemIsSelected
 } from '../../testutils/menuUtils';
+import { ApiServer, newApiServer } from '../../testutils/server';
 
 const authCodeLogin: AuthCodeLogin = {
 	url: 'theUrl'
@@ -22,17 +23,20 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const renderApp = renderApp(mockApi);
 const sleep100 = Sleep.sleep(100);
 
 describe('Navbar', () => {
+	let apiServer: ApiServer;
 	let location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
+		mockApi.onGet('/oauth/user').passThrough();
+		apiServer = newApiServer();
 	});
 
 	afterEach(() => {
 		Option.map(restoreLocation)(location);
+		apiServer.server.shutdown();
 	});
 
 	it('renders for desktop', async () => {
