@@ -32,7 +32,7 @@ export const seedTradier: DataUpdater = (draft) => {
 	const addQuote = createAddQuote(draft);
 	const addHistory = createAddHistory(draft);
 	const addTimesale = createAddTimesale(draft);
-	['VTI', 'VOO', 'AAPL', 'GOOG'].forEach((symbol, index) => {
+	['VTI', 'VOO', 'AAPL', 'GOOG', 'MSFT'].forEach((symbol, index) => {
 		addQuote(symbol, index);
 		addHistory(symbol, index);
 		addTimesale(symbol, index);
