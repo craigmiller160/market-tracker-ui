@@ -1,5 +1,9 @@
 import { Form, FormInstance, Input, Modal, Radio, Space } from 'antd';
 import { Updater, useImmer } from 'use-immer';
+import { pipe } from 'fp-ts/es6/function';
+import * as TaskEither from 'fp-ts/es6/TaskEither';
+import { getWatchlistNames } from '../../../services/WatchlistService';
+import { useEffect, useMemo } from 'react';
 
 interface Props {
 	readonly show: boolean;
@@ -45,6 +49,7 @@ const NewWatchlistItem = (
 );
 
 const createGetWatchlistNames = (setState: Updater<State>) => () => {
+	pipe(getWatchlistNames(), TaskEither.fold());
 	// TODO finish this
 };
 
@@ -55,6 +60,15 @@ export const AddToWatchlistModal = (props: Props) => {
 		hadError: false,
 		existingWatchlistNames: []
 	});
+	const getWatchlistNames = useMemo(
+		() => createGetWatchlistNames(setState),
+		[setState]
+	);
+
+	useEffect(() => {
+		getWatchlistNames();
+	}, [getWatchlistNames]);
+
 	return (
 		<Modal
 			title="Add to Watchlist"
