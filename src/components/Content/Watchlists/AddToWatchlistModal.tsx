@@ -19,10 +19,11 @@ import {
 } from '../../../services/WatchlistService';
 import { useEffect, useMemo } from 'react';
 import { castDraft } from 'immer';
-import { TaskT } from '@craigmiller160/ts-functions/es/types';
+import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
+import { DbWatchlist } from '../../../types/Watchlist';
 
 interface Props {
 	readonly show: boolean;
@@ -130,13 +131,27 @@ const ModalForm = (props: ModalFormProps) => {
 };
 
 const createOnOk =
-	(form: FormInstance<ModalFormData>, onClose: () => void) => () => {
+	(symbol: string, form: FormInstance<ModalFormData>, onClose: () => void) =>
+	(): TaskTryT<DbWatchlist> => {
 		const values: ModalFormData = form.getFieldsValue();
-		match(values)
+		const saveAction: TaskTryT<DbWatchlist> = match(values)
 			.with({ watchlistSelectionType: 'existing' }, (_) =>
-				addStockToWatchlist(_.existingWatchlistName, '')
+				addStockToWatchlist(_.existingWatchlistName, symbol)
 			)
-			.otherwise((_) => createWatchlist(_.newWatchListName, ''));
+			.otherwise((_) => createWatchlist(_.newWatchListName, symbol));
+		return pipe(
+			saveAction,
+			TaskEither.fold(
+				(ex) => {
+					onClose();
+					return TaskEither.left(ex);
+				},
+				(result) => {
+					onClose();
+					return TaskEither.right(result);
+				}
+			)
+		);
 	};
 
 export const AddToWatchlistModal = (props: Props) => {
@@ -172,11 +187,11 @@ export const AddToWatchlistModal = (props: Props) => {
 			/>
 		));
 
-	const onOk = createOnOk(form, props.onClose);
+	const onOk = createOnOk(props.symbol, form, props.onClose);
 
 	return (
 		<Modal
-			title="Add to Watchlist"
+			title={`Add ${props.symbol} to Watchlist`}
 			className="AddToWatchlistModal"
 			visible={props.show}
 			onCancel={props.onClose}
