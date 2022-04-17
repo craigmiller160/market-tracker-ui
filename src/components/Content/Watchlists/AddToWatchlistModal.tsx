@@ -1,4 +1,5 @@
 import { Form, FormInstance, Input, Modal, Radio, Space } from 'antd';
+import { Updater, useImmer } from 'use-immer';
 
 interface Props {
 	readonly show: boolean;
@@ -10,6 +11,13 @@ type WatchlistSelectionType = 'existing' | 'new';
 interface ModalForm {
 	readonly watchlistSelectionType: WatchlistSelectionType;
 	readonly newWatchListName: string;
+	readonly existingWatchlistName: string;
+}
+
+interface State {
+	readonly loading: boolean;
+	readonly hadError: boolean;
+	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
 // TODO don't forget alert message on success
@@ -36,8 +44,17 @@ const NewWatchlistItem = (
 	</Form.Item>
 );
 
+const createGetWatchlistNames = (setState: Updater<State>) => () => {
+	// TODO finish this
+};
+
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
+	const [state, setState] = useImmer<State>({
+		loading: true,
+		hadError: false,
+		existingWatchlistNames: []
+	});
 	return (
 		<Modal
 			title="Add to Watchlist"
