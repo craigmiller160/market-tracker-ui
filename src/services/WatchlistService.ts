@@ -71,9 +71,19 @@ export const removeStockFromWatchlist = (
 	watchlistName: string,
 	stockSymbol: string
 ): TaskTryT<DbWatchlist> => {
-	throw new Error();
+	const encodedWatchlistName = encodeURIComponent(watchlistName);
+	const encodedStockSymbol = encodeURIComponent(stockSymbol);
+	return pipe(
+		ajaxApi.delete<DbWatchlist>({
+			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
+		}),
+		TaskEither.map(getResponseData)
+	);
 };
 
 export const removeWatchlist = (watchlistName: string): TaskTryT<unknown> => {
-	throw new Error();
-}
+	const encodedWatchlistName = encodeURIComponent(watchlistName);
+	return ajaxApi.delete<unknown>({
+		uri: `/watchlists/${encodedWatchlistName}`
+	});
+};
