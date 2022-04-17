@@ -4,6 +4,8 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { getWatchlistNames } from '../../../services/WatchlistService';
 import { useEffect, useMemo } from 'react';
+import { castDraft } from 'immer';
+import { TaskT } from '@craigmiller160/ts-functions/es/types';
 
 interface Props {
 	readonly show: boolean;
@@ -48,10 +50,22 @@ const NewWatchlistItem = (
 	</Form.Item>
 );
 
-const createGetWatchlistNames = (setState: Updater<State>) => () => {
-	pipe(getWatchlistNames(), TaskEither.fold());
-	// TODO finish this
-};
+const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> =>
+	pipe(
+		getWatchlistNames(),
+		TaskEither.fold(
+			() => async () =>
+				setState((draft) => {
+					draft.loading = false;
+					draft.hadError = true;
+				}),
+			(names) => async () =>
+				setState((draft) => {
+					draft.loading = false;
+					draft.existingWatchlistNames = castDraft(names);
+				})
+		)
+	);
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
