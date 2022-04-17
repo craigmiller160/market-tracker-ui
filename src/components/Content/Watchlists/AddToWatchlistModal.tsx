@@ -90,7 +90,7 @@ const ModalForm = (props: ModalFormProps) => {
 		))
 		.otherwise(() => (
 			<Form.Item name="existingWatchlistName">
-				<Select showSearch>
+				<Select data-testid="existing-watchlist-select" showSearch>
 					{props.existingWatchlistNames.map((name) => (
 						<Select.Option key={name} value={name}>
 							{name}

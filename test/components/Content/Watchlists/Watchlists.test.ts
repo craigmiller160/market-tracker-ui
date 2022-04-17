@@ -137,12 +137,23 @@ describe('Watchlists', () => {
 		);
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
 
-		fireEvent.change(screen.getByRole('combobox'), {
-			target: { value: 'First Watchlist' }
-		});
+		const select = screen.getByTestId('existing-watchlist-select');
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		fireEvent.mouseDown(select.querySelector('.ant-select-selector')!);
 		await waitFor(() =>
-			expect(screen.getByRole('combobox')).toHaveValue('First Watchlist')
+			expect(
+				screen.queryByRole('option', { name: 'First Watchlist' })
+			).toBeInTheDocument()
 		);
+		expect(
+			screen.queryByRole('option', { name: 'Second Watchlist' })
+		).toBeInTheDocument();
+
+		fireEvent.click(
+			screen.getByRole('option', { name: 'First Watchlist' })
+		);
+
+		// TODO this part below works
 		userEvent.click(screen.getByText('OK'));
 		await waitFor(() =>
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
