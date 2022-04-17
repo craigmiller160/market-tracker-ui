@@ -4,6 +4,7 @@ import {
 	Input,
 	Modal,
 	Radio,
+	Select,
 	Space,
 	Typography
 } from 'antd';
@@ -41,22 +42,41 @@ interface State {
 
 const NewWatchlistItem = (
 	<Form.Item shouldUpdate label="New">
-		{(innerForm: FormInstance<ModalForm>) => {
-			return (
-				<Input
-					disabled={
-						innerForm.getFieldsValue().watchlistSelectionType !==
-						'new'
-					}
-					value={innerForm.getFieldsValue().newWatchListName}
-					onChange={(event) =>
-						innerForm.setFieldsValue({
-							newWatchListName: event.target.validationMessage
-						})
-					}
-				/>
-			);
-		}}
+		{(innerForm: FormInstance<ModalForm>) => (
+			<Input
+				disabled={
+					innerForm.getFieldsValue().watchlistSelectionType !== 'new'
+				}
+				value={innerForm.getFieldsValue().newWatchListName}
+				onChange={(event) =>
+					innerForm.setFieldsValue({
+						newWatchListName: event.target.validationMessage
+					})
+				}
+			/>
+		)}
+	</Form.Item>
+);
+
+const createExistingWatchlistItem = (
+	existingWatchlistNames: ReadonlyArray<string>
+) => (
+	<Form.Item shouldUpdate label="Existing">
+		{(innerForm: FormInstance<ModalForm>) => (
+			<Select
+				value={innerForm.getFieldsValue().existingWatchlistName}
+				disabled={
+					innerForm.getFieldsValue().watchlistSelectionType !==
+					'existing'
+				}
+			>
+				{existingWatchlistNames.map((name) => (
+					<Select.Option key={name} value={name}>
+						{name}
+					</Select.Option>
+				))}
+			</Select>
+		)}
 	</Form.Item>
 );
 
@@ -85,6 +105,7 @@ const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 
 interface ModalFormProps {
 	readonly form: FormInstance<ModalForm>;
+	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
 const ModalForm = (props: ModalFormProps) => (
@@ -97,7 +118,11 @@ const ModalForm = (props: ModalFormProps) => (
 		<Form.Item name="watchlistSelectionType">
 			<Radio.Group>
 				<Space direction="vertical">
-					<Radio value="existing">Select Box</Radio>
+					<Radio value="existing">
+						{createExistingWatchlistItem(
+							props.existingWatchlistNames
+						)}
+					</Radio>
 					<Radio value="new">{NewWatchlistItem}</Radio>
 				</Space>
 			</Radio.Group>
@@ -130,7 +155,12 @@ export const AddToWatchlistModal = (props: Props) => {
 				Error Loading Watchlist Names
 			</Typography.Title>
 		))
-		.otherwise(() => <ModalForm form={form} />);
+		.otherwise(() => (
+			<ModalForm
+				form={form}
+				existingWatchlistNames={state.existingWatchlistNames}
+			/>
+		));
 
 	return (
 		<Modal
