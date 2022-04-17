@@ -8,6 +8,7 @@ import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
 import {
 	getAllWatchlists,
+	removeWatchlist,
 	renameWatchlist
 } from '../../../services/WatchlistService';
 import { pipe } from 'fp-ts/es6/function';
@@ -29,6 +30,7 @@ interface State {
 	readonly renameWatchlistId?: string;
 	readonly showConfirmModal: boolean;
 	readonly confirmModalMessage: string;
+	readonly confirmModalWatchlistId?: string;
 }
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
@@ -81,12 +83,26 @@ const createShowConfirmRemoveWatchlist =
 			);
 			if (foundWatchlist) {
 				draft.showConfirmModal = true;
+				draft.confirmModalWatchlistId = id;
 				draft.confirmModalMessage = `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`;
 			}
 		});
 
 const createHandleConfirmModalAction =
-	(setState: Updater<State>) => (result: ConfirmModalResult) => {};
+	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
+	(result: ConfirmModalResult) => {
+		if (ConfirmModalResult.OK === result) {
+			setState((draft) => {
+				draft.showConfirmModal = false;
+				draft.loading = true;
+			});
+			// TODO how to get watchlistName
+			pipe(
+				removeWatchlist(''),
+				TaskEither.chain(() => getWatchlists)
+			);
+		}
+	};
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
