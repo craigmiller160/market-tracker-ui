@@ -12,7 +12,10 @@ import {
 import { Updater, useImmer } from 'use-immer';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { getWatchlistNames } from '../../../services/WatchlistService';
+import {
+	addStockToWatchlist,
+	getWatchlistNames
+} from '../../../services/WatchlistService';
 import { useEffect, useMemo } from 'react';
 import { castDraft } from 'immer';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
@@ -124,6 +127,12 @@ const ModalForm = (props: ModalFormProps) => {
 	);
 };
 
+const createOnOk =
+	(form: FormInstance<ModalFormData>, onClose: () => void) => () => {
+		const values: ModalFormData = form.getFieldsValue();
+		// TODO finish this
+	};
+
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalFormData>();
 	const [state, setState] = useImmer<State>({
@@ -157,9 +166,7 @@ export const AddToWatchlistModal = (props: Props) => {
 			/>
 		));
 
-	const onOk = () => {
-		props.onClose();
-	};
+	const onOk = createOnOk(form, props.onClose);
 
 	return (
 		<Modal
