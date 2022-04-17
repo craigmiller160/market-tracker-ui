@@ -20,11 +20,15 @@ import {
 	createWatchlistPanel,
 	WatchlistPanelConfig
 } from './createWatchlistPanel';
+import { watch } from 'vite/types/chokidar';
+import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 
 interface State {
 	readonly loading: boolean;
 	readonly watchlists: ReadonlyArray<DbWatchlist>;
 	readonly renameWatchlistId?: string;
+	readonly showConfirmModal: boolean;
+	readonly confirmModalMessage: string;
 }
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
@@ -69,13 +73,27 @@ const createOnSaveRenamedWatchlist =
 			renameWatchlist(oldName, newName)();
 		});
 
-const createOnRemoveWatchlist =
-	(setState: Updater<State>) => (id: string) => {};
+const createShowConfirmRemoveWatchlist =
+	(setState: Updater<State>) => (id: string) =>
+		setState((draft) => {
+			const foundWatchlist = draft.watchlists.find(
+				(watchlist) => watchlist._id === id
+			);
+			if (foundWatchlist) {
+				draft.showConfirmModal = true;
+				draft.confirmModalMessage = `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`;
+			}
+		});
+
+const createHandleConfirmModalAction =
+	(setState: Updater<State>) => (result: ConfirmModalResult) => {};
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
-		watchlists: []
+		watchlists: [],
+		showConfirmModal: false,
+		confirmModalMessage: ''
 	});
 
 	const getWatchlists = useMemo(
@@ -95,8 +113,12 @@ export const Watchlists = () => {
 		() => createOnSaveRenamedWatchlist(setState),
 		[setState]
 	);
-	const onRemoveWatchlist = useMemo(
-		() => createOnRemoveWatchlist(setState),
+	const showConfirmRemoveWatchlist = useMemo(
+		() => createShowConfirmRemoveWatchlist(setState),
+		[setState]
+	);
+	const handleConfirmModalAction = useMemo(
+		() => createHandleConfirmModalAction(setState),
 		[setState]
 	);
 
@@ -108,7 +130,7 @@ export const Watchlists = () => {
 		renameWatchlistId: state.renameWatchlistId,
 		onRenameWatchlist,
 		onSaveRenamedWatchlist,
-		onRemoveWatchlist
+		onRemoveWatchlist: showConfirmRemoveWatchlist
 	};
 	const panels = createPanels(state.watchlists, panelConfig);
 
@@ -131,6 +153,11 @@ export const Watchlists = () => {
 				</Typography.Title>
 				{body}
 			</div>
+			<ConfirmModal
+				show={state.showConfirmModal}
+				message={state.confirmModalMessage}
+				onClose={handleConfirmModalAction}
+			/>
 		</RefreshProvider>
 	);
 };
