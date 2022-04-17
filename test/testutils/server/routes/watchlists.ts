@@ -16,6 +16,9 @@ interface ModifyInvestmentParams {
 }
 
 export const createWatchlistRoutes = (database: Database, server: Server) => {
+	server.get('/watchlists/names', () =>
+		database.data.watchlists.map((watchlist) => watchlist.watchlistName)
+	);
 	server.get('/watchlists/all', () => database.data.watchlists);
 	server.put('/watchlists/:oldName/rename/:newName', (schema, request) => {
 		const params = request.params as unknown as RenameWatchlistParams;
