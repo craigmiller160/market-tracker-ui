@@ -10,7 +10,7 @@ import {
 	Typography
 } from 'antd';
 import { Updater, useImmer } from 'use-immer';
-import { pipe } from 'fp-ts/es6/function';
+import { constVoid, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import {
 	addStockToWatchlist,
@@ -24,6 +24,10 @@ import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
 import { DbWatchlist } from '../../../types/Watchlist';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
+import * as Task from 'fp-ts/es6/Task';
+import { notificationSlice } from '../../../store/notification/slice';
 
 interface Props {
 	readonly show: boolean;
@@ -130,32 +134,51 @@ const ModalForm = (props: ModalFormProps) => {
 	);
 };
 
+type WatchlistAndSave = [string, TaskTryT<DbWatchlist>];
+
 const createOnOk =
-	(symbol: string, form: FormInstance<ModalFormData>, onClose: () => void) =>
-	(): TaskTryT<DbWatchlist> => {
+	(
+		symbol: string,
+		dispatch: Dispatch,
+		form: FormInstance<ModalFormData>,
+		onClose: () => void
+	) =>
+	(): TaskT<void> => {
 		const values: ModalFormData = form.getFieldsValue();
-		const saveAction: TaskTryT<DbWatchlist> = match(values)
-			.with({ watchlistSelectionType: 'existing' }, (_) =>
-				addStockToWatchlist(_.existingWatchlistName, symbol)
+		const [watchlistName, saveAction]: WatchlistAndSave = match(values)
+			.with(
+				{ watchlistSelectionType: 'existing' },
+				(_): WatchlistAndSave => [
+					_.existingWatchlistName,
+					addStockToWatchlist(_.existingWatchlistName, symbol)
+				]
 			)
-			.otherwise((_) => createWatchlist(_.newWatchListName, symbol));
+			.otherwise(
+				(_): WatchlistAndSave => [
+					_.newWatchListName,
+					createWatchlist(_.newWatchListName, symbol)
+				]
+			);
 		return pipe(
 			saveAction,
 			TaskEither.fold(
-				(ex) => {
-					onClose();
-					return TaskEither.left(ex);
-				},
-				(result) => {
-					onClose();
-					return TaskEither.right(result);
+				() => async () => constVoid(),
+				() => async () => {
+					dispatch(
+						notificationSlice.actions.addSuccess(
+							`Added ${symbol} to watchlist ${watchlistName}`
+						)
+					);
+					return constVoid();
 				}
-			)
+			),
+			Task.map(onClose)
 		);
 	};
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalFormData>();
+	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>({
 		loading: false,
 		hadError: false,
@@ -187,7 +210,7 @@ export const AddToWatchlistModal = (props: Props) => {
 			/>
 		));
 
-	const onOk = createOnOk(props.symbol, form, props.onClose);
+	const onOk = createOnOk(props.symbol, dispatch, form, props.onClose);
 
 	return (
 		<Modal
