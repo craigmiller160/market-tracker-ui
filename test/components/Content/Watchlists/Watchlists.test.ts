@@ -1,7 +1,6 @@
 import { ApiServer, newApiServer } from '../../../testutils/server';
 import { renderApp } from '../../../testutils/RenderApp';
-import { fireEvent, waitFor, within } from '@testing-library/react';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 
@@ -152,12 +151,14 @@ describe('Watchlists', () => {
 		fireEvent.click(
 			screen.getByRole('option', { name: 'First Watchlist' })
 		);
+		// await waitFor(() => expect(screen.getByText('First Watchlist')).toBeInTheDocument());
+		screen.debug(screen.getByTestId('add-to-watchlist-modal')); // TODO delete this
 
-		// TODO this part below works
-		userEvent.click(screen.getByText('OK'));
-		await waitFor(() =>
-			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
-		);
+		// TODO below here works
+		// userEvent.click(screen.getByText('OK'));
+		// await waitFor(() =>
+		// 	expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
+		// );
 		// TODO select the existing watchlist and save and then validate
 	});
 
