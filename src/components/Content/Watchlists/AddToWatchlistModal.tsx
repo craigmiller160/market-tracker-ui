@@ -27,7 +27,7 @@ interface Props {
 
 type WatchlistSelectionType = 'existing' | 'new';
 
-interface ModalForm {
+interface ModalFormData {
 	readonly watchlistSelectionType: WatchlistSelectionType;
 	readonly newWatchListName: string;
 	readonly existingWatchlistName: string;
@@ -66,7 +66,7 @@ const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 };
 
 interface ModalFormProps {
-	readonly form: FormInstance<ModalForm>;
+	readonly form: FormInstance<ModalFormData>;
 	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
@@ -125,7 +125,7 @@ const ModalForm = (props: ModalFormProps) => {
 };
 
 export const AddToWatchlistModal = (props: Props) => {
-	const [form] = Form.useForm<ModalForm>();
+	const [form] = Form.useForm<ModalFormData>();
 	const [state, setState] = useImmer<State>({
 		loading: false,
 		hadError: false,
@@ -157,12 +157,17 @@ export const AddToWatchlistModal = (props: Props) => {
 			/>
 		));
 
+	const onOk = () => {
+		props.onClose();
+	};
+
 	return (
 		<Modal
 			title="Add to Watchlist"
 			className="AddToWatchlistModal"
 			visible={props.show}
 			onCancel={props.onClose}
+			onOk={onOk}
 		>
 			{Body}
 		</Modal>
