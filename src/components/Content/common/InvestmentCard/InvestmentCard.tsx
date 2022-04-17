@@ -29,6 +29,7 @@ import { Spinner } from '../../../UI/Spinner';
 
 interface Props {
 	readonly info: InvestmentInfo;
+	readonly getActions?: (symbol: string) => ReactNode[];
 }
 
 const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
@@ -205,7 +206,8 @@ const getPriceAndBody = (
 			Body: <ChartComp data={data} />
 		}));
 
-export const InvestmentCard = ({ info }: Props) => {
+export const InvestmentCard = (props: Props) => {
+	const { info, getActions = () => [] } = props;
 	const { breakpoints } = useContext(ScreenContext);
 	const breakpointName = getBreakpointName(breakpoints);
 	const time = useSelector(timeValueSelector);
@@ -234,6 +236,7 @@ export const InvestmentCard = ({ info }: Props) => {
 			{Price}
 		</>
 	);
+
 	return (
 		<Card
 			title={FullTitle}
@@ -241,6 +244,7 @@ export const InvestmentCard = ({ info }: Props) => {
 			className={`InvestmentCard ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
+			actions={!loading && !error ? getActions(info.symbol) : []}
 		>
 			{Body}
 		</Card>

@@ -1,5 +1,5 @@
 import './Search.scss';
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { SearchForm } from './SearchForm';
 import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
@@ -7,13 +7,18 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { Updater, useImmer } from 'use-immer';
 import { SearchValues } from './constants';
-import { useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
+import { AddToWatchlistModal } from '../Watchlists/AddToWatchlistModal';
 
 interface State {
 	readonly info: InvestmentInfo;
 	readonly showCard: boolean;
+	readonly addToWatchlistModal: {
+		readonly show: boolean;
+		readonly symbol: string;
+	};
 }
 
 const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
@@ -26,6 +31,16 @@ const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
 	});
 };
 
+const createGetActions =
+	(addToWatchlist: (symbol: string) => void) =>
+	// eslint-disable-next-line react/display-name
+	(symbol: string): ReactNode[] =>
+		[
+			<Button key="addToWatchlist" onClick={() => addToWatchlist(symbol)}>
+				+ Watchlist
+			</Button>
+		];
+
 export const Search = () => {
 	const marketTime = useSelector(timeValueSelector);
 	const [state, setState] = useImmer<State>({
@@ -34,7 +49,11 @@ export const Search = () => {
 			symbol: '',
 			name: ''
 		},
-		showCard: false
+		showCard: false,
+		addToWatchlistModal: {
+			show: false,
+			symbol: ''
+		}
 	});
 	const doSearch = useMemo(() => createDoSearch(setState), [setState]);
 
@@ -46,13 +65,35 @@ export const Search = () => {
 		}
 	}, [marketTime, state.info.symbol, setState]);
 
+	const getActions = createGetActions((symbol: string) =>
+		setState((draft) => {
+			draft.addToWatchlistModal.show = true;
+			draft.addToWatchlistModal.symbol = symbol;
+		})
+	);
+
+	const closeAddToWatchlistModal = () =>
+		setState((draft) => {
+			draft.addToWatchlistModal = {
+				show: false,
+				symbol: ''
+			};
+		});
+
 	return (
 		<RefreshProvider>
-			<div className="SearchPage">
+			<div className="SearchPage" data-testid="search-page">
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
-				{state.showCard && <InvestmentCard info={state.info} />}
+				{state.showCard && (
+					<InvestmentCard info={state.info} getActions={getActions} />
+				)}
 			</div>
+			<AddToWatchlistModal
+				symbol={state.addToWatchlistModal.symbol}
+				show={state.addToWatchlistModal.show}
+				onClose={closeAddToWatchlistModal}
+			/>
 		</RefreshProvider>
 	);
 };

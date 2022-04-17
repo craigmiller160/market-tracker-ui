@@ -1,7 +1,6 @@
 import { ApiServer, newApiServer } from '../../../testutils/server';
 import { renderApp } from '../../../testutils/RenderApp';
-import { waitFor, within } from '@testing-library/react';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 
@@ -16,6 +15,9 @@ const testCard = (symbol: string, price: string) => {
 	expect(priceNodes).toHaveLength(2);
 	expect(priceNodes[0]).toHaveTextContent(price);
 };
+
+const getSymbolField = () => screen.getByPlaceholderText('Symbol');
+const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 
 describe('Watchlists', () => {
 	let apiServer: ApiServer;
@@ -99,5 +101,117 @@ describe('Watchlists', () => {
 			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
 		);
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
+	});
+
+	it('adds stock to existing watchlist', async () => {
+		renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		await waitFor(() =>
+			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
+		);
+		userEvent.type(getSymbolField(), 'MSFT');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-MSFT');
+		await waitFor(
+			() =>
+				expect(
+					within(card).queryByText(/\+ Watchlist/)
+				).toBeInTheDocument(),
+			{
+				timeout: 30000
+			}
+		);
+		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
+		userEvent.click(addWatchlistBtn);
+
+		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
+			'Add MSFT to Watchlist'
+		);
+		await waitFor(() =>
+			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
+		);
+		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
+
+		const select = screen.getByTestId('existing-watchlist-select');
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		fireEvent.mouseDown(select.querySelector('.ant-select-selector')!);
+		await waitFor(() =>
+			expect(
+				screen.queryByRole('option', { name: 'First Watchlist' })
+			).toBeInTheDocument()
+		);
+		expect(
+			screen.queryByRole('option', { name: 'Second Watchlist' })
+		).toBeInTheDocument();
+
+		fireEvent.click(screen.getAllByText('First Watchlist')[1]);
+
+		userEvent.click(screen.getByText('OK'));
+		await waitFor(() =>
+			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('Watchlists'));
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
+	});
+
+	it('adds stock to new watchlist', async () => {
+		renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		await waitFor(() =>
+			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
+		);
+		userEvent.type(getSymbolField(), 'MSFT');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-MSFT');
+		await waitFor(
+			() =>
+				expect(
+					within(card).queryByText(/\+ Watchlist/)
+				).toBeInTheDocument(),
+			{
+				timeout: 30000
+			}
+		);
+		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
+		userEvent.click(addWatchlistBtn);
+
+		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
+			'Add MSFT to Watchlist'
+		);
+		await waitFor(() =>
+			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
+		);
+		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
+
+		userEvent.click(screen.getByText('New Watchlist'));
+		userEvent.type(
+			screen.getByTestId('new-watchlist-input'),
+			'New Watchlist'
+		);
+
+		userEvent.click(screen.getByText('OK'));
+		await waitFor(() =>
+			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('Watchlists'));
+		await waitFor(() =>
+			expect(screen.queryByText('New Watchlist')).toBeVisible()
+		);
+		userEvent.click(screen.getByText('New Watchlist'));
+		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 });
