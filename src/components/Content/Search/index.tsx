@@ -75,7 +75,7 @@ export const Search = () => {
 	const closeAddToWatchlistModal = () =>
 		setState((draft) => {
 			draft.addToWatchlistModal = {
-				show: true,
+				show: false,
 				symbol: ''
 			};
 		});
