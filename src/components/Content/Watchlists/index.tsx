@@ -21,16 +21,18 @@ import {
 	createWatchlistPanel,
 	WatchlistPanelConfig
 } from './createWatchlistPanel';
-import { watch } from 'vite/types/chokidar';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 
 interface State {
 	readonly loading: boolean;
 	readonly watchlists: ReadonlyArray<DbWatchlist>;
 	readonly renameWatchlistId?: string;
-	readonly showConfirmModal: boolean;
-	readonly confirmModalMessage: string;
-	readonly confirmModalWatchlistId?: string;
+	readonly confirmModal: {
+		readonly show: boolean;
+		readonly message: string;
+		readonly watchlistName: string;
+		readonly symbol?: string;
+	};
 }
 
 const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
@@ -82,23 +84,24 @@ const createShowConfirmRemoveWatchlist =
 				(watchlist) => watchlist._id === id
 			);
 			if (foundWatchlist) {
-				draft.showConfirmModal = true;
-				draft.confirmModalWatchlistId = id;
-				draft.confirmModalMessage = `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`;
+				draft.confirmModal = {
+					show: true,
+					message: `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`,
+					watchlistName: foundWatchlist.watchlistName
+				};
 			}
 		});
 
 const createHandleConfirmModalAction =
 	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(result: ConfirmModalResult) => {
+	(watchlistName: string, result: ConfirmModalResult) => {
 		if (ConfirmModalResult.OK === result) {
 			setState((draft) => {
-				draft.showConfirmModal = false;
+				draft.confirmModal.show = false;
 				draft.loading = true;
 			});
-			// TODO how to get watchlistName
 			pipe(
-				removeWatchlist(''),
+				removeWatchlist(watchlistName),
 				TaskEither.chain(() => getWatchlists)
 			);
 		}
@@ -108,8 +111,11 @@ export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
 		watchlists: [],
-		showConfirmModal: false,
-		confirmModalMessage: ''
+		confirmModal: {
+			show: false,
+			message: '',
+			watchlistName: ''
+		}
 	});
 
 	const getWatchlists = useMemo(
@@ -134,8 +140,8 @@ export const Watchlists = () => {
 		[setState]
 	);
 	const handleConfirmModalAction = useMemo(
-		() => createHandleConfirmModalAction(setState),
-		[setState]
+		() => createHandleConfirmModalAction(setState, getWatchlists),
+		[setState, getWatchlists]
 	);
 
 	const { breakpoints } = useContext(ScreenContext);
@@ -170,9 +176,14 @@ export const Watchlists = () => {
 				{body}
 			</div>
 			<ConfirmModal
-				show={state.showConfirmModal}
-				message={state.confirmModalMessage}
-				onClose={handleConfirmModalAction}
+				show={state.confirmModal.show}
+				message={state.confirmModal.message}
+				onClose={(result) =>
+					handleConfirmModalAction(
+						state.confirmModal.watchlistName,
+						result
+					)
+				}
 			/>
 		</RefreshProvider>
 	);
