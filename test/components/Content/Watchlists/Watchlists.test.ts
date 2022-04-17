@@ -143,6 +143,16 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.getByRole('combobox')).toHaveValue('First Watchlist')
 		);
+		userEvent.click(screen.getByText('OK'));
+		await waitFor(
+			() =>
+				expect(
+					screen.queryByText(/Add .* to Watchlist/)
+				).not.toBeInTheDocument(),
+			{
+				timeout: 30000
+			}
+		);
 		// TODO select the existing watchlist and save and then validate
 	});
 

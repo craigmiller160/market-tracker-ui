@@ -90,7 +90,7 @@ const ModalForm = (props: ModalFormProps) => {
 		))
 		.otherwise(() => (
 			<Form.Item name="existingWatchlistName">
-				<Select showSearch onChange={forceUpdate}>
+				<Select showSearch>
 					{props.existingWatchlistNames.map((name) => (
 						<Select.Option key={name} value={name}>
 							{name}
@@ -99,8 +99,6 @@ const ModalForm = (props: ModalFormProps) => {
 				</Select>
 			</Form.Item>
 		));
-
-	// TODO delete Value text
 
 	return (
 		<Form
@@ -119,7 +117,6 @@ const ModalForm = (props: ModalFormProps) => {
 				</Radio.Group>
 			</Form.Item>
 			{WatchlistField}
-			<p>Value: {props.form.getFieldsValue().existingWatchlistName}</p>
 		</Form>
 	);
 };
