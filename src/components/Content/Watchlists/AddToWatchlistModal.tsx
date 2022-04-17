@@ -136,45 +136,43 @@ const ModalForm = (props: ModalFormProps) => {
 
 type WatchlistAndSave = [string, TaskTryT<DbWatchlist>];
 
-const createOnOk =
-	(
-		symbol: string,
-		dispatch: Dispatch,
-		form: FormInstance<ModalFormData>,
-		onClose: () => void
-	) =>
-	(): TaskT<void> => {
-		const values: ModalFormData = form.getFieldsValue();
-		const [watchlistName, saveAction]: WatchlistAndSave = match(values)
-			.with(
-				{ watchlistSelectionType: 'existing' },
-				(_): WatchlistAndSave => [
-					_.existingWatchlistName,
-					addStockToWatchlist(_.existingWatchlistName, symbol)
-				]
-			)
-			.otherwise(
-				(_): WatchlistAndSave => [
-					_.newWatchListName,
-					createWatchlist(_.newWatchListName, symbol)
-				]
-			);
-		return pipe(
-			saveAction,
-			TaskEither.fold(
-				() => async () => constVoid(),
-				() => async () => {
-					dispatch(
-						notificationSlice.actions.addSuccess(
-							`Added ${symbol} to watchlist ${watchlistName}`
-						)
-					);
-					return constVoid();
-				}
-			),
-			Task.map(onClose)
+const createOnOk = (
+	symbol: string,
+	dispatch: Dispatch,
+	form: FormInstance<ModalFormData>,
+	onClose: () => void
+): TaskT<void> => {
+	const values: ModalFormData = form.getFieldsValue();
+	const [watchlistName, saveAction]: WatchlistAndSave = match(values)
+		.with(
+			{ watchlistSelectionType: 'existing' },
+			(_): WatchlistAndSave => [
+				_.existingWatchlistName,
+				addStockToWatchlist(_.existingWatchlistName, symbol)
+			]
+		)
+		.otherwise(
+			(_): WatchlistAndSave => [
+				_.newWatchListName,
+				createWatchlist(_.newWatchListName, symbol)
+			]
 		);
-	};
+	return pipe(
+		saveAction,
+		TaskEither.fold(
+			() => async () => constVoid(),
+			() => async () => {
+				dispatch(
+					notificationSlice.actions.addSuccess(
+						`Added ${symbol} to watchlist ${watchlistName}`
+					)
+				);
+				return constVoid();
+			}
+		),
+		Task.map(onClose)
+	);
+};
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalFormData>();
