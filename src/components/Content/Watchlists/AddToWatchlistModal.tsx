@@ -89,7 +89,14 @@ const ModalForm = (props: ModalFormProps) => {
 		watchlistSelectionType: 'existing'
 	});
 
-	// TODO make sure to reset selection type
+	const watchlistSelectionType =
+		props.form.getFieldsValue().watchlistSelectionType;
+
+	useEffect(() => {
+		setState((draft) => {
+			draft.watchlistSelectionType = watchlistSelectionType;
+		});
+	}, [setState, watchlistSelectionType]);
 
 	const onSelectionTypeChange = (event: RadioChangeEvent) =>
 		setState((draft) => {
@@ -120,7 +127,7 @@ const ModalForm = (props: ModalFormProps) => {
 			form={props.form}
 			preserve
 			initialValues={{
-				watchlistSelectionType: state.watchlistSelectionType
+				watchlistSelectionType: 'existing'
 			}}
 		>
 			<Form.Item name="watchlistSelectionType">
@@ -194,7 +201,6 @@ export const AddToWatchlistModal = (props: Props) => {
 	useEffect(() => {
 		if (props.show) {
 			getWatchlistNames();
-			form.resetFields();
 		}
 	}, [getWatchlistNames, props.show, form]);
 
@@ -212,7 +218,12 @@ export const AddToWatchlistModal = (props: Props) => {
 			/>
 		));
 
-	const onOk = createOnOk(props.symbol, dispatch, form, props.onClose);
+	const onClose = () => {
+		form.resetFields();
+		props.onClose();
+	};
+
+	const onOk = createOnOk(props.symbol, dispatch, form, onClose);
 
 	// TODO disable ok button until there is a watchlist selected
 
@@ -221,7 +232,7 @@ export const AddToWatchlistModal = (props: Props) => {
 			title={`Add ${props.symbol} to Watchlist`}
 			className="AddToWatchlistModal"
 			visible={props.show}
-			onCancel={props.onClose}
+			onCancel={onClose}
 			onOk={onOk}
 		>
 			{Body}
