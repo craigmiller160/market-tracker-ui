@@ -164,6 +164,39 @@ describe('Watchlists', () => {
 	});
 
 	it('adds stock to new watchlist', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		await waitFor(() =>
+			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
+		);
+		userEvent.type(getSymbolField(), 'MSFT');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-MSFT');
+		await waitFor(
+			() =>
+				expect(
+					within(card).queryByText(/\+ Watchlist/)
+				).toBeInTheDocument(),
+			{
+				timeout: 30000
+			}
+		);
+		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
+		userEvent.click(addWatchlistBtn);
+
+		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
+			'Add MSFT to Watchlist'
+		);
+		await waitFor(() =>
+			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
+		);
+		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
+
+		userEvent.click(screen.getByText('New Watchlist'));
+		// TODO finish this
 	});
 });
