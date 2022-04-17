@@ -102,7 +102,11 @@ describe('Watchlists', () => {
 	});
 
 	it('adds stock to existing watchlist', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/search'
+		});
+		await waitFor(() => expect(screen.queryByTestId('search-page')));
+		// TODO finish this
 	});
 
 	it('adds stock to new watchlist', async () => {

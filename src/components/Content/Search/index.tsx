@@ -82,7 +82,7 @@ export const Search = () => {
 
 	return (
 		<RefreshProvider>
-			<div className="SearchPage">
+			<div className="SearchPage" data-testid="search-page">
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
 				{state.showCard && (
