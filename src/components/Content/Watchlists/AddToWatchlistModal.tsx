@@ -49,9 +49,6 @@ interface State {
 	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
-// TODO don't forget alert message on success
-// TODO make sure it resets when re-opened
-
 const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 	setState((draft) => {
 		draft.loading = true;
