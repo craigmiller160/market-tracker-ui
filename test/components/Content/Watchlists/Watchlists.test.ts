@@ -149,15 +149,18 @@ describe('Watchlists', () => {
 		).toBeInTheDocument();
 
 		fireEvent.click(screen.getAllByText('First Watchlist')[1]);
-		// await waitFor(() => expect(screen.getByText('First Watchlist')).toBeInTheDocument());
-		// screen.debug(screen.getByTestId('add-to-watchlist-modal')); // TODO delete this
 
-		// TODO below here works
 		userEvent.click(screen.getByText('OK'));
 		await waitFor(() =>
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
 		);
-		// TODO select the existing watchlist and save and then validate
+
+		userEvent.click(screen.getByText('Watchlists'));
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
 	it('adds stock to new watchlist', async () => {
