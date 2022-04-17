@@ -136,18 +136,13 @@ describe('Watchlists', () => {
 			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
 		);
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
-		userEvent.click(screen.getByRole('combobox'));
-		await waitFor(() =>
-			expect(screen.getAllByRole('option')).toHaveLength(2)
-		);
 
-		// TODO improve this logic
-		// const items = screen.getAllByText('First Watchlist');
-		fireEvent.mouseDown(
-			screen.getByRole('option', { name: 'First Watchlist' })
+		fireEvent.change(screen.getByRole('combobox'), {
+			target: { value: 'First Watchlist' }
+		});
+		await waitFor(() =>
+			expect(screen.getByRole('combobox')).toHaveValue('First Watchlist')
 		);
-		screen.debug(screen.getByRole('combobox'));
-		// userEvent.click(items[1]);
 		// TODO select the existing watchlist and save and then validate
 	});
 
