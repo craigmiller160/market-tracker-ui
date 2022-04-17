@@ -78,10 +78,10 @@ const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 interface ModalFormProps {
 	readonly form: FormInstance<ModalFormData>;
 	readonly existingWatchlistNames: ReadonlyArray<string>;
+	readonly onFormChange: () => void;
 }
 
 const ModalForm = (props: ModalFormProps) => {
-	const forceUpdate = useForceUpdate();
 	const WatchlistField = match(props.form.getFieldsValue())
 		.with({ watchlistSelectionType: 'new' }, () => (
 			<Form.Item name="newWatchListName">
@@ -106,12 +106,13 @@ const ModalForm = (props: ModalFormProps) => {
 		<Form
 			form={props.form}
 			preserve
+			onValuesChange={props.onFormChange}
 			initialValues={{
 				watchlistSelectionType: 'existing'
 			}}
 		>
 			<Form.Item name="watchlistSelectionType">
-				<Radio.Group onChange={forceUpdate}>
+				<Radio.Group>
 					<Space direction="vertical">
 						<Radio value="existing">Existing Watchlist</Radio>
 						<Radio value="new">New Watchlist</Radio>
@@ -165,7 +166,19 @@ const createOnOk =
 		)();
 	};
 
+const isOkButtonDisabled = (form: FormInstance<ModalFormData>): boolean => {
+	const formValues = form.getFieldsValue();
+	return (
+		((formValues.watchlistSelectionType === 'existing' ||
+			formValues.watchlistSelectionType === undefined) &&
+			!formValues.existingWatchlistName) ||
+		(formValues.watchlistSelectionType === 'new' &&
+			!formValues.newWatchListName)
+	);
+};
+
 export const AddToWatchlistModal = (props: Props) => {
+	const forceUpdate = useForceUpdate();
 	const [form] = Form.useForm<ModalFormData>();
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>({
@@ -194,6 +207,7 @@ export const AddToWatchlistModal = (props: Props) => {
 		.otherwise(() => (
 			<ModalForm
 				form={form}
+				onFormChange={forceUpdate}
 				existingWatchlistNames={state.existingWatchlistNames}
 			/>
 		));
@@ -205,7 +219,7 @@ export const AddToWatchlistModal = (props: Props) => {
 
 	const onOk = createOnOk(props.symbol, dispatch, form, onClose);
 
-	// TODO disable ok button until there is a watchlist selected
+	const okButtonDisabled = isOkButtonDisabled(form);
 
 	return (
 		<Modal
@@ -215,6 +229,9 @@ export const AddToWatchlistModal = (props: Props) => {
 			visible={props.show}
 			onCancel={onClose}
 			onOk={onOk}
+			okButtonProps={{
+				disabled: okButtonDisabled
+			}}
 		>
 			{Body}
 		</Modal>
