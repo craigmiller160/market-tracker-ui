@@ -1,4 +1,12 @@
-import { Form, FormInstance, Input, Modal, Radio, Space } from 'antd';
+import {
+	Form,
+	FormInstance,
+	Input,
+	Modal,
+	Radio,
+	Space,
+	Typography
+} from 'antd';
 import { Updater, useImmer } from 'use-immer';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -6,6 +14,8 @@ import { getWatchlistNames } from '../../../services/WatchlistService';
 import { useEffect, useMemo } from 'react';
 import { castDraft } from 'immer';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
+import { match } from 'ts-pattern';
+import { Spinner } from '../../UI/Spinner';
 
 interface Props {
 	readonly show: boolean;
@@ -50,8 +60,13 @@ const NewWatchlistItem = (
 	</Form.Item>
 );
 
-const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> =>
-	pipe(
+const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
+	setState((draft) => {
+		draft.loading = true;
+		draft.existingWatchlistNames = [];
+		draft.hadError = false;
+	});
+	return pipe(
 		getWatchlistNames(),
 		TaskEither.fold(
 			() => async () =>
@@ -66,11 +81,34 @@ const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> =>
 				})
 		)
 	);
+};
+
+interface ModalFormProps {
+	readonly form: FormInstance<ModalForm>;
+}
+
+const ModalForm = (props: ModalFormProps) => (
+	<Form
+		form={props.form}
+		initialValues={{
+			watchlistSelectionType: 'existing'
+		}}
+	>
+		<Form.Item name="watchlistSelectionType">
+			<Radio.Group>
+				<Space direction="vertical">
+					<Radio value="existing">Select Box</Radio>
+					<Radio value="new">{NewWatchlistItem}</Radio>
+				</Space>
+			</Radio.Group>
+		</Form.Item>
+	</Form>
+);
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
 	const [state, setState] = useImmer<State>({
-		loading: true,
+		loading: false,
 		hadError: false,
 		existingWatchlistNames: []
 	});
@@ -80,32 +118,28 @@ export const AddToWatchlistModal = (props: Props) => {
 	);
 
 	useEffect(() => {
-		getWatchlistNames();
-	}, [getWatchlistNames]);
+		if (props.show) {
+			getWatchlistNames();
+		}
+	}, [getWatchlistNames, props.show]);
+
+	const Body = match(state)
+		.with({ loading: true }, () => <Spinner />)
+		.with({ loading: false, hadError: true }, () => (
+			<Typography.Title className="ErrorMsg" level={3}>
+				Error Loading Watchlist Names
+			</Typography.Title>
+		))
+		.otherwise(() => <ModalForm form={form} />);
 
 	return (
 		<Modal
 			title="Add to Watchlist"
+			className="AddToWatchlistModal"
 			visible={props.show}
 			onCancel={props.onClose}
 		>
-			<div>
-				<Form
-					form={form}
-					initialValues={{
-						watchlistSelectionType: 'existing'
-					}}
-				>
-					<Form.Item name="watchlistSelectionType">
-						<Radio.Group>
-							<Space direction="vertical">
-								<Radio value="existing">Select Box</Radio>
-								<Radio value="new">{NewWatchlistItem}</Radio>
-							</Space>
-						</Radio.Group>
-					</Form.Item>
-				</Form>
-			</div>
+			{Body}
 		</Modal>
 	);
 };
