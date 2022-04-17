@@ -31,15 +31,15 @@ const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
 	});
 };
 
-interface UseCardActionsProps {
-	readonly addToWatchlist: () => void;
-}
-
-const useCardActions = (props: UseCardActionsProps): ReactNode[] => [
-	<Button key="addToWatchlist" onClick={props.addToWatchlist}>
-		+ Watchlist
-	</Button>
-];
+const createGetActions =
+	(addToWatchlist: (symbol: string) => void) =>
+	// eslint-disable-next-line react/display-name
+	(symbol: string): ReactNode[] =>
+		[
+			<Button key="addToWatchlist" onClick={() => addToWatchlist(symbol)}>
+				+ Watchlist
+			</Button>
+		];
 
 export const Search = () => {
 	const marketTime = useSelector(timeValueSelector);
@@ -65,12 +65,12 @@ export const Search = () => {
 		}
 	}, [marketTime, state.info.symbol, setState]);
 
-	const CardActions = useCardActions({
-		addToWatchlist: () =>
-			setState((draft) => {
-				draft.addToWatchlistModal.show = true;
-			})
-	});
+	const getActions = createGetActions((symbol: string) =>
+		setState((draft) => {
+			draft.addToWatchlistModal.show = true;
+			draft.addToWatchlistModal.symbol = symbol;
+		})
+	);
 
 	const closeAddToWatchlistModal = () =>
 		setState((draft) => {
@@ -86,7 +86,7 @@ export const Search = () => {
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
 				{state.showCard && (
-					<InvestmentCard info={state.info} actions={CardActions} />
+					<InvestmentCard info={state.info} getActions={getActions} />
 				)}
 			</div>
 			<AddToWatchlistModal
