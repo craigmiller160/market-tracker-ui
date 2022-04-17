@@ -27,7 +27,7 @@ import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
-import useForceUpdate from 'antd/es/_util/hooks/useForceUpdate';
+import { useForceUpdate } from '../../hooks/useForceUpdate';
 
 interface Props {
 	readonly show: boolean;
