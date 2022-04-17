@@ -82,25 +82,12 @@ interface ModalFormProps {
 }
 
 const ModalForm = (props: ModalFormProps) => {
-	const WatchlistField = match(props.form.getFieldsValue())
-		.with({ watchlistSelectionType: 'new' }, () => (
-			<Form.Item name="newWatchListName">
-				<Input data-testid="new-watchlist-input" />
-			</Form.Item>
-		))
-		.otherwise(() => (
-			<Form.Item name="existingWatchlistName">
-				<Select data-testid="existing-watchlist-select" showSearch>
-					{props.existingWatchlistNames.map((name) => (
-						<Select.Option key={name} value={name}>
-							{name}
-						</Select.Option>
-					))}
-				</Select>
-			</Form.Item>
-		));
-
-	// TODO disable OK button until something is selected
+	const isNewWatchlist =
+		props.form.getFieldsValue().watchlistSelectionType === 'new';
+	const newWatchlistStyle = isNewWatchlist ? undefined : { display: 'none' };
+	const existingWatchlistStyle = isNewWatchlist
+		? { display: 'none' }
+		: undefined;
 
 	return (
 		<Form
@@ -119,7 +106,21 @@ const ModalForm = (props: ModalFormProps) => {
 					</Space>
 				</Radio.Group>
 			</Form.Item>
-			{WatchlistField}
+			<Form.Item name="newWatchListName" style={newWatchlistStyle}>
+				<Input data-testid="new-watchlist-input" />
+			</Form.Item>
+			<Form.Item
+				name="existingWatchlistName"
+				style={existingWatchlistStyle}
+			>
+				<Select data-testid="existing-watchlist-select" showSearch>
+					{props.existingWatchlistNames.map((name) => (
+						<Select.Option key={name} value={name}>
+							{name}
+						</Select.Option>
+					))}
+				</Select>
+			</Form.Item>
 		</Form>
 	);
 };
@@ -218,7 +219,6 @@ export const AddToWatchlistModal = (props: Props) => {
 	};
 
 	const onOk = createOnOk(props.symbol, dispatch, form, onClose);
-
 	const okButtonDisabled = isOkButtonDisabled(form);
 
 	return (
