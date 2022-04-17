@@ -1,6 +1,8 @@
 import { Response, Server } from 'miragejs';
-import { Database } from '../Database';
+import { Database, ensureDbUserRecord } from '../Database';
 import { validationError } from '../utils/validate';
+import { DbWatchlist, Watchlist } from '../../../../src/types/Watchlist';
+import { castDraft } from 'immer';
 
 interface RenameWatchlistParams {
 	readonly oldName: string;
@@ -19,6 +21,16 @@ export const createWatchlistRoutes = (database: Database, server: Server) => {
 	server.get('/watchlists/names', () =>
 		database.data.watchlists.map((watchlist) => watchlist.watchlistName)
 	);
+	server.post('/watchlists', (schema, request) => {
+		const watchlist: Watchlist = JSON.parse(
+			request.requestBody
+		) as Watchlist;
+		const dbWatchlist: DbWatchlist = ensureDbUserRecord(watchlist);
+		database.updateData((draft) => {
+			draft.watchlists.push(castDraft(dbWatchlist));
+		});
+		return dbWatchlist;
+	});
 	server.get('/watchlists/all', () => database.data.watchlists);
 	server.put('/watchlists/:oldName/rename/:newName', (schema, request) => {
 		const params = request.params as unknown as RenameWatchlistParams;
