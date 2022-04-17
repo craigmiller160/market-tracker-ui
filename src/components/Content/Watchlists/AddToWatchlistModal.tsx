@@ -211,6 +211,7 @@ export const AddToWatchlistModal = (props: Props) => {
 		<Modal
 			title={`Add ${props.symbol} to Watchlist`}
 			className="AddToWatchlistModal"
+			data-testid="add-to-watchlist-modal"
 			visible={props.show}
 			onCancel={onClose}
 			onOk={onOk}
