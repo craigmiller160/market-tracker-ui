@@ -4,7 +4,6 @@ import {
 	Input,
 	Modal,
 	Radio,
-	RadioChangeEvent,
 	Select,
 	Space,
 	Typography
@@ -28,6 +27,7 @@ import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
+import useForceUpdate from 'antd/es/_util/hooks/useForceUpdate';
 
 interface Props {
 	readonly show: boolean;
@@ -80,32 +80,15 @@ interface ModalFormProps {
 	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
-interface ModalFormState {
-	readonly watchlistSelectionType: WatchlistSelectionType;
-}
-
 const ModalForm = (props: ModalFormProps) => {
-	const [state, setState] = useImmer<ModalFormState>({
-		watchlistSelectionType: 'existing'
-	});
-
-	const watchlistSelectionType =
-		props.form.getFieldsValue().watchlistSelectionType;
-
-	useEffect(() => {
-		setState((draft) => {
-			draft.watchlistSelectionType = watchlistSelectionType;
-		});
-	}, [setState, watchlistSelectionType]);
-
-	const onSelectionTypeChange = (event: RadioChangeEvent) =>
-		setState((draft) => {
-			draft.watchlistSelectionType = event.target
-				.value as WatchlistSelectionType;
-		});
-
-	const WatchlistField = match(state)
-		.with({ watchlistSelectionType: 'existing' }, () => (
+	const forceUpdate = useForceUpdate();
+	const WatchlistField = match(props.form.getFieldsValue())
+		.with({ watchlistSelectionType: 'new' }, () => (
+			<Form.Item name="newWatchListName">
+				<Input />
+			</Form.Item>
+		))
+		.otherwise(() => (
 			<Form.Item name="existingWatchlistName">
 				<Select>
 					{props.existingWatchlistNames.map((name) => (
@@ -114,11 +97,6 @@ const ModalForm = (props: ModalFormProps) => {
 						</Select.Option>
 					))}
 				</Select>
-			</Form.Item>
-		))
-		.otherwise(() => (
-			<Form.Item name="newWatchListName">
-				<Input />
 			</Form.Item>
 		));
 
@@ -131,7 +109,7 @@ const ModalForm = (props: ModalFormProps) => {
 			}}
 		>
 			<Form.Item name="watchlistSelectionType">
-				<Radio.Group onChange={onSelectionTypeChange}>
+				<Radio.Group onChange={forceUpdate}>
 					<Space direction="vertical">
 						<Radio value="existing">Existing Watchlist</Radio>
 						<Radio value="new">New Watchlist</Radio>
