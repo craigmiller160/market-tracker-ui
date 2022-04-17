@@ -66,3 +66,14 @@ export const getWatchlistNames = (): TaskTryT<ReadonlyArray<string>> =>
 		}),
 		TaskEither.map(getResponseData)
 	);
+
+export const removeStockFromWatchlist = (
+	watchlistName: string,
+	stockSymbol: string
+): TaskTryT<DbWatchlist> => {
+	throw new Error();
+};
+
+export const removeWatchlist = (watchlistName: string): TaskTryT<unknown> => {
+	throw new Error();
+}

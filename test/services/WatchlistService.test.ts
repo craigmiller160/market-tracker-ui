@@ -93,10 +93,25 @@ describe('WatchlistService', () => {
 	});
 
 	it('removeStockFromWatchlist', async () => {
-		throw new Error();
+		const newWatchlist: DbWatchlist = {
+			...watchlists[0],
+			stocks: []
+		};
+		mockApi
+			.onDelete('/watchlists/First%20Watchlist/stock/VTI')
+			.reply(200, newWatchlist);
+		const result = await WatchlistService.removeStockFromWatchlist(
+			'First Watchlist',
+			'VTI'
+		)();
+		expect(result).toEqualRight(newWatchlist);
 	});
 
 	it('removeWatchlist', async () => {
-		throw new Error();
+		mockApi.onDelete('/watchlists/First%20Watchlist').reply(200);
+		const result = await WatchlistService.removeWatchlist(
+			'First Watchlist'
+		)();
+		expect(result).toBeRight();
 	});
 });
