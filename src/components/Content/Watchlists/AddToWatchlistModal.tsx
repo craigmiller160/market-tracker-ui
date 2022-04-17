@@ -14,6 +14,7 @@ import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import {
 	addStockToWatchlist,
+	createWatchlist,
 	getWatchlistNames
 } from '../../../services/WatchlistService';
 import { useEffect, useMemo } from 'react';
@@ -130,7 +131,11 @@ const ModalForm = (props: ModalFormProps) => {
 const createOnOk =
 	(form: FormInstance<ModalFormData>, onClose: () => void) => () => {
 		const values: ModalFormData = form.getFieldsValue();
-		// TODO finish this
+		match(values)
+			.with({ watchlistSelectionType: 'existing' }, (_) =>
+				addStockToWatchlist(_.existingWatchlistName, '')
+			)
+			.otherwise((_) => createWatchlist(_.newWatchListName, ''));
 	};
 
 export const AddToWatchlistModal = (props: Props) => {
