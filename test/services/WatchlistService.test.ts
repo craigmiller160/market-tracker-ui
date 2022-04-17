@@ -1,4 +1,4 @@
-import { DbWatchlist } from '../../src/types/Watchlist';
+import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
 import MockAdapter from 'axios-mock-adapter';
@@ -68,5 +68,27 @@ describe('WatchlistService', () => {
 		mockApi.onGet('/watchlists/names').reply(200, ['One', 'Two']);
 		const result = await WatchlistService.getWatchlistNames()();
 		expect(result).toEqualRight(['One', 'Two']);
+	});
+
+	it('createWatchlist', async () => {
+		const watchlistName = 'MyWatchlist';
+		const symbol = 'VTI';
+		const body: Watchlist = {
+			watchlistName,
+			stocks: [{ symbol }],
+			cryptos: []
+		};
+		const response: DbWatchlist = {
+			...body,
+			userId: 1,
+			_id: '2'
+		};
+		mockApi.onPost('/watchlists', body).reply(200, response);
+
+		const result = await WatchlistService.createWatchlist(
+			watchlistName,
+			symbol
+		)();
+		expect(result).toEqualRight(response);
 	});
 });

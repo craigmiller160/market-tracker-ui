@@ -1,5 +1,5 @@
 import { ajaxApi, getResponseData } from './AjaxApi';
-import { DbWatchlist } from '../types/Watchlist';
+import { DbWatchlist, Watchlist } from '../types/Watchlist';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
@@ -32,6 +32,28 @@ export const addStockToWatchlist = (
 	return pipe(
 		ajaxApi.put<void, DbWatchlist>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
+		}),
+		TaskEither.map(getResponseData)
+	);
+};
+
+export const createWatchlist = (
+	watchlistName: string,
+	stockSymbol: string
+): TaskTryT<DbWatchlist> => {
+	const input: Watchlist = {
+		watchlistName,
+		stocks: [
+			{
+				symbol: stockSymbol
+			}
+		],
+		cryptos: []
+	};
+	return pipe(
+		ajaxApi.post<Watchlist, DbWatchlist>({
+			uri: '/watchlists',
+			body: input
 		}),
 		TaskEither.map(getResponseData)
 	);
