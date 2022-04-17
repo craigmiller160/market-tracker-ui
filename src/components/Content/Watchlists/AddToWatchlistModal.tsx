@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio, Space } from 'antd';
+import { Form, FormInstance, Input, Modal, Radio, Space } from 'antd';
 
 interface Props {
 	readonly show: boolean;
@@ -35,8 +35,33 @@ export const AddToWatchlistModal = (props: Props) => {
 							<Space direction="vertical">
 								<Radio value="existing">Select Box</Radio>
 								<Radio value="new">
-									<Form.Item name="newWatchListName">
-										<Input />
+									<Form.Item shouldUpdate>
+										{(
+											innerForm: FormInstance<ModalForm>
+										) => {
+											return (
+												<Input
+													disabled={
+														innerForm.getFieldsValue()
+															.watchlistSelectionType !==
+														'new'
+													}
+													value={
+														innerForm.getFieldsValue()
+															.newWatchListName
+													}
+													onChange={(event) =>
+														innerForm.setFieldsValue(
+															{
+																newWatchListName:
+																	event.target
+																		.validationMessage
+															}
+														)
+													}
+												/>
+											);
+										}}
 									</Form.Item>
 								</Radio>
 							</Space>
