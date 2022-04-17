@@ -89,6 +89,7 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 
 interface ActionsProps {
 	readonly onRenameWatchlist: () => void;
+	readonly onRemoveWatchlist: () => void;
 	readonly renameWatchlistId?: string;
 }
 
@@ -97,10 +98,18 @@ const WatchlistPanelActions = (props: ActionsProps) => {
 		event.stopPropagation();
 		props.onRenameWatchlist();
 	};
+	const onRemoveClick = (event: MouseEvent) => {
+		event.stopPropagation();
+		props.onRemoveWatchlist();
+	};
+	// TODO need a different button layout for mobile, this won't work
 	return (
 		<div>
 			{props.renameWatchlistId === undefined && (
-				<Button onClick={onRenameClick}>Rename</Button>
+				<>
+					<Button onClick={onRenameClick}>Rename</Button>
+					<Button onClick={onRemoveClick}>Remove</Button>
+				</>
 			)}
 		</div>
 	);
