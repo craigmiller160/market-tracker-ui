@@ -4,6 +4,7 @@ import {
 	Input,
 	Modal,
 	Radio,
+	RadioChangeEvent,
 	Select,
 	Space,
 	Typography
@@ -41,65 +42,6 @@ interface State {
 // TODO don't forget alert message on success
 // TODO make sure it resets when re-opened
 
-const NewWatchlistItem = (
-	<Form.Item shouldUpdate label="New">
-		{(innerForm: FormInstance<ModalForm>) => (
-			<Input
-				disabled={
-					innerForm.getFieldsValue().watchlistSelectionType !== 'new'
-				}
-				value={innerForm.getFieldsValue().newWatchListName}
-				onChange={(event) =>
-					innerForm.setFieldsValue({
-						newWatchListName: event.target.value
-					})
-				}
-			/>
-		)}
-	</Form.Item>
-);
-
-const createExistingWatchlistItem = (
-	existingWatchlistNames: ReadonlyArray<string>
-) => {
-	const shouldUpdate = (
-		oldValues: ModalForm,
-		newValues: ModalForm
-	): boolean =>
-		oldValues.existingWatchlistName !== newValues.existingWatchlistName ||
-		oldValues.watchlistSelectionType !== newValues.watchlistSelectionType;
-	console.log('Creating');
-	return (
-		<Form.Item shouldUpdate={shouldUpdate} label="Existing">
-			{(innerForm: FormInstance<ModalForm>) => {
-				console.log('Updating');
-				return (
-					<Select
-						value={innerForm.getFieldsValue().existingWatchlistName}
-						onChange={(value) =>
-							innerForm.setFieldsValue({
-								existingWatchlistName: value
-							})
-						}
-						disabled={
-							innerForm.getFieldsValue()
-								.watchlistSelectionType !== undefined &&
-							innerForm.getFieldsValue()
-								.watchlistSelectionType !== 'existing'
-						}
-					>
-						{existingWatchlistNames.map((name) => (
-							<Select.Option key={name} value={name}>
-								{name}
-							</Select.Option>
-						))}
-					</Select>
-				);
-			}}
-		</Form.Item>
-	);
-};
-
 const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 	setState((draft) => {
 		draft.loading = true;
@@ -128,35 +70,56 @@ interface ModalFormProps {
 	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
+interface ModalFormState {
+	readonly watchlistSelectionType: WatchlistSelectionType;
+}
+
 const ModalForm = (props: ModalFormProps) => {
+	const [state, setState] = useImmer<ModalFormState>({
+		watchlistSelectionType: 'existing'
+	});
+
+	const onSelectionTypeChange = (event: RadioChangeEvent) =>
+		setState((draft) => {
+			draft.watchlistSelectionType = event.target
+				.value as WatchlistSelectionType;
+		});
+
+	const WatchlistField = match(state)
+		.with({ watchlistSelectionType: 'existing' }, () => (
+			<Form.Item name="existingWatchlistName">
+				<Select>
+					{props.existingWatchlistNames.map((name) => (
+						<Select.Option key={name} value={name}>
+							{name}
+						</Select.Option>
+					))}
+				</Select>
+			</Form.Item>
+		))
+		.otherwise(() => (
+			<Form.Item name="newWatchlistName">
+				<Input />
+			</Form.Item>
+		));
+
 	return (
 		<Form
 			form={props.form}
 			preserve
 			initialValues={{
-				watchlistSelectionType: 'existing'
+				watchlistSelectionType: state.watchlistSelectionType
 			}}
 		>
 			<Form.Item name="watchlistSelectionType">
-				<Radio.Group>
+				<Radio.Group onChange={onSelectionTypeChange}>
 					<Space direction="vertical">
 						<Radio value="existing">Existing Watchlist</Radio>
 						<Radio value="new">New Watchlist</Radio>
 					</Space>
 				</Radio.Group>
 			</Form.Item>
-			<Form.Item name="newWatchlistName">
-				<Input />
-			</Form.Item>
-			<Form.Item name="existingWatchlistName">
-				<Select>
-					{props.existingWatchlistNames.map((name) => (
-						<Select.Option key={name} value={name}>
-							name
-						</Select.Option>
-					))}
-				</Select>
-			</Form.Item>
+			{WatchlistField}
 		</Form>
 	);
 };
