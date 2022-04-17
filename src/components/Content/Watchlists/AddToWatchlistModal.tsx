@@ -165,8 +165,9 @@ export const AddToWatchlistModal = (props: Props) => {
 	useEffect(() => {
 		if (props.show) {
 			getWatchlistNames();
+			form.resetFields();
 		}
-	}, [getWatchlistNames, props.show]);
+	}, [getWatchlistNames, props.show, form]);
 
 	const Body = match(state)
 		.with({ loading: true }, () => <Spinner />)
