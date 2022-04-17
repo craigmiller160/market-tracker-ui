@@ -2,18 +2,4 @@
   .ErrorMsg {
     color: red;
   }
-
-  // TODO may end up deleting this one
-  .ant-radio-group {
-    width: 100%;
-    .ant-space {
-      width: 100%;
-      .ant-radio-wrapper {
-        width: 100%;
-        >span:not(.ant-radio) {
-          width: 100%;
-        }
-      }
-    }
-  }
 }
