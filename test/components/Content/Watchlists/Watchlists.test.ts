@@ -136,6 +136,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
 		);
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
+		// TODO select the existing watchlist and save and then validate
 	});
 
 	it('adds stock to new watchlist', async () => {
