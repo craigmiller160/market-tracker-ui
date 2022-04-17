@@ -50,7 +50,7 @@ const NewWatchlistItem = (
 				value={innerForm.getFieldsValue().newWatchListName}
 				onChange={(event) =>
 					innerForm.setFieldsValue({
-						newWatchListName: event.target.validationMessage
+						newWatchListName: event.target.value
 					})
 				}
 			/>
@@ -72,9 +72,11 @@ const createExistingWatchlistItem = (
 				newValues.watchlistSelectionType
 		);
 	};
+	console.log('Creating')
 	return (
 		<Form.Item shouldUpdate={shouldUpdate} label="Existing">
 			{(innerForm: FormInstance<ModalForm>) => {
+				console.log('Updating')
 				return (
 					<Select
 						value={innerForm.getFieldsValue().existingWatchlistName}
@@ -141,12 +143,15 @@ const ModalForm = (props: ModalFormProps) => (
 		<Form.Item name="watchlistSelectionType">
 			<Radio.Group>
 				<Space direction="vertical">
-					<Radio value="existing">Existing</Radio>
+					<Radio value="existing">
+						{createExistingWatchlistItem(
+							props.existingWatchlistNames
+						)}
+					</Radio>
 					<Radio value="new">{NewWatchlistItem}</Radio>
 				</Space>
 			</Radio.Group>
 		</Form.Item>
-		{createExistingWatchlistItem(props.existingWatchlistNames)}
 	</Form>
 );
 
