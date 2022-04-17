@@ -17,6 +17,7 @@ import { castDraft } from 'immer';
 import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
+import './AddToWatchlistModal.scss';
 
 interface Props {
 	readonly show: boolean;
