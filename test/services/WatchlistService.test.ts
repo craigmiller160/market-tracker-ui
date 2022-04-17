@@ -91,4 +91,12 @@ describe('WatchlistService', () => {
 		)();
 		expect(result).toEqualRight(response);
 	});
+
+	it('removeStockFromWatchlist', async () => {
+		throw new Error();
+	});
+
+	it('removeWatchlist', async () => {
+		throw new Error();
+	});
 });
