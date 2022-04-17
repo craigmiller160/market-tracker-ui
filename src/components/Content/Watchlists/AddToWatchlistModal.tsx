@@ -64,19 +64,14 @@ const createExistingWatchlistItem = (
 	const shouldUpdate = (
 		oldValues: ModalForm,
 		newValues: ModalForm
-	): boolean => {
-		return (
-			oldValues.existingWatchlistName !==
-				newValues.existingWatchlistName ||
-			oldValues.watchlistSelectionType !==
-				newValues.watchlistSelectionType
-		);
-	};
-	console.log('Creating')
+	): boolean =>
+		oldValues.existingWatchlistName !== newValues.existingWatchlistName ||
+		oldValues.watchlistSelectionType !== newValues.watchlistSelectionType;
+	console.log('Creating');
 	return (
 		<Form.Item shouldUpdate={shouldUpdate} label="Existing">
 			{(innerForm: FormInstance<ModalForm>) => {
-				console.log('Updating')
+				console.log('Updating');
 				return (
 					<Select
 						value={innerForm.getFieldsValue().existingWatchlistName}
