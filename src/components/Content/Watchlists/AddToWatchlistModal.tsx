@@ -110,7 +110,7 @@ const ModalForm = (props: ModalFormProps) => {
 			</Form.Item>
 		))
 		.otherwise(() => (
-			<Form.Item name="newWatchlistName">
+			<Form.Item name="newWatchListName">
 				<Input />
 			</Form.Item>
 		));
