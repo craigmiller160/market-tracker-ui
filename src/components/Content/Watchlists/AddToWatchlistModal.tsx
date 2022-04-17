@@ -1,4 +1,4 @@
-import { Form, Modal, Radio, Space } from 'antd';
+import { Form, Input, Modal, Radio, Space } from 'antd';
 
 interface Props {
 	readonly show: boolean;
@@ -9,6 +9,7 @@ type WatchlistSelectionType = 'existing' | 'new';
 
 interface ModalForm {
 	readonly watchlistSelectionType: WatchlistSelectionType;
+	readonly newWatchListName: string;
 }
 
 // TODO don't forget alert message on success
@@ -33,7 +34,11 @@ export const AddToWatchlistModal = (props: Props) => {
 						<Radio.Group>
 							<Space direction="vertical">
 								<Radio value="existing">Select Box</Radio>
-								<Radio value="new">Input Field</Radio>
+								<Radio value="new">
+									<Form.Item name="newWatchListName">
+										<Input />
+									</Form.Item>
+								</Radio>
 							</Space>
 						</Radio.Group>
 					</Form.Item>
