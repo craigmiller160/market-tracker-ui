@@ -15,7 +15,10 @@ import { AddToWatchlistModal } from '../Watchlists/AddToWatchlistModal';
 interface State {
 	readonly info: InvestmentInfo;
 	readonly showCard: boolean;
-	readonly showAddToWatchlistModal: boolean;
+	readonly addToWatchlistModal: {
+		readonly show: boolean;
+		readonly symbol: string;
+	};
 }
 
 const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
@@ -47,7 +50,10 @@ export const Search = () => {
 			name: ''
 		},
 		showCard: false,
-		showAddToWatchlistModal: false
+		addToWatchlistModal: {
+			show: false,
+			symbol: ''
+		}
 	});
 	const doSearch = useMemo(() => createDoSearch(setState), [setState]);
 
@@ -62,13 +68,16 @@ export const Search = () => {
 	const CardActions = useCardActions({
 		addToWatchlist: () =>
 			setState((draft) => {
-				draft.showAddToWatchlistModal = true;
+				draft.addToWatchlistModal.show = true;
 			})
 	});
 
 	const closeAddToWatchlistModal = () =>
 		setState((draft) => {
-			draft.showAddToWatchlistModal = false;
+			draft.addToWatchlistModal = {
+				show: true,
+				symbol: ''
+			};
 		});
 
 	return (
@@ -81,7 +90,8 @@ export const Search = () => {
 				)}
 			</div>
 			<AddToWatchlistModal
-				show={state.showAddToWatchlistModal}
+				symbol={state.addToWatchlistModal.symbol}
+				show={state.addToWatchlistModal.show}
 				onClose={closeAddToWatchlistModal}
 			/>
 		</RefreshProvider>

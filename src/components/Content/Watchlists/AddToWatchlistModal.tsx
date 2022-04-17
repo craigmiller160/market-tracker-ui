@@ -26,6 +26,7 @@ import './AddToWatchlistModal.scss';
 
 interface Props {
 	readonly show: boolean;
+	readonly symbol: string;
 	readonly onClose: () => void;
 }
 
