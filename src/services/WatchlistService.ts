@@ -36,3 +36,11 @@ export const addStockToWatchlist = (
 		TaskEither.map(getResponseData)
 	);
 };
+
+export const getWatchlistNames = (): TaskTryT<ReadonlyArray<string>> =>
+	pipe(
+		ajaxApi.get<ReadonlyArray<string>>({
+			uri: '/watchlists/names'
+		}),
+		TaskEither.map(getResponseData)
+	);

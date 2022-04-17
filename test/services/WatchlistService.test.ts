@@ -63,4 +63,10 @@ describe('WatchlistService', () => {
 		)();
 		expect(result).toEqualRight(newWatchlist);
 	});
+
+	it('getWatchlistNames', async () => {
+		mockApi.onGet('/watchlists/names').reply(200, ['One', 'Two']);
+		const result = await WatchlistService.getWatchlistNames()();
+		expect(result).toEqualRight(['One', 'Two']);
+	});
 });
