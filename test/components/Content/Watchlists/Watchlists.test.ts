@@ -17,6 +17,9 @@ const testCard = (symbol: string, price: string) => {
 	expect(priceNodes[0]).toHaveTextContent(price);
 };
 
+const getSymbolField = () => screen.getByPlaceholderText('Symbol');
+const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
+
 describe('Watchlists', () => {
 	let apiServer: ApiServer;
 	beforeEach(() => {
@@ -105,8 +108,34 @@ describe('Watchlists', () => {
 		renderApp({
 			initialPath: '/market-tracker/search'
 		});
-		await waitFor(() => expect(screen.queryByTestId('search-page')));
-		// TODO finish this
+		await waitFor(() =>
+			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
+		);
+		userEvent.type(getSymbolField(), 'MSFT');
+		userEvent.click(getSearchBtn());
+		await waitFor(() =>
+			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
+		);
+		const card = screen.getByTestId('market-card-MSFT');
+		await waitFor(
+			() =>
+				expect(
+					within(card).queryByText(/\+ Watchlist/)
+				).toBeInTheDocument(),
+			{
+				timeout: 30000
+			}
+		);
+		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
+		userEvent.click(addWatchlistBtn);
+
+		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
+			'Add MSFT to Watchlist'
+		);
+		await waitFor(() =>
+			expect(screen.queryByLabelText('Existing Watchlist')).toBeChecked()
+		);
+		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
 	});
 
 	it('adds stock to new watchlist', async () => {
