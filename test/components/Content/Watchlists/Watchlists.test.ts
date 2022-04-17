@@ -214,4 +214,12 @@ describe('Watchlists', () => {
 		userEvent.click(screen.getByText('New Watchlist'));
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
+
+	it('remove stock from watchlist', async () => {
+		throw new Error();
+	});
+
+	it('remove watchlist', async () => {
+		throw new Error();
+	});
 });
