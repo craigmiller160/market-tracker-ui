@@ -61,15 +61,10 @@ const NewWatchlistItem = (
 const createExistingWatchlistItem = (
 	existingWatchlistNames: ReadonlyArray<string>
 ) => {
-	let firstUpdate = true;
 	const shouldUpdate = (
 		oldValues: ModalForm,
 		newValues: ModalForm
 	): boolean => {
-		if (firstUpdate) {
-			firstUpdate = false;
-			return true;
-		}
 		return (
 			oldValues.existingWatchlistName !==
 				newValues.existingWatchlistName ||
@@ -79,26 +74,30 @@ const createExistingWatchlistItem = (
 	};
 	return (
 		<Form.Item shouldUpdate={shouldUpdate} label="Existing">
-			{(innerForm: FormInstance<ModalForm>) => (
-				<Select
-					value={innerForm.getFieldsValue().existingWatchlistName}
-					onChange={(value) =>
-						innerForm.setFieldsValue({
-							existingWatchlistName: value
-						})
-					}
-					disabled={
-						innerForm.getFieldsValue().watchlistSelectionType !==
-						'existing'
-					}
-				>
-					{existingWatchlistNames.map((name) => (
-						<Select.Option key={name} value={name}>
-							{name}
-						</Select.Option>
-					))}
-				</Select>
-			)}
+			{(innerForm: FormInstance<ModalForm>) => {
+				return (
+					<Select
+						value={innerForm.getFieldsValue().existingWatchlistName}
+						onChange={(value) =>
+							innerForm.setFieldsValue({
+								existingWatchlistName: value
+							})
+						}
+						disabled={
+							innerForm.getFieldsValue()
+								.watchlistSelectionType !== undefined &&
+							innerForm.getFieldsValue()
+								.watchlistSelectionType !== 'existing'
+						}
+					>
+						{existingWatchlistNames.map((name) => (
+							<Select.Option key={name} value={name}>
+								{name}
+							</Select.Option>
+						))}
+					</Select>
+				);
+			}}
 		</Form.Item>
 	);
 };
@@ -134,6 +133,7 @@ interface ModalFormProps {
 const ModalForm = (props: ModalFormProps) => (
 	<Form
 		form={props.form}
+		preserve
 		initialValues={{
 			watchlistSelectionType: 'existing'
 		}}
@@ -141,15 +141,12 @@ const ModalForm = (props: ModalFormProps) => (
 		<Form.Item name="watchlistSelectionType">
 			<Radio.Group>
 				<Space direction="vertical">
-					<Radio value="existing">
-						{createExistingWatchlistItem(
-							props.existingWatchlistNames
-						)}
-					</Radio>
+					<Radio value="existing">Existing</Radio>
 					<Radio value="new">{NewWatchlistItem}</Radio>
 				</Space>
 			</Radio.Group>
 		</Form.Item>
+		{createExistingWatchlistItem(props.existingWatchlistNames)}
 	</Form>
 );
 
