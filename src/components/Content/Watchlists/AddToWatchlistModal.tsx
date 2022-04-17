@@ -100,6 +100,8 @@ const ModalForm = (props: ModalFormProps) => {
 			</Form.Item>
 		));
 
+	// TODO disable OK button until something is selected
+
 	return (
 		<Form
 			form={props.form}
