@@ -69,6 +69,9 @@ const createOnSaveRenamedWatchlist =
 			renameWatchlist(oldName, newName)();
 		});
 
+const createOnRemoveWatchlist =
+	(setState: Updater<State>) => (id: string) => {};
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
@@ -84,8 +87,18 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
-	const onRenameWatchlist = createOnRenameWatchlist(setState);
-	const onSaveRenamedWatchlist = createOnSaveRenamedWatchlist(setState);
+	const onRenameWatchlist = useMemo(
+		() => createOnRenameWatchlist(setState),
+		[setState]
+	);
+	const onSaveRenamedWatchlist = useMemo(
+		() => createOnSaveRenamedWatchlist(setState),
+		[setState]
+	);
+	const onRemoveWatchlist = useMemo(
+		() => createOnRemoveWatchlist(setState),
+		[setState]
+	);
 
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
@@ -94,7 +107,8 @@ export const Watchlists = () => {
 		breakpoints,
 		renameWatchlistId: state.renameWatchlistId,
 		onRenameWatchlist,
-		onSaveRenamedWatchlist
+		onSaveRenamedWatchlist,
+		onRemoveWatchlist
 	};
 	const panels = createPanels(state.watchlists, panelConfig);
 

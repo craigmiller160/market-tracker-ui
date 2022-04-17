@@ -119,6 +119,7 @@ export interface WatchlistPanelConfig {
 	readonly breakpoints: Breakpoints;
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
+	readonly onRemoveWatchlist: (id: string) => void;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
 }
 
@@ -130,6 +131,9 @@ export const createWatchlistPanel =
 				key={watchlist._id}
 				extra={
 					<WatchlistPanelActions
+						onRemoveWatchlist={() =>
+							config.onRemoveWatchlist(watchlist._id)
+						}
 						renameWatchlistId={config.renameWatchlistId}
 						onRenameWatchlist={() =>
 							config.onRenameWatchlist(watchlist._id)
