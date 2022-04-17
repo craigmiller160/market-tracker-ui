@@ -85,7 +85,7 @@ const ModalForm = (props: ModalFormProps) => {
 	const WatchlistField = match(props.form.getFieldsValue())
 		.with({ watchlistSelectionType: 'new' }, () => (
 			<Form.Item name="newWatchListName">
-				<Input />
+				<Input data-testid="new-watchlist-input" />
 			</Form.Item>
 		))
 		.otherwise(() => (

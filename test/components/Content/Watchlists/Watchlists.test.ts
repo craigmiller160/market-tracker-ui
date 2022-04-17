@@ -197,6 +197,21 @@ describe('Watchlists', () => {
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
 
 		userEvent.click(screen.getByText('New Watchlist'));
-		// TODO finish this
+		userEvent.type(
+			screen.getByTestId('new-watchlist-input'),
+			'New Watchlist'
+		);
+
+		userEvent.click(screen.getByText('OK'));
+		await waitFor(() =>
+			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('Watchlists'));
+		await waitFor(() =>
+			expect(screen.queryByText('New Watchlist')).toBeVisible()
+		);
+		userEvent.click(screen.getByText('New Watchlist'));
+		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 });
