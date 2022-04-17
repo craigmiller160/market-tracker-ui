@@ -15,6 +15,27 @@ interface ModalForm {
 // TODO don't forget alert message on success
 // TODO make sure it resets when re-opened
 
+const NewWatchlistItem = (
+	<Form.Item shouldUpdate label="New">
+		{(innerForm: FormInstance<ModalForm>) => {
+			return (
+				<Input
+					disabled={
+						innerForm.getFieldsValue().watchlistSelectionType !==
+						'new'
+					}
+					value={innerForm.getFieldsValue().newWatchListName}
+					onChange={(event) =>
+						innerForm.setFieldsValue({
+							newWatchListName: event.target.validationMessage
+						})
+					}
+				/>
+			);
+		}}
+	</Form.Item>
+);
+
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
 	return (
@@ -34,36 +55,7 @@ export const AddToWatchlistModal = (props: Props) => {
 						<Radio.Group>
 							<Space direction="vertical">
 								<Radio value="existing">Select Box</Radio>
-								<Radio value="new">
-									<Form.Item shouldUpdate>
-										{(
-											innerForm: FormInstance<ModalForm>
-										) => {
-											return (
-												<Input
-													disabled={
-														innerForm.getFieldsValue()
-															.watchlistSelectionType !==
-														'new'
-													}
-													value={
-														innerForm.getFieldsValue()
-															.newWatchListName
-													}
-													onChange={(event) =>
-														innerForm.setFieldsValue(
-															{
-																newWatchListName:
-																	event.target
-																		.validationMessage
-															}
-														)
-													}
-												/>
-											);
-										}}
-									</Form.Item>
-								</Radio>
+								<Radio value="new">{NewWatchlistItem}</Radio>
 							</Space>
 						</Radio.Group>
 					</Form.Item>
