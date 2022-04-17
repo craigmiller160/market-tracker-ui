@@ -128,28 +128,38 @@ interface ModalFormProps {
 	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
-const ModalForm = (props: ModalFormProps) => (
-	<Form
-		form={props.form}
-		preserve
-		initialValues={{
-			watchlistSelectionType: 'existing'
-		}}
-	>
-		<Form.Item name="watchlistSelectionType">
-			<Radio.Group>
-				<Space direction="vertical">
-					<Radio value="existing">
-						{createExistingWatchlistItem(
-							props.existingWatchlistNames
-						)}
-					</Radio>
-					<Radio value="new">{NewWatchlistItem}</Radio>
-				</Space>
-			</Radio.Group>
-		</Form.Item>
-	</Form>
-);
+const ModalForm = (props: ModalFormProps) => {
+	return (
+		<Form
+			form={props.form}
+			preserve
+			initialValues={{
+				watchlistSelectionType: 'existing'
+			}}
+		>
+			<Form.Item name="watchlistSelectionType">
+				<Radio.Group>
+					<Space direction="vertical">
+						<Radio value="existing">Existing Watchlist</Radio>
+						<Radio value="new">New Watchlist</Radio>
+					</Space>
+				</Radio.Group>
+			</Form.Item>
+			<Form.Item name="newWatchlistName">
+				<Input />
+			</Form.Item>
+			<Form.Item name="existingWatchlistName">
+				<Select>
+					{props.existingWatchlistNames.map((name) => (
+						<Select.Option key={name} value={name}>
+							name
+						</Select.Option>
+					))}
+				</Select>
+			</Form.Item>
+		</Form>
+	);
+};
 
 export const AddToWatchlistModal = (props: Props) => {
 	const [form] = Form.useForm<ModalForm>();
