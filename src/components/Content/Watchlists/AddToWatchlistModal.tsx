@@ -60,25 +60,48 @@ const NewWatchlistItem = (
 
 const createExistingWatchlistItem = (
 	existingWatchlistNames: ReadonlyArray<string>
-) => (
-	<Form.Item shouldUpdate label="Existing">
-		{(innerForm: FormInstance<ModalForm>) => (
-			<Select
-				value={innerForm.getFieldsValue().existingWatchlistName}
-				disabled={
-					innerForm.getFieldsValue().watchlistSelectionType !==
-					'existing'
-				}
-			>
-				{existingWatchlistNames.map((name) => (
-					<Select.Option key={name} value={name}>
-						{name}
-					</Select.Option>
-				))}
-			</Select>
-		)}
-	</Form.Item>
-);
+) => {
+	let firstUpdate = true;
+	const shouldUpdate = (
+		oldValues: ModalForm,
+		newValues: ModalForm
+	): boolean => {
+		if (firstUpdate) {
+			firstUpdate = false;
+			return true;
+		}
+		return (
+			oldValues.existingWatchlistName !==
+				newValues.existingWatchlistName ||
+			oldValues.watchlistSelectionType !==
+				newValues.watchlistSelectionType
+		);
+	};
+	return (
+		<Form.Item shouldUpdate={shouldUpdate} label="Existing">
+			{(innerForm: FormInstance<ModalForm>) => (
+				<Select
+					value={innerForm.getFieldsValue().existingWatchlistName}
+					onChange={(value) =>
+						innerForm.setFieldsValue({
+							existingWatchlistName: value
+						})
+					}
+					disabled={
+						innerForm.getFieldsValue().watchlistSelectionType !==
+						'existing'
+					}
+				>
+					{existingWatchlistNames.map((name) => (
+						<Select.Option key={name} value={name}>
+							{name}
+						</Select.Option>
+					))}
+				</Select>
+			)}
+		</Form.Item>
+	);
+};
 
 const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
 	setState((draft) => {
