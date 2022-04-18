@@ -289,4 +289,8 @@ describe('Watchlists', () => {
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
 		expect(screen.queryByText('Second Watchlist')).toBeVisible();
 	});
+
+	it('add watchlist from watchlists page', async () => {
+		throw new Error();
+	});
 });
