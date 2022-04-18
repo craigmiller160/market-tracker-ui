@@ -229,6 +229,8 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(2)
 		);
+		expect(screen.getByText('First Watchlist')).toBeVisible();
+		expect(screen.getByText('Second Watchlist')).toBeVisible();
 
 		userEvent.click(screen.getAllByText('Remove')[0]);
 		await waitFor(() =>
@@ -238,6 +240,12 @@ describe('Watchlists', () => {
 				)
 			).toBeVisible()
 		);
-		// TODO finish this
+		userEvent.click(screen.getByText('OK'));
+
+		await waitFor(() =>
+			expect(screen.queryAllByText('Remove')).toHaveLength(1)
+		);
+		expect(screen.getByText('First Watchlist')).not.toBeVisible();
+		expect(screen.getByText('Second Watchlist')).toBeVisible();
 	});
 });
