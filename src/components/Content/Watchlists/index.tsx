@@ -210,8 +210,9 @@ export const Watchlists = () => {
 				message={state.confirmModal.message}
 				onClose={(result) =>
 					handleConfirmModalAction(
+						result,
 						state.confirmModal.watchlistName,
-						result
+						state.confirmModal.symbol
 					)
 				}
 			/>
