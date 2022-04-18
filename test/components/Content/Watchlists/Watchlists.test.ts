@@ -245,7 +245,7 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(1)
 		);
-		expect(screen.getByText('First Watchlist')).not.toBeVisible();
-		expect(screen.getByText('Second Watchlist')).toBeVisible();
+		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
+		expect(screen.queryByText('Second Watchlist')).toBeVisible();
 	});
 });

@@ -121,9 +121,10 @@ export const createWatchlistRoutes = (database: Database, server: Server) => {
 				);
 			}
 		});
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return database.data.watchlists.find(
 			(watchlist) =>
 				watchlist.watchlistName === removeInvestmentParams.name
-		);
+		)!;
 	});
 };
