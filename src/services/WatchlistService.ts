@@ -39,15 +39,18 @@ export const addStockToWatchlist = (
 
 export const createWatchlist = (
 	watchlistName: string,
-	stockSymbol: string
+	stockSymbol?: string
 ): TaskTryT<DbWatchlist> => {
+	const stocks = stockSymbol
+		? [
+				{
+					symbol: stockSymbol
+				}
+		  ]
+		: [];
 	const input: Watchlist = {
 		watchlistName,
-		stocks: [
-			{
-				symbol: stockSymbol
-			}
-		],
+		stocks,
 		cryptos: []
 	};
 	return pipe(

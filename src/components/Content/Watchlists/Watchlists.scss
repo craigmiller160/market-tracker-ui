@@ -13,4 +13,12 @@
   .ant-collapse {
     width: 100%;
   }
+
+  .RootActions {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 1rem;
+  }
 }

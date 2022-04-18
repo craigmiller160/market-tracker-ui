@@ -7,12 +7,14 @@ export enum ConfirmModalResult {
 
 interface Props {
 	readonly show: boolean;
+	readonly title: string;
 	readonly message: string;
 	readonly onClose: (result: ConfirmModalResult) => void;
 }
 
 export const ConfirmModal = (props: Props) => (
 	<Modal
+		title={props.title}
 		visible={props.show}
 		onCancel={() => props.onClose(ConfirmModalResult.CANCEL)}
 		onOk={() => props.onClose(ConfirmModalResult.OK)}

@@ -70,7 +70,7 @@ describe('WatchlistService', () => {
 		expect(result).toEqualRight(['One', 'Two']);
 	});
 
-	it('createWatchlist', async () => {
+	it('createWatchlist with stock', async () => {
 		const watchlistName = 'MyWatchlist';
 		const symbol = 'VTI';
 		const body: Watchlist = {
@@ -89,6 +89,24 @@ describe('WatchlistService', () => {
 			watchlistName,
 			symbol
 		)();
+		expect(result).toEqualRight(response);
+	});
+
+	it('createWatchlist without stock', async () => {
+		const watchlistName = 'MyWatchlist';
+		const body: Watchlist = {
+			watchlistName,
+			stocks: [],
+			cryptos: []
+		};
+		const response: DbWatchlist = {
+			...body,
+			userId: 1,
+			_id: '2'
+		};
+		mockApi.onPost('/watchlists', body).reply(200, response);
+
+		const result = await WatchlistService.createWatchlist(watchlistName)();
 		expect(result).toEqualRight(response);
 	});
 
