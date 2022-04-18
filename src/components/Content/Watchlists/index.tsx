@@ -104,6 +104,10 @@ const createHandleConfirmModalAction =
 				removeWatchlist(watchlistName),
 				TaskEither.chain(() => getWatchlists)
 			)();
+		} else {
+			setState((draft) => {
+				draft.confirmModal.show = false;
+			});
 		}
 	};
 

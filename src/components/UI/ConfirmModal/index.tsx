@@ -17,6 +17,6 @@ export const ConfirmModal = (props: Props) => (
 		onCancel={() => props.onClose(ConfirmModalResult.CANCEL)}
 		onOk={() => props.onClose(ConfirmModalResult.OK)}
 	>
-		<Typography.Title level={3}>{props.message}</Typography.Title>
+		<Typography.Title level={5}>{props.message}</Typography.Title>
 	</Modal>
 );
