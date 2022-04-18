@@ -23,6 +23,7 @@ import {
 	WatchlistPanelConfig
 } from './createWatchlistPanel';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
+import { InputModal } from '../../UI/InputModal';
 
 interface State {
 	readonly loading: boolean;
@@ -33,6 +34,9 @@ interface State {
 		readonly message: string;
 		readonly watchlistName: string;
 		readonly symbol?: string;
+	};
+	readonly inputModal: {
+		readonly show: boolean;
 	};
 }
 
@@ -132,6 +136,18 @@ const createShowConfirmRemoveStock =
 			};
 		});
 
+const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
+	setState((draft) => {
+		draft.inputModal.show = true;
+	});
+
+const createHandleAddWatchlistResult =
+	(setState: Updater<State>) => (value?: string) => {
+		setState((draft) => {
+			draft.inputModal.show = false;
+		});
+	};
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
@@ -140,6 +156,9 @@ export const Watchlists = () => {
 			show: false,
 			message: '',
 			watchlistName: ''
+		},
+		inputModal: {
+			show: false
 		}
 	});
 
@@ -170,6 +189,14 @@ export const Watchlists = () => {
 	);
 	const showConfirmRemoveStock = useMemo(
 		() => createShowConfirmRemoveStock(setState),
+		[setState]
+	);
+	const showAddWatchlistModal = useMemo(
+		() => createShowAddWatchlistModal(setState),
+		[setState]
+	);
+	const handleAddWatchlistResult = useMemo(
+		() => createHandleAddWatchlistResult(setState),
 		[setState]
 	);
 
@@ -209,6 +236,7 @@ export const Watchlists = () => {
 				{body}
 			</div>
 			<ConfirmModal
+				title="Remove"
 				show={state.confirmModal.show}
 				message={state.confirmModal.message}
 				onClose={(result) =>
@@ -218,6 +246,12 @@ export const Watchlists = () => {
 						state.confirmModal.symbol
 					)
 				}
+			/>
+			<InputModal
+				title="Add Watchlist"
+				show={state.inputModal.show}
+				label="Name"
+				onClose={handleAddWatchlistResult}
 			/>
 		</RefreshProvider>
 	);
