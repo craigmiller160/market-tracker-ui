@@ -35,7 +35,7 @@ interface Props {
 const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
 	<div className="Title">
 		<h3>
-			<strong>{`${data.name} (${info.symbol})`}</strong>
+			<strong>{`(${info.symbol}) ${data.name}`}</strong>
 		</h3>
 	</div>
 );
