@@ -214,4 +214,79 @@ describe('Watchlists', () => {
 		userEvent.click(screen.getByText('New Watchlist'));
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
+
+	it('remove stock from watchlist', async () => {
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() =>
+			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
+		);
+		expect(screen.queryByText(/\(VOO\)/)).toBeVisible();
+
+		const vooCard = screen.getByTestId('market-card-VOO');
+		await waitFor(() =>
+			expect(within(vooCard).queryByText('Remove')).toBeVisible()
+		);
+		userEvent.click(within(vooCard).getByText('Remove'));
+
+		const confirmMsg =
+			'Are you sure you want to remove "VOO" from watchlist "First Watchlist"';
+
+		await waitFor(() =>
+			expect(screen.queryByText(confirmMsg)).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('OK'));
+		await waitFor(() =>
+			expect(screen.queryByText(confirmMsg)).not.toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() =>
+			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
+		);
+		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
+	});
+
+	it('remove watchlist', async () => {
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Remove')).toHaveLength(2)
+		);
+		expect(screen.getByText('First Watchlist')).toBeVisible();
+		expect(screen.getByText('Second Watchlist')).toBeVisible();
+
+		userEvent.click(screen.getAllByText('Remove')[0]);
+		await waitFor(() =>
+			expect(
+				screen.queryByText(
+					'Are you sure you want to remove watchlist "First Watchlist"'
+				)
+			).toBeVisible()
+		);
+		userEvent.click(screen.getByText('OK'));
+
+		await waitFor(() =>
+			expect(screen.queryAllByText('Remove')).toHaveLength(1)
+		);
+		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
+		expect(screen.queryByText('Second Watchlist')).toBeVisible();
+	});
 });

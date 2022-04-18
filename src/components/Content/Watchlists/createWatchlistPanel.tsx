@@ -1,11 +1,22 @@
 import { MouseEvent } from 'react';
 import { DbWatchlist } from '../../../types/Watchlist';
-import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
+import {
+	Button,
+	Collapse,
+	Dropdown,
+	Form,
+	FormInstance,
+	Input,
+	Menu,
+	Typography
+} from 'antd';
+import { MenuInfo } from 'rc-menu/lib/interface';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
+import { match } from 'ts-pattern';
 
 interface PanelTitleProps {
 	readonly breakpoints: Breakpoints;
@@ -89,18 +100,57 @@ const WatchlistPanelTitle = (props: PanelTitleProps) => {
 
 interface ActionsProps {
 	readonly onRenameWatchlist: () => void;
+	readonly onRemoveWatchlist: () => void;
 	readonly renameWatchlistId?: string;
 }
 
-const WatchlistPanelActions = (props: ActionsProps) => {
+const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 	const onRenameClick = (event: MouseEvent) => {
 		event.stopPropagation();
 		props.onRenameWatchlist();
 	};
+	const onRemoveClick = (event: MouseEvent) => {
+		event.stopPropagation();
+		props.onRemoveWatchlist();
+	};
+
 	return (
 		<div>
 			{props.renameWatchlistId === undefined && (
-				<Button onClick={onRenameClick}>Rename</Button>
+				<>
+					<Button onClick={onRenameClick}>Rename</Button>
+					<Button onClick={onRemoveClick}>Remove</Button>
+				</>
+			)}
+		</div>
+	);
+};
+
+const MobileWatchlistPanelActions = (props: ActionsProps) => {
+	const onMenuClick = (menuInfo: MenuInfo) =>
+		match(menuInfo)
+			.with({ key: 'rename' }, () => props.onRemoveWatchlist())
+			.otherwise(() => props.onRenameWatchlist());
+
+	const TheMenu = (
+		<Menu onClick={onMenuClick}>
+			<Menu.Item key="rename">Rename</Menu.Item>
+			<Menu.Item key="remove">Remove</Menu.Item>
+		</Menu>
+	);
+
+	const onMenuBtnClick = (event: MouseEvent) => {
+		event.stopPropagation();
+	};
+
+	return (
+		<div>
+			{props.renameWatchlistId === undefined && (
+				<>
+					<Dropdown overlay={TheMenu} trigger={['click']}>
+						<Button onClick={onMenuBtnClick}>...</Button>
+					</Dropdown>
+				</>
 			)}
 		</div>
 	);
@@ -110,23 +160,30 @@ export interface WatchlistPanelConfig {
 	readonly breakpoints: Breakpoints;
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
+	readonly onRemoveWatchlist: (id: string) => void;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+	readonly onRemoveStock: (id: string, symbol: string) => void;
 }
 
 export const createWatchlistPanel =
 	// eslint-disable-next-line react/display-name
 	(config: WatchlistPanelConfig) => (watchlist: DbWatchlist) => {
+		const actionProps: ActionsProps = {
+			onRenameWatchlist: () => config.onRenameWatchlist(watchlist._id),
+			renameWatchlistId: config.renameWatchlistId,
+			onRemoveWatchlist: () => config.onRemoveWatchlist(watchlist._id)
+		};
+
+		const Actions = match(config.breakpoints)
+			.with({ xs: true }, () => (
+				<MobileWatchlistPanelActions {...actionProps} />
+			))
+			.otherwise(() => <DesktopWatchlistPanelActions {...actionProps} />);
+
 		return (
 			<Collapse.Panel
 				key={watchlist._id}
-				extra={
-					<WatchlistPanelActions
-						renameWatchlistId={config.renameWatchlistId}
-						onRenameWatchlist={() =>
-							config.onRenameWatchlist(watchlist._id)
-						}
-					/>
-				}
+				extra={Actions}
 				className="WatchlistPanel"
 				header={
 					<WatchlistPanelTitle
@@ -141,6 +198,8 @@ export const createWatchlistPanel =
 				}
 			>
 				<WatchlistSection
+					watchlistId={watchlist._id}
+					onRemoveStock={config.onRemoveStock}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>

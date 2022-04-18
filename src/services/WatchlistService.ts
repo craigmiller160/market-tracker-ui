@@ -66,3 +66,24 @@ export const getWatchlistNames = (): TaskTryT<ReadonlyArray<string>> =>
 		}),
 		TaskEither.map(getResponseData)
 	);
+
+export const removeStockFromWatchlist = (
+	watchlistName: string,
+	stockSymbol: string
+): TaskTryT<DbWatchlist> => {
+	const encodedWatchlistName = encodeURIComponent(watchlistName);
+	const encodedStockSymbol = encodeURIComponent(stockSymbol);
+	return pipe(
+		ajaxApi.delete<DbWatchlist>({
+			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
+		}),
+		TaskEither.map(getResponseData)
+	);
+};
+
+export const removeWatchlist = (watchlistName: string): TaskTryT<unknown> => {
+	const encodedWatchlistName = encodeURIComponent(watchlistName);
+	return ajaxApi.delete<unknown>({
+		uri: `/watchlists/${encodedWatchlistName}`
+	});
+};
