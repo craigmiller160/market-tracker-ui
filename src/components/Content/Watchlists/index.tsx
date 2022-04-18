@@ -103,7 +103,7 @@ const createHandleConfirmModalAction =
 			pipe(
 				removeWatchlist(watchlistName),
 				TaskEither.chain(() => getWatchlists)
-			);
+			)();
 		}
 	};
 
