@@ -226,10 +226,11 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
 		);
-		const removeBtns = screen.getAllByText('Remove');
-		expect(removeBtns).toHaveLength(2);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Remove')).toHaveLength(2)
+		);
 
-		userEvent.click(removeBtns[0]);
+		userEvent.click(screen.getAllByText('Remove')[0]);
 		await waitFor(() =>
 			expect(
 				screen.queryByText(
