@@ -9,7 +9,7 @@ const PRICE_REGEX = /\$\d+\.\d{2}/;
 const testCard = (symbol: string, price: string) => {
 	const card = screen.getByTestId(`market-card-${symbol}`);
 	expect(within(card).queryByText(new RegExp(symbol))).toHaveTextContent(
-		`My Stock (${symbol})`
+		`(${symbol}) My Stock`
 	);
 	const priceNodes = within(card).getAllByText(PRICE_REGEX);
 	expect(priceNodes).toHaveLength(2);

@@ -85,7 +85,7 @@ const handleValidationError =
 
 const validateCardTitle = (card: HTMLElement, info: MarketInvestmentInfo) => {
 	const title = within(card).queryByText(RegExp(`\\(${info.symbol}\\)`));
-	expect(title).toHaveTextContent(`${info.name} (${info.symbol})`);
+	expect(title).toHaveTextContent(`(${info.symbol}) ${info.name}`);
 };
 
 const validateCardSinceDate = (card: HTMLElement, time: MarketTime) => {
