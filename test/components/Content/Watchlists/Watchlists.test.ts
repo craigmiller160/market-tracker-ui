@@ -291,6 +291,32 @@ describe('Watchlists', () => {
 	});
 
 	it('add watchlist from watchlists page', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Remove')).toHaveLength(2)
+		);
+		expect(screen.queryByText('Add')).toBeVisible();
+
+		userEvent.click(screen.getByText('Add'));
+
+		await waitFor(() =>
+			expect(screen.queryByText('Add Watchlist')).toBeVisible()
+		);
+
+		userEvent.type(screen.getByLabelText('Name'), 'New Watchlist');
+		userEvent.click(screen.getByText('OK'));
+
+		await waitFor(() =>
+			expect(screen.queryByText('Add Watchlist')).not.toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryByText('New Watchlist')).toBeVisible()
+		);
+		expect(screen.queryAllByText('Remove')).toHaveLength(3);
 	});
 });
