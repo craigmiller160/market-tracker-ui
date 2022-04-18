@@ -1,5 +1,5 @@
 import './Watchlists.scss';
-import { Collapse, Typography } from 'antd';
+import { Button, Collapse, Typography } from 'antd';
 import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { match } from 'ts-pattern';
@@ -203,6 +203,9 @@ export const Watchlists = () => {
 				<Typography.Title>
 					Investment{titleSpace}Watchlists
 				</Typography.Title>
+				<div className="RootActions">
+					<Button>Add</Button>
+				</div>
 				{body}
 			</div>
 			<ConfirmModal
