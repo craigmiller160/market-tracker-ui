@@ -154,6 +154,7 @@ export const createWatchlistPanel =
 				}
 			>
 				<WatchlistSection
+					watchlistName={watchlist.watchlistName}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>

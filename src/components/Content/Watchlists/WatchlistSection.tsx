@@ -5,6 +5,7 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import './WatchlistSection.scss';
 
 interface Props {
+	readonly watchlistName: string;
 	readonly stocks: ReadonlyArray<WatchlistItem>;
 	readonly cryptos: ReadonlyArray<WatchlistItem>;
 }
