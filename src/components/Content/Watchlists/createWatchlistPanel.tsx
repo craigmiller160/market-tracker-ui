@@ -1,6 +1,16 @@
 import { MouseEvent } from 'react';
 import { DbWatchlist } from '../../../types/Watchlist';
-import { Button, Collapse, Form, FormInstance, Input, Typography } from 'antd';
+import {
+	Button,
+	Collapse,
+	Dropdown,
+	Form,
+	FormInstance,
+	Input,
+	Menu,
+	Typography
+} from 'antd';
+import { MenuInfo } from 'rc-menu/lib/interface';
 import { WatchlistSection } from './WatchlistSection';
 import './WatchlistPanel.scss';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
@@ -102,6 +112,24 @@ const WatchlistPanelActions = (props: ActionsProps) => {
 		event.stopPropagation();
 		props.onRemoveWatchlist();
 	};
+
+	// TODO clean this up big time once it works
+
+	const onMenuClick = (menuInfo: MenuInfo) => {
+		menuInfo.domEvent.stopPropagation();
+	};
+
+	const onMenuBtnClick = (event: MouseEvent) => {
+		event.stopPropagation();
+	};
+
+	const menu = (
+		<Menu onClick={onMenuClick}>
+			<Menu.Item key="rename">Rename</Menu.Item>
+			<Menu.Item key="remove">Remove</Menu.Item>
+		</Menu>
+	);
+
 	// TODO need a different button layout for mobile, this won't work
 	return (
 		<div>
@@ -109,6 +137,9 @@ const WatchlistPanelActions = (props: ActionsProps) => {
 				<>
 					<Button onClick={onRenameClick}>Rename</Button>
 					<Button onClick={onRemoveClick}>Remove</Button>
+					<Dropdown overlay={menu} trigger={['click']}>
+						<Button onClick={onMenuBtnClick}>...</Button>
+					</Dropdown>
 				</>
 			)}
 		</div>
