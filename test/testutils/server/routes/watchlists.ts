@@ -21,6 +21,12 @@ interface RemoveWatchlistParams {
 	readonly name: string;
 }
 
+interface RemoveInvestmentParams {
+	readonly name: string;
+	readonly type: InvestmentType;
+	readonly symbol: string;
+}
+
 export const createWatchlistRoutes = (database: Database, server: Server) => {
 	server.get('/watchlists/names', () =>
 		database.data.watchlists.map((watchlist) => watchlist.watchlistName)
@@ -93,5 +99,31 @@ export const createWatchlistRoutes = (database: Database, server: Server) => {
 			);
 		});
 		return new Response(204);
+	});
+	server.delete('/watchlists/:name/:type/:symbol', (schema, request) => {
+		const removeInvestmentParams =
+			request.params as unknown as RemoveInvestmentParams;
+		if (removeInvestmentParams.type === 'crypto') {
+			return validationError(
+				'Crypto not yet supported for removing investments'
+			);
+		}
+		database.updateData((draft) => {
+			const foundIndex = draft.watchlists.findIndex(
+				(watchlist) =>
+					watchlist.watchlistName === removeInvestmentParams.name
+			);
+			if (foundIndex >= 0) {
+				draft.watchlists[foundIndex].stocks = draft.watchlists[
+					foundIndex
+				].stocks.filter(
+					(stock) => stock.symbol !== removeInvestmentParams.symbol
+				);
+			}
+		});
+		return database.data.watchlists.find(
+			(watchlist) =>
+				watchlist.watchlistName === removeInvestmentParams.name
+		);
 	});
 };
