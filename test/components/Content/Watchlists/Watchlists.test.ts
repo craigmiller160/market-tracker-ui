@@ -238,15 +238,26 @@ describe('Watchlists', () => {
 		);
 		userEvent.click(within(vooCard).getByText('Remove'));
 
+		const confirmMsg =
+			'Are you sure you want to remove "VOO" from watchlist "First Watchlist"';
+
 		await waitFor(() =>
-			expect(
-				screen.queryByText(
-					'Are you sure you want to remove "VOO" from watchlist "First Watchlist"'
-				)
-			).toBeVisible()
+			expect(screen.queryByText(confirmMsg)).toBeVisible()
 		);
 
 		userEvent.click(screen.getByText('OK'));
+		await waitFor(() =>
+			expect(screen.queryByText(confirmMsg)).not.toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() =>
+			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
+		);
+		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
 	});
 
 	it('remove watchlist', async () => {
