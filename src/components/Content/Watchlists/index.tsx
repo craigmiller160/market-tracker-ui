@@ -8,6 +8,7 @@ import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
 import {
 	getAllWatchlists,
+	removeStockFromWatchlist,
 	removeWatchlist,
 	renameWatchlist
 } from '../../../services/WatchlistService';
@@ -94,14 +95,17 @@ const createShowConfirmRemoveWatchlist =
 
 const createHandleConfirmModalAction =
 	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(watchlistName: string, result: ConfirmModalResult) => {
+	(result: ConfirmModalResult, watchlistName: string, symbol?: string) => {
 		if (ConfirmModalResult.OK === result) {
 			setState((draft) => {
 				draft.confirmModal.show = false;
 				draft.loading = true;
 			});
+			const action = symbol
+				? removeStockFromWatchlist(watchlistName, symbol)
+				: removeWatchlist(watchlistName);
 			pipe(
-				removeWatchlist(watchlistName),
+				action,
 				TaskEither.chain(() => getWatchlists)
 			)();
 		} else {
