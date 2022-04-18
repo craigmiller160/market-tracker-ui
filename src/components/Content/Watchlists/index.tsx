@@ -7,6 +7,7 @@ import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
 import {
+	createWatchlist,
 	getAllWatchlists,
 	removeStockFromWatchlist,
 	removeWatchlist,
@@ -142,10 +143,17 @@ const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
 	});
 
 const createHandleAddWatchlistResult =
-	(setState: Updater<State>) => (value?: string) => {
+	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
+	(value?: string) => {
 		setState((draft) => {
 			draft.inputModal.show = false;
 		});
+		if (value) {
+			pipe(
+				createWatchlist(value),
+				TaskEither.chain(() => getWatchlists)
+			)();
+		}
 	};
 
 export const Watchlists = () => {
@@ -196,8 +204,8 @@ export const Watchlists = () => {
 		[setState]
 	);
 	const handleAddWatchlistResult = useMemo(
-		() => createHandleAddWatchlistResult(setState),
-		[setState]
+		() => createHandleAddWatchlistResult(setState, getWatchlists),
+		[setState, getWatchlists]
 	);
 
 	const { breakpoints } = useContext(ScreenContext);
