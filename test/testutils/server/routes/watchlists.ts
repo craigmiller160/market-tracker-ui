@@ -17,6 +17,10 @@ interface ModifyInvestmentParams {
 	readonly symbol: string;
 }
 
+interface RemoveWatchlistParams {
+	readonly name: string;
+}
+
 export const createWatchlistRoutes = (database: Database, server: Server) => {
 	server.get('/watchlists/names', () =>
 		database.data.watchlists.map((watchlist) => watchlist.watchlistName)
@@ -78,5 +82,16 @@ export const createWatchlistRoutes = (database: Database, server: Server) => {
 			});
 		});
 		return database.data.watchlists[watchlistIndex];
+	});
+	server.delete('/watchlists/:name', (schema, request) => {
+		const removeWatchlistParams =
+			request.params as unknown as RemoveWatchlistParams;
+		database.updateData((draft) => {
+			draft.watchlists = draft.watchlists.filter(
+				(watchlist) =>
+					watchlist.watchlistName !== removeWatchlistParams.name
+			);
+		});
+		return new Response(204);
 	});
 };
