@@ -107,6 +107,23 @@ const createHandleConfirmModalAction =
 		}
 	};
 
+const createShowConfirmRemoveStock =
+	(setState: Updater<State>) => (watchlistId: string, symbol: string) =>
+		setState((draft) => {
+			const watchlistName = draft.watchlists.find(
+				(watchlist) => watchlist._id === watchlistId
+			)?.watchlistName;
+			if (!watchlistName) {
+				return;
+			}
+			draft.confirmModal = {
+				show: true,
+				watchlistName,
+				symbol,
+				message: `Are you sure you want to remove "${symbol}" from watchlist "${watchlistName}"`
+			};
+		});
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
@@ -143,6 +160,10 @@ export const Watchlists = () => {
 		() => createHandleConfirmModalAction(setState, getWatchlists),
 		[setState, getWatchlists]
 	);
+	const showConfirmRemoveStock = useMemo(
+		() => createShowConfirmRemoveStock(setState),
+		[setState]
+	);
 
 	const { breakpoints } = useContext(ScreenContext);
 	const titleSpace = getTitleSpace(breakpoints);
@@ -152,7 +173,8 @@ export const Watchlists = () => {
 		renameWatchlistId: state.renameWatchlistId,
 		onRenameWatchlist,
 		onSaveRenamedWatchlist,
-		onRemoveWatchlist: showConfirmRemoveWatchlist
+		onRemoveWatchlist: showConfirmRemoveWatchlist,
+		onRemoveStock: showConfirmRemoveStock
 	};
 	const panels = createPanels(state.watchlists, panelConfig);
 

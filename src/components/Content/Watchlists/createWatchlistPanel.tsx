@@ -121,6 +121,7 @@ export interface WatchlistPanelConfig {
 	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onRemoveWatchlist: (id: string) => void;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+	readonly onRemoveStock: (id: string, symbol: string) => void;
 }
 
 export const createWatchlistPanel =
@@ -154,7 +155,8 @@ export const createWatchlistPanel =
 				}
 			>
 				<WatchlistSection
-					watchlistName={watchlist.watchlistName}
+					watchlistId={watchlist._id}
+					onRemoveStock={config.onRemoveStock}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>
