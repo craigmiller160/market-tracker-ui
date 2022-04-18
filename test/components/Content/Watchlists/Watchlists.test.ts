@@ -220,6 +220,23 @@ describe('Watchlists', () => {
 	});
 
 	it('remove watchlist', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+		);
+		const removeBtns = screen.getAllByText('Remove');
+		expect(removeBtns).toHaveLength(2);
+
+		userEvent.click(removeBtns[0]);
+		await waitFor(() =>
+			expect(
+				screen.queryByText(
+					'Are you sure you want to remove watchlist "First Watchlist"'
+				)
+			).toBeVisible()
+		);
+		// TODO finish this
 	});
 });
