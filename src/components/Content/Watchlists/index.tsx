@@ -231,7 +231,7 @@ export const Watchlists = () => {
 					Investment{titleSpace}Watchlists
 				</Typography.Title>
 				<div className="RootActions">
-					<Button>Add</Button>
+					<Button onClick={showAddWatchlistModal}>Add</Button>
 				</div>
 				{body}
 			</div>
