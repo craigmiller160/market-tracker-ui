@@ -216,7 +216,37 @@ describe('Watchlists', () => {
 	});
 
 	it('remove stock from watchlist', async () => {
-		throw new Error();
+		renderApp({
+			initialPath: '/market-tracker/watchlists'
+		});
+		await waitFor(() =>
+			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+		);
+		await waitFor(() =>
+			expect(screen.queryByText('First Watchlist')).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('First Watchlist'));
+		await waitFor(() =>
+			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
+		);
+		expect(screen.queryByText(/\(VOO\)/)).toBeVisible();
+
+		const vooCard = screen.getByTestId('market-card-VOO');
+		await waitFor(() =>
+			expect(within(vooCard).queryByText('Remove')).toBeVisible()
+		);
+		userEvent.click(within(vooCard).getByText('Remove'));
+
+		await waitFor(() =>
+			expect(
+				screen.queryByText(
+					'Are you sure you want to remove "VOO" from watchlist "First Watchlist"'
+				)
+			).toBeVisible()
+		);
+
+		userEvent.click(screen.getByText('OK'));
 	});
 
 	it('remove watchlist', async () => {
