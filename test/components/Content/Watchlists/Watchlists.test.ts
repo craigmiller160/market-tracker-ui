@@ -286,8 +286,10 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(1)
 		);
+		await waitFor(() =>
+			expect(screen.queryByText('Second Watchlist')).toBeVisible()
+		);
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
-		expect(screen.queryByText('Second Watchlist')).toBeVisible();
 	});
 
 	it('add watchlist from watchlists page', async () => {
