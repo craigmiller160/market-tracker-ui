@@ -28,6 +28,10 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 			element: <Search />
 		},
 		{
+			path: 'watchlists',
+			element: <Watchlists />
+		},
+		{
 			path: 'recognition',
 			element: <Recognition />
 		}
@@ -47,10 +51,6 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 			{
 				path: 'portfolios',
 				element: <Portfolios />
-			},
-			{
-				path: 'watchlists',
-				element: <Watchlists />
 			}
 		])
 		.otherwise(() => []);
