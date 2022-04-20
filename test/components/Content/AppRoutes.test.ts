@@ -118,17 +118,4 @@ describe('AppRoutes', () => {
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
-
-	it('will not render watchlists route in prod', async () => {
-		process.env.NODE_ENV = 'production';
-		await renderApp({
-			initialPath: '/market-tracker/watchlists'
-		});
-		await waitFor(() =>
-			expect(window.location.href).toEqual(
-				'http://localhost/market-tracker/markets'
-			)
-		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
-	});
 });
