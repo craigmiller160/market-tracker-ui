@@ -96,7 +96,7 @@ describe('Navbar', () => {
 		menuItemIsSelected('Today');
 
 		expect(screen.queryByText('Portfolios')).not.toBeInTheDocument();
-		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
+		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
