@@ -129,8 +129,8 @@ const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 const MobileWatchlistPanelActions = (props: ActionsProps) => {
 	const onMenuClick = (menuInfo: MenuInfo) =>
 		match(menuInfo)
-			.with({ key: 'rename' }, () => props.onRemoveWatchlist())
-			.otherwise(() => props.onRenameWatchlist());
+			.with({ key: 'rename' }, () => props.onRenameWatchlist())
+			.otherwise(() => props.onRemoveWatchlist());
 
 	const TheMenu = (
 		<Menu onClick={onMenuClick}>
