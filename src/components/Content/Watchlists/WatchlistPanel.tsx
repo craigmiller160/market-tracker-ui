@@ -172,14 +172,23 @@ export interface WatchlistPanelProps extends WatchlistPanelConfig {
 export const WatchlistPanel =
 	// eslint-disable-next-line react/display-name
 	(props: WatchlistPanelProps) => {
-		const { watchlist } = props;
+		const {
+			breakpoints,
+			renameWatchlistId,
+			onRemoveWatchlist,
+			onRemoveStock,
+			onRenameWatchlist,
+			onSaveRenamedWatchlist,
+			watchlist,
+			...rest
+		} = props;
 		const actionProps: ActionsProps = {
-			onRenameWatchlist: () => props.onRenameWatchlist(watchlist._id),
-			renameWatchlistId: props.renameWatchlistId,
-			onRemoveWatchlist: () => props.onRemoveWatchlist(watchlist._id)
+			onRenameWatchlist: () => onRenameWatchlist(watchlist._id),
+			renameWatchlistId: renameWatchlistId,
+			onRemoveWatchlist: () => onRemoveWatchlist(watchlist._id)
 		};
 
-		const Actions = match(props.breakpoints)
+		const Actions = match(breakpoints)
 			.with({ xs: true }, () => (
 				<MobileWatchlistPanelActions {...actionProps} />
 			))
@@ -187,24 +196,25 @@ export const WatchlistPanel =
 
 		return (
 			<Collapse.Panel
+				{...rest}
 				key={watchlist._id}
 				extra={Actions}
 				className="WatchlistPanel"
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
-						breakpoints={props.breakpoints}
+						breakpoints={breakpoints}
 						onClearRenamedWatchlistId={() =>
-							props.onRenameWatchlist(undefined)
+							onRenameWatchlist(undefined)
 						}
-						renameWatchlistId={props.renameWatchlistId}
-						onSaveRenamedWatchlist={props.onSaveRenamedWatchlist}
+						renameWatchlistId={renameWatchlistId}
+						onSaveRenamedWatchlist={onSaveRenamedWatchlist}
 					/>
 				}
 			>
 				<WatchlistSection
 					watchlistId={watchlist._id}
-					onRemoveStock={props.onRemoveStock}
+					onRemoveStock={onRemoveStock}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>
