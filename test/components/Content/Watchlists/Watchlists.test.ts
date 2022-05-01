@@ -39,7 +39,22 @@ describe('Watchlists', () => {
 			initialPath: '/market-tracker/watchlists',
 			screenContextValue
 		});
-		throw new Error();
+		await waitFor(() =>
+			expect(
+				screen.queryByText(/Investment.*Watchlists/)
+			).toBeInTheDocument()
+		);
+		await waitFor(() =>
+			expect(
+				screen.queryAllByTestId('watchlist-panel-title')
+			).toHaveLength(2)
+		);
+		apiServer.database.data.watchlists.forEach((watchlist) => {
+			expect(
+				screen.queryByText(watchlist.watchlistName)
+			).toBeInTheDocument();
+		});
+		// TODO validate mobile layout
 	});
 
 	it('renders all watchlists', async () => {

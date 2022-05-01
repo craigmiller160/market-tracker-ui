@@ -159,7 +159,7 @@ const MobileWatchlistPanelActions = (props: ActionsProps) => {
 };
 
 export interface WatchlistPanelConfig {
-	readonly breakpoints: Breakpoints; // TODO probably can move this into component
+	readonly breakpoints: Breakpoints;
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onRemoveWatchlist: (id: string) => void;
