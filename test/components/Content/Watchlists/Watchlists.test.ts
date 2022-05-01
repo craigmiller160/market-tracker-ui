@@ -54,7 +54,30 @@ describe('Watchlists', () => {
 				screen.queryByText(watchlist.watchlistName)
 			).toBeInTheDocument();
 		});
-		// TODO validate mobile layout
+
+		expect(screen.queryAllByTestId('mobile-panel-actions')).toHaveLength(
+			apiServer.database.data.watchlists.length
+		);
+
+		expect(screen.getByTestId('watchlist-page').className).toContain('xs');
+		expect(screen.getAllByText('...')).toHaveLength(
+			apiServer.database.data.watchlists.length
+		);
+
+		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
+		);
+
+		testCard('VTI', '$100.00');
+		testCard('VOO', '$101.00');
+
+		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[1]);
+		await waitFor(() =>
+			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
+		);
+		testCard('AAPL', '$102.00');
+		testCard('GOOG', '$103.00');
 	});
 
 	it('renders all watchlists', async () => {
@@ -76,6 +99,13 @@ describe('Watchlists', () => {
 				screen.queryByText(watchlist.watchlistName)
 			).toBeInTheDocument();
 		});
+
+		expect(screen.queryAllByTestId('desktop-panel-actions')).toHaveLength(
+			apiServer.database.data.watchlists.length
+		);
+		expect(screen.getByTestId('watchlist-page').className).not.toContain(
+			'xs'
+		);
 
 		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
 		await waitFor(() =>

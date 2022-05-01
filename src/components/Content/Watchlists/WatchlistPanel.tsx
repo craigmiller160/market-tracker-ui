@@ -115,7 +115,7 @@ const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 	};
 
 	return (
-		<div>
+		<div data-testid="desktop-panel-actions">
 			{props.renameWatchlistId === undefined && (
 				<>
 					<Button onClick={onRenameClick}>Rename</Button>
@@ -146,7 +146,7 @@ const MobileWatchlistPanelActions = (props: ActionsProps) => {
 	};
 
 	return (
-		<div>
+		<div data-testid="mobile-panel-actions">
 			{props.renameWatchlistId === undefined && (
 				<>
 					<Dropdown overlay={TheMenu} trigger={['click']}>
