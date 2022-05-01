@@ -1,5 +1,5 @@
 import { isDesktop } from '../utils/Breakpoints';
-import { match, select, when } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import { DesktopNavbar } from './DesktopNavbar';
 import { MobileNavbar } from './MobileNavbar';
 import { Updater, useImmer } from 'use-immer';
@@ -56,7 +56,7 @@ const useHandleMenuClick = (
 				.with({ prefix: 'auth' }, () => {
 					// Do nothing for now
 				})
-				.with({ prefix: 'page', action: select() }, (page) => {
+				.with({ prefix: 'page', action: P.select() }, (page) => {
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
@@ -108,7 +108,7 @@ export const Navbar: FC<object> = () => {
 	};
 
 	const NavbarComp = match(breakpoints)
-		.with(when(isDesktop), () => <DesktopNavbar {...props} />)
+		.when(isDesktop, () => <DesktopNavbar {...props} />)
 		.otherwise(() => <MobileNavbar {...props} />);
 	return <div data-testid="navbar">{NavbarComp}</div>;
 };

@@ -1,7 +1,7 @@
 import { Card, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import { ReactNode, useContext } from 'react';
-import { match, not, when } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -66,7 +66,7 @@ const createPrice = (data: InvestmentData, status: MarketStatus) => {
 	)}%`;
 	const priceClassName = match({ priceChange, status })
 		.with({ status: MarketStatus.CLOSED }, () => '')
-		.with({ priceChange: when(gt0) }, () => 'up')
+		.with({ priceChange: P.when(gt0) }, () => 'up')
 		.otherwise(() => 'down');
 	const ChangeIcon =
 		priceChange >= 0 ? <CaretUpFilled /> : <CaretDownFilled />;
@@ -190,7 +190,7 @@ const getPriceAndBody = (
 			Price: <div />,
 			Body: <Spinner />
 		}))
-		.with({ error: not(undefined) }, ({ error: errorInfo }) => ({
+		.with({ error: P.not(undefined) }, ({ error: errorInfo }) => ({
 			Price: <div />,
 			Body: createErrorMessage(errorInfo)
 		}))

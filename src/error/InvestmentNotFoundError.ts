@@ -1,4 +1,4 @@
-import { instanceOf, match } from 'ts-pattern';
+import { P, match } from 'ts-pattern';
 import TraceError from 'trace-error';
 import { pipe } from 'fp-ts/es6/function';
 import * as Option from 'fp-ts/es6/Option';
@@ -15,7 +15,7 @@ export const isNestedInvestmentNotFoundError = (
 	ex: Error
 ): ex is InvestmentNotFoundError =>
 	match(ex)
-		.with(instanceOf(TraceError), (traceError) =>
+		.with(P.instanceOf(TraceError), (traceError) =>
 			pipe(
 				Option.fromNullable(traceError.cause()),
 				Option.map(isNestedInvestmentNotFoundError),
@@ -26,7 +26,7 @@ export const isNestedInvestmentNotFoundError = (
 
 export const getInvestmentNotFoundMessage = (ex: Error): string =>
 	match(ex)
-		.with(instanceOf(TraceError), (traceError) =>
+		.with(P.instanceOf(TraceError), (traceError) =>
 			pipe(
 				Option.fromNullable(traceError.cause()),
 				Option.map(getInvestmentNotFoundMessage),

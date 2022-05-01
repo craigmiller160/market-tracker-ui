@@ -1,7 +1,7 @@
 import { RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
-import { match, when } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists';
 import { Markets } from '../components/Content/Markets';
@@ -47,7 +47,7 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 		}
 	];
 	const envDependentRoutes = match(env)
-		.with(when(isNotProd), () => [
+		.when(isNotProd, () => [
 			{
 				path: 'portfolios',
 				element: <Portfolios />
