@@ -3,6 +3,7 @@ import { renderApp } from '../../../testutils/RenderApp';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
+import { ScreenContextValue } from '../../../../src/components/ScreenContext';
 
 const PRICE_REGEX = /\$\d+\.\d{2}/;
 
@@ -28,6 +29,19 @@ describe('Watchlists', () => {
 	afterEach(() => {
 		apiServer.server.shutdown();
 	});
+	it('renders all watchlists on mobile', async () => {
+		const screenContextValue: ScreenContextValue = {
+			breakpoints: {
+				xs: true
+			}
+		};
+		renderApp({
+			initialPath: '/market-tracker/watchlists',
+			screenContextValue
+		});
+		throw new Error();
+	});
+
 	it('renders all watchlists', async () => {
 		renderApp({
 			initialPath: '/market-tracker/watchlists'
@@ -65,6 +79,15 @@ describe('Watchlists', () => {
 	});
 
 	it('renames a watchlist on mobile', async () => {
+		const screenContextValue: ScreenContextValue = {
+			breakpoints: {
+				xs: true
+			}
+		};
+		renderApp({
+			initialPath: '/market-tracker/watchlists',
+			screenContextValue
+		});
 		throw new Error();
 	});
 
