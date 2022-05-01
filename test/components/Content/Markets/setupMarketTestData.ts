@@ -6,7 +6,7 @@ import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmen
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { TradierCalendarStatus } from '../../../../src/types/tradier/calendar';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
-import { match, when } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { getTodayEnd } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
@@ -107,7 +107,7 @@ export const createSetupMockApiCalls =
 		investmentInfo.forEach((info, index) => {
 			match({ info, time: config.time })
 				.with(
-					{ info: when(isStockInfo), time: when(isNotToday) },
+					{ info: P.when(isStockInfo), time: P.when(isNotToday) },
 					() => {
 						mockTradierQuoteRequest(mockApi, info.symbol, index);
 						mockTradierHistoryRequest(
@@ -118,16 +118,19 @@ export const createSetupMockApiCalls =
 						);
 					}
 				)
-				.with({ info: when(isStockInfo), time: when(isToday) }, () => {
-					mockTradierQuoteRequest(mockApi, info.symbol, index);
-					mockTradierTimesaleRequest(
-						mockApi,
-						info.symbol,
-						index,
-						config.tradierTimesaleBaseMillis
-					);
-				})
-				.with({ info: when(isCryptoInfo) }, () => {
+				.with(
+					{ info: P.when(isStockInfo), time: P.when(isToday) },
+					() => {
+						mockTradierQuoteRequest(mockApi, info.symbol, index);
+						mockTradierTimesaleRequest(
+							mockApi,
+							info.symbol,
+							index,
+							config.tradierTimesaleBaseMillis
+						);
+					}
+				)
+				.with({ info: P.when(isCryptoInfo) }, () => {
 					mockCoinGeckoPriceRequest(mockApi, info.symbol, index);
 					mockCoinGeckoHistoryRequest(
 						mockApi,
