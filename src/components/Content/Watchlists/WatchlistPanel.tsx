@@ -157,7 +157,7 @@ const MobileWatchlistPanelActions = (props: ActionsProps) => {
 };
 
 export interface WatchlistPanelConfig {
-	readonly breakpoints: Breakpoints;
+	readonly breakpoints: Breakpoints; // TODO probably can move this into component
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onRemoveWatchlist: (id: string) => void;
@@ -165,16 +165,21 @@ export interface WatchlistPanelConfig {
 	readonly onRemoveStock: (id: string, symbol: string) => void;
 }
 
-export const createWatchlistPanel =
+export interface WatchlistPanelProps extends WatchlistPanelConfig {
+	readonly watchlist: DbWatchlist;
+}
+
+export const WatchlistPanel =
 	// eslint-disable-next-line react/display-name
-	(config: WatchlistPanelConfig) => (watchlist: DbWatchlist) => {
+	(props: WatchlistPanelProps) => {
+		const { watchlist } = props;
 		const actionProps: ActionsProps = {
-			onRenameWatchlist: () => config.onRenameWatchlist(watchlist._id),
-			renameWatchlistId: config.renameWatchlistId,
-			onRemoveWatchlist: () => config.onRemoveWatchlist(watchlist._id)
+			onRenameWatchlist: () => props.onRenameWatchlist(watchlist._id),
+			renameWatchlistId: props.renameWatchlistId,
+			onRemoveWatchlist: () => props.onRemoveWatchlist(watchlist._id)
 		};
 
-		const Actions = match(config.breakpoints)
+		const Actions = match(props.breakpoints)
 			.with({ xs: true }, () => (
 				<MobileWatchlistPanelActions {...actionProps} />
 			))
@@ -188,18 +193,18 @@ export const createWatchlistPanel =
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
-						breakpoints={config.breakpoints}
+						breakpoints={props.breakpoints}
 						onClearRenamedWatchlistId={() =>
-							config.onRenameWatchlist(undefined)
+							props.onRenameWatchlist(undefined)
 						}
-						renameWatchlistId={config.renameWatchlistId}
-						onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
+						renameWatchlistId={props.renameWatchlistId}
+						onSaveRenamedWatchlist={props.onSaveRenamedWatchlist}
 					/>
 				}
 			>
 				<WatchlistSection
 					watchlistId={watchlist._id}
-					onRemoveStock={config.onRemoveStock}
+					onRemoveStock={props.onRemoveStock}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>

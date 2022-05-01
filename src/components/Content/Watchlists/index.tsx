@@ -19,10 +19,7 @@ import { castDraft } from 'immer';
 import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { Spinner } from '../../UI/Spinner';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
-import {
-	createWatchlistPanel,
-	WatchlistPanelConfig
-} from './createWatchlistPanel';
+import { WatchlistPanel, WatchlistPanelConfig } from './WatchlistPanel';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
 
@@ -49,7 +46,14 @@ const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
 const createPanels = (
 	watchlists: ReadonlyArray<DbWatchlist>,
 	panelConfig: WatchlistPanelConfig
-): ReactNode => watchlists.map(createWatchlistPanel(panelConfig));
+): ReactNode =>
+	watchlists.map((watchlist) => (
+		<WatchlistPanel
+			key={watchlist._id}
+			{...panelConfig}
+			watchlist={watchlist}
+		/>
+	));
 
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
