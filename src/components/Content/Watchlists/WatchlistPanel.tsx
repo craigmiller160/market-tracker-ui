@@ -127,10 +127,12 @@ const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 };
 
 const MobileWatchlistPanelActions = (props: ActionsProps) => {
-	const onMenuClick = (menuInfo: MenuInfo) =>
+	const onMenuClick = (menuInfo: MenuInfo) => {
+		menuInfo.domEvent.stopPropagation();
 		match(menuInfo)
 			.with({ key: 'rename' }, () => props.onRenameWatchlist())
 			.otherwise(() => props.onRemoveWatchlist());
+	};
 
 	const TheMenu = (
 		<Menu onClick={onMenuClick}>
