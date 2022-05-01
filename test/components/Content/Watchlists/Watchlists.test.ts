@@ -64,6 +64,10 @@ describe('Watchlists', () => {
 		testCard('GOOG', '$103.00');
 	});
 
+	it('renames a watchlist on mobile', async () => {
+		throw new Error();
+	});
+
 	it('renames a watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/watchlists'
@@ -260,7 +264,11 @@ describe('Watchlists', () => {
 		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
 	});
 
-	it('remove watchlist', async () => {
+	it('removes watchlist on mobile', async () => {
+		throw new Error();
+	});
+
+	it('removes watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
