@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import * as Either from 'fp-ts/es6/Either';
 import '@testing-library/jest-dom/extend-expect';
-import { match, when } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
 	getOneMonthDisplayStartDate,
@@ -109,7 +109,7 @@ const validateMarketStatus = (
 	status: MarketStatus
 ) =>
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+		.with({ type: P.when(isStock), status: MarketStatus.CLOSED }, () => {
 			expect(
 				within(card).queryByText('Market Closed')
 			).toBeInTheDocument();
@@ -141,7 +141,7 @@ const validatePriceLine = (
 	const baseCurrentPrice = match({ type, currentPriceStrategy })
 		.with(
 			{
-				type: when(isStock),
+				type: P.when(isStock),
 				currentPriceStrategy: CurrentPriceStrategy.HISTORY
 			},
 			() => BASE_HISTORY_2_PRICE
@@ -155,7 +155,7 @@ const validatePriceLine = (
 
 	const baseInitialPrice = match({ type, time })
 		.with(
-			{ type: when(isStock), time: MarketTime.ONE_DAY },
+			{ type: P.when(isStock), time: MarketTime.ONE_DAY },
 			() => BASE_PREV_CLOSE_PRICE
 		)
 		.otherwise(() => BASE_HISTORY_1_PRICE);
@@ -169,7 +169,7 @@ const validatePriceLine = (
 
 	const currentPriceResult = within(card).queryByText(currentPrice);
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () => {
+		.with({ type: P.when(isStock), status: MarketStatus.CLOSED }, () => {
 			expect(currentPriceResult).toBeInTheDocument();
 			expect(
 				within(card).queryByText('Market Closed')
@@ -179,7 +179,7 @@ const validatePriceLine = (
 
 	const priceLine = within(card).queryByText(/\([+|-]\$.*\)/);
 	match({ type, status })
-		.with({ type: when(isStock), status: MarketStatus.CLOSED }, () =>
+		.with({ type: P.when(isStock), status: MarketStatus.CLOSED }, () =>
 			expect(priceLine).not.toBeInTheDocument()
 		)
 		.otherwise(() =>

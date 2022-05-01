@@ -1870,10 +1870,10 @@
   dependencies:
     prettier "^2.5.1"
 
-"@craigmiller160/ts-functions@1.3.0":
-  version "1.3.0"
-  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.3.0.tgz#8d5c2a57784e0c25baf7ad761f29e3ffbcda690c"
-  integrity sha512-lm+X+12ZveN776/UpcvjMtxvlFiWg0wGxkfk9uy1m/i4apoy2s7Ioqb9CZgmmq9eOAl3BX/dk2Ubc1YjE8twUA==
+"@craigmiller160/ts-functions@1.4.0":
+  version "1.4.0"
+  resolved "https://craigmiller160.ddns.net:30003/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.4.0.tgz#a952c26f9e3c4d000b941cfe6cb653405e28fffc"
+  integrity sha512-GUD+YE54E5FgO2H+0H5kZz+zQXYIKuqa3b2wDqH9+5rXcsz9gE0CY79oBtvvCLt2f+FAtiaeVJkgEe/6Pr5d0w==
 
 "@craigmiller160/webpack-config-sass@1.0.0":
   version "1.0.0"
