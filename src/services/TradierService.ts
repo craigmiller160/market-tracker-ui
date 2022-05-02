@@ -13,7 +13,7 @@ import {
 	TradierQuotes,
 	tradierQuotesV
 } from '../types/tradier/quotes';
-import { instanceOf, match, __, not } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
 import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
@@ -66,10 +66,10 @@ const formatTradierQuotes = (
 	quotes: TradierQuotes
 ): TryT<ReadonlyArray<Quote>> => {
 	const tradierQuotesEither = match(quotes.quotes)
-		.with({ unmatched_symbols: not(undefined) }, (_) =>
+		.with({ unmatched_symbols: P.not(undefined) }, (_) =>
 			Either.left(new InvestmentNotFoundError(_.unmatched_symbols.symbol))
 		)
-		.with({ quote: instanceOf(Array) }, () =>
+		.with({ quote: P.instanceOf(Array) }, () =>
 			Either.right(quotes.quotes.quote as ReadonlyArray<TradierQuote>)
 		)
 		.otherwise(() => Either.right([quotes.quotes.quote as TradierQuote]));
@@ -101,23 +101,26 @@ const createTradierHistoryRecord = (
 
 const tradierHistoryToHistoryRecord = (
 	tHistory: TradierHistoryDay
-): ReadonlyArray<HistoryRecord> =>
-	match({
+): ReadonlyArray<HistoryRecord> => {
+	const open = parseInt(`${tHistory.open}`);
+	const close = parseInt(`${tHistory.close}`);
+	return match({
 		date: tHistory.date,
-		open: parseInt(`${tHistory.open}`),
-		close: parseInt(`${tHistory.close}`)
+		open,
+		close
 	})
-		.with({ open: not(__.NaN), close: __.NaN }, (_) => [
-			createTradierHistoryRecord(_.date, '00:00:00', _.open)
+		.with({ open: P.not(NaN), close: NaN }, () => [
+			createTradierHistoryRecord(tHistory.date, '00:00:00', open)
 		])
-		.with({ open: __.NaN, close: not(__.NaN) }, (_) => [
-			createTradierHistoryRecord(_.date, '23:59:59', _.close)
+		.with({ open: NaN, close: P.not(NaN) }, () => [
+			createTradierHistoryRecord(tHistory.date, '23:59:59', close)
 		])
-		.with({ open: __.NaN, close: __.NaN }, () => [])
-		.otherwise((_) => [
-			createTradierHistoryRecord(_.date, '00:00:00', _.open),
-			createTradierHistoryRecord(_.date, '23:59:59', _.close)
+		.with({ open: NaN, close: NaN }, () => [])
+		.otherwise(() => [
+			createTradierHistoryRecord(tHistory.date, '00:00:00', open),
+			createTradierHistoryRecord(tHistory.date, '23:59:59', close)
 		]);
+};
 
 const formatTradierHistory = (
 	history: TradierHistory
@@ -145,7 +148,10 @@ const ensureSeriesDataArray = (
 	data: TradierSeriesData | ReadonlyArray<TradierSeriesData>
 ): ReadonlyArray<TradierSeriesData> =>
 	match(data)
-		.with(instanceOf(Array), () => data as ReadonlyArray<TradierSeriesData>)
+		.with(
+			P.instanceOf(Array),
+			() => data as ReadonlyArray<TradierSeriesData>
+		)
 		.otherwise(() => [data] as ReadonlyArray<TradierSeriesData>);
 
 const formatTimesales = (

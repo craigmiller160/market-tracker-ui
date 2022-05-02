@@ -115,7 +115,7 @@ const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 	};
 
 	return (
-		<div>
+		<div data-testid="desktop-panel-actions">
 			{props.renameWatchlistId === undefined && (
 				<>
 					<Button onClick={onRenameClick}>Rename</Button>
@@ -127,10 +127,12 @@ const DesktopWatchlistPanelActions = (props: ActionsProps) => {
 };
 
 const MobileWatchlistPanelActions = (props: ActionsProps) => {
-	const onMenuClick = (menuInfo: MenuInfo) =>
+	const onMenuClick = (menuInfo: MenuInfo) => {
+		menuInfo.domEvent.stopPropagation();
 		match(menuInfo)
-			.with({ key: 'rename' }, () => props.onRemoveWatchlist())
-			.otherwise(() => props.onRenameWatchlist());
+			.with({ key: 'rename' }, () => props.onRenameWatchlist())
+			.otherwise(() => props.onRemoveWatchlist());
+	};
 
 	const TheMenu = (
 		<Menu onClick={onMenuClick}>
@@ -144,7 +146,7 @@ const MobileWatchlistPanelActions = (props: ActionsProps) => {
 	};
 
 	return (
-		<div>
+		<div data-testid="mobile-panel-actions">
 			{props.renameWatchlistId === undefined && (
 				<>
 					<Dropdown overlay={TheMenu} trigger={['click']}>
@@ -165,16 +167,30 @@ export interface WatchlistPanelConfig {
 	readonly onRemoveStock: (id: string, symbol: string) => void;
 }
 
-export const createWatchlistPanel =
+export interface WatchlistPanelProps extends WatchlistPanelConfig {
+	readonly watchlist: DbWatchlist;
+}
+
+export const WatchlistPanel =
 	// eslint-disable-next-line react/display-name
-	(config: WatchlistPanelConfig) => (watchlist: DbWatchlist) => {
+	(props: WatchlistPanelProps) => {
+		const {
+			breakpoints,
+			renameWatchlistId,
+			onRemoveWatchlist,
+			onRemoveStock,
+			onRenameWatchlist,
+			onSaveRenamedWatchlist,
+			watchlist,
+			...rest
+		} = props;
 		const actionProps: ActionsProps = {
-			onRenameWatchlist: () => config.onRenameWatchlist(watchlist._id),
-			renameWatchlistId: config.renameWatchlistId,
-			onRemoveWatchlist: () => config.onRemoveWatchlist(watchlist._id)
+			onRenameWatchlist: () => onRenameWatchlist(watchlist._id),
+			renameWatchlistId: renameWatchlistId,
+			onRemoveWatchlist: () => onRemoveWatchlist(watchlist._id)
 		};
 
-		const Actions = match(config.breakpoints)
+		const Actions = match(breakpoints)
 			.with({ xs: true }, () => (
 				<MobileWatchlistPanelActions {...actionProps} />
 			))
@@ -182,24 +198,25 @@ export const createWatchlistPanel =
 
 		return (
 			<Collapse.Panel
+				{...rest}
 				key={watchlist._id}
 				extra={Actions}
 				className="WatchlistPanel"
 				header={
 					<WatchlistPanelTitle
 						watchlist={watchlist}
-						breakpoints={config.breakpoints}
+						breakpoints={breakpoints}
 						onClearRenamedWatchlistId={() =>
-							config.onRenameWatchlist(undefined)
+							onRenameWatchlist(undefined)
 						}
-						renameWatchlistId={config.renameWatchlistId}
-						onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
+						renameWatchlistId={renameWatchlistId}
+						onSaveRenamedWatchlist={onSaveRenamedWatchlist}
 					/>
 				}
 			>
 				<WatchlistSection
 					watchlistId={watchlist._id}
-					onRemoveStock={config.onRemoveStock}
+					onRemoveStock={onRemoveStock}
 					stocks={watchlist.stocks}
 					cryptos={watchlist.cryptos}
 				/>

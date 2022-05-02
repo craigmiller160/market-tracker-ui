@@ -61,7 +61,7 @@
     "@ant-design/plots": "^1.0.9",
     "@craigmiller160/ajax-api-fp-ts": "^1.0.3",
     "@craigmiller160/ajax-error-handler": "1.0.0",
-    "@craigmiller160/ts-functions": "1.3.0",
+    "@craigmiller160/ts-functions": "1.4.0",
     "@reduxjs/toolkit": "^1.7.1",
     "antd": "^4.19.5",
     "core-js": "^3.20.2",
@@ -80,7 +80,7 @@
     "redux": "^4.1.2",
     "regenerator-runtime": "^0.13.9",
     "trace-error": "^1.0.3",
-    "ts-pattern": "^3.3.4",
+    "ts-pattern": "^4.0.2",
     "use-immer": "^0.6.0"
   }
 }

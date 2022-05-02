@@ -1,15 +1,15 @@
 import { Database } from '../Database';
 import { Server } from 'miragejs/server';
 import { Response } from 'miragejs';
-import { match, when } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import * as Option from 'fp-ts/es6/Option';
 import { pipe } from 'fp-ts/es6/function';
 
 export const createOAuthRoutes = (database: Database, server: Server) => {
 	server.get('/oauth/user', () =>
 		match(database.data.authUser)
-			.with(
-				when(Option.isSome),
+			.when(
+				Option.isSome,
 				() =>
 					new Response(
 						200,

@@ -15,7 +15,7 @@ import { castDraft } from 'immer';
 import { RefreshTimerContext } from '../Content/common/refresh/RefreshTimerContext';
 import { isNestedAxiosError } from '../../services/AjaxApi';
 import { InvestmentInfo } from '../../types/data/InvestmentInfo';
-import { match, when } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import {
 	getInvestmentNotFoundMessage,
 	isNestedInvestmentNotFoundError
@@ -42,15 +42,15 @@ const createHandleGetDataError =
 	(ex: Error): TaskT<void> =>
 	async () => {
 		const errorInfo = match(ex)
-			.with(
-				when(isNestedAxiosError),
+			.when(
+				isNestedAxiosError,
 				(): ErrorInfo => ({
 					name: '',
 					message: '',
 					isAxios: true
 				})
 			)
-			.with(when(isNestedInvestmentNotFoundError), () => {
+			.when(isNestedInvestmentNotFoundError, () => {
 				console.error('Error getting data', ex.stack);
 				return {
 					name: 'InvestmentNotFoundError',

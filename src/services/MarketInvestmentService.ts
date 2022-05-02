@@ -7,7 +7,7 @@ import {
 	TryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
-import { match, when } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import * as coinGeckoService from './CoinGeckoService';
@@ -50,7 +50,7 @@ interface IntermediateInvestmentData {
 
 export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 	match(type)
-		.with(when(isStock), () => tradierService.getQuotes)
+		.when(isStock, () => tradierService.getQuotes)
 		.otherwise(() => coinGeckoService.getQuotes);
 
 export const getHistoryFn = (
@@ -59,51 +59,51 @@ export const getHistoryFn = (
 ): HistoryFn =>
 	match({ time, type })
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isStock) },
+			{ time: MarketTime.ONE_DAY, type: P.when(isStock) },
 			() => tradierService.getTimesales
 		)
 		.with(
-			{ time: MarketTime.ONE_DAY, type: when(isCrypto) },
+			{ time: MarketTime.ONE_DAY, type: P.when(isCrypto) },
 			() => coinGeckoService.getTodayHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isStock) },
+			{ time: MarketTime.ONE_WEEK, type: P.when(isStock) },
 			() => tradierService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_WEEK, type: when(isCrypto) },
+			{ time: MarketTime.ONE_WEEK, type: P.when(isCrypto) },
 			() => coinGeckoService.getOneWeekHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isStock) },
+			{ time: MarketTime.ONE_MONTH, type: P.when(isStock) },
 			() => tradierService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_MONTH, type: when(isCrypto) },
+			{ time: MarketTime.ONE_MONTH, type: P.when(isCrypto) },
 			() => coinGeckoService.getOneMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isStock) },
+			{ time: MarketTime.THREE_MONTHS, type: P.when(isStock) },
 			() => tradierService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.THREE_MONTHS, type: when(isCrypto) },
+			{ time: MarketTime.THREE_MONTHS, type: P.when(isCrypto) },
 			() => coinGeckoService.getThreeMonthHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isStock) },
+			{ time: MarketTime.ONE_YEAR, type: P.when(isStock) },
 			() => tradierService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.ONE_YEAR, type: when(isCrypto) },
+			{ time: MarketTime.ONE_YEAR, type: P.when(isCrypto) },
 			() => coinGeckoService.getOneYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isStock) },
+			{ time: MarketTime.FIVE_YEARS, type: P.when(isStock) },
 			() => tradierService.getFiveYearHistory
 		)
 		.with(
-			{ time: MarketTime.FIVE_YEARS, type: when(isCrypto) },
+			{ time: MarketTime.FIVE_YEARS, type: P.when(isCrypto) },
 			() => coinGeckoService.getFiveYearHistory
 		)
 		.run();
@@ -176,11 +176,11 @@ const getStartPrice = (
 		.with(
 			{
 				time: MarketTime.ONE_DAY,
-				quote: when(hasPrevClose)
+				quote: P.when(hasPrevClose)
 			},
 			() => Either.right(quote.previousClose)
 		)
-		.with({ history: when(hasHistory) }, () =>
+		.with({ history: P.when(hasHistory) }, () =>
 			pipe(
 				RArray.head(history),
 				Option.map((_) => _.price),
@@ -210,8 +210,10 @@ const updateHistory = (
 		.with(
 			{
 				time: MarketTime.ONE_DAY,
-				history: when(hasHistory),
-				startPrice: when(notEqualToHistoryStartPrice(historyStartPrice))
+				history: P.when(hasHistory),
+				startPrice: P.when(
+					notEqualToHistoryStartPrice(historyStartPrice)
+				)
 			},
 			() =>
 				pipe(
@@ -255,14 +257,14 @@ const getCurrentPrice = (
 	})
 		.with(
 			{
-				type: when(isStock),
+				type: P.when(isStock),
 				time: MarketTime.ONE_DAY,
-				mostRecentHistoryRecord: when(isLaterThanNow)
+				mostRecentHistoryRecord: P.when(isLaterThanNow)
 			},
 			() => mostRecentHistoryPrice
 		)
 		.with(
-			{ quote: when(priceAndPrevCloseEqual) },
+			{ quote: P.when(priceAndPrevCloseEqual) },
 			() => mostRecentHistoryPrice
 		)
 		.otherwise(() => quote.price);
@@ -272,7 +274,7 @@ const notEmpty = (value?: string): boolean => (value?.length ?? 0) > 0;
 
 const getInvestmentName = (info: InvestmentInfo, quote: Quote): string =>
 	match({ info, quote })
-		.with({ info: { name: when(notEmpty) } }, () => info.name)
+		.with({ info: { name: P.when(notEmpty) } }, () => info.name)
 		.otherwise(() => quote.name);
 
 const handleInvestmentData =

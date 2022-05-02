@@ -9,7 +9,7 @@ import { authSlice } from '../store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { notificationSlice } from '../store/notification/slice';
 import { AxiosError } from 'axios';
-import { match, when, not, instanceOf } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import * as Json from '@craigmiller160/ts-functions/es/Json';
 import { pipe } from 'fp-ts/es6/function';
 import { debounce } from 'lodash-es';
@@ -19,7 +19,7 @@ const isUndefined = (value: string | undefined): boolean => value === undefined;
 
 export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
 	match(ex)
-		.with(instanceOf(TraceError), (traceError) =>
+		.with(P.instanceOf(TraceError), (traceError) =>
 			pipe(
 				Option.fromNullable(traceError.cause()),
 				Option.map(isNestedAxiosError),
@@ -45,7 +45,10 @@ const getFullErrorMessage = (
 ) =>
 	match({ errorMsg, error })
 		.with(
-			{ errorMsg: not(when(isUndefined)), error: when(isAxiosError) },
+			{
+				errorMsg: P.not(P.when(isUndefined)),
+				error: P.when(isAxiosError)
+			},
 			() => {
 				const responseBody = getAxiosErrorBody(
 					error as AxiosError<unknown>
@@ -54,7 +57,7 @@ const getFullErrorMessage = (
 			}
 		)
 		.with(
-			{ errorMsg: when(isUndefined), error: when(isAxiosError) },
+			{ errorMsg: P.when(isUndefined), error: P.when(isAxiosError) },
 			() => {
 				const responseBody = getAxiosErrorBody(
 					error as AxiosError<unknown>
