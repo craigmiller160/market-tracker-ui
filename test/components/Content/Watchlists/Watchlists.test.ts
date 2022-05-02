@@ -123,7 +123,7 @@ describe('Watchlists', () => {
 		testCard('GOOG', '$103.00');
 	});
 
-	it('renames a watchlist on mobile', async () => {
+	it.skip('renames a watchlist on mobile', async () => {
 		const screenContextValue: ScreenContextValue = {
 			breakpoints: {
 				xs: true
@@ -133,7 +133,44 @@ describe('Watchlists', () => {
 			initialPath: '/market-tracker/watchlists',
 			screenContextValue
 		});
-		throw new Error();
+		await waitFor(() =>
+			expect(
+				screen.queryAllByTestId('watchlist-panel-title')
+			).toHaveLength(2)
+		);
+		expect(screen.queryAllByRole('button', { name: '...' })).toHaveLength(
+			2
+		);
+		expect(screen.queryByText('Save')).not.toBeInTheDocument();
+		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+
+		userEvent.click(screen.getAllByRole('button', { name: '...' })[0]);
+		await waitFor(() => expect(screen.getByText('Rename')).toBeVisible());
+		expect(screen.getByText('Remove')).toBeVisible();
+		userEvent.click(screen.getByText('Rename'));
+		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
+		expect(
+			screen.queryByDisplayValue('First Watchlist')
+		).toBeInTheDocument();
+		expect(screen.queryByText('Rename')).not.toBeInTheDocument();
+		expect(screen.queryByText('Save')).toBeInTheDocument();
+		expect(screen.queryByText('Cancel')).toBeInTheDocument();
+
+		userEvent.click(screen.getByText('Cancel'));
+		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.queryAllByText('Rename')).toHaveLength(2);
+
+		userEvent.click(screen.queryAllByText('Rename')[0]);
+		const input = screen.getByDisplayValue('First Watchlist');
+		userEvent.clear(input);
+		userEvent.type(input, 'New Watchlist');
+
+		userEvent.click(screen.getByText('Save'));
+		await waitFor(() =>
+			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
+		);
+		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 
 	it('renames a watchlist', async () => {
@@ -332,7 +369,7 @@ describe('Watchlists', () => {
 		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
 	});
 
-	it('removes watchlist on mobile', async () => {
+	it.skip('removes watchlist on mobile', async () => {
 		throw new Error();
 	});
 
