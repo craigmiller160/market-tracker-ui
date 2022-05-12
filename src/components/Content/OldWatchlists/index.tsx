@@ -1,4 +1,4 @@
-import './Watchlists.scss';
+
 import { Button, Collapse, Typography } from 'antd';
 import { ReactNode, useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
@@ -23,25 +23,7 @@ import { WatchlistPanel, WatchlistPanelConfig } from './WatchlistPanel';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
 
-interface State {
-	readonly loading: boolean;
-	readonly watchlists: ReadonlyArray<DbWatchlist>;
-	readonly renameWatchlistId?: string;
-	readonly confirmModal: {
-		readonly show: boolean;
-		readonly message: string;
-		readonly watchlistName: string;
-		readonly symbol?: string;
-	};
-	readonly inputModal: {
-		readonly show: boolean;
-	};
-}
 
-const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
-	match(breakpoints)
-		.with({ xs: true }, () => <br />)
-		.otherwise(() => ' ');
 
 const createPanels = (
 	watchlists: ReadonlyArray<DbWatchlist>,
@@ -161,18 +143,6 @@ const createHandleAddWatchlistResult =
 	};
 
 export const Watchlists = () => {
-	const [state, setState] = useImmer<State>({
-		loading: true,
-		watchlists: [],
-		confirmModal: {
-			show: false,
-			message: '',
-			watchlistName: ''
-		},
-		inputModal: {
-			show: false
-		}
-	});
 
 	const getWatchlists = useMemo(
 		() => createGetWatchlists(setState),

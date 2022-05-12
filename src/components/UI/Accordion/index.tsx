@@ -2,6 +2,7 @@ import { Collapse } from 'antd';
 import { ReactNode } from 'react';
 import { AccordionInvestment } from './AccordionInvestment';
 import { AccordionPanel } from './AccordionPanel';
+import './Accordion.scss';
 
 export interface AccordionPanelConfig {
 	readonly title: ReactNode;

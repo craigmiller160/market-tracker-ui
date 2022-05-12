@@ -1,12 +1,8 @@
-@import "../../../styles/page";
+@import "src/styles/page";
 
 .WatchlistsPage {
   @include PageRoot;
   width: 95%;
-
-  .ant-collapse {
-    width: 100%;
-  }
 
   .RootActions {
     width: 100%;
