@@ -58,5 +58,11 @@
     "name": "Ethereum",
     "type": "CRYPTO",
     "marketType": "CRYPTO"
+  },
+  {
+    "symbol": "USDT",
+    "name": "Tether",
+    "type": "CRYPTO",
+    "marketType": "CRYPTO"
   }
 ]

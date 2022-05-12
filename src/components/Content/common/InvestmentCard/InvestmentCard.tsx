@@ -42,7 +42,7 @@ const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
 
 const localeOptions: Intl.NumberFormatOptions = {
 	minimumFractionDigits: 2,
-	maximumFractionDigits: 2
+	maximumFractionDigits: 4
 };
 
 const gt0 = (value: number) => value > 0;
