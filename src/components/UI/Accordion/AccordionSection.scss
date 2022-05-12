@@ -1,0 +1,5 @@
+@import "src/styles/card_list";
+
+.AccordionSection {
+  @include CardList;
+}
