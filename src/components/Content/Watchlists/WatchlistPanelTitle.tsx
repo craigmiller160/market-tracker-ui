@@ -33,7 +33,6 @@ const createOnCancelRenamedTitle =
 	};
 
 export const WatchlistPanelTitle = (props: Props) => {
-	console.log('TitleProps', props);
 	const { watchlist, renameWatchlistId } = props;
 	const dispatch = useDispatch();
 	const [form] = Form.useForm<TitleForm>();
