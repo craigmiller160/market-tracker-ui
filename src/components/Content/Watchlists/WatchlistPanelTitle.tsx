@@ -4,6 +4,7 @@ import { Button, Form, FormInstance, Input, Typography } from 'antd';
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
+import './WatchlistPanelTitle.scss';
 
 interface Props {
 	readonly breakpoints: Breakpoints;
