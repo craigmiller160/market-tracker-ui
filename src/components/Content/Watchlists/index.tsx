@@ -183,7 +183,16 @@ const usePanelConfig = (
 					symbol: stock.symbol,
 					type: InvestmentType.STOCK,
 					name: '',
-					getActions: undefined // TODO fill this in
+					getActions: (symbol: string) => [
+						<Button
+							key="remove"
+							onClick={() =>
+								config.onRemoveStock(watchlist._id, symbol)
+							}
+						>
+							Remove
+						</Button>
+					]
 				})
 			)
 		})
