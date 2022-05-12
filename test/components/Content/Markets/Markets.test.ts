@@ -41,7 +41,7 @@ enum CurrentPriceStrategy {
 
 const localeOptions: Intl.NumberFormatOptions = {
 	minimumFractionDigits: 2,
-	maximumFractionDigits: 2
+	maximumFractionDigits: 4
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);
