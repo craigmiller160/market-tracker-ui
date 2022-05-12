@@ -187,6 +187,7 @@ const createPanels = (
 					onRemoveWatchlist={() =>
 						config.onRemoveWatchlist(watchlist._id)
 					}
+					renameWatchlistId={config.renameWatchlistId}
 				/>
 			),
 			key: watchlist._id,
