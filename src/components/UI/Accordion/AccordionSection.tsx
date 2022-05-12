@@ -7,7 +7,7 @@ interface Props {
 }
 
 const investmentToCard = (investment: AccordionInvestment) => (
-	<InvestmentCard info={investment} getActions={investment.getActions} />
+	<InvestmentCard key={investment.symbol} info={investment} getActions={investment.getActions} />
 );
 
 export const AccordionSection = (props: Props) => {
