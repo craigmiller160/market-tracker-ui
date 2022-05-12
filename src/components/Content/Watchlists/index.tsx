@@ -24,6 +24,7 @@ import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
+import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 
 interface State {
 	readonly loading: boolean;
@@ -165,7 +166,17 @@ const usePanelConfig = (
 ): ReadonlyArray<AccordionPanelConfig> =>
 	watchlists.map(
 		(watchlist): AccordionPanelConfig => ({
-			title: <div />,
+			title: (
+				<WatchlistPanelTitle
+					breakpoints={config.breakpoints}
+					watchlist={watchlist}
+					renameWatchlistId={config.renameWatchlistId}
+					onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
+					onClearRenamedWatchlistId={() =>
+						config.onRenameWatchlist(undefined)
+					}
+				/>
+			),
 			key: watchlist._id,
 			investments: watchlist.stocks.map(
 				(stock): AccordionInvestment => ({
