@@ -58,7 +58,9 @@ const createPanels = (
 		([marketInvestmentType, investments]): AccordionPanelConfig => ({
 			title: (
 				<Typography.Title level={4}>
-					{getMarketInvestmentTypeTitle(marketInvestmentType)}
+					{getMarketInvestmentTypeTitle(
+						marketInvestmentType as MarketInvestmentType
+					)}
 				</Typography.Title>
 			),
 			key: marketInvestmentType,
