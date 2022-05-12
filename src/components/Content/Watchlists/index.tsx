@@ -1,12 +1,12 @@
 import { Updater, useImmer } from 'use-immer';
-import { DbWatchlist, Watchlist } from '../../../types/Watchlist';
+import { DbWatchlist } from '../../../types/Watchlist';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
 import { useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { Spinner } from '../../UI/Spinner';
-import { Button, Collapse, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
@@ -16,11 +16,14 @@ import {
 	createWatchlist,
 	getAllWatchlists,
 	removeStockFromWatchlist,
-	removeWatchlist
+	removeWatchlist,
+	renameWatchlist
 } from '../../../services/WatchlistService';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
+import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
+import { InvestmentType } from '../../../types/data/InvestmentType';
 
 interface State {
 	readonly loading: boolean;
@@ -94,9 +97,86 @@ const createHandleConfirmModalAction =
 		}
 	};
 
-const createPanelConfig = (
-	watchlists: ReadonlyArray<Watchlist>
-): ReadonlyArray<AccordionPanelConfig> => {};
+const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
+	setState((draft) => {
+		draft.renameWatchlistId = id;
+	});
+
+const createOnSaveRenamedWatchlist =
+	(setState: Updater<State>) => (id: string, newName: string) =>
+		setState((draft) => {
+			const watchlistToChangeIndex = draft.watchlists.findIndex(
+				(watchlist) => watchlist._id === id
+			);
+			const watchlistToChange = draft.watchlists[watchlistToChangeIndex];
+			const oldName = watchlistToChange.watchlistName;
+			draft.renameWatchlistId = undefined;
+			draft.watchlists[watchlistToChangeIndex] = castDraft({
+				...watchlistToChange,
+				watchlistName: newName
+			});
+			renameWatchlist(oldName, newName)();
+		});
+
+const createShowConfirmRemoveWatchlist =
+	(setState: Updater<State>) => (id: string) =>
+		setState((draft) => {
+			const foundWatchlist = draft.watchlists.find(
+				(watchlist) => watchlist._id === id
+			);
+			if (foundWatchlist) {
+				draft.confirmModal = {
+					show: true,
+					message: `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`,
+					watchlistName: foundWatchlist.watchlistName
+				};
+			}
+		});
+
+const createShowConfirmRemoveStock =
+	(setState: Updater<State>) => (watchlistId: string, symbol: string) =>
+		setState((draft) => {
+			const watchlistName = draft.watchlists.find(
+				(watchlist) => watchlist._id === watchlistId
+			)?.watchlistName;
+			if (!watchlistName) {
+				return;
+			}
+			draft.confirmModal = {
+				show: true,
+				watchlistName,
+				symbol,
+				message: `Are you sure you want to remove "${symbol}" from watchlist "${watchlistName}"`
+			};
+		});
+
+interface WatchlistPanelConfig {
+	readonly breakpoints: Breakpoints;
+	readonly renameWatchlistId?: string;
+	readonly onRenameWatchlist: (id?: string) => void;
+	readonly onRemoveWatchlist: (id: string) => void;
+	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+	readonly onRemoveStock: (id: string, symbol: string) => void;
+}
+
+const usePanelConfig = (
+	watchlists: ReadonlyArray<DbWatchlist>,
+	config: WatchlistPanelConfig
+): ReadonlyArray<AccordionPanelConfig> =>
+	watchlists.map(
+		(watchlist): AccordionPanelConfig => ({
+			title: <div />,
+			key: watchlist._id,
+			investments: watchlist.stocks.map(
+				(stock): AccordionInvestment => ({
+					symbol: stock.symbol,
+					type: InvestmentType.STOCK,
+					name: '',
+					getActions: undefined // TODO fill this in
+				})
+			)
+		})
+	);
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
@@ -138,7 +218,34 @@ export const Watchlists = () => {
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
 
-	const panels = createPanelConfig(state.watchlists);
+	const onRenameWatchlist = useMemo(
+		() => createOnRenameWatchlist(setState),
+		[setState]
+	);
+	const onSaveRenamedWatchlist = useMemo(
+		() => createOnSaveRenamedWatchlist(setState),
+		[setState]
+	);
+	const showConfirmRemoveWatchlist = useMemo(
+		() => createShowConfirmRemoveWatchlist(setState),
+		[setState]
+	);
+
+	const showConfirmRemoveStock = useMemo(
+		() => createShowConfirmRemoveStock(setState),
+		[setState]
+	);
+
+	const panelConfig: WatchlistPanelConfig = {
+		breakpoints,
+		renameWatchlistId: state.renameWatchlistId,
+		onRenameWatchlist,
+		onSaveRenamedWatchlist,
+		onRemoveWatchlist: showConfirmRemoveWatchlist,
+		onRemoveStock: showConfirmRemoveStock
+	};
+
+	const panels = usePanelConfig(state.watchlists, panelConfig);
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
 		.otherwise(() => <Accordion panels={panels} />);
