@@ -25,6 +25,7 @@ import { castDraft } from 'immer';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
+import { WatchlistPanelActions } from './WatchlistPanelActions';
 
 interface State {
 	readonly loading: boolean;
@@ -174,6 +175,17 @@ const createPanels = (
 					onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
 					onClearRenamedWatchlistId={() =>
 						config.onRenameWatchlist(undefined)
+					}
+				/>
+			),
+			actions: (
+				<WatchlistPanelActions
+					breakpoints={config.breakpoints}
+					onRenameWatchlist={() =>
+						config.onRenameWatchlist(watchlist._id)
+					}
+					onRemoveWatchlist={() =>
+						config.onRemoveWatchlist(watchlist._id)
 					}
 				/>
 			),
