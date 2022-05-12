@@ -102,9 +102,7 @@ export const Watchlists = () => {
 
 
 
-	useEffect(() => {
-		getWatchlists();
-	}, [getWatchlists]);
+
 
 	const onRenameWatchlist = useMemo(
 		() => createOnRenameWatchlist(setState),
@@ -125,7 +123,6 @@ export const Watchlists = () => {
 	);
 
 
-	const breakpointName = getBreakpointName(breakpoints);
 	const panelConfig: WatchlistPanelConfig = {
 		breakpoints,
 		renameWatchlistId: state.renameWatchlistId,

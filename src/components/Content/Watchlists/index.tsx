@@ -3,7 +3,7 @@ import { DbWatchlist } from '../../../types/Watchlist';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Collapse, Typography } from 'antd';
@@ -112,6 +112,10 @@ export const Watchlists = () => {
 		() => createGetWatchlists(setState),
 		[setState]
 	);
+
+	useEffect(() => {
+		getWatchlists();
+	}, [getWatchlists]);
 
 	const showAddWatchlistModal = useMemo(
 		() => createShowAddWatchlistModal(setState),
