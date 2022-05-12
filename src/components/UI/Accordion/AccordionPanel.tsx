@@ -15,11 +15,11 @@ export const AccordionPanel = (props: Props) => {
 	const { title, actions, investments, key, ...rest } = props;
 	return (
 		<Collapse.Panel
+			{...rest}
 			header={title}
 			key={key}
 			extra={actions}
 			className="AccordionPanel"
-			{...rest}
 		>
 			<AccordionSection investments={investments} />
 		</Collapse.Panel>

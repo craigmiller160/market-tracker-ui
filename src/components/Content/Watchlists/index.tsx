@@ -160,7 +160,7 @@ interface WatchlistPanelConfig {
 	readonly onRemoveStock: (id: string, symbol: string) => void;
 }
 
-const usePanelConfig = (
+const createPanels = (
 	watchlists: ReadonlyArray<DbWatchlist>,
 	config: WatchlistPanelConfig
 ): ReadonlyArray<AccordionPanelConfig> =>
@@ -265,7 +265,7 @@ export const Watchlists = () => {
 		onRemoveStock: showConfirmRemoveStock
 	};
 
-	const panels = usePanelConfig(state.watchlists, panelConfig);
+	const panels = createPanels(state.watchlists, panelConfig);
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
 		.otherwise(() => <Accordion panels={panels} />);
