@@ -1,12 +1,12 @@
 import './AccordionSection.scss';
 import { InvestmentCard } from '../../Content/common/InvestmentCard/InvestmentCard';
-import { AccordionInvestmentType } from './AccordionInvestmentType';
+import { AccordionInvestment } from './AccordionInvestment';
 
 interface Props {
-	readonly investments: ReadonlyArray<AccordionInvestmentType>;
+	readonly investments: ReadonlyArray<AccordionInvestment>;
 }
 
-const investmentToCard = (investment: AccordionInvestmentType) => (
+const investmentToCard = (investment: AccordionInvestment) => (
 	<InvestmentCard info={investment} getActions={investment.getActions} />
 );
 
