@@ -9,9 +9,12 @@ import * as Either from 'fp-ts/es6/Either';
 import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
-import { MarketInvestmentType } from '../../../types/data/MarketInvestmentType';
-import { MarketSection } from './MarketSection';
+import {
+	getMarketInvestmentTypeTitle,
+	MarketInvestmentType
+} from '../../../types/data/MarketInvestmentType';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
+import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -48,26 +51,30 @@ const useHandleInvestmentError = (error?: Error) => {
 	}, [error, dispatch]);
 };
 
+const createPanels = (
+	investments: InvestmentsByType
+): ReadonlyArray<AccordionPanelConfig> =>
+	Object.entries(investments).map(
+		([marketInvestmentType, investments]): AccordionPanelConfig => ({
+			title: (
+				<Typography.Title level={4}>
+					{getMarketInvestmentTypeTitle(marketInvestmentType)}
+				</Typography.Title>
+			),
+			key: marketInvestmentType,
+			investments
+		})
+	);
+
 export const Markets = () => {
 	const investmentResult = useMemo(getInvestmentResult, []);
 	useHandleInvestmentError(investmentResult.error);
-
+	const panels = createPanels(investmentResult.investments);
 	return (
 		<RefreshProvider>
 			<div className="GlobalMarkets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
-				<MarketSection
-					marketType={MarketInvestmentType.USA_ETF}
-					data={investmentResult.investments}
-				/>
-				<MarketSection
-					marketType={MarketInvestmentType.INTERNATIONAL_ETF}
-					data={investmentResult.investments}
-				/>
-				<MarketSection
-					marketType={MarketInvestmentType.CRYPTO}
-					data={investmentResult.investments}
-				/>
+				<Accordion panels={panels} />
 			</div>
 		</RefreshProvider>
 	);
