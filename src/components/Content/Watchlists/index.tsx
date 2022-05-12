@@ -1,5 +1,5 @@
 import { Updater, useImmer } from 'use-immer';
-import { DbWatchlist } from '../../../types/Watchlist';
+import { DbWatchlist, Watchlist } from '../../../types/Watchlist';
 import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
@@ -7,7 +7,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import { ScreenContext } from '../../ScreenContext';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Collapse, Typography } from 'antd';
-import { Accordion } from '../../UI/Accordion';
+import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
@@ -94,6 +94,10 @@ const createHandleConfirmModalAction =
 		}
 	};
 
+const createPanelConfig = (
+	watchlists: ReadonlyArray<Watchlist>
+): ReadonlyArray<AccordionPanelConfig> => {};
+
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
 		loading: true,
@@ -134,9 +138,10 @@ export const Watchlists = () => {
 	const titleSpace = getTitleSpace(breakpoints);
 	const breakpointName = getBreakpointName(breakpoints);
 
+	const panels = createPanelConfig(state.watchlists);
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
-		.otherwise(() => <Accordion panels={[]} />);
+		.otherwise(() => <Accordion panels={panels} />);
 
 	return (
 		<RefreshProvider>
