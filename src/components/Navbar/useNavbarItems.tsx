@@ -1,8 +1,15 @@
 import { ReactNode } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
-import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
-import { identity } from 'fp-ts/es6/function';
+import {
+	MarketTime,
+	marketTimeToMenuKey,
+	menuKeyToMarketTime
+} from '../../types/MarketTime';
+import { identity, pipe } from 'fp-ts/es6/function';
 import { Menu } from 'antd';
+import { match } from 'ts-pattern';
+import { Try } from '@craigmiller160/ts-functions/es';
+import * as Either from 'fp-ts/es6/Either';
 
 interface NavbarItem {
 	readonly key: string;
@@ -80,6 +87,24 @@ const createAuthNavItem = (
 	);
 };
 
+const isOneDayItem = (item: NavbarItem): boolean =>
+	pipe(
+		Try.tryCatch(() => menuKeyToMarketTime(item.key)),
+		Either.map((time) => time === MarketTime.ONE_DAY),
+		Either.getOrElse((): boolean => false)
+	);
+
+const navbarItemToMenuItem = (item: NavbarItem) => {
+	const className = match(item)
+		.when(isOneDayItem, () => 'OneDayItem')
+		.otherwise(() => '');
+	return (
+		<Menu.Item className={className} key={item.key}>
+			{item.name}
+		</Menu.Item>
+	);
+};
+
 // TODO need to know which items are selected
 export const useNavbarItems = (): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
@@ -91,5 +116,19 @@ export const useNavbarItems = (): ReactNode => {
 		authBtnTxt
 	);
 
-	return <div />;
+	const PageItems = ITEMS.pages.map(navbarItemToMenuItem);
+	const TimeItems = ITEMS.times.map(navbarItemToMenuItem);
+
+	return match({ isAuthorized, hasChecked })
+		.with({ isAuthorized: true, hasChecked: true }, () => (
+			<>
+				{PageItems}
+				{TimeItems}
+				{AuthNavItem}
+			</>
+		))
+		.with({ isAuthorized: false, hasChecked: true }, () => (
+			<>{AuthNavItem}</>
+		))
+		.otherwise(() => <></>);
 };
