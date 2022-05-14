@@ -1,55 +1,75 @@
-import { Menu } from 'antd';
-import { ReactNode } from 'react';
-import { match } from 'ts-pattern';
+import { ReactNode, useMemo } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
-import { identity } from 'fp-ts/es6/function';
-import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
+import {
+	MarketTime,
+	marketTimeToMenuKey,
+	menuKeyToMarketTime
+} from '../../types/MarketTime';
+import { identity, pipe } from 'fp-ts/es6/function';
+import { Menu } from 'antd';
+import { match } from 'ts-pattern';
+import { Try } from '@craigmiller160/ts-functions/es';
+import * as Either from 'fp-ts/es6/Either';
+import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
+import * as Option from 'fp-ts/es6/Option';
+import * as RArray from 'fp-ts/es6/ReadonlyArray';
 
-const createMainNavItems = () => {
-	const NonProdItems = match(process.env.NODE_ENV)
-		.with('production', () => <></>)
-		.otherwise(() => (
-			<>
-				<Menu.Item key="page.portfolios">Portfolios</Menu.Item>
-			</>
-		));
+interface NavbarItem {
+	readonly key: string;
+	readonly name: string;
+}
 
-	return (
-		<>
-			<Menu.Item key="page.markets">Markets</Menu.Item>
-			<Menu.Item key="page.search">Search</Menu.Item>
-			<Menu.Item key="page.watchlists">Watchlists</Menu.Item>
-			{NonProdItems}
-			<Menu.Item key="page.recognition">Recognition</Menu.Item>
-		</>
-	);
+interface AllItems {
+	readonly pages: ReadonlyArray<NavbarItem>;
+	readonly times: ReadonlyArray<NavbarItem>;
+}
+
+const ITEMS: AllItems = {
+	pages: [
+		{
+			key: 'page.markets',
+			name: 'Markets'
+		},
+		{
+			key: 'page.search',
+			name: 'Search'
+		},
+		{
+			key: 'page.watchlists',
+			name: 'Watchlists'
+		},
+		{
+			key: 'page.recognition',
+			name: 'Recognition'
+		}
+	],
+	times: [
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_DAY),
+			name: 'Today'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_WEEK),
+			name: '1 Week'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_MONTH),
+			name: '1 Month'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.THREE_MONTHS),
+			name: '3 Months'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_YEAR),
+			name: '1 Year'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
+			name: '5 Years'
+		}
+	]
 };
-
-const TimeRangeNavItems = (
-	<>
-		<Menu.Item
-			className="OneDayItem"
-			key={marketTimeToMenuKey(MarketTime.ONE_DAY)}
-		>
-			Today
-		</Menu.Item>
-		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_WEEK)}>
-			1 Week
-		</Menu.Item>
-		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_MONTH)}>
-			1 Month
-		</Menu.Item>
-		<Menu.Item key={marketTimeToMenuKey(MarketTime.THREE_MONTHS)}>
-			3 Months
-		</Menu.Item>
-		<Menu.Item key={marketTimeToMenuKey(MarketTime.ONE_YEAR)}>
-			1 Year
-		</Menu.Item>
-		<Menu.Item key={marketTimeToMenuKey(MarketTime.FIVE_YEARS)}>
-			5 Years
-		</Menu.Item>
-	</>
-);
 
 const createAuthNavItem = (
 	isAuthorized: boolean,
@@ -70,22 +90,96 @@ const createAuthNavItem = (
 	);
 };
 
-export const useNavbarItems = (): ReactNode => {
+const isOneDayItem = (item: NavbarItem): boolean =>
+	pipe(
+		Try.tryCatch(() => menuKeyToMarketTime(item.key)),
+		Either.map((time) => time === MarketTime.ONE_DAY),
+		Either.getOrElse((): boolean => false)
+	);
+
+const navbarItemToMenuItem = (item: NavbarItem) => {
+	const className = match(item)
+		.when(isOneDayItem, () => 'OneDayItem')
+		.otherwise(() => '');
+	return (
+		<Menu.Item className={className} key={item.key}>
+			{item.name}
+		</Menu.Item>
+	);
+};
+
+type NavbarItemComponents = [PageItems: ReactNode, TimeItems: ReactNode];
+
+const useDesktopItems = (): NavbarItemComponents => [
+	<>{ITEMS.pages.map(navbarItemToMenuItem)}</>,
+	<>{ITEMS.times.map(navbarItemToMenuItem)}</>
+];
+
+const getItemName = (
+	items: ReadonlyArray<NavbarItem>,
+	selected: string
+): string =>
+	pipe(
+		items,
+		RArray.findFirst((item) => item.key === selected),
+		Option.map((item) => item.name),
+		Option.getOrElse(() => '')
+	);
+
+// TODO consider expand icon
+const createMobileItemMenu = (
+	title: string,
+	items: ReadonlyArray<NavbarItem>
+): ReactNode => (
+	<Menu.SubMenu title={`+ ${title}`}>
+		{items.map(navbarItemToMenuItem)}
+	</Menu.SubMenu>
+);
+
+const useMobileItems = (
+	selectedPageKey: string,
+	selectedTimeKey: string
+): NavbarItemComponents => {
+	const pageName = useMemo(
+		() => getItemName(ITEMS.pages, selectedPageKey),
+		[selectedPageKey]
+	);
+	const timeName = useMemo(
+		() => getItemName(ITEMS.times, selectedTimeKey),
+		[selectedTimeKey]
+	);
+	return [
+		createMobileItemMenu(pageName, ITEMS.pages),
+		createMobileItemMenu(timeName, ITEMS.times)
+	];
+};
+
+export const useNavbarItems = (
+	selectedPageKey: string,
+	selectedTimeKey: string
+): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
+	const breakpointName = useBreakpointName();
 
 	const AuthNavItem = createAuthNavItem(
 		isAuthorized,
 		authBtnAction,
 		authBtnTxt
 	);
-	const MainNavItems = createMainNavItems();
+
+	const mobileItems = useMobileItems(selectedPageKey, selectedTimeKey);
+	const desktopItems = useDesktopItems();
+
+	const [PageItems, TimeItems] = match(breakpointName)
+		.with(BreakpointName.XS, () => mobileItems)
+		.otherwise(() => desktopItems);
 
 	return match({ isAuthorized, hasChecked })
 		.with({ isAuthorized: true, hasChecked: true }, () => (
 			<>
-				{MainNavItems}
-				{TimeRangeNavItems}
+				{PageItems}
+				{TimeItems}
 				{AuthNavItem}
 			</>
 		))

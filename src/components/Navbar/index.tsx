@@ -1,20 +1,19 @@
-import { isDesktop } from '../utils/Breakpoints';
-import { match, P } from 'ts-pattern';
-import { DesktopNavbar } from './DesktopNavbar';
-import { MobileNavbar } from './MobileNavbar';
+import './Navbar.scss';
+import { Layout, Menu } from 'antd';
 import { Updater, useImmer } from 'use-immer';
-import { MenuInfo } from 'rc-menu/lib/interface';
-import { FC, useCallback, useContext, useEffect } from 'react';
-import { NavbarProps } from './NavbarProps';
-import { ScreenContext } from '../ScreenContext';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router';
-import * as Regex from '@craigmiller160/ts-functions/es/Regex';
-import { pipe } from 'fp-ts/es6/function';
-import * as Option from 'fp-ts/es6/Option';
+import { useNavbarItems } from './useNavbarItems';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
-import { changeSelectedTime } from '../../store/marketSettings/actions';
+import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router';
+import { useCallback, useEffect } from 'react';
 import { StoreDispatch } from '../../store';
+import { pipe } from 'fp-ts/es6/function';
+import * as Option from 'fp-ts/es6/Option';
+import { match, P } from 'ts-pattern';
+import { changeSelectedTime } from '../../store/marketSettings/actions';
+import * as Regex from '@craigmiller160/ts-functions/es/Regex';
+import { MenuInfo } from 'rc-menu/lib/interface';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -85,14 +84,14 @@ const useSetSelectedFromLocation = (setState: Updater<State>) =>
 		[setState]
 	);
 
-export const Navbar: FC<object> = () => {
+export const Navbar = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { breakpoints } = useContext(ScreenContext);
 	const [state, setState] = useImmer<State>(initState);
-
 	const selectedTimeKey = useSelector(timeMenuKeySelector);
+	const Items = useNavbarItems(state.selectedPageKey, selectedTimeKey);
+	const breakpointName = useBreakpointName();
 
 	const handleMenuClick = useHandleMenuClick(navigate, dispatch);
 	const setSelectedFromLocation = useSetSelectedFromLocation(setState);
@@ -101,14 +100,28 @@ export const Navbar: FC<object> = () => {
 		setSelectedFromLocation(location.pathname);
 	}, [location.pathname, setSelectedFromLocation]);
 
-	const props: NavbarProps = {
-		selectedPageKey: state.selectedPageKey,
-		selectedTimeKey,
-		handleMenuClick
-	};
+	const testId = match(breakpointName)
+		.with(BreakpointName.XS, () => 'mobile-navbar')
+		.otherwise(() => 'desktop-navbar');
 
-	const NavbarComp = match(breakpoints)
-		.when(isDesktop, () => <DesktopNavbar {...props} />)
-		.otherwise(() => <MobileNavbar {...props} />);
-	return <div data-testid="navbar">{NavbarComp}</div>;
+	return (
+		<Layout.Header
+			className={`Navbar ${breakpointName}`}
+			data-testid="navbar"
+		>
+			<Menu
+				onClick={handleMenuClick}
+				className="Menu"
+				theme="dark"
+				mode="horizontal"
+				data-testid={testId}
+				selectedKeys={[state.selectedPageKey, selectedTimeKey]}
+			>
+				<Menu.Item key="Nothing" className="Brand">
+					Market Tracker
+				</Menu.Item>
+				{Items}
+			</Menu>
+		</Layout.Header>
+	);
 };

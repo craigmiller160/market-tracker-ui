@@ -1,11 +1,11 @@
 import { MouseEvent } from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import { match } from 'ts-pattern';
-import { Breakpoints } from '../../utils/Breakpoints';
+import { BreakpointName } from '../../utils/Breakpoints';
 import { MenuInfo } from 'rc-menu/lib/interface';
 
 interface ActionsProps {
-	readonly breakpoints: Breakpoints;
+	readonly breakpointName: BreakpointName;
 	readonly onRenameWatchlist: () => void;
 	readonly onRemoveWatchlist: () => void;
 	readonly renameWatchlistId?: string;
@@ -66,6 +66,8 @@ const MobileWatchlistPanelActions = (props: ActionsProps) => {
 };
 
 export const WatchlistPanelActions = (props: ActionsProps) =>
-	match(props.breakpoints)
-		.with({ xs: true }, () => <MobileWatchlistPanelActions {...props} />)
+	match(props.breakpointName)
+		.with(BreakpointName.XS, () => (
+			<MobileWatchlistPanelActions {...props} />
+		))
 		.otherwise(() => <DesktopWatchlistPanelActions {...props} />);

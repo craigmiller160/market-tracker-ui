@@ -1,11 +1,10 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { SearchValues } from './constants';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { toNameCase } from '../../../utils/stringUtils';
-import { ScreenContext } from '../../ScreenContext';
-import { getBreakpointName } from '../../utils/Breakpoints';
+import { useBreakpointName } from '../../utils/Breakpoints';
 
 type DoSearchFn = (values: SearchValues) => void;
 
@@ -33,8 +32,7 @@ export const SearchForm = (props: Props) => {
 		() => createSearchForSymbol(props.doSearch),
 		[props.doSearch]
 	);
-	const { breakpoints } = useContext(ScreenContext);
-	const breakpointName = getBreakpointName(breakpoints);
+	const breakpointName = useBreakpointName();
 	const rootClassName = `SearchForm ${breakpointName}`;
 	return (
 		<Form

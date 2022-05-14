@@ -1,4 +1,5 @@
+@import "src/styles/page";
+
 .WelcomePage {
-  margin: 4rem auto;
-  text-align: center;
+  @include PageRoot;
 }

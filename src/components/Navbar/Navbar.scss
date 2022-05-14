@@ -1,0 +1,50 @@
+.Navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+
+  &:not(.xs) {
+    padding: 1rem;
+
+    .Menu {
+      .OneDayItem {
+        margin-left: auto;
+      }
+
+      .AuthItem {
+        &.IsAuth {
+          margin-left: 2rem;
+        }
+        &:not(.IsAuth) {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
+  &.xs {
+    padding: 0;
+
+    .ant-menu-submenu {
+      padding: 0 1rem;
+    }
+  }
+
+  .Menu {
+    width: 100%;
+
+    .Brand {
+      cursor: auto;
+      color: white;
+      font-size: 1rem;
+      :hover, &.ant-menu-item:hover {
+        background-color: #001529;
+        color: white;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { Card, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -11,8 +11,6 @@ import {
 	getTodayDisplayDate
 } from '../../../../utils/timeUtils';
 import './InvestmentCard.scss';
-import { ScreenContext } from '../../../ScreenContext';
-import { getBreakpointName } from '../../../utils/Breakpoints';
 import { MarketTime } from '../../../../types/MarketTime';
 import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
@@ -26,6 +24,7 @@ import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 import { Spinner } from '../../../UI/Spinner';
+import { useBreakpointName } from '../../../utils/Breakpoints';
 
 interface Props {
 	readonly info: InvestmentInfo;
@@ -208,8 +207,7 @@ const getPriceAndBody = (
 
 export const InvestmentCard = (props: Props) => {
 	const { info, getActions = () => [] } = props;
-	const { breakpoints } = useContext(ScreenContext);
-	const breakpointName = getBreakpointName(breakpoints);
+	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
 	const status = useSelector(marketStatusSelector);
