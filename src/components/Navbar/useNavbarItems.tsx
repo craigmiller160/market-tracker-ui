@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
+import { identity } from 'fp-ts/es6/function';
+import { Menu } from 'antd';
 
 interface NavbarItem {
 	readonly key: string;
@@ -59,8 +61,35 @@ const ITEMS: AllItems = {
 	]
 };
 
+const createAuthNavItem = (
+	isAuthorized: boolean,
+	authBtnAction: () => void,
+	authBtnTxt: string
+) => {
+	const className = ['AuthItem', isAuthorized ? 'IsAuth' : null]
+		.filter(identity)
+		.join(' ');
+	return (
+		<Menu.Item
+			className={className}
+			key="auth.action"
+			onClick={authBtnAction}
+		>
+			{authBtnTxt}
+		</Menu.Item>
+	);
+};
+
+// TODO need to know which items are selected
 export const useNavbarItems = (): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
+
+	const AuthNavItem = createAuthNavItem(
+		isAuthorized,
+		authBtnAction,
+		authBtnTxt
+	);
+
 	return <div />;
 };
