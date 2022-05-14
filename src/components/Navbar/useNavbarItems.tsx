@@ -126,11 +126,14 @@ const getItemName = (
 		Option.getOrElse(() => '')
 	);
 
+// TODO consider expand icon
 const createMobileItemMenu = (
 	title: string,
 	items: ReadonlyArray<NavbarItem>
 ): ReactNode => (
-	<Menu.SubMenu title={title}>{items.map(navbarItemToMenuItem)}</Menu.SubMenu>
+	<Menu.SubMenu title={`+ ${title}`}>
+		{items.map(navbarItemToMenuItem)}
+	</Menu.SubMenu>
 );
 
 const useMobileItems = (
