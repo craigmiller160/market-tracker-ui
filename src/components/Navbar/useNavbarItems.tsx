@@ -1,19 +1,63 @@
 import { ReactNode } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
-
-enum NavbarItemType {
-	PAGE,
-	NON_PROD_PAGE,
-	TIME
-}
+import { MarketTime, marketTimeToMenuKey } from '../../types/MarketTime';
 
 interface NavbarItem {
 	readonly key: string;
 	readonly name: string;
-	readonly type: NavbarItemType;
-	readonly onClick?: () => void;
-	readonly className?: string;
 }
+
+interface AllItems {
+	readonly pages: ReadonlyArray<NavbarItem>;
+	readonly times: ReadonlyArray<NavbarItem>;
+}
+
+const ITEMS: AllItems = {
+	pages: [
+		{
+			key: 'page.markets',
+			name: 'Markets'
+		},
+		{
+			key: 'page.search',
+			name: 'Search'
+		},
+		{
+			key: 'page.watchlists',
+			name: 'Watchlists'
+		},
+		{
+			key: 'page.recognition',
+			name: 'Recognition'
+		}
+	],
+	times: [
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_DAY),
+			name: 'Today'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_WEEK),
+			name: '1 Week'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_MONTH),
+			name: '1 Month'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.THREE_MONTHS),
+			name: '3 Months'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.ONE_YEAR),
+			name: '1 Year'
+		},
+		{
+			key: marketTimeToMenuKey(MarketTime.FIVE_YEARS),
+			name: '5 Years'
+		}
+	]
+};
 
 export const useNavbarItems = (): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
