@@ -9,7 +9,7 @@ import { renderApp } from '../../../testutils/RenderApp';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
-import * as Either from 'fp-ts/es6/Either';
+import * as TaskEither from 'fp-ts/es6/TaskEither';
 import '@testing-library/jest-dom/extend-expect';
 import { match, P } from 'ts-pattern';
 import {
@@ -33,6 +33,8 @@ import {
 	BASE_PREV_CLOSE_PRICE
 } from '../../../testutils/testDataUtils';
 import { ApiServer, newApiServer } from '../../../testutils/server';
+import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
+import { TaskTry } from '@craigmiller160/ts-functions';
 
 enum CurrentPriceStrategy {
 	QUOTE,
@@ -197,10 +199,10 @@ const validateInvestmentCard = (
 		`market-card-${info.symbol}`
 	);
 	pipe(
-		Try.tryCatch(() => {
+		TaskTry.tryCatch(async () => {
 			expect(maybeCard).not.toBeUndefined();
 			const card = maybeCard!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-			validateCardTitle(card, info);
+			await waitFor(() => validateCardTitle(card, info));
 			validateCardSinceDate(card, config.time);
 			validateMarketStatus(
 				card,
@@ -209,15 +211,33 @@ const validateInvestmentCard = (
 			);
 			validatePriceLine(card, info.type, config, modifier);
 		}),
-		Either.mapLeft(handleValidationError(info.symbol, maybeCard)),
-		Try.getOrThrow
+		TaskEither.mapLeft(handleValidationError(info.symbol, maybeCard)),
+		TaskTry.getOrThrow
 	);
 };
 
 const testMarketsPage = (config: MarketTestConfig) => {
 	const marketsPage = screen.getByTestId('markets-page');
+	userEvent.click(screen.getByText('US Markets'));
+
 	investmentInfo.forEach((info, index) => {
-		validateInvestmentCard(marketsPage, info, config, index);
+		if (info.marketType === MarketInvestmentType.USA_ETF) {
+			validateInvestmentCard(marketsPage, info, config, index);
+		}
+	});
+
+	userEvent.click(screen.getByText('International Markets'));
+	investmentInfo.forEach((info, index) => {
+		if (info.marketType === MarketInvestmentType.INTERNATIONAL_ETF) {
+			validateInvestmentCard(marketsPage, info, config, index);
+		}
+	});
+
+	userEvent.click(screen.getByText('Cryptocurrency'));
+	investmentInfo.forEach((info, index) => {
+		if (info.marketType === MarketInvestmentType.CRYPTO) {
+			validateInvestmentCard(marketsPage, info, config, index);
+		}
 	});
 };
 

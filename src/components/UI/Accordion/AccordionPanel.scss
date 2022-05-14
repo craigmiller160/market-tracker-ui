@@ -1,0 +1,15 @@
+.AccordionPanel {
+  &.ant-collapse-item {
+    >.ant-collapse-header {
+      align-items: center;
+      h4 {
+        margin: 0;
+        overflow: auto;
+      }
+    }
+  }
+
+  .ant-collapse-content-box {
+    padding: 0;
+  }
+}

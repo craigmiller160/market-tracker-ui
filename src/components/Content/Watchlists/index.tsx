@@ -1,11 +1,17 @@
-import './Watchlists.scss';
-import { Button, Collapse, Typography } from 'antd';
-import { ReactNode, useContext, useEffect, useMemo } from 'react';
-import { ScreenContext } from '../../ScreenContext';
-import { match } from 'ts-pattern';
-import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
-import { DbWatchlist } from '../../../types/Watchlist';
 import { Updater, useImmer } from 'use-immer';
+import { DbWatchlist } from '../../../types/Watchlist';
+import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
+import { match } from 'ts-pattern';
+import './Watchlists.scss';
+import { useContext, useEffect, useMemo } from 'react';
+import { ScreenContext } from '../../ScreenContext';
+import { Spinner } from '../../UI/Spinner';
+import { Button, Typography } from 'antd';
+import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
+import { RefreshProvider } from '../common/refresh/RefreshProvider';
+import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
+import { InputModal } from '../../UI/InputModal';
+import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import {
 	createWatchlist,
 	getAllWatchlists,
@@ -16,12 +22,10 @@ import {
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { castDraft } from 'immer';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import { Spinner } from '../../UI/Spinner';
-import { RefreshProvider } from '../common/refresh/RefreshProvider';
-import { WatchlistPanel, WatchlistPanelConfig } from './WatchlistPanel';
-import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
-import { InputModal } from '../../UI/InputModal';
+import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
+import { InvestmentType } from '../../../types/data/InvestmentType';
+import { WatchlistPanelTitle } from './WatchlistPanelTitle';
+import { WatchlistPanelActions } from './WatchlistPanelActions';
 
 interface State {
 	readonly loading: boolean;
@@ -38,23 +42,6 @@ interface State {
 	};
 }
 
-const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
-	match(breakpoints)
-		.with({ xs: true }, () => <br />)
-		.otherwise(() => ' ');
-
-const createPanels = (
-	watchlists: ReadonlyArray<DbWatchlist>,
-	panelConfig: WatchlistPanelConfig
-): ReactNode =>
-	watchlists.map((watchlist) => (
-		<WatchlistPanel
-			key={watchlist._id}
-			{...panelConfig}
-			watchlist={watchlist}
-		/>
-	));
-
 const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 	pipe(
 		getAllWatchlists(),
@@ -65,6 +52,52 @@ const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
 			})
 		)
 	);
+
+const createHandleAddWatchlistResult =
+	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
+	(value?: string) => {
+		setState((draft) => {
+			draft.inputModal.show = false;
+		});
+		if (value) {
+			pipe(
+				createWatchlist(value),
+				TaskEither.chain(() => getWatchlists)
+			)();
+		}
+	};
+
+const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
+	match(breakpoints)
+		.with({ xs: true }, () => <br />)
+		.otherwise(() => ' ');
+
+const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
+	setState((draft) => {
+		draft.inputModal.show = true;
+	});
+
+const createHandleConfirmModalAction =
+	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
+	(result: ConfirmModalResult, watchlistName: string, symbol?: string) => {
+		if (ConfirmModalResult.OK === result) {
+			setState((draft) => {
+				draft.confirmModal.show = false;
+				draft.loading = true;
+			});
+			const action = symbol
+				? removeStockFromWatchlist(watchlistName, symbol)
+				: removeWatchlist(watchlistName);
+			pipe(
+				action,
+				TaskEither.chain(() => getWatchlists)
+			)();
+		} else {
+			setState((draft) => {
+				draft.confirmModal.show = false;
+			});
+		}
+	};
 
 const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
 	setState((draft) => {
@@ -102,28 +135,6 @@ const createShowConfirmRemoveWatchlist =
 			}
 		});
 
-const createHandleConfirmModalAction =
-	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(result: ConfirmModalResult, watchlistName: string, symbol?: string) => {
-		if (ConfirmModalResult.OK === result) {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-				draft.loading = true;
-			});
-			const action = symbol
-				? removeStockFromWatchlist(watchlistName, symbol)
-				: removeWatchlist(watchlistName);
-			pipe(
-				action,
-				TaskEither.chain(() => getWatchlists)
-			)();
-		} else {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-			});
-		}
-	};
-
 const createShowConfirmRemoveStock =
 	(setState: Updater<State>) => (watchlistId: string, symbol: string) =>
 		setState((draft) => {
@@ -141,24 +152,64 @@ const createShowConfirmRemoveStock =
 			};
 		});
 
-const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
-	setState((draft) => {
-		draft.inputModal.show = true;
-	});
+interface WatchlistPanelConfig {
+	readonly breakpoints: Breakpoints;
+	readonly renameWatchlistId?: string;
+	readonly onRenameWatchlist: (id?: string) => void;
+	readonly onRemoveWatchlist: (id: string) => void;
+	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
+	readonly onRemoveStock: (id: string, symbol: string) => void;
+}
 
-const createHandleAddWatchlistResult =
-	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(value?: string) => {
-		setState((draft) => {
-			draft.inputModal.show = false;
-		});
-		if (value) {
-			pipe(
-				createWatchlist(value),
-				TaskEither.chain(() => getWatchlists)
-			)();
-		}
-	};
+const createPanels = (
+	watchlists: ReadonlyArray<DbWatchlist>,
+	config: WatchlistPanelConfig
+): ReadonlyArray<AccordionPanelConfig> =>
+	watchlists.map(
+		(watchlist): AccordionPanelConfig => ({
+			title: (
+				<WatchlistPanelTitle
+					breakpoints={config.breakpoints}
+					watchlist={watchlist}
+					renameWatchlistId={config.renameWatchlistId}
+					onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
+					onClearRenamedWatchlistId={() =>
+						config.onRenameWatchlist(undefined)
+					}
+				/>
+			),
+			actions: (
+				<WatchlistPanelActions
+					breakpoints={config.breakpoints}
+					onRenameWatchlist={() =>
+						config.onRenameWatchlist(watchlist._id)
+					}
+					onRemoveWatchlist={() =>
+						config.onRemoveWatchlist(watchlist._id)
+					}
+					renameWatchlistId={config.renameWatchlistId}
+				/>
+			),
+			key: watchlist._id,
+			investments: watchlist.stocks.map(
+				(stock): AccordionInvestment => ({
+					symbol: stock.symbol,
+					type: InvestmentType.STOCK,
+					name: '',
+					getActions: (symbol: string) => [
+						<Button
+							key="remove"
+							onClick={() =>
+								config.onRemoveStock(watchlist._id, symbol)
+							}
+						>
+							Remove
+						</Button>
+					]
+				})
+			)
+		})
+	);
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
@@ -183,6 +234,23 @@ export const Watchlists = () => {
 		getWatchlists();
 	}, [getWatchlists]);
 
+	const showAddWatchlistModal = useMemo(
+		() => createShowAddWatchlistModal(setState),
+		[setState]
+	);
+	const handleConfirmModalAction = useMemo(
+		() => createHandleConfirmModalAction(setState, getWatchlists),
+		[setState, getWatchlists]
+	);
+	const handleAddWatchlistResult = useMemo(
+		() => createHandleAddWatchlistResult(setState, getWatchlists),
+		[setState, getWatchlists]
+	);
+
+	const { breakpoints } = useContext(ScreenContext);
+	const titleSpace = getTitleSpace(breakpoints);
+	const breakpointName = getBreakpointName(breakpoints);
+
 	const onRenameWatchlist = useMemo(
 		() => createOnRenameWatchlist(setState),
 		[setState]
@@ -195,26 +263,12 @@ export const Watchlists = () => {
 		() => createShowConfirmRemoveWatchlist(setState),
 		[setState]
 	);
-	const handleConfirmModalAction = useMemo(
-		() => createHandleConfirmModalAction(setState, getWatchlists),
-		[setState, getWatchlists]
-	);
+
 	const showConfirmRemoveStock = useMemo(
 		() => createShowConfirmRemoveStock(setState),
 		[setState]
 	);
-	const showAddWatchlistModal = useMemo(
-		() => createShowAddWatchlistModal(setState),
-		[setState]
-	);
-	const handleAddWatchlistResult = useMemo(
-		() => createHandleAddWatchlistResult(setState, getWatchlists),
-		[setState, getWatchlists]
-	);
 
-	const { breakpoints } = useContext(ScreenContext);
-	const titleSpace = getTitleSpace(breakpoints);
-	const breakpointName = getBreakpointName(breakpoints);
 	const panelConfig: WatchlistPanelConfig = {
 		breakpoints,
 		renameWatchlistId: state.renameWatchlistId,
@@ -223,15 +277,11 @@ export const Watchlists = () => {
 		onRemoveWatchlist: showConfirmRemoveWatchlist,
 		onRemoveStock: showConfirmRemoveStock
 	};
-	const panels = createPanels(state.watchlists, panelConfig);
 
+	const panels = createPanels(state.watchlists, panelConfig);
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
-		.otherwise(() => (
-			<Collapse className="Accordion" accordion destroyInactivePanel>
-				{panels}
-			</Collapse>
-		));
+		.otherwise(() => <Accordion panels={panels} />);
 
 	return (
 		<RefreshProvider>
