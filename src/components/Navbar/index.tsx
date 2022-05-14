@@ -4,7 +4,7 @@ import { Updater, useImmer } from 'use-immer';
 import { useNavbarItems } from './useNavbarItems';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
-import { useBreakpointName } from '../utils/Breakpoints';
+import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import { useCallback, useEffect } from 'react';
 import { StoreDispatch } from '../../store';
@@ -100,13 +100,21 @@ export const Navbar = () => {
 		setSelectedFromLocation(location.pathname);
 	}, [location.pathname, setSelectedFromLocation]);
 
+	const testId = match(breakpointName)
+		.with(BreakpointName.XS, () => 'mobile-navbar')
+		.otherwise(() => 'desktop-navbar');
+
 	return (
-		<Layout.Header className={`Navbar ${breakpointName}`}>
+		<Layout.Header
+			className={`Navbar ${breakpointName}`}
+			data-testid="navbar"
+		>
 			<Menu
 				onClick={handleMenuClick}
 				className="Menu"
 				theme="dark"
 				mode="horizontal"
+				data-testid={testId}
 				selectedKeys={[state.selectedPageKey, selectedTimeKey]}
 			>
 				<Menu.Item key="Nothing" className="Brand">
