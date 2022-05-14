@@ -20,7 +20,7 @@ export const Navbar = () => {
 	const Items = useNavbarItems(state.selectedPageKey, selectedTimeKey);
 	const breakpointName = useBreakpointName();
 	return (
-		<Layout.Header className={ `Navbar ${breakpointName}` }>
+		<Layout.Header className={`Navbar ${breakpointName}`}>
 			<Menu
 				className="Menu"
 				theme="dark"
