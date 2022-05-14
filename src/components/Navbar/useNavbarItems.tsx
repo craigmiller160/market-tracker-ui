@@ -106,7 +106,7 @@ const navbarItemToMenuItem = (item: NavbarItem) => {
 };
 
 // TODO need to know which items are selected
-export const useNavbarItems = (): ReactNode => {
+export const useNavbarItems = (selectedPageKey: string, selectedTimeKey: string): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
 
