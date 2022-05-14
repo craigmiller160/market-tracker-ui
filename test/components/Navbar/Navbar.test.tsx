@@ -197,9 +197,6 @@ describe('Navbar', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
 		);
-		expect(
-			screen.getByText('Portfolios').closest('li')?.className
-		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 		expect(screen.getByText('Watchlists').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
