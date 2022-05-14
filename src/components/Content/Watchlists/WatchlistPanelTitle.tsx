@@ -1,13 +1,12 @@
-import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { DbWatchlist } from '../../../types/Watchlist';
 import { Button, Form, FormInstance, Input, Typography } from 'antd';
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import './WatchlistPanelTitle.scss';
+import { useBreakpointName } from '../../utils/Breakpoints';
 
 interface Props {
-	readonly breakpoints: Breakpoints;
 	readonly watchlist: DbWatchlist;
 	readonly renameWatchlistId?: string;
 	readonly onSaveRenamedWatchlist: (id: string, newName: string) => void;
@@ -39,6 +38,7 @@ export const WatchlistPanelTitle = (props: Props) => {
 	const [form] = Form.useForm<TitleForm>();
 
 	const isEditing = watchlist._id === renameWatchlistId;
+	const breakpointName = useBreakpointName();
 
 	if (!isEditing) {
 		return (
@@ -59,7 +59,6 @@ export const WatchlistPanelTitle = (props: Props) => {
 	const onCancelRenamedTitle = createOnCancelRenamedTitle(
 		props.onClearRenamedWatchlistId
 	);
-	const breakpointName = getBreakpointName(props.breakpoints);
 
 	return (
 		<Form

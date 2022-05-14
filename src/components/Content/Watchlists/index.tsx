@@ -1,10 +1,8 @@
 import { Updater, useImmer } from 'use-immer';
 import { DbWatchlist } from '../../../types/Watchlist';
-import { Breakpoints, getBreakpointName } from '../../utils/Breakpoints';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
-import { useContext, useEffect, useMemo } from 'react';
-import { ScreenContext } from '../../ScreenContext';
+import { useEffect, useMemo } from 'react';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Typography } from 'antd';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
@@ -26,6 +24,7 @@ import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 import { WatchlistPanelActions } from './WatchlistPanelActions';
+import { BreakpointName, useBreakpointName } from '../../utils/Breakpoints';
 
 interface State {
 	readonly loading: boolean;
@@ -67,9 +66,9 @@ const createHandleAddWatchlistResult =
 		}
 	};
 
-const getTitleSpace = (breakpoints: Breakpoints): string | JSX.Element =>
-	match(breakpoints)
-		.with({ xs: true }, () => <br />)
+const getTitleSpace = (breakpointName: BreakpointName): string | JSX.Element =>
+	match(breakpointName)
+		.with(BreakpointName.XS, () => <br />)
 		.otherwise(() => ' ');
 
 const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
@@ -153,7 +152,7 @@ const createShowConfirmRemoveStock =
 		});
 
 interface WatchlistPanelConfig {
-	readonly breakpoints: Breakpoints;
+	readonly breakpointName: BreakpointName;
 	readonly renameWatchlistId?: string;
 	readonly onRenameWatchlist: (id?: string) => void;
 	readonly onRemoveWatchlist: (id: string) => void;
@@ -169,7 +168,6 @@ const createPanels = (
 		(watchlist): AccordionPanelConfig => ({
 			title: (
 				<WatchlistPanelTitle
-					breakpoints={config.breakpoints}
 					watchlist={watchlist}
 					renameWatchlistId={config.renameWatchlistId}
 					onSaveRenamedWatchlist={config.onSaveRenamedWatchlist}
@@ -180,7 +178,7 @@ const createPanels = (
 			),
 			actions: (
 				<WatchlistPanelActions
-					breakpoints={config.breakpoints}
+					breakpointName={config.breakpointName}
 					onRenameWatchlist={() =>
 						config.onRenameWatchlist(watchlist._id)
 					}
@@ -247,9 +245,8 @@ export const Watchlists = () => {
 		[setState, getWatchlists]
 	);
 
-	const { breakpoints } = useContext(ScreenContext);
-	const titleSpace = getTitleSpace(breakpoints);
-	const breakpointName = getBreakpointName(breakpoints);
+	const breakpointName = useBreakpointName();
+	const titleSpace = getTitleSpace(breakpointName);
 
 	const onRenameWatchlist = useMemo(
 		() => createOnRenameWatchlist(setState),
@@ -270,7 +267,7 @@ export const Watchlists = () => {
 	);
 
 	const panelConfig: WatchlistPanelConfig = {
-		breakpoints,
+		breakpointName,
 		renameWatchlistId: state.renameWatchlistId,
 		onRenameWatchlist,
 		onSaveRenamedWatchlist,
