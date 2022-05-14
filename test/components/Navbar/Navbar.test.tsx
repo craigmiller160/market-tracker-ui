@@ -124,20 +124,20 @@ describe('Navbar', () => {
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
-	it('starts on portfolios page due to route, then navigates to search page', async () => {
+	it('starts on recognition page due to route, then navigates to search page', async () => {
 		await renderApp({
-			initialPath: '/market-tracker/portfolios'
+			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
 			expect(screen.queryByText('Markets')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
+			'http://localhost/market-tracker/recognition'
 		);
-		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
+		expect(
+			screen.getByText('Recognition').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
 		userEvent.click(screen.getByText('Search'));
 
 		expect(window.location.href).toEqual(
@@ -146,31 +146,6 @@ describe('Navbar', () => {
 		const navbar = screen.getByTestId('desktop-navbar');
 		expect(
 			within(navbar).getByText('Search').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-	});
-
-	it('starts on portfolios page due to route, then navigates to recognition page', async () => {
-		await renderApp({
-			initialPath: '/market-tracker/portfolios'
-		});
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
-		);
-		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
-
-		userEvent.click(screen.getByText('Recognition'));
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
-		);
-		expect(
-			screen.getByText('Recognition').closest('li')?.className
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
 	});
 
@@ -199,20 +174,20 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('starts on portfolios page due to route, then navigates to watchlists page', async () => {
+	it('starts on recognition page due to route, then navigates to watchlists page', async () => {
 		await renderApp({
-			initialPath: '/market-tracker/portfolios'
+			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
 			expect(screen.queryByText('Markets')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
+			'http://localhost/market-tracker/recognition'
 		);
-		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
+		expect(
+			screen.getByText('Recognition').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
 		expect(
 			screen.getByText('Watchlists').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
@@ -230,20 +205,20 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('starts on portfolios page due to route, then navigates to markets page', async () => {
+	it('starts on recognition page due to route, then navigates to markets page', async () => {
 		await renderApp({
-			initialPath: '/market-tracker/portfolios'
+			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
 			expect(screen.queryByText('Markets')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
+			'http://localhost/market-tracker/recognition'
 		);
-		expect(screen.getByText('Portfolios').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
+		expect(
+			screen.getByText('Recognition').closest('li')?.className
+		).toEqual(expect.stringContaining(SELECTED_CLASS));
 		expect(
 			screen.getByText('Markets').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
