@@ -130,9 +130,7 @@ const createMobileItemMenu = (
 	title: string,
 	items: ReadonlyArray<NavbarItem>
 ): ReactNode => (
-	<Menu.ItemGroup title={title}>
-		{items.map(navbarItemToMenuItem)}
-	</Menu.ItemGroup>
+	<Menu.SubMenu title={title}>{items.map(navbarItemToMenuItem)}</Menu.SubMenu>
 );
 
 const useMobileItems = (
@@ -167,11 +165,12 @@ export const useNavbarItems = (
 		authBtnTxt
 	);
 
+	const mobileItems = useMobileItems(selectedPageKey, selectedTimeKey);
+	const desktopItems = useDesktopItems();
+
 	const [PageItems, TimeItems] = match(breakpointName)
-		.with(BreakpointName.XS, () =>
-			useMobileItems(selectedPageKey, selectedTimeKey)
-		)
-		.otherwise(() => useDesktopItems());
+		.with(BreakpointName.XS, () => mobileItems)
+		.otherwise(() => desktopItems);
 
 	return match({ isAuthorized, hasChecked })
 		.with({ isAuthorized: true, hasChecked: true }, () => (
