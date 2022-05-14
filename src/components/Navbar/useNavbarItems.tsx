@@ -108,14 +108,11 @@ const navbarItemToMenuItem = (item: NavbarItem) => {
 	);
 };
 
-type NavbarItemComponents = [
-	PageItems: ReadonlyArray<ReactNode>,
-	TimeItems: ReadonlyArray<ReactNode>
-];
+type NavbarItemComponents = [PageItems: ReactNode, TimeItems: ReactNode];
 
 const useDesktopItems = (): NavbarItemComponents => [
-	ITEMS.pages.map(navbarItemToMenuItem),
-	ITEMS.times.map(navbarItemToMenuItem)
+	<>{ITEMS.pages.map(navbarItemToMenuItem)}</>,
+	<>{ITEMS.times.map(navbarItemToMenuItem)}</>
 ];
 
 const getItemName = (
@@ -141,8 +138,6 @@ const useMobileItems = (
 		() => getItemName(ITEMS.times, selectedTimeKey),
 		[selectedTimeKey]
 	);
-
-
 };
 
 export const useNavbarItems = (
@@ -160,7 +155,9 @@ export const useNavbarItems = (
 	);
 
 	const [PageItems, TimeItems] = match(breakpointName)
-		.with(BreakpointName.XS, () => [])
+		.with(BreakpointName.XS, () =>
+			useMobileItems(selectedPageKey, selectedTimeKey)
+		)
 		.otherwise(() => useDesktopItems());
 
 	return match({ isAuthorized, hasChecked })
