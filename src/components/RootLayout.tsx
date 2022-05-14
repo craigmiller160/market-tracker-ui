@@ -5,7 +5,7 @@ import { ExperimentalNavbar } from './Experimental';
 
 export const RootLayout = () => (
 	<Layout className="RootLayout">
-		<Content />
 		<ExperimentalNavbar />
+		<Content />
 	</Layout>
 );

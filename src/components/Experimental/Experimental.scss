@@ -1,20 +1,9 @@
 .Experimental {
-  background-color: #001529;
   padding: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
-  .Brand {
-    float: left;
-    margin-right: 1rem;
-    flex: 0.4;
-    h3 {
-      color: white;
-      margin: 0;
-      padding: 0;
-    }
-  }
   .Menu {
-    flex: 0.6;
+    width: 100%;
   }
 }
