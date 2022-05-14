@@ -10,6 +10,7 @@ import { Menu } from 'antd';
 import { match } from 'ts-pattern';
 import { Try } from '@craigmiller160/ts-functions/es';
 import * as Either from 'fp-ts/es6/Either';
+import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 
 interface NavbarItem {
 	readonly key: string;
@@ -105,12 +106,23 @@ const navbarItemToMenuItem = (item: NavbarItem) => {
 	);
 };
 
+type NavbarItemComponents = [
+	PageItems: ReadonlyArray<ReactNode>,
+	TimeItems: ReadonlyArray<ReactNode>
+];
+
+const createDesktopItems = (): NavbarItemComponents => [
+	ITEMS.pages.map(navbarItemToMenuItem),
+	ITEMS.times.map(navbarItemToMenuItem)
+];
+
 export const useNavbarItems = (
 	selectedPageKey: string,
 	selectedTimeKey: string
 ): ReactNode => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
+	const breakpointName = useBreakpointName();
 
 	const AuthNavItem = createAuthNavItem(
 		isAuthorized,
@@ -118,8 +130,9 @@ export const useNavbarItems = (
 		authBtnTxt
 	);
 
-	const PageItems = ITEMS.pages.map(navbarItemToMenuItem);
-	const TimeItems = ITEMS.times.map(navbarItemToMenuItem);
+	const [PageItems, TimeItems] = match(breakpointName)
+		.with(BreakpointName.XS, () => [])
+		.otherwise(() => createDesktopItems());
 
 	return match({ isAuthorized, hasChecked })
 		.with({ isAuthorized: true, hasChecked: true }, () => (
