@@ -228,9 +228,6 @@ describe('Navbar', () => {
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
 		);
-		expect(
-			screen.getByText('Portfolios').closest('li')?.className
-		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 		expect(screen.getByText('Markets').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
