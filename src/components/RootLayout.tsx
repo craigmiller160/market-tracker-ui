@@ -1,11 +1,11 @@
 import { Content } from './Content';
 import { Layout } from 'antd';
 import './RootLayout.scss';
-import { ExperimentalNavbar } from './Experimental';
+import { Navbar } from './Navbar';
 
 export const RootLayout = () => (
 	<Layout className="RootLayout">
-		<ExperimentalNavbar />
+		<Navbar />
 		<Content />
 	</Layout>
 );
