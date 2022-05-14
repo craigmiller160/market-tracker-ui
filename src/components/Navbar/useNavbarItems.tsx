@@ -126,6 +126,15 @@ const getItemName = (
 		Option.getOrElse(() => '')
 	);
 
+const createMobileItemMenu = (
+	title: string,
+	items: ReadonlyArray<NavbarItem>
+): ReactNode => (
+	<Menu.ItemGroup title={title}>
+		{items.map(navbarItemToMenuItem)}
+	</Menu.ItemGroup>
+);
+
 const useMobileItems = (
 	selectedPageKey: string,
 	selectedTimeKey: string
@@ -138,6 +147,10 @@ const useMobileItems = (
 		() => getItemName(ITEMS.times, selectedTimeKey),
 		[selectedTimeKey]
 	);
+	return [
+		createMobileItemMenu(pageName, ITEMS.pages),
+		createMobileItemMenu(timeName, ITEMS.times)
+	];
 };
 
 export const useNavbarItems = (
