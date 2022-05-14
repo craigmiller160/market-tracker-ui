@@ -8,6 +8,23 @@
   z-index: 1;
   width: 100%;
 
+  :not(&.xs) {
+    .Menu {
+      .OneDayItem {
+        margin-left: auto;
+      }
+
+      .AuthItem {
+        &.IsAuth {
+          margin-left: 2rem;
+        }
+        &:not(.IsAuth) {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
   .Menu {
     width: 100%;
 
@@ -18,20 +35,6 @@
       :hover, &.ant-menu-item:hover {
         background-color: #001529;
         color: white;
-      }
-    }
-
-    // TODO below here is affected by screen size
-    .OneDayItem {
-      margin-left: auto;
-    }
-
-    .AuthItem {
-      &.IsAuth {
-        margin-left: 2rem;
-      }
-      &:not(.IsAuth) {
-        margin-left: auto;
       }
     }
   }

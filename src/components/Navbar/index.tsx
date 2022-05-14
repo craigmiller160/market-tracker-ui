@@ -4,6 +4,7 @@ import { useImmer } from 'use-immer';
 import { useNavbarItems } from './useNavbarItems';
 import { useSelector } from 'react-redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
+import { useBreakpointName } from '../utils/Breakpoints';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -17,8 +18,9 @@ export const Navbar = () => {
 	const [state, setState] = useImmer<State>(initState);
 	const selectedTimeKey = useSelector(timeMenuKeySelector);
 	const Items = useNavbarItems(state.selectedPageKey, selectedTimeKey);
+	const breakpointName = useBreakpointName();
 	return (
-		<Layout.Header className="Navbar">
+		<Layout.Header className={ `Navbar ${breakpointName}` }>
 			<Menu
 				className="Menu"
 				theme="dark"
