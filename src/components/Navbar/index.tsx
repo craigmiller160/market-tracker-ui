@@ -1,5 +1,6 @@
 import './Navbar.scss';
 import { Layout, Menu } from 'antd';
+import { useImmer } from 'use-immer';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -10,6 +11,7 @@ const initState: State = {
 };
 
 export const Navbar = () => {
+	const [state, setState] = useImmer<State>(initState);
 	return (
 		<Layout.Header className="Navbar">
 			<Menu className="Menu" theme="dark" mode="horizontal">
