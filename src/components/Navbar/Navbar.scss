@@ -28,6 +28,10 @@
 
   &.xs {
     padding: 0;
+
+    .ant-menu-submenu {
+      padding: 0 1rem;
+    }
   }
 
   .Menu {
