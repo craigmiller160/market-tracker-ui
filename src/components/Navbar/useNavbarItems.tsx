@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import {
 	MarketTime,
@@ -11,6 +11,8 @@ import { match } from 'ts-pattern';
 import { Try } from '@craigmiller160/ts-functions/es';
 import * as Either from 'fp-ts/es6/Either';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
+import * as Option from 'fp-ts/es6/Option';
+import * as RArray from 'fp-ts/es6/ReadonlyArray';
 
 interface NavbarItem {
 	readonly key: string;
@@ -111,10 +113,37 @@ type NavbarItemComponents = [
 	TimeItems: ReadonlyArray<ReactNode>
 ];
 
-const createDesktopItems = (): NavbarItemComponents => [
+const useDesktopItems = (): NavbarItemComponents => [
 	ITEMS.pages.map(navbarItemToMenuItem),
 	ITEMS.times.map(navbarItemToMenuItem)
 ];
+
+const getItemName = (
+	items: ReadonlyArray<NavbarItem>,
+	selected: string
+): string =>
+	pipe(
+		items,
+		RArray.findFirst((item) => item.key === selected),
+		Option.map((item) => item.name),
+		Option.getOrElse(() => '')
+	);
+
+const useMobileItems = (
+	selectedPageKey: string,
+	selectedTimeKey: string
+): NavbarItemComponents => {
+	const pageName = useMemo(
+		() => getItemName(ITEMS.pages, selectedPageKey),
+		[selectedPageKey]
+	);
+	const timeName = useMemo(
+		() => getItemName(ITEMS.times, selectedTimeKey),
+		[selectedTimeKey]
+	);
+
+
+};
 
 export const useNavbarItems = (
 	selectedPageKey: string,
@@ -132,7 +161,7 @@ export const useNavbarItems = (
 
 	const [PageItems, TimeItems] = match(breakpointName)
 		.with(BreakpointName.XS, () => [])
-		.otherwise(() => createDesktopItems());
+		.otherwise(() => useDesktopItems());
 
 	return match({ isAuthorized, hasChecked })
 		.with({ isAuthorized: true, hasChecked: true }, () => (
