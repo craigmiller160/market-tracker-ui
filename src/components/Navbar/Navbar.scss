@@ -22,6 +22,10 @@
 
     .ant-menu-submenu {
       padding: 0 1rem;
+
+      &:not(.ant-menu-submenu-active) {
+        color: hsla(0,0%,100%,.65);
+      }
     }
   }
 
