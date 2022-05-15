@@ -105,12 +105,12 @@ export const Navbar = () => {
 		.otherwise(() => 'desktop-navbar');
 
 	const itemsPlusBrand: MenuProps['items'] = [
-		...(items ?? []),
 		{
 			key: 'nothing',
 			className: 'Brand',
-			title: 'Market Tracker'
-		}
+			label: 'Market Tracker'
+		},
+		...(items ?? [])
 	];
 
 	return (
