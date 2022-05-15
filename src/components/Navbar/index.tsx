@@ -43,6 +43,9 @@ const useHandleMenuClick = (
 ) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
+			if (menuItemInfo.key === 'nothing') {
+				return;
+			}
 			const keyParts = pipe(
 				captureMenuKeyParts(menuItemInfo.key),
 				Option.getOrElse(() => ({
@@ -53,7 +56,7 @@ const useHandleMenuClick = (
 
 			match(keyParts)
 				.with({ prefix: 'auth' }, () => {
-					// Do nothing for now
+					// Do nothing
 				})
 				.with({ prefix: 'page', action: P.select() }, (page) => {
 					navigate(`/market-tracker/${page}`);
