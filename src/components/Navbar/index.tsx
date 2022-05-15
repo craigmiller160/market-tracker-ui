@@ -1,5 +1,5 @@
 import './Navbar.scss';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, MenuProps } from 'antd';
 import { Updater, useImmer } from 'use-immer';
 import { useNavbarItems } from './useNavbarItems';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +43,9 @@ const useHandleMenuClick = (
 ) =>
 	useCallback(
 		(menuItemInfo: MenuInfo) => {
+			if (menuItemInfo.key === 'nothing') {
+				return;
+			}
 			const keyParts = pipe(
 				captureMenuKeyParts(menuItemInfo.key),
 				Option.getOrElse(() => ({
@@ -53,7 +56,7 @@ const useHandleMenuClick = (
 
 			match(keyParts)
 				.with({ prefix: 'auth' }, () => {
-					// Do nothing for now
+					// Do nothing
 				})
 				.with({ prefix: 'page', action: P.select() }, (page) => {
 					navigate(`/market-tracker/${page}`);
@@ -90,7 +93,7 @@ export const Navbar = () => {
 	const dispatch = useDispatch();
 	const [state, setState] = useImmer<State>(initState);
 	const selectedTimeKey = useSelector(timeMenuKeySelector);
-	const Items = useNavbarItems(state.selectedPageKey, selectedTimeKey);
+	const items = useNavbarItems(state.selectedPageKey, selectedTimeKey);
 	const breakpointName = useBreakpointName();
 
 	const handleMenuClick = useHandleMenuClick(navigate, dispatch);
@@ -104,6 +107,15 @@ export const Navbar = () => {
 		.with(BreakpointName.XS, () => 'mobile-navbar')
 		.otherwise(() => 'desktop-navbar');
 
+	const itemsPlusBrand: MenuProps['items'] = [
+		{
+			key: 'nothing',
+			className: 'Brand',
+			label: 'Market Tracker'
+		},
+		...(items ?? [])
+	];
+
 	return (
 		<Layout.Header
 			className={`Navbar ${breakpointName}`}
@@ -116,12 +128,8 @@ export const Navbar = () => {
 				mode="horizontal"
 				data-testid={testId}
 				selectedKeys={[state.selectedPageKey, selectedTimeKey]}
-			>
-				<Menu.Item key="Nothing" className="Brand">
-					Market Tracker
-				</Menu.Item>
-				{Items}
-			</Menu>
+				items={itemsPlusBrand}
+			/>
 		</Layout.Header>
 	);
 };

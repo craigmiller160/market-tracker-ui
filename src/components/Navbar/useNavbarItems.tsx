@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavbarAuthCheck } from './useNavbarAuthStatus';
 import {
 	MarketTime,
@@ -6,13 +6,15 @@ import {
 	menuKeyToMarketTime
 } from '../../types/MarketTime';
 import { identity, pipe } from 'fp-ts/es6/function';
-import { Menu } from 'antd';
+import { MenuProps } from 'antd';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
 import { match } from 'ts-pattern';
 import { Try } from '@craigmiller160/ts-functions/es';
 import * as Either from 'fp-ts/es6/Either';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 import * as Option from 'fp-ts/es6/Option';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import { CaretDownOutlined } from '@ant-design/icons';
 
 interface NavbarItem {
 	readonly key: string;
@@ -75,19 +77,18 @@ const createAuthNavItem = (
 	isAuthorized: boolean,
 	authBtnAction: () => void,
 	authBtnTxt: string
-) => {
+): MenuProps['items'] => {
 	const className = ['AuthItem', isAuthorized ? 'IsAuth' : null]
 		.filter(identity)
 		.join(' ');
-	return (
-		<Menu.Item
-			className={className}
-			key="auth.action"
-			onClick={authBtnAction}
-		>
-			{authBtnTxt}
-		</Menu.Item>
-	);
+	return [
+		{
+			className,
+			key: 'auth.action',
+			onClick: authBtnAction,
+			label: authBtnTxt
+		}
+	];
 };
 
 const isOneDayItem = (item: NavbarItem): boolean =>
@@ -97,22 +98,26 @@ const isOneDayItem = (item: NavbarItem): boolean =>
 		Either.getOrElse((): boolean => false)
 	);
 
-const navbarItemToMenuItem = (item: NavbarItem) => {
+const navbarItemToMenuItem = (item: NavbarItem): ItemType => {
 	const className = match(item)
 		.when(isOneDayItem, () => 'OneDayItem')
 		.otherwise(() => '');
-	return (
-		<Menu.Item className={className} key={item.key}>
-			{item.name}
-		</Menu.Item>
-	);
+
+	return {
+		label: item.name,
+		className,
+		key: item.key
+	};
 };
 
-type NavbarItemComponents = [PageItems: ReactNode, TimeItems: ReactNode];
+type NavbarItemComponents = [
+	PageItems: MenuProps['items'],
+	TimeItems: MenuProps['items']
+];
 
 const useDesktopItems = (): NavbarItemComponents => [
-	<>{ITEMS.pages.map(navbarItemToMenuItem)}</>,
-	<>{ITEMS.times.map(navbarItemToMenuItem)}</>
+	ITEMS.pages.map(navbarItemToMenuItem),
+	ITEMS.times.map(navbarItemToMenuItem)
 ];
 
 const getItemName = (
@@ -129,11 +134,14 @@ const getItemName = (
 const createMobileItemMenu = (
 	title: string,
 	items: ReadonlyArray<NavbarItem>
-): ReactNode => (
-	<Menu.SubMenu title={`+ ${title}`}>
-		{items.map(navbarItemToMenuItem)}
-	</Menu.SubMenu>
-);
+): MenuProps['items'] => [
+	{
+		label: title,
+		key: title,
+		children: items.map(navbarItemToMenuItem),
+		icon: <CaretDownOutlined />
+	}
+];
 
 const useMobileItems = (
 	selectedPageKey: string,
@@ -156,7 +164,7 @@ const useMobileItems = (
 export const useNavbarItems = (
 	selectedPageKey: string,
 	selectedTimeKey: string
-): ReactNode => {
+): MenuProps['items'] => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
 	const breakpointName = useBreakpointName();
@@ -175,15 +183,11 @@ export const useNavbarItems = (
 		.otherwise(() => desktopItems);
 
 	return match({ isAuthorized, hasChecked })
-		.with({ isAuthorized: true, hasChecked: true }, () => (
-			<>
-				{PageItems}
-				{TimeItems}
-				{AuthNavItem}
-			</>
-		))
-		.with({ isAuthorized: false, hasChecked: true }, () => (
-			<>{AuthNavItem}</>
-		))
-		.otherwise(() => <></>);
+		.with({ isAuthorized: true, hasChecked: true }, () => [
+			...(PageItems ?? []),
+			...(TimeItems ?? []),
+			...(AuthNavItem ?? [])
+		])
+		.with({ isAuthorized: false, hasChecked: true }, () => AuthNavItem)
+		.otherwise(() => []);
 };
