@@ -126,7 +126,6 @@ const getItemName = (
 		Option.getOrElse(() => '')
 	);
 
-// TODO consider expand icon
 const createMobileItemMenu = (
 	title: string,
 	items: ReadonlyArray<NavbarItem>
