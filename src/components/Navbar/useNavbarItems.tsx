@@ -85,7 +85,7 @@ const createAuthNavItem = (
 			className,
 			key: 'auth.action',
 			onClick: authBtnAction,
-			title: authBtnTxt
+			label: authBtnTxt
 		}
 	];
 };
@@ -103,7 +103,7 @@ const navbarItemToMenuItem = (item: NavbarItem): ItemType => {
 		.otherwise(() => '');
 
 	return {
-		title: item.name,
+		label: item.name,
 		className,
 		key: item.key
 	};
@@ -135,7 +135,7 @@ const createMobileItemMenu = (
 	items: ReadonlyArray<NavbarItem>
 ): MenuProps['items'] => [
 	{
-		title: `+ ${title}`,
+		label: `+ ${title}`,
 		key: title,
 		children: items.map(navbarItemToMenuItem)
 	}
