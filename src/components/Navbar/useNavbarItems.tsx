@@ -14,6 +14,7 @@ import * as Either from 'fp-ts/es6/Either';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 import * as Option from 'fp-ts/es6/Option';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import { CaretDownOutlined } from '@ant-design/icons';
 
 interface NavbarItem {
 	readonly key: string;
@@ -135,9 +136,10 @@ const createMobileItemMenu = (
 	items: ReadonlyArray<NavbarItem>
 ): MenuProps['items'] => [
 	{
-		label: `+ ${title}`,
+		label: title,
 		key: title,
-		children: items.map(navbarItemToMenuItem)
+		children: items.map(navbarItemToMenuItem),
+		icon: <CaretDownOutlined />
 	}
 ];
 
