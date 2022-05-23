@@ -67,7 +67,11 @@ const formatTradierQuotes = (
 ): TryT<ReadonlyArray<Quote>> => {
 	const tradierQuotesEither = match(quotes.quotes)
 		.with({ unmatched_symbols: P.not(undefined) }, (_) =>
-			Either.left(new InvestmentNotFoundError(_.unmatched_symbols.symbol))
+			Either.left(
+				new InvestmentNotFoundError(
+					_.unmatched_symbols.symbol.toString()
+				)
+			)
 		)
 		.with({ quote: P.instanceOf(Array) }, () =>
 			Either.right(quotes.quotes.quote as ReadonlyArray<TradierQuote>)

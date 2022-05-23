@@ -18,7 +18,7 @@ export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
 
 export const tradierUnmatchedV = ioType.readonly(
 	ioType.type({
-		symbol: ioType.string
+		symbol: ioType.union([ioType.string, ioType.number])
 	})
 );
 
