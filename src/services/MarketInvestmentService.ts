@@ -18,7 +18,6 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Either from 'fp-ts/es6/Either';
-import TraceError from 'trace-error';
 import {
 	InvestmentType,
 	isCrypto,
@@ -314,9 +313,11 @@ export const getInvestmentData = (
 		TaskEither.chainEitherK(handleInvestmentData(time, info)),
 		TaskEither.mapLeft(
 			(ex) =>
-				new TraceError(
+				new Error(
 					`Error getting data for ${info.symbol}: ${ex.message}`,
-					ex
+					{
+						cause: ex
+					}
 				)
 		)
 	);
