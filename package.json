@@ -34,7 +34,7 @@
     "@craigmiller160/eslint-config-prettier": "1.0.0",
     "@craigmiller160/eslint-config-react": "1.0.0",
     "@craigmiller160/eslint-config-tree-shaking-import-restrictions": "1.0.0",
-    "@craigmiller160/eslint-config-ts": "1.0.0",
+    "@craigmiller160/eslint-config-ts": "1.0.1",
     "@craigmiller160/jest-config": "1.0.0",
     "@craigmiller160/jest-config-ts": "1.0.0",
     "@craigmiller160/prettier-config": "1.0.0",
@@ -55,7 +55,7 @@
     "lint-staged": "^12.1.7",
     "miragejs": "^0.1.43",
     "redux-mock-store": "^1.5.4",
-    "typescript": "^4.5.4",
+    "typescript": "^4.7.1-rc",
     "vite": "^2.8.4"
   },
   "dependencies": {
