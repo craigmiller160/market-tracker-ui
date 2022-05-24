@@ -5,7 +5,6 @@ import { MockStore } from 'redux-mock-store';
 import * as Option from 'fp-ts/es6/Option';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { AxiosError } from 'axios';
-import TraceError from 'trace-error';
 
 const sleep550ms = Sleep.sleep(550);
 
@@ -44,15 +43,19 @@ describe('AjaxApi Error Handling', () => {
 			expect(result).toEqual(false);
 		});
 
-		it('is trace error with axios error cause', () => {
-			const traceError = new TraceError('', axiosError);
-			const result = isNestedAxiosError(traceError);
+		it('is error with axios error cause', () => {
+			const error = new Error('', {
+				cause: axiosError
+			});
+			const result = isNestedAxiosError(error);
 			expect(result).toEqual(true);
 		});
 
-		it('is trace error without axios error cause', () => {
-			const traceError = new TraceError('', new Error());
-			const result = isNestedAxiosError(traceError);
+		it('is error without axios error cause', () => {
+			const error = new Error('', {
+				cause: new Error()
+			});
+			const result = isNestedAxiosError(error);
 			expect(result).toEqual(false);
 		});
 	});

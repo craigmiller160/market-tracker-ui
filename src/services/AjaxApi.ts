@@ -13,18 +13,13 @@ import { match, P } from 'ts-pattern';
 import * as Json from '@craigmiller160/ts-functions/es/Json';
 import { pipe } from 'fp-ts/es6/function';
 import { debounce } from 'lodash-es';
-import TraceError from 'trace-error';
 
 const isUndefined = (value: string | undefined): boolean => value === undefined;
 
 export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
 	match(ex)
-		.with(P.instanceOf(TraceError), (traceError) =>
-			pipe(
-				Option.fromNullable(traceError.cause()),
-				Option.map(isNestedAxiosError),
-				Option.getOrElse(() => false)
-			)
+		.with({ cause: P.not(P.nullish) }, ({ cause }) =>
+			isNestedAxiosError(cause)
 		)
 		.otherwise(
 			(error) =>
