@@ -1,14 +1,12 @@
-import { RootState } from '../../src/store';
+import { store, StoreType } from '../../src/store';
 import {
 	ScreenContext,
 	ScreenContextValue
 } from '../../src/components/ScreenContext';
-import { EnhancedStore } from '@reduxjs/toolkit';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { RootLayout } from '../../src/components/RootLayout';
-import { store } from '../../src/store';
 import { marketSettingsSlice } from '../../src/store/marketSettings/slice';
 import { authSlice } from '../../src/store/auth/slice';
 import { notificationSlice } from '../../src/store/notification/slice';
@@ -19,7 +17,7 @@ interface RenderConfig {
 }
 
 interface RenderResult {
-	readonly store: EnhancedStore<RootState>;
+	readonly store: StoreType;
 }
 
 const resetStore = () => {
