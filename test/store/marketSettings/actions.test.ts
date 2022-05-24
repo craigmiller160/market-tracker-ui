@@ -2,11 +2,11 @@ import {
 	changeSelectedTime,
 	checkAndUpdateMarketStatus
 } from '../../../src/store/marketSettings/actions';
-import createMockStore from 'redux-mock-store';
+import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
-import { RootState } from '../../../src/store';
+import { RootState, StoreType } from '../../../src/store';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
@@ -46,6 +46,8 @@ const tradierCalendar: TradierCalendar = {
 	}
 };
 
+type MockStoreType = StoreType & MockStoreEnhanced;
+
 describe('marketSettings actions', () => {
 	beforeEach(() => {
 		mockApi.reset();
@@ -53,7 +55,7 @@ describe('marketSettings actions', () => {
 
 	describe('changeSelectedTime', () => {
 		it('current & new time match', async () => {
-			const mockStore = newMockStore(defaultState);
+			const mockStore = newMockStore(defaultState) as MockStoreType;
 			await mockStore.dispatch(changeSelectedTime(todayKey));
 
 			expect(mockStore.getActions()).toEqual([]);
@@ -66,7 +68,7 @@ describe('marketSettings actions', () => {
 			const newDefaultState = produce(defaultState, (draft) => {
 				draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
 			});
-			const mockStore = newMockStore(newDefaultState);
+			const mockStore = newMockStore(newDefaultState) as MockStoreType;
 			await mockStore.dispatch(changeSelectedTime(todayKey));
 
 			expect(mockStore.getActions()).toEqual([
@@ -85,7 +87,7 @@ describe('marketSettings actions', () => {
 			const newDefaultState = produce(defaultState, (draft) => {
 				draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
 			});
-			const mockStore = newMockStore(newDefaultState);
+			const mockStore = newMockStore(newDefaultState) as MockStoreType;
 			await mockStore.dispatch(changeSelectedTime(oneWeekKey));
 
 			expect(mockStore.getActions()).toEqual([
@@ -106,7 +108,7 @@ describe('marketSettings actions', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, tradierCalendar);
-			const mockStore = newMockStore(defaultState);
+			const mockStore = newMockStore(defaultState) as MockStoreType;
 			await mockStore.dispatch(
 				checkAndUpdateMarketStatus(MarketTime.ONE_DAY)
 			);
@@ -120,7 +122,7 @@ describe('marketSettings actions', () => {
 		});
 
 		it('checks market status for another time', async () => {
-			const mockStore = newMockStore(defaultState);
+			const mockStore = newMockStore(defaultState) as MockStoreType;
 			await mockStore.dispatch(
 				checkAndUpdateMarketStatus(MarketTime.ONE_WEEK)
 			);
