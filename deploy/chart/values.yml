@@ -1,0 +1,16 @@
+app-deployment:
+  appName: market-tracker-ui
+  deployment:
+    image: nexus-docker-craigmiller160.ddns.net/market-tracker-ui:latest
+    ports:
+      - 443
+    livenessProbe:
+      httpGet:
+        path: /healthcheck
+        port: 443
+        scheme: HTTPS
+  service:
+    enable: true
+    type: ClusterIP
+    ports:
+      - containerPort: 443
