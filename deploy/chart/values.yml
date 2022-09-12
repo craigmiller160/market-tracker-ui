@@ -1,7 +1,7 @@
 app-deployment:
-  appName: video-manager-client
+  appName: market-tracker-ui
   deployment:
-    image: nexus-docker-craigmiller160.ddns.net/video-manager-client:latest
+    image: nexus-docker-craigmiller160.ddns.net/market-tracker-ui:latest
     ports:
       - 443
     livenessProbe:
