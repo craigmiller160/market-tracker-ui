@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node scripts/startDev.js",
-    "build": "yarn typeCheck && yarn lint && yarn test && yarn forceBuild",
+    "build": "yarn typeCheck && yarn lint && yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
     "lint": "craig-lint",
