@@ -8,3 +8,12 @@ app-deployment:
       path: /healthcheck
       port: 443
       scheme: HTTPS
+secure_ingress:
+  name: market-tracker-ingress
+  backendIsHttps: true
+  hosts:
+    - name: apps-craigmiller160.ddns.net
+      services:
+        - path: /(market-tracker(/.*)?)
+          serviceName: market-tracker-ui
+          portNumber: 443
