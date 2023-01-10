@@ -10,3 +10,4 @@ coverage
 deploy/build
 reports
 deploy/chart/charts
+*.tgz

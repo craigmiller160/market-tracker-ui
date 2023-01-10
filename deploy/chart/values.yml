@@ -1,4 +1,4 @@
-app-deployment:
+app_deployment:
   appName: market-tracker-ui
   image: nexus-docker-craigmiller160.ddns.net/market-tracker-ui:latest
   ports:
@@ -8,12 +8,12 @@ app-deployment:
       path: /healthcheck
       port: 443
       scheme: HTTPS
-secure_ingress:
-  name: market-tracker-ingress
-  backendIsHttps: true
-  hosts:
-    - name: apps-craigmiller160.ddns.net
-      services:
-        - path: /(market-tracker(/.*)?)
-          serviceName: market-tracker-ui
-          portNumber: 443
+  secure_ingress:
+    name: market-tracker-ingress
+    backendIsHttps: true
+    hosts:
+      - name: apps-craigmiller160.ddns.net
+        services:
+          - path: /(market-tracker(/.*)?)
+            serviceName: market-tracker-ui
+            portNumber: 443
