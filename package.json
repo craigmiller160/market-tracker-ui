@@ -1,6 +1,6 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "author": "craigmiller160",
   "files": [
     "build"
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "node scripts/startDev.js",
-    "build": "yarn typeCheck && yarn lint && yarn forceBuild",
+    "buildReal": "yarn typeCheck && yarn lint && yarn forceBuild",
+    "build": "yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
     "lint": "craig-lint",
