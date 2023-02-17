@@ -2156,10 +2156,10 @@
   dependencies:
     prettier "^2.5.1"
 
-"@craigmiller160/ts-functions@1.4.1":
-  version "1.4.1"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.4.1.tgz#0c249ca0eeaca20910bcc24220a8d01bbb4c28c0"
-  integrity sha512-Q3QiHdF+spJW/H3ROO5WkrUMgjXdaJsOBqUFod8R0sJ92M69fZdTt0Gt0UzoiLmx//BhldxOrt+gNGoTTeoogg==
+"@craigmiller160/ts-functions@1.6.0":
+  version "1.6.0"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ts-functions/-/ts-functions-1.6.0.tgz#867e357dff82cbcaa8cea6909a8c4e2e119f413c"
+  integrity sha512-bGhOv3Yl0W5FtMJFD1LGsX6rtVIegvQxJaev1wd3XyqzEiYQuqdMWszpEUtKBTlqBUIXwyqjM36vYqwfZ6DQyw==
 
 "@ctrl/tinycolor@^3.4.0":
   version "3.4.0"

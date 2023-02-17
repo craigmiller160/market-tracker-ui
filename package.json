@@ -63,7 +63,7 @@
     "@ant-design/plots": "^1.0.9",
     "@craigmiller160/ajax-api-fp-ts": "2.0.2",
     "@craigmiller160/ajax-error-handler": "1.0.1",
-    "@craigmiller160/ts-functions": "1.4.1",
+    "@craigmiller160/ts-functions": "1.6.0",
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.20.4",
     "core-js": "^3.20.2",
