@@ -2035,10 +2035,10 @@
   resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@craigmiller160/ajax-api-fp-ts@2.0.0":
-  version "2.0.0"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api-fp-ts/-/ajax-api-fp-ts-2.0.0.tgz#50e555ed8e46d5446c58b2c09ccaf2d21595c0ab"
-  integrity sha512-QOVw5mGDXIXnXKu/J7PbTNrs214N3Xoo0haR8AZksRryIyhd9ZqkJWK61eElAzWjcXah9SGuRfgwhMvBlVZa/w==
+"@craigmiller160/ajax-api-fp-ts@2.0.2":
+  version "2.0.2"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api-fp-ts/-/ajax-api-fp-ts-2.0.2.tgz#37146037feb911b7c0f1ac0a7adb983beced041b"
+  integrity sha512-V7csZSCQldVGu9pm0J8ddkn1UE4dj2kp/BVoF/cJlfJnI0JQL/TpaBa2JnSNUdA+ZnGqeEkpCnUQZQIqnFdKgA==
   dependencies:
     "@craigmiller160/ajax-api" "^2.1.0"
 
