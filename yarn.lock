@@ -2035,19 +2035,19 @@
   resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@craigmiller160/ajax-api-fp-ts@^1.0.4":
-  version "1.0.4"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api-fp-ts/-/ajax-api-fp-ts-1.0.4.tgz#9fe60260da517ac3e98d9985b775a3a2b8e4b0d7"
-  integrity sha512-3GCF+giVe2V9690DDjbTomgW4xqxq3FTCHv/5zv0PbqAR8+ZOvlCDwsPMyYjVxDK8F98C6JLiAVXaiQ/2+lGfw==
+"@craigmiller160/ajax-api-fp-ts@2.0.0":
+  version "2.0.0"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api-fp-ts/-/ajax-api-fp-ts-2.0.0.tgz#50e555ed8e46d5446c58b2c09ccaf2d21595c0ab"
+  integrity sha512-QOVw5mGDXIXnXKu/J7PbTNrs214N3Xoo0haR8AZksRryIyhd9ZqkJWK61eElAzWjcXah9SGuRfgwhMvBlVZa/w==
   dependencies:
-    "@craigmiller160/ajax-api" "^1.1.4"
+    "@craigmiller160/ajax-api" "^2.1.0"
 
-"@craigmiller160/ajax-api@^1.1.4":
-  version "1.1.4"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api/-/ajax-api-1.1.4.tgz#b62c43f428d86cae4ea1d39bde1c482e6204c3ff"
-  integrity sha512-GjVatm5MCBkmEoPRtwBfYhEeJDFxPnb8+KOUKGCT1QReyEg2RE8FFfn1z9kT+7DEOEpa08kKOHyIAgDVKSBmZA==
+"@craigmiller160/ajax-api@^2.1.0":
+  version "2.1.0"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/ajax-api/-/ajax-api-2.1.0.tgz#7182f614027d338cda9203dd8c2fa2ad4f964326"
+  integrity sha512-H0VwrJGwOIf8dE316m06CH2VkZ/z6Kdu0P2LaG19gxeXLS8LlyWPDmpt8QgllqSlSpB89qBnwil+2fmIMFcieg==
   dependencies:
-    axios "^0.21.1"
+    axios "^0.26.0"
 
 "@craigmiller160/ajax-error-handler@1.0.1":
   version "1.0.1"
@@ -3530,12 +3530,12 @@ axios-mock-adapter@^1.20.0:
     is-blob "^2.1.0"
     is-buffer "^2.0.5"
 
-axios@^0.21.1:
-  version "0.21.4"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
-  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
+axios@^0.26.0:
+  version "0.26.1"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
+  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
   dependencies:
-    follow-redirects "^1.14.0"
+    follow-redirects "^1.14.8"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -4930,10 +4930,10 @@ fmin@^0.0.2:
     tape "^4.5.1"
     uglify-js "^2.6.2"
 
-follow-redirects@^1.14.0:
-  version "1.14.7"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
-  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
+follow-redirects@^1.14.8:
+  version "1.15.2"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 for-each@~0.3.3:
   version "0.3.3"
