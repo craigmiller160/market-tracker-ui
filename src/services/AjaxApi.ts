@@ -18,8 +18,9 @@ const isUndefined = (value: string | undefined): boolean => value === undefined;
 
 export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
 	match(ex)
-		.with({ cause: P.not(P.nullish) }, ({ cause }) =>
-			isNestedAxiosError(cause)
+		.with(
+			{ cause: P.union(P.not(P.nullish), P.instanceOf(Error)) },
+			({ cause }) => isNestedAxiosError(cause as Error)
 		)
 		.otherwise(
 			(error) =>
@@ -67,14 +68,14 @@ const debouncedUnauthorizedNotification = debounce(
 	500
 );
 
-const ajaxErrorHandler: DefaultErrorHandler = (status, error, message) => {
+const ajaxErrorHandler: DefaultErrorHandler = (status, error) => {
 	if (status === 401) {
 		store.dispatch(authSlice.actions.setUserData(Option.none));
 		debouncedUnauthorizedNotification();
 	} else {
 		store.dispatch(
 			notificationSlice.actions.addError(
-				getFullErrorMessage(status, message, error)
+				getFullErrorMessage(status, undefined, error)
 			)
 		);
 	}
