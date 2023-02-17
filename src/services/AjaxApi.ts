@@ -18,9 +18,8 @@ const isUndefined = (value: string | undefined): boolean => value === undefined;
 
 export const isNestedAxiosError = (ex: Error): ex is AxiosError =>
 	match(ex)
-		.with(
-			{ cause: P.union(P.not(P.nullish), P.instanceOf(Error)) },
-			({ cause }) => isNestedAxiosError(cause as Error)
+		.with({ cause: P.not(P.nullish) }, ({ cause }) =>
+			isNestedAxiosError(cause as Error)
 		)
 		.otherwise(
 			(error) =>
