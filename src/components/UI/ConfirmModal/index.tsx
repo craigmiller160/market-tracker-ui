@@ -15,7 +15,7 @@ interface Props {
 export const ConfirmModal = (props: Props) => (
 	<Modal
 		title={props.title}
-		visible={props.show}
+		open={props.show}
 		onCancel={() => props.onClose(ConfirmModalResult.CANCEL)}
 		onOk={() => props.onClose(ConfirmModalResult.OK)}
 	>

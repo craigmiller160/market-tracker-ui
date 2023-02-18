@@ -24,7 +24,7 @@ export const InputModal = (props: Props) => {
 		<Form form={form} onValuesChange={forceUpdate}>
 			<Modal
 				title={props.title}
-				visible={props.show}
+				open={props.show}
 				onCancel={() => props.onClose()}
 				onOk={() => props.onClose(form.getFieldsValue().value)}
 				okButtonProps={{
