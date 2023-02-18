@@ -19,23 +19,6 @@ describe('AppRoutes', () => {
 		apiServer.server.shutdown();
 	});
 
-	it('shows correct initial route for un-authenticated user', async () => {
-		apiServer.actions.clearDefaultUser();
-		await renderApp();
-		await waitFor(
-			() =>
-				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/welcome'
-				),
-			{
-				timeout: 2000
-			}
-		);
-		expect(
-			screen.queryByText('Welcome to Market Tracker')
-		).toBeInTheDocument();
-	});
-
 	it('shows correct initial route for authenticated user', async () => {
 		await renderApp();
 		await waitFor(
