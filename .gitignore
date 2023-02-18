@@ -11,3 +11,4 @@ deploy/build
 reports
 deploy/chart/charts
 *.tgz
+.terraform
