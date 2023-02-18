@@ -4,6 +4,6 @@ spawn('vite', [], {
 	stdio: 'inherit'
 });
 
-spawn('tsc', ['--watch'], {
+spawn('tsc', ['--noEmit', '--watch'], {
 	stdio: 'inherit'
 });

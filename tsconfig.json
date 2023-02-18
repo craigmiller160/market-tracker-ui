@@ -7,7 +7,6 @@
       "esnext",
       "webworker"
     ],
-    "outDir": "./build",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,7 +21,8 @@
     "module": "es2022"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "test/**/*"
   ],
   "exclude": [
     "node_modules",

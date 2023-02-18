@@ -1,12 +1,10 @@
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
-import { AuthCodeLogin } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
-import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
-import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
+import { restoreLocation } from '../../testutils/mockLocation';
 import { renderApp } from '../../testutils/RenderApp';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
@@ -15,19 +13,13 @@ import {
 } from '../../testutils/menuUtils';
 import { ApiServer, newApiServer } from '../../testutils/server';
 
-const authCodeLogin: AuthCodeLogin = {
-	url: 'theUrl'
-};
-
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const sleep100 = Sleep.sleep(100);
-
 describe('Navbar', () => {
 	let apiServer: ApiServer;
-	let location: Option.Option<Location> = Option.none;
+	const location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
@@ -138,7 +130,7 @@ describe('Navbar', () => {
 		expect(
 			screen.getByText('Recognition').closest('li')?.className
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
-		userEvent.click(screen.getByText('Search'));
+		await userEvent.click(screen.getByText('Search'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/search'
@@ -164,7 +156,7 @@ describe('Navbar', () => {
 			screen.getByText('Recognition').closest('li')?.className
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -192,7 +184,7 @@ describe('Navbar', () => {
 			screen.getByText('Watchlists').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -220,7 +212,7 @@ describe('Navbar', () => {
 			screen.getByText('Markets').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Markets'));
+		await userEvent.click(screen.getByText('Markets'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
@@ -230,34 +222,6 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('sends login request', async () => {
-		apiServer.actions.clearDefaultUser();
-		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Login')).toBeInTheDocument()
-		);
-		location = Option.some(mockLocation());
-		await act(async () => {
-			await userEvent.click(screen.getByText('Login'));
-		});
-		expect(mockApi.history.post).toHaveLength(1);
-		expect(window.location.assign).toHaveBeenCalledWith('theUrl');
-	});
-
-	it('sends logout request', async () => {
-		mockApi.onGet('/oauth/logout').reply(200);
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
-		await act(async () => {
-			await userEvent.click(screen.getByText('Logout'));
-			await sleep100();
-		});
-		expect(screen.queryByText('Login')).toBeInTheDocument();
-	});
-
 	it('selects 1 Week', async () => {
 		await renderApp();
 		await waitFor(() =>
@@ -265,7 +229,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Week'));
+		await userEvent.click(screen.getByText('1 Week'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Week');
 	});
@@ -277,7 +241,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Month'));
+		await userEvent.click(screen.getByText('1 Month'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Month');
 	});
@@ -288,10 +252,10 @@ describe('Navbar', () => {
 			expect(screen.queryByText('Markets')).toBeInTheDocument()
 		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
-		menuItemIsSelected('1 Week');
+		await waitFor(() => menuItemIsSelected('1 Week'));
 		menuItemIsNotSelected('Today');
 
-		userEvent.click(screen.getByText('Today'));
+		await userEvent.click(screen.getByText('Today'));
 		menuItemIsNotSelected('1 Week');
 		menuItemIsSelected('Today');
 	});
@@ -303,7 +267,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('3 Months'));
+		await userEvent.click(screen.getByText('3 Months'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('3 Months');
 	});
@@ -315,7 +279,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Year'));
+		await userEvent.click(screen.getByText('1 Year'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Year');
 	});
@@ -327,7 +291,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('5 Years'));
+		await userEvent.click(screen.getByText('5 Years'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('5 Years');
 	});

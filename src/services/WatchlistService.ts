@@ -30,7 +30,7 @@ export const addStockToWatchlist = (
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
 	return pipe(
-		ajaxApi.put<void, DbWatchlist>({
+		ajaxApi.put<DbWatchlist, void>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
 		}),
 		TaskEither.map(getResponseData)
@@ -54,7 +54,7 @@ export const createWatchlist = (
 		cryptos: []
 	};
 	return pipe(
-		ajaxApi.post<Watchlist, DbWatchlist>({
+		ajaxApi.post<DbWatchlist, Watchlist>({
 			uri: '/watchlists',
 			body: input
 		}),

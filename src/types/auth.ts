@@ -1,5 +1,5 @@
 export interface AuthUser {
-	readonly userId: number;
+	readonly userId: string;
 }
 
 export interface AuthCodeLogin {

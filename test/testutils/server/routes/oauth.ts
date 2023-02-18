@@ -16,7 +16,7 @@ export const createOAuthRoutes = (database: Database, server: Server) => {
 						{},
 						pipe(
 							database.data.authUser,
-							Option.getOrElse(() => ({ userId: -1 }))
+							Option.getOrElse(() => ({ userId: '' }))
 						)
 					)
 			)

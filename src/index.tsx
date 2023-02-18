@@ -1,13 +1,15 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import 'antd/dist/antd.min.css';
-import ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import './index.scss';
 import { App } from './components/App';
 import { store } from './store';
 import { notificationSlice } from './store/notification/slice';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = ReactDOM.createRoot(document.querySelector('#root')!);
+
+root.render(<App />);
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {

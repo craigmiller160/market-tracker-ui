@@ -64,7 +64,9 @@ describe('Watchlists', () => {
 			apiServer.database.data.watchlists.length
 		);
 
-		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
+		await userEvent.click(
+			screen.getAllByTestId('watchlist-panel-title')[0]
+		);
 		await waitFor(() =>
 			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
 		);
@@ -72,7 +74,9 @@ describe('Watchlists', () => {
 		testCard('VTI', '$100.00');
 		testCard('VOO', '$101.00');
 
-		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[1]);
+		await userEvent.click(
+			screen.getAllByTestId('watchlist-panel-title')[1]
+		);
 		await waitFor(
 			() =>
 				expect(screen.queryAllByText('Chart is Here')).toHaveLength(2),
@@ -111,7 +115,9 @@ describe('Watchlists', () => {
 			'xs'
 		);
 
-		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[0]);
+		await userEvent.click(
+			screen.getAllByTestId('watchlist-panel-title')[0]
+		);
 		await waitFor(() =>
 			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
 		);
@@ -119,7 +125,9 @@ describe('Watchlists', () => {
 		testCard('VTI', '$100.00');
 		testCard('VOO', '$101.00');
 
-		userEvent.click(screen.getAllByTestId('watchlist-panel-title')[1]);
+		await userEvent.click(
+			screen.getAllByTestId('watchlist-panel-title')[1]
+		);
 		await waitFor(() =>
 			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
 		);
@@ -149,10 +157,12 @@ describe('Watchlists', () => {
 		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
 		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
 
-		userEvent.click(screen.getAllByRole('button', { name: '...' })[0]);
+		await userEvent.click(
+			screen.getAllByRole('button', { name: '...' })[0]
+		);
 		await waitFor(() => expect(screen.getByText('Rename')).toBeVisible());
 		expect(screen.getByText('Remove')).toBeVisible();
-		userEvent.click(screen.getByText('Rename'));
+		await userEvent.click(screen.getByText('Rename'));
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
 		expect(
 			screen.queryByDisplayValue('First Watchlist')
@@ -161,16 +171,16 @@ describe('Watchlists', () => {
 		expect(screen.queryByText('Save')).toBeInTheDocument();
 		expect(screen.queryByText('Cancel')).toBeInTheDocument();
 
-		userEvent.click(screen.getByText('Cancel'));
+		await userEvent.click(screen.getByText('Cancel'));
 		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 
-		userEvent.click(screen.queryAllByText('Rename')[0]);
+		await userEvent.click(screen.queryAllByText('Rename')[0]);
 		const input = screen.getByDisplayValue('First Watchlist');
-		userEvent.clear(input);
-		userEvent.type(input, 'New Watchlist');
+		await userEvent.clear(input);
+		await userEvent.type(input, 'New Watchlist');
 
-		userEvent.click(screen.getByText('Save'));
+		await userEvent.click(screen.getByText('Save'));
 		await waitFor(() =>
 			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
 		);
@@ -191,7 +201,7 @@ describe('Watchlists', () => {
 		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
 		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
 
-		userEvent.click(screen.queryAllByText('Rename')[0]);
+		await userEvent.click(screen.queryAllByText('Rename')[0]);
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
 		expect(
 			screen.queryByDisplayValue('First Watchlist')
@@ -200,16 +210,16 @@ describe('Watchlists', () => {
 		expect(screen.queryByText('Save')).toBeInTheDocument();
 		expect(screen.queryByText('Cancel')).toBeInTheDocument();
 
-		userEvent.click(screen.getByText('Cancel'));
+		await userEvent.click(screen.getByText('Cancel'));
 		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 
-		userEvent.click(screen.queryAllByText('Rename')[0]);
+		await userEvent.click(screen.queryAllByText('Rename')[0]);
 		const input = screen.getByDisplayValue('First Watchlist');
-		userEvent.clear(input);
-		userEvent.type(input, 'New Watchlist');
+		await userEvent.clear(input);
+		await userEvent.type(input, 'New Watchlist');
 
-		userEvent.click(screen.getByText('Save'));
+		await userEvent.click(screen.getByText('Save'));
 		await waitFor(() =>
 			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
 		);
@@ -223,8 +233,8 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
 		);
-		userEvent.type(getSymbolField(), 'MSFT');
-		userEvent.click(getSearchBtn());
+		await userEvent.type(getSymbolField(), 'MSFT');
+		await userEvent.click(getSearchBtn());
 		await waitFor(() =>
 			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
 		);
@@ -239,7 +249,7 @@ describe('Watchlists', () => {
 			}
 		);
 		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
-		userEvent.click(addWatchlistBtn);
+		await userEvent.click(addWatchlistBtn);
 
 		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
 			'Add MSFT to Watchlist'
@@ -263,16 +273,16 @@ describe('Watchlists', () => {
 
 		fireEvent.click(screen.getAllByText('First Watchlist')[1]);
 
-		userEvent.click(screen.getByText('OK'));
+		await userEvent.click(screen.getByText('OK'));
 		await waitFor(() =>
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
 		);
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 		await waitFor(() =>
 			expect(screen.queryByText('First Watchlist')).toBeVisible()
 		);
-		userEvent.click(screen.getByText('First Watchlist'));
+		await userEvent.click(screen.getByText('First Watchlist'));
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
@@ -283,8 +293,8 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
 		);
-		userEvent.type(getSymbolField(), 'MSFT');
-		userEvent.click(getSearchBtn());
+		await userEvent.type(getSymbolField(), 'MSFT');
+		await userEvent.click(getSearchBtn());
 		await waitFor(() =>
 			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
 		);
@@ -299,7 +309,7 @@ describe('Watchlists', () => {
 			}
 		);
 		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
-		userEvent.click(addWatchlistBtn);
+		await userEvent.click(addWatchlistBtn);
 
 		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
 			'Add MSFT to Watchlist'
@@ -309,22 +319,22 @@ describe('Watchlists', () => {
 		);
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
 
-		userEvent.click(screen.getByText('New Watchlist'));
-		userEvent.type(
+		await userEvent.click(screen.getByText('New Watchlist'));
+		await userEvent.type(
 			screen.getByTestId('new-watchlist-input'),
 			'New Watchlist'
 		);
 
-		userEvent.click(screen.getByText('OK'));
+		await userEvent.click(screen.getByText('OK'));
 		await waitFor(() =>
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
 		);
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 		await waitFor(() =>
 			expect(screen.queryByText('New Watchlist')).toBeVisible()
 		);
-		userEvent.click(screen.getByText('New Watchlist'));
+		await userEvent.click(screen.getByText('New Watchlist'));
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
@@ -339,7 +349,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByText('First Watchlist')).toBeVisible()
 		);
 
-		userEvent.click(screen.getByText('First Watchlist'));
+		await userEvent.click(screen.getByText('First Watchlist'));
 		await waitFor(() =>
 			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
 		);
@@ -349,7 +359,7 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(within(vooCard).queryByText('Remove')).toBeVisible()
 		);
-		userEvent.click(within(vooCard).getByText('Remove'));
+		await userEvent.click(within(vooCard).getByText('Remove'));
 
 		const confirmMsg =
 			'Are you sure you want to remove "VOO" from watchlist "First Watchlist"';
@@ -358,7 +368,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByText(confirmMsg)).toBeVisible()
 		);
 
-		userEvent.click(screen.getByText('OK'));
+		await userEvent.click(screen.getByText('OK'));
 		await waitFor(() =>
 			expect(screen.queryByText(confirmMsg)).not.toBeVisible()
 		);
@@ -366,7 +376,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByText('First Watchlist')).toBeVisible()
 		);
 
-		userEvent.click(screen.getByText('First Watchlist'));
+		await userEvent.click(screen.getByText('First Watchlist'));
 		await waitFor(() =>
 			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
 		);
@@ -390,7 +400,7 @@ describe('Watchlists', () => {
 		expect(screen.getByText('First Watchlist')).toBeVisible();
 		expect(screen.getByText('Second Watchlist')).toBeVisible();
 
-		userEvent.click(screen.getAllByText('Remove')[0]);
+		await userEvent.click(screen.getAllByText('Remove')[0]);
 		await waitFor(() =>
 			expect(
 				screen.queryByText(
@@ -398,7 +408,7 @@ describe('Watchlists', () => {
 				)
 			).toBeVisible()
 		);
-		userEvent.click(screen.getByText('OK'));
+		await userEvent.click(screen.getByText('OK'));
 
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(1)
@@ -421,14 +431,14 @@ describe('Watchlists', () => {
 		);
 		expect(screen.queryByText('Add')).toBeVisible();
 
-		userEvent.click(screen.getByText('Add'));
+		await userEvent.click(screen.getByText('Add'));
 
 		await waitFor(() =>
 			expect(screen.queryByText('Add Watchlist')).toBeVisible()
 		);
 
-		userEvent.type(screen.getByLabelText('Name'), 'New Watchlist');
-		userEvent.click(screen.getByText('OK'));
+		await userEvent.type(screen.getByLabelText('Name'), 'New Watchlist');
+		await userEvent.click(screen.getByText('OK'));
 
 		await waitFor(() =>
 			expect(screen.queryByText('Add Watchlist')).not.toBeVisible()

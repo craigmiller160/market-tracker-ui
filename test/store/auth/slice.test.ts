@@ -1,9 +1,10 @@
 import { authSlice } from '../../../src/store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { AuthUser } from '../../../src/types/auth';
+import { nanoid } from '@reduxjs/toolkit';
 
 const authUser: AuthUser = {
-	userId: 1
+	userId: nanoid()
 };
 
 describe('auth slice', () => {

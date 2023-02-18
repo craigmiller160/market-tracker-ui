@@ -13,14 +13,14 @@ export const isNestedInvestmentNotFoundError = (
 ): ex is InvestmentNotFoundError =>
 	match(ex)
 		.with({ cause: P.not(P.nullish) }, ({ cause }) =>
-			isNestedInvestmentNotFoundError(cause)
+			isNestedInvestmentNotFoundError(cause as Error)
 		)
 		.otherwise((error) => error.name === 'InvestmentNotFoundError');
 
 export const getInvestmentNotFoundMessage = (ex: Error): string =>
 	match(ex)
 		.with({ cause: P.not(P.nullish) }, ({ cause }) =>
-			getInvestmentNotFoundMessage(cause)
+			getInvestmentNotFoundMessage(cause as Error)
 		)
 		.with({ name: 'InvestmentNotFoundError' }, (error) => error.message)
 		.otherwise(() => '');

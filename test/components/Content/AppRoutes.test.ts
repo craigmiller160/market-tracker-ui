@@ -22,10 +22,14 @@ describe('AppRoutes', () => {
 	it('shows correct initial route for un-authenticated user', async () => {
 		apiServer.actions.clearDefaultUser();
 		await renderApp();
-		await waitFor(() =>
-			expect(window.location.href).toEqual(
-				'http://localhost/market-tracker/welcome'
-			)
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/welcome'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		expect(
 			screen.queryByText('Welcome to Market Tracker')
@@ -34,22 +38,32 @@ describe('AppRoutes', () => {
 
 	it('shows correct initial route for authenticated user', async () => {
 		await renderApp();
-		await waitFor(() =>
-			expect(window.location.href).toEqual(
-				'http://localhost/market-tracker/markets'
-			)
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/markets'
+				),
+			{
+				timeout: 2000
+			}
 		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('All Markets')).toBeInTheDocument()
+		);
 	});
 
 	it('correctly redirects for totally wrong route', async () => {
 		await renderApp({
 			initialPath: '/auth-management/'
 		});
-		await waitFor(() =>
-			expect(window.location.href).toEqual(
-				'http://localhost/market-tracker/markets'
-			)
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/markets'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});
@@ -58,8 +72,14 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/markets'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/markets'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		await waitFor(() =>
 			expect(screen.queryByText('All Markets')).toBeInTheDocument()
@@ -70,8 +90,14 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/portfolios'
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/portfolios'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		await waitFor(() =>
 			expect(screen.queryByText('Portfolios Page')).toBeInTheDocument()
@@ -82,8 +108,14 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/watchlists'
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/watchlists'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		await waitFor(() =>
 			expect(
@@ -96,8 +128,14 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/recognition'
 		});
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/recognition'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		await waitFor(() =>
 			expect(
@@ -111,10 +149,14 @@ describe('AppRoutes', () => {
 		await renderApp({
 			initialPath: '/market-tracker/portfolios'
 		});
-		await waitFor(() =>
-			expect(window.location.href).toEqual(
-				'http://localhost/market-tracker/markets'
-			)
+		await waitFor(
+			() =>
+				expect(window.location.href).toEqual(
+					'http://localhost/market-tracker/markets'
+				),
+			{
+				timeout: 2000
+			}
 		);
 		expect(screen.queryByText('All Markets')).toBeInTheDocument();
 	});

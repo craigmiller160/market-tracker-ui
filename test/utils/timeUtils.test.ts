@@ -4,66 +4,65 @@ import {
 	formatTimesalesDate,
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
+	getFiveYearStartDate,
 	getOneMonthDisplayStartDate,
 	getOneMonthHistoryStartDate,
+	getOneMonthStartDate,
 	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
+	getOneWeekStartDate,
 	getOneYearDisplayStartDate,
 	getOneYearHistoryStartDate,
+	getOneYearStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayEnd,
-	getTodayStart,
-	getTodayDisplayDate,
-	getTodayHistoryDate,
-	setTodayEndTime,
-	setTodayStartTime,
-	getTodayStartString,
-	getTodayEndString,
-	getOneWeekStartDate,
-	getOneMonthStartDate,
 	getThreeMonthStartDate,
-	getOneYearStartDate,
-	getFiveYearStartDate
+	getTodayDisplayDate,
+	getTodayEnd,
+	getTodayEndString,
+	getTodayHistoryDate,
+	getTodayStart,
+	getTodayStartString,
+	setTodayEndTime,
+	setTodayStartTime
 } from '../../src/utils/timeUtils';
-import { pipe, identity } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { match } from 'ts-pattern';
 
-const compareFormat = Time.format('yyyy-MM-dd HH:mm:ss');
-const UTC_OFFSET_4 = 240;
+const formatTimestamp = Time.format('yyyy-MM-dd HH:mm:ss');
+
+const setStartOfDay = Time.set({
+	hours: 0,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
+const setEndOfDay = Time.set({
+	hours: 23,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
 
 describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
 		const date = new Date();
 		const actual = setTodayStartTime(date);
-		const actualText = compareFormat(actual);
-		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
+		const actualText = formatTimestamp(actual);
 
-		const expectedTime = match(date.getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => '01:00:00')
-			.run();
+		const expectedText = pipe(date, setStartOfDay, formatTimestamp);
 
-		expect(actualText).toEqual(`${expectedTextDate} ${expectedTime}`);
+		expect(actualText).toEqual(expectedText);
 	});
 
 	it('setTodayEndTime', () => {
 		const date = new Date();
 		const actual = setTodayEndTime(date);
-		const actualText = compareFormat(actual);
+		const actualText = formatTimestamp(actual);
 
-		const [expectedDate, expectedTime] = match(date.getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => {
-				const dateText = pipe(
-					date,
-					Time.addDays(1),
-					Time.format('yyyy-MM-dd')
-				);
-				return [dateText, '00:00:00'];
-			})
-			.run();
+		const expectedText = pipe(date, setEndOfDay, formatTimestamp);
 
-		expect(actualText).toEqual(`${expectedDate} ${expectedTime}`);
+		expect(actualText).toEqual(expectedText);
 	});
 
 	it('getTodayHistoryDate', () => {
@@ -81,7 +80,7 @@ describe('timeUtils', () => {
 	it('getOneWeekStartDate', () => {
 		const expected = pipe(new Date(), Time.subWeeks(1));
 		const actual = getOneWeekStartDate();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getOneWeekHistoryStartDate', () => {
@@ -99,7 +98,7 @@ describe('timeUtils', () => {
 	it('getOneMonthStartDate', () => {
 		const expected = pipe(new Date(), Time.subMonths(1));
 		const actual = getOneMonthStartDate();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getOneMonthHistoryStartDate', () => {
@@ -117,7 +116,7 @@ describe('timeUtils', () => {
 	it('getThreeMonthStartDate', () => {
 		const expected = pipe(new Date(), Time.subMonths(3));
 		const actual = getThreeMonthStartDate();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getThreeMonthHistoryStartDate', () => {
@@ -135,7 +134,7 @@ describe('timeUtils', () => {
 	it('getOneYearStartDate', () => {
 		const expected = pipe(new Date(), Time.subYears(1));
 		const actual = getOneYearStartDate();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getOneYearHistoryStartDate', () => {
@@ -153,7 +152,7 @@ describe('timeUtils', () => {
 	it('getFiveYearStartDate', () => {
 		const expected = pipe(new Date(), Time.subYears(5));
 		const actual = getFiveYearStartDate();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getFiveYearHistoryStartDate', () => {
@@ -169,87 +168,26 @@ describe('timeUtils', () => {
 	});
 
 	it('getTodayStart', () => {
-		const expectedHours = match(new Date().getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => 1)
-			.run();
-
-		const expected = pipe(
-			new Date(),
-			Time.set({
-				hours: expectedHours,
-				minutes: 0,
-				seconds: 0,
-				milliseconds: 0
-			})
-		);
+		const expected = pipe(new Date(), setStartOfDay);
 		const actual = getTodayStart();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getTodayStartString', () => {
-		const expectedHours = match(new Date().getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => 1)
-			.run();
-		const expected = pipe(
-			new Date(),
-			Time.set({
-				hours: expectedHours,
-				minutes: 0,
-				seconds: 0,
-				milliseconds: 0
-			}),
-			formatTimesalesDate
-		);
+		const expected = pipe(new Date(), setStartOfDay, formatTimesalesDate);
 
 		const actual = getTodayStartString();
 		expect(actual).toEqual(expected);
 	});
 
 	it('getTodayEnd', () => {
-		const adjustDate: (d: Date) => Date = match(
-			new Date().getTimezoneOffset()
-		)
-			.with(UTC_OFFSET_4, () => Time.addDays(1))
-			.otherwise(() => identity);
-		const expectedHours = match(new Date().getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => 0)
-			.run();
-
-		const expected = pipe(
-			new Date(),
-			adjustDate,
-			Time.set({
-				hours: expectedHours,
-				minutes: 0,
-				seconds: 0,
-				milliseconds: 0
-			})
-		);
+		const expected = pipe(new Date(), setEndOfDay);
 		const actual = getTodayEnd();
-		expect(compareFormat(actual)).toEqual(compareFormat(expected));
+		expect(formatTimestamp(actual)).toEqual(formatTimestamp(expected));
 	});
 
 	it('getTodayEndString', () => {
-		const adjustDate: (d: Date) => Date = match(
-			new Date().getTimezoneOffset()
-		)
-			.with(UTC_OFFSET_4, () => Time.addDays(1))
-			.otherwise(() => identity);
-		const expectedHours = match(new Date().getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => 0)
-			.run();
-
-		const expected = pipe(
-			new Date(),
-			adjustDate,
-			Time.set({
-				hours: expectedHours,
-				minutes: 0,
-				seconds: 0,
-				milliseconds: 0
-			}),
-			formatTimesalesDate
-		);
+		const expected = pipe(new Date(), setEndOfDay, formatTimesalesDate);
 		const actual = getTodayEndString();
 		expect(actual).toEqual(expected);
 	});
