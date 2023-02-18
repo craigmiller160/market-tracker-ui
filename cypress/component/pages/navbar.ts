@@ -19,7 +19,7 @@ const getMobileThreeMonthsItem = () => getMobileMenuItems().eq(3);
 const getMobileOneYearItem = () => getMobileMenuItems().eq(4);
 const getMobileFiveYearsItem = () => getMobileMenuItems().eq(5);
 
-export {
+export const navbarPage = {
 	getTitle,
 	getMobilePageMenu,
 	getMobileTimeMenu,

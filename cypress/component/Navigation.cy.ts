@@ -1,28 +1,39 @@
-export {};
+import { navbarPage } from './pages/navbar';
+
+const SELECTED_CLASS = 'ant-menu-item-selected';
+
 describe('Navigation', () => {
 	it('navigation on mobile does not use selected class', () => {
 		cy.mount({
 			viewport: 'mobile'
 		});
 		cy.get('.ant-notification-close-x').click();
-		cy.get('.Brand .ant-menu-title-content').should(
-			'have.text',
-			'Market Tracker'
-		);
-		cy.get('.ant-menu-submenu-horizontal .ant-menu-title-content')
-			.should('have.length', 2)
-			.each(($elem, index) => {
-				expect($elem.text()).eq(['Markets', 'Today'][index]);
-			});
-		cy.get('.ant-menu-submenu-horizontal .ant-menu-title-content')
-			.eq(0)
-			.click();
-		cy.get('.ant-menu-sub .ant-menu-title-content').eq(2).click();
-		cy.get('.ant-notification-close-x').click();
-		cy.get('.ant-menu-submenu-horizontal .ant-menu-title-content')
-			.should('have.length', 2)
-			.each(($elem, index) => {
-				expect($elem.text()).eq(['Watchlists', 'Today'][index]);
-			});
+		navbarPage.getTitle().should('have.text', 'Market Tracker');
+		navbarPage
+			.getMobilePageMenu()
+			.should('have.text', 'Markets')
+			.closest('li')
+			.should('not.have.class', SELECTED_CLASS);
+		navbarPage
+			.getMobilePageMenu()
+			.should('have.text', 'Today')
+			.closest('li')
+			.should('not.have.class', SELECTED_CLASS);
+
+		navbarPage.getMobilePageMenu().click();
+		navbarPage.getMobileWatchlistsItem().click();
+		navbarPage
+			.getMobilePageMenu()
+			.should('have.text', 'Watchlists')
+			.closest('li')
+			.should('not.have.class', SELECTED_CLASS);
+
+		navbarPage.getMobileTimeMenu().click();
+		navbarPage.getMobileFiveYearsItem().click();
+		navbarPage
+			.getMobilePageMenu()
+			.should('have.text', '5 Years')
+			.closest('li')
+			.should('not.have.class', SELECTED_CLASS);
 	});
 });
