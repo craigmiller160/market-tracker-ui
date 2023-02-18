@@ -5,13 +5,19 @@ import './index.scss';
 import { App } from './components/App';
 import { store } from './store';
 import { notificationSlice } from './store/notification/slice';
+import { BrowserRouter } from 'react-router-dom';
+import { MarketTrackerKeycloakProvider } from './components/keycloak/MarketTrackerKeycloakProvider';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
 root.render(
 	<React.StrictMode>
-		<App />
+		<BrowserRouter basename="/">
+			<MarketTrackerKeycloakProvider>
+				<App />
+			</MarketTrackerKeycloakProvider>
+		</BrowserRouter>
 	</React.StrictMode>
 );
 
