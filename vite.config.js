@@ -17,11 +17,19 @@ const https =
 				)
 		  };
 
+const define = !process.env.CYPRESS
+	? undefined
+	: {
+			'process.env.POLYGON_CLIPPING_MAX_QUEUE_SIZE': '1000000',
+			'process.env.POLYGON_CLIPPING_MAX_SWEEPLINE_SEGMENTS': '1000000'
+	  };
+
 export default defineConfig({
 	root: path.join(process.cwd(), 'src'),
 	base: '/market-tracker/',
 	publicDir: path.join(process.cwd(), 'public'),
 	envDir: path.join(process.cwd(), 'environment'),
+	define,
 	server: {
 		port: 3000,
 		host: true,
