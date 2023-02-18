@@ -252,7 +252,7 @@ describe('Navbar', () => {
 			expect(screen.queryByText('Markets')).toBeInTheDocument()
 		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
-		menuItemIsSelected('1 Week');
+		await waitFor(() => menuItemIsSelected('1 Week'));
 		menuItemIsNotSelected('Today');
 
 		await userEvent.click(screen.getByText('Today'));
