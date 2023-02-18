@@ -37,7 +37,7 @@
     "@craigmiller160/eslint-config-ts": "1.1.1",
     "@craigmiller160/jest-config": "2.0.0",
     "@craigmiller160/prettier-config": "1.0.1",
-    "@relmify/jest-fp-ts": "^1.1.1",
+    "@relmify/jest-fp-ts": "^2.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
