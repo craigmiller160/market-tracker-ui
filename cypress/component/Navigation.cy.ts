@@ -3,6 +3,9 @@ import { navbarPage } from './pages/navbar';
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
 describe('Navigation', () => {
+	beforeEach(() => {
+		cy.mockApi((mockApi) => mockApi.reset());
+	});
 	it('navigation on mobile does not use selected class', () => {
 		cy.mount({
 			viewport: 'mobile'
