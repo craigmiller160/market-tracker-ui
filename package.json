@@ -13,7 +13,7 @@
     "build": "yarn typeCheck && yarn lint && yarn test && yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
-    "lint": "craig-lint",
+    "lint": "eslint --fix --max-warnings=0 '{src,test,cypress}/**/*.{ts,tsx}'",
     "test": "craig-test",
     "prepare": "husky install",
     "validate": "yarn typeCheck && yarn lint && yarn test",
