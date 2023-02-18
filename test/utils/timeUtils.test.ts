@@ -66,18 +66,13 @@ describe('timeUtils', () => {
 		const actual = setTodayEndTime(date);
 		const actualText = compareFormat(actual);
 
-		const [expectedDate, expectedTime] = match(date.getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => {
-				const dateText = pipe(
-					date,
-					Time.addDays(1),
-					Time.format('yyyy-MM-dd')
-				);
-				return [dateText, '00:00:00'];
-			})
-			.run();
+		const expectedText = pipe(
+			date,
+			adjustExpectedTimeByOffset,
+			Time.format('yyyy-MM-dd HH:mm:ss')
+		);
 
-		expect(actualText).toEqual(`${expectedDate} ${expectedTime}`);
+		expect(actualText).toEqual(expectedText);
 	});
 
 	it('getTodayHistoryDate', () => {
