@@ -6,7 +6,7 @@ import {
 	KeycloakAuthContext
 } from '@craigmiller160/react-keycloak';
 import { MemoryRouter } from 'react-router';
-import { App } from 'antd';
+import { App } from '../../src/components/App';
 
 const desktopViewport = (): Chainable<null> => cy.viewport(1920, 1080);
 const mobileViewport = (): Chainable<null> => cy.viewport(500, 500);
