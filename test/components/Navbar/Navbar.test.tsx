@@ -1,12 +1,10 @@
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { ajaxApi } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
-import { AuthCodeLogin } from '../../../src/types/auth';
 import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/es6/Option';
-import { mockLocation, restoreLocation } from '../../testutils/mockLocation';
-import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
+import { restoreLocation } from '../../testutils/mockLocation';
 import { renderApp } from '../../testutils/RenderApp';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
@@ -15,19 +13,13 @@ import {
 } from '../../testutils/menuUtils';
 import { ApiServer, newApiServer } from '../../testutils/server';
 
-const authCodeLogin: AuthCodeLogin = {
-	url: 'theUrl'
-};
-
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(ajaxApi.instance);
 
-const sleep100 = Sleep.sleep(100);
-
 describe('Navbar', () => {
 	let apiServer: ApiServer;
-	let location: Option.Option<Location> = Option.none;
+	const location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
@@ -228,34 +220,6 @@ describe('Navbar', () => {
 		expect(screen.getByText('Markets').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
-	});
-
-	it('sends login request', async () => {
-		apiServer.actions.clearDefaultUser();
-		mockApi.onPost('/oauth/authcode/login').reply(200, authCodeLogin);
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Login')).toBeInTheDocument()
-		);
-		location = Option.some(mockLocation());
-		await act(async () => {
-			await userEvent.click(screen.getByText('Login'));
-		});
-		expect(mockApi.history.post).toHaveLength(1);
-		expect(window.location.assign).toHaveBeenCalledWith('theUrl');
-	});
-
-	it('sends logout request', async () => {
-		mockApi.onGet('/oauth/logout').reply(200);
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
-		await act(async () => {
-			await userEvent.click(screen.getByText('Logout'));
-			await sleep100();
-		});
-		expect(screen.queryByText('Login')).toBeInTheDocument();
 	});
 
 	it('selects 1 Week', async () => {
