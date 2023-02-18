@@ -22,7 +22,8 @@
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
   },
   "resolutions": {
-    "rc-util": ">=5.27.2"
+    "rc-util": ">=5.27.2",
+    "@babel/runtime": ">=7.18.3"
   },
   "devDependencies": {
     "@craigmiller160/babel-config": "^1.1.1",
