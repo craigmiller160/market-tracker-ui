@@ -4,29 +4,29 @@ import {
 	formatTimesalesDate,
 	getFiveYearDisplayStartDate,
 	getFiveYearHistoryStartDate,
+	getFiveYearStartDate,
 	getOneMonthDisplayStartDate,
 	getOneMonthHistoryStartDate,
+	getOneMonthStartDate,
 	getOneWeekDisplayStartDate,
 	getOneWeekHistoryStartDate,
+	getOneWeekStartDate,
 	getOneYearDisplayStartDate,
 	getOneYearHistoryStartDate,
+	getOneYearStartDate,
 	getThreeMonthDisplayStartDate,
 	getThreeMonthHistoryStartDate,
-	getTodayEnd,
-	getTodayStart,
-	getTodayDisplayDate,
-	getTodayHistoryDate,
-	setTodayEndTime,
-	setTodayStartTime,
-	getTodayStartString,
-	getTodayEndString,
-	getOneWeekStartDate,
-	getOneMonthStartDate,
 	getThreeMonthStartDate,
-	getOneYearStartDate,
-	getFiveYearStartDate
+	getTodayDisplayDate,
+	getTodayEnd,
+	getTodayEndString,
+	getTodayHistoryDate,
+	getTodayStart,
+	getTodayStartString,
+	setTodayEndTime,
+	setTodayStartTime
 } from '../../src/utils/timeUtils';
-import { pipe, identity } from 'fp-ts/es6/function';
+import { identity, pipe } from 'fp-ts/es6/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
 
@@ -34,19 +34,31 @@ const compareFormat = Time.format('yyyy-MM-dd HH:mm:ss');
 const UTC_OFFSET_4 = 240;
 const UTC_OFFSET_5 = 300;
 
+const zeroOutTime = Time.set({
+	hours: 0,
+	minutes: 0,
+	seconds: 0,
+	milliseconds: 0
+});
+
+const adjustExpectedTimeByOffset = (date: Date): Date => {
+	const utcOffset = UTC_OFFSET_5 - new Date().getTimezoneOffset();
+	return pipe(date, zeroOutTime, Time.addMinutes(utcOffset));
+};
+
 describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
 		const date = new Date();
 		const actual = setTodayStartTime(date);
 		const actualText = compareFormat(actual);
-		const expectedTextDate = Time.format('yyyy-MM-dd')(date);
 
-		const expectedTime = match(date.getTimezoneOffset())
-			.with(UTC_OFFSET_4, () => '01:00:00')
-			.with(UTC_OFFSET_5, () => '00:00:00')
-			.run();
+		const expectedText = pipe(
+			date,
+			adjustExpectedTimeByOffset,
+			Time.format('yyyy-MM-dd HH:mm:ss')
+		);
 
-		expect(actualText).toEqual(`${expectedTextDate} ${expectedTime}`);
+		expect(actualText).toEqual(expectedText);
 	});
 
 	it('setTodayEndTime', () => {
