@@ -3,9 +3,10 @@ import * as Option from 'fp-ts/es6/Option';
 import produce from 'immer';
 import { AuthUser } from '../../../src/types/auth';
 import { defaultState } from '../../testutils/mockStoreUtils';
+import { nanoid } from '@reduxjs/toolkit';
 
 const authUser: AuthUser = {
-	userId: 1
+	userId: nanoid()
 };
 
 describe('selectors', () => {

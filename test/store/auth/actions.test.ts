@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
 import { loadAuthUser } from '../../../src/store/auth/actions';
 import { RootState } from '../../../src/store';
-import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AnyAction, nanoid, ThunkDispatch } from '@reduxjs/toolkit';
 import * as Option from 'fp-ts/es6/Option';
 import { authSlice } from '../../../src/store/auth/slice';
 import { AuthUser } from '../../../src/types/auth';
@@ -13,7 +13,7 @@ import { defaultState } from '../../testutils/mockStoreUtils';
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
 
 const authUser: AuthUser = {
-	userId: 1
+	userId: nanoid()
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);

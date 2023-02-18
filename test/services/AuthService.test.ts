@@ -4,6 +4,7 @@ import { getAuthUser } from '../../src/services/AuthService';
 import { AuthUser } from '../../src/types/auth';
 import '@relmify/jest-fp-ts';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
+import { nanoid } from '@reduxjs/toolkit';
 
 jest.mock('../../src/store', () => ({
 	store: {
@@ -12,7 +13,7 @@ jest.mock('../../src/store', () => ({
 }));
 
 const authUser: AuthUser = {
-	userId: 1
+	userId: nanoid()
 };
 
 const mockApi = new MockAdapter(ajaxApi.instance);

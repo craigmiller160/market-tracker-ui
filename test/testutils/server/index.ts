@@ -7,6 +7,7 @@ import * as Option from 'fp-ts/es6/Option';
 import { createOAuthRoutes } from './routes/oauth';
 import { createTradierRoutes } from './routes/tradier';
 import { seedTradier } from './seedData/tradier';
+import { nanoid } from '@reduxjs/toolkit';
 
 interface ApiServerActions {
 	readonly clearDefaultUser: () => void;
@@ -27,7 +28,7 @@ export const newApiServer = (): ApiServer => {
 	const database = new Database();
 	database.updateData((draft) => {
 		draft.authUser = Option.some({
-			userId: 1
+			userId: nanoid()
 		});
 		seedWatchlists(draft);
 		seedTradier(draft);

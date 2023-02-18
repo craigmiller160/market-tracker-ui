@@ -1,4 +1,4 @@
-import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AnyAction, nanoid, ThunkDispatch } from '@reduxjs/toolkit';
 import { RootState } from '../../../src/store';
 import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -22,7 +22,7 @@ jest.mock('../../../src/store/marketSettings/actions', () => ({
 }));
 
 const userData: AuthUser = {
-	userId: 1
+	userId: nanoid()
 };
 
 interface MockState {
