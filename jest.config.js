@@ -4,10 +4,9 @@ const {
 	libPatterns,
 	createCombinedPattern
 } = require('@craigmiller160/jest-config/utils/libsToRecompile');
-const jestTsConfig = require('@craigmiller160/jest-config-ts');
 const path = require('path');
 
-const config = merge(jestConfig, jestTsConfig, {
+const config = merge(jestConfig, {
 	setupFilesAfterEnv: [path.join(process.cwd(), 'test', 'setup.tsx')]
 });
 

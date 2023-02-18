@@ -25,7 +25,6 @@
     "rc-util": ">=5.21.4"
   },
   "devDependencies": {
-    "@craigmiller160/babel-config": "1.1.1",
     "@craigmiller160/babel-config-core-polyfills": "^1.0.1",
     "@craigmiller160/babel-config-react": "1.0.1",
     "@craigmiller160/config-merge": "^1.0.1",
@@ -35,8 +34,7 @@
     "@craigmiller160/eslint-config-react": "1.0.2",
     "@craigmiller160/eslint-config-tree-shaking-import-restrictions": "1.0.1",
     "@craigmiller160/eslint-config-ts": "1.1.1",
-    "@craigmiller160/jest-config": "1.0.4",
-    "@craigmiller160/jest-config-ts": "1.0.2",
+    "@craigmiller160/jest-config": "2.0.0",
     "@craigmiller160/prettier-config": "1.0.1",
     "@relmify/jest-fp-ts": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -47,7 +45,7 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/redux-mock-store": "^1.0.3",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react-swc": "^3.1.0",
     "axios-mock-adapter": "^1.20.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.7",
