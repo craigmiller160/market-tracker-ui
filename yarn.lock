@@ -1839,10 +1839,10 @@
   dependencies:
     eslint-plugin-jest "^25.3.2"
 
-"@craigmiller160/eslint-config-js@^1.2.0-beta":
-  version "1.2.0-beta.1"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/eslint-config-js/-/eslint-config-js-1.2.0-beta.1.tgz#75e80480bfa92d611ae168a5e9f7214b912b04bf"
-  integrity sha512-Xc+3PsNcfMMTfqLUzvEN1d/Z/jE61zMnh8g48IBc/4fR4wRyertOquEIyKVPrrVgMloU1ILCODBW9BfEW6p4Mg==
+"@craigmiller160/eslint-config-js@1.2.0":
+  version "1.2.0"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/eslint-config-js/-/eslint-config-js-1.2.0.tgz#2ef6c7765d235a7f136ab4375688eb8d3c1fb30f"
+  integrity sha512-velFASNTs4SEobng5Gtd617rp/V5wQ19HSuEWfS2ilBNm8dxz5n/8ghUh0CeN2q/kxq9yGfOwjjYlEJMzUH9wQ==
   dependencies:
     cross-spawn "^7.0.3"
     eslint "^8.34.0"
