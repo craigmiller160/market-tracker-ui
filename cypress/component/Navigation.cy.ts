@@ -15,7 +15,7 @@ describe('Navigation', () => {
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
 		navbarPage
-			.getMobilePageMenu()
+			.getMobileTimeMenu()
 			.should('have.text', 'Today')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
@@ -32,7 +32,7 @@ describe('Navigation', () => {
 		navbarPage.getMobileTimeMenu().click();
 		navbarPage.getMobileFiveYearsItem().click();
 		navbarPage
-			.getMobilePageMenu()
+			.getMobileTimeMenu()
 			.should('have.text', '5 Years')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
