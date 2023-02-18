@@ -87,7 +87,7 @@ describe('useCheckMarketStatus', () => {
 		]);
 	});
 
-	it('Invoked by a component re-render after already having run', () => {
+	it('Invoked by a component re-render after already having run', async () => {
 		const newState = produce(defaultState, (draft) => {
 			draft.auth.hasChecked = true;
 			draft.auth.userData = Option.some(userData);
@@ -96,7 +96,7 @@ describe('useCheckMarketStatus', () => {
 		doRender(mockStore);
 		expect(screen.queryByText(/Name: .*/)).toHaveTextContent('Name: Bob');
 
-		userEvent.click(screen.getByText('Click'));
+		await userEvent.click(screen.getByText('Click'));
 		expect(screen.queryByText(/Name: .*/)).toHaveTextContent('Name: Joe');
 
 		expect(mockStore.getActions()).toEqual([
