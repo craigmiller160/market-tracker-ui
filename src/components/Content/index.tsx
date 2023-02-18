@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { loadAuthUser } from '../../store/auth/actions';
 import { Layout } from 'antd';
 import { AppRoutes } from './AppRoutes';
 import { useNotification } from '../UI/Notification/useNotification';
 import { useCheckMarketStatus } from './useCheckMarketStatus';
+import { useStoreDispatch } from '../../store';
 
 export const Content = () => {
-	const dispatch = useDispatch();
+	const dispatch = useStoreDispatch();
 	useNotification();
 	useCheckMarketStatus();
 
