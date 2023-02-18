@@ -6,6 +6,7 @@ import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
 import { ConfigProvider } from 'antd';
+import { MarketTrackerKeycloakProvider } from './keycloak/MarketTrackerKeycloakProvider';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -20,13 +21,15 @@ export const App = () => {
 	const screenContextValue = createScreenContextValue(breakpoints);
 	return (
 		<ConfigProvider csp={{ nonce }}>
-			<ScreenContext.Provider value={screenContextValue}>
-				<Provider store={store}>
-					<BrowserRouter basename="/">
-						<RootLayout />
-					</BrowserRouter>
-				</Provider>
-			</ScreenContext.Provider>
+			<MarketTrackerKeycloakProvider>
+				<ScreenContext.Provider value={screenContextValue}>
+					<Provider store={store}>
+						<BrowserRouter basename="/">
+							<RootLayout />
+						</BrowserRouter>
+					</Provider>
+				</ScreenContext.Provider>
+			</MarketTrackerKeycloakProvider>
 		</ConfigProvider>
 	);
 };
