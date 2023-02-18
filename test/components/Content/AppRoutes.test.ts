@@ -47,7 +47,9 @@ describe('AppRoutes', () => {
 				timeout: 2000
 			}
 		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.queryByText('All Markets')).toBeInTheDocument()
+		);
 	});
 
 	it('correctly redirects for totally wrong route', async () => {
