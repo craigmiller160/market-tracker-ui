@@ -16,7 +16,9 @@
     "lint": "craig-lint",
     "test": "craig-test",
     "prepare": "husky install",
-    "validate": "yarn typeCheck && yarn lint && yarn test"
+    "validate": "yarn typeCheck && yarn lint && yarn test",
+    "cypress": "cypress open",
+    "cypress:headless": "cypress run --component"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
