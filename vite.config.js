@@ -1,11 +1,13 @@
 import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import fs from 'fs';
+import { defineConfig } from 'vite';
 
-export default {
+export default defineConfig({
 	root: path.join(process.cwd(), 'src'),
 	base: '/market-tracker/',
 	publicDir: path.join(process.cwd(), 'public'),
+	envDir: path.join(process.cwd(), 'environment'),
 	server: {
 		port: 3000,
 		host: true,
@@ -48,4 +50,4 @@ export default {
 		outDir: path.join(process.cwd(), 'build'),
 		emptyOutDir: true
 	}
-};
+});
