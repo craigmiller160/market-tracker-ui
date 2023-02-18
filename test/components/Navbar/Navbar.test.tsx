@@ -290,6 +290,39 @@ describe('Navbar', () => {
 				}
 			}
 		});
-		throw new Error();
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).toBeInTheDocument()
+		);
+		expect(screen.getByText('Today')).toBeVisible();
+		expect(screen.getByText('Markets')).toBeVisible();
+		menuItemIsNotSelected('Today');
+		menuItemIsNotSelected('Markets');
+
+		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
+		expect(screen.queryByText('5 Years')).not.toBeInTheDocument();
+
+		await userEvent.click(screen.getByText('Markets'));
+		await waitFor(() =>
+			expect(screen.getAllByText('Markets')).toHaveLength(2)
+		);
+		expect(screen.queryByText('Watchlists')).toBeVisible();
+		await userEvent.click(screen.getByText('Watchlists'));
+		await waitFor(() =>
+			expect(screen.queryByText('Markets')).not.toBeInTheDocument()
+		);
+		expect(screen.getByText('Watchlists')).toBeVisible();
+		menuItemIsNotSelected('Watchlists');
+
+		await userEvent.click(screen.getByText('Today'));
+		await waitFor(() =>
+			expect(screen.getAllByText('Today')).toHaveLength(2)
+		);
+		expect(screen.queryByText('5 Years')).toBeVisible();
+		await userEvent.click(screen.getByText('5 Years'));
+		await waitFor(() =>
+			expect(screen.queryByText('Today')).not.toBeInTheDocument()
+		);
+		expect(screen.getByText('5 Years')).toBeVisible();
+		menuItemIsNotSelected('5 Years');
 	});
 });
