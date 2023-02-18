@@ -280,4 +280,16 @@ describe('Navbar', () => {
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('5 Years');
 	});
+
+	it('navigation on mobile does not use selected class', async () => {
+		await renderApp({
+			screenContextValue: {
+				breakpoints: {
+					sm: false,
+					xs: true
+				}
+			}
+		});
+		throw new Error();
+	});
 });
