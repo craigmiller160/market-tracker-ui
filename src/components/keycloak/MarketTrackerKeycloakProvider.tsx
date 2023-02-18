@@ -2,7 +2,6 @@
 
 import { PropsWithChildren } from 'react';
 import { KeycloakAuthProvider } from '@craigmiller160/react-keycloak';
-import { MarketTrackerKeycloakBridge } from './MarketTrackerKeycloakBridge';
 import { BEARER_TOKEN_KEY } from '@craigmiller160/ajax-api-fp-ts';
 
 const getRealm = (): string => {
@@ -18,8 +17,6 @@ export const MarketTrackerKeycloakProvider = (props: PropsWithChildren) => (
 		clientId="market-tracker-ui"
 		localStorageKey={BEARER_TOKEN_KEY}
 	>
-		<MarketTrackerKeycloakBridge>
-			{props.children}
-		</MarketTrackerKeycloakBridge>
+		{props.children}
 	</KeycloakAuthProvider>
 );

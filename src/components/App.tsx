@@ -1,4 +1,3 @@
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -6,7 +5,7 @@ import { Breakpoints } from './utils/Breakpoints';
 import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
 import { ConfigProvider } from 'antd';
-import { MarketTrackerKeycloakProvider } from './keycloak/MarketTrackerKeycloakProvider';
+import { MarketTrackerKeycloakBridge } from './keycloak/MarketTrackerKeycloakBridge';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -22,13 +21,11 @@ export const App = () => {
 	return (
 		<ConfigProvider csp={{ nonce }}>
 			<Provider store={store}>
-				<MarketTrackerKeycloakProvider>
+				<MarketTrackerKeycloakBridge>
 					<ScreenContext.Provider value={screenContextValue}>
-						<BrowserRouter basename="/">
-							<RootLayout />
-						</BrowserRouter>
+						<RootLayout />
 					</ScreenContext.Provider>
-				</MarketTrackerKeycloakProvider>
+				</MarketTrackerKeycloakBridge>
 			</Provider>
 		</ConfigProvider>
 	);

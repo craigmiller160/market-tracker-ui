@@ -10,13 +10,15 @@
   },
   "scripts": {
     "start": "node scripts/startDev.js",
-    "build": "yarn typeCheck && yarn lint && yarn test && yarn forceBuild",
+    "build": "yarn validate && yarn forceBuild",
     "forceBuild": "vite build && vite --config vite.config.sw.js build",
     "typeCheck": "tsc --noEmit",
-    "lint": "craig-lint",
+    "lint": "eslint --fix --max-warnings=0 '{src,test,cypress}/**/*.{ts,tsx}'",
     "test": "craig-test",
     "prepare": "husky install",
-    "validate": "yarn typeCheck && yarn lint && yarn test"
+    "validate": "yarn typeCheck && yarn lint && yarn test && yarn cypress:headless",
+    "cypress": "cypress open",
+    "cypress:headless": "cypress run --component"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
@@ -50,6 +52,7 @@
     "@types/redux-mock-store": "^1.0.3",
     "@vitejs/plugin-react-swc": "^3.1.0",
     "axios-mock-adapter": "^1.20.0",
+    "cypress": "^12.6.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.7",
     "miragejs": "^0.1.43",

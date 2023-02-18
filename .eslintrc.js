@@ -8,6 +8,12 @@ module.exports = {
 		'@craigmiller160/eslint-config-ts'
 	],
 	rules: {
-		'react/react-in-jsx-scope': 0
+		'react/react-in-jsx-scope': 0,
+		'@typescript-eslint/no-namespace': [
+			'error',
+			{
+				allowDeclarations: true
+			}
+		]
 	}
 };
