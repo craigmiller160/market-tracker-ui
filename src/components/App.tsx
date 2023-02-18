@@ -21,15 +21,15 @@ export const App = () => {
 	const screenContextValue = createScreenContextValue(breakpoints);
 	return (
 		<ConfigProvider csp={{ nonce }}>
-			<MarketTrackerKeycloakProvider>
-				<ScreenContext.Provider value={screenContextValue}>
-					<Provider store={store}>
+			<Provider store={store}>
+				<MarketTrackerKeycloakProvider>
+					<ScreenContext.Provider value={screenContextValue}>
 						<BrowserRouter basename="/">
 							<RootLayout />
 						</BrowserRouter>
-					</Provider>
-				</ScreenContext.Provider>
-			</MarketTrackerKeycloakProvider>
+					</ScreenContext.Provider>
+				</MarketTrackerKeycloakProvider>
+			</Provider>
 		</ConfigProvider>
 	);
 };
