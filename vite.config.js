@@ -3,6 +3,20 @@ import react from '@vitejs/plugin-react-swc';
 import fs from 'fs';
 import { defineConfig } from 'vite';
 
+const https =
+	process.env.CYPRESS === 'true'
+		? undefined
+		: {
+				cert: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.cert.pem'),
+					'utf8'
+				),
+				key: fs.readFileSync(
+					path.join(process.cwd(), 'config', 'localhost.key.pem'),
+					'utf8'
+				)
+		  };
+
 export default defineConfig({
 	root: path.join(process.cwd(), 'src'),
 	base: '/market-tracker/',
@@ -11,16 +25,7 @@ export default defineConfig({
 	server: {
 		port: 3000,
 		host: true,
-		https: {
-			cert: fs.readFileSync(
-				path.join(process.cwd(), 'config', 'localhost.cert.pem'),
-				'utf8'
-			),
-			key: fs.readFileSync(
-				path.join(process.cwd(), 'config', 'localhost.key.pem'),
-				'utf8'
-			)
-		},
+		https,
 		proxy: {
 			'/market-tracker/api': {
 				target: 'https://localhost:8080',
