@@ -28,6 +28,7 @@ describe('Navigation', () => {
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
 
+		cy.get('.ant-notification-close-x').click();
 		navbarPage.getMobileTimeMenu().click();
 		navbarPage.getMobileFiveYearsItem().click();
 		navbarPage
