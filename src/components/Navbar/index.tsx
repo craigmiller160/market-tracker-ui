@@ -106,6 +106,9 @@ export const Navbar = () => {
 	const testId = match(breakpointName)
 		.with(BreakpointName.XS, () => 'mobile-navbar')
 		.otherwise(() => 'desktop-navbar');
+	const selectedKeys = match(breakpointName)
+		.with(BreakpointName.XS, () => [])
+		.otherwise(() => [state.selectedPageKey, selectedTimeKey]);
 
 	const itemsPlusBrand: MenuProps['items'] = [
 		{
@@ -127,7 +130,7 @@ export const Navbar = () => {
 				theme="dark"
 				mode="horizontal"
 				data-testid={testId}
-				selectedKeys={[state.selectedPageKey, selectedTimeKey]}
+				selectedKeys={selectedKeys}
 				items={itemsPlusBrand}
 			/>
 		</Layout.Header>
