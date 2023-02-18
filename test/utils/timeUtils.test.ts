@@ -32,6 +32,7 @@ import { match } from 'ts-pattern';
 
 const compareFormat = Time.format('yyyy-MM-dd HH:mm:ss');
 const UTC_OFFSET_4 = 240;
+const UTC_OFFSET_5 = 300;
 
 describe('timeUtils', () => {
 	it('setTodayStartTime', () => {
@@ -42,6 +43,7 @@ describe('timeUtils', () => {
 
 		const expectedTime = match(date.getTimezoneOffset())
 			.with(UTC_OFFSET_4, () => '01:00:00')
+			.with(UTC_OFFSET_5, () => '00:00:00')
 			.run();
 
 		expect(actualText).toEqual(`${expectedTextDate} ${expectedTime}`);
