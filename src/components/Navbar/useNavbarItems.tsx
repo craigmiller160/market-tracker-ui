@@ -29,16 +29,12 @@ interface AllItems {
 const ITEMS: AllItems = {
 	pages: [
 		{
-			key: 'page.markets',
-			name: 'Markets'
+			key: 'page.watchlists',
+			name: 'Watchlists'
 		},
 		{
 			key: 'page.search',
 			name: 'Search'
-		},
-		{
-			key: 'page.watchlists',
-			name: 'Watchlists'
 		},
 		{
 			key: 'page.recognition',
