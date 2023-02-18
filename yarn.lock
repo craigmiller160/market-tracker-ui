@@ -700,17 +700,17 @@
     csstype "^3.0.8"
     tslib "^2.0.3"
 
-"@antv/x6-react-components@^1.1.13", "@antv/x6-react-components@^1.1.15":
-  version "1.1.15"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@antv/x6-react-components/-/x6-react-components-1.1.15.tgz#9d35b06ffe261272d11caee63b463f3ac744b392"
-  integrity sha512-tXUak5CPuZLIA0fVBSM2vZ+TxxoEGBcokr0J69e7H0G3WIutDf6J6RkNeRGuKvcW8O1Lef1jiBGSLLjlrRXf0g==
+"@antv/x6-react-components@>=1.1.20", "@antv/x6-react-components@^1.1.13", "@antv/x6-react-components@^1.1.15":
+  version "2.0.7"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@antv/x6-react-components/-/x6-react-components-2.0.7.tgz#ea5dd70e2babc4b519bffae1eb92b75f1ce1d130"
+  integrity sha512-AcnsJgaIup88FWPFs37T/YuiDhwkwOwPlvCs3gMoMPLkoxACeuolip5l6BDcGpWlSSiibTPJ2u24tk6AIB1XxQ==
   dependencies:
     clamp "^1.0.1"
     classnames "^2.2.6"
     rc-dropdown "^3.0.0-alpha.0"
     rc-util "^4.15.7"
-    react-color "^2.17.3"
-    react-resize-detector "^6.6.4"
+    react-color "2.19.3"
+    react-resize-detector "^7.0.0"
     ua-parser-js "^0.7.20"
 
 "@antv/x6-react-shape@^1.4.5", "@antv/x6-react-shape@^1.5.2":
@@ -2927,11 +2927,6 @@
   integrity sha512-Wqe3tJa6x9MxMN4DJnMfZoBRBRak1XTPklqj4qkVm5VBpZnC8PSADf4kLuFQ9NAdHaowfWoEeUMz7NWc2GMtnA==
   dependencies:
     redux "^4.0.5"
-
-"@types/resize-observer-browser@^0.1.6":
-  version "0.1.7"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@types/resize-observer-browser/-/resize-observer-browser-0.1.7.tgz#294aaadf24ac6580b8fbd1fe3ab7b59fe85f9ef3"
-  integrity sha512-G9eN0Sn0ii9PWQ3Vl72jDPgeJwRWhv2Qk/nQkJuWmRmOB4HX3/BhD5SE1dZs/hzPZL/WKnvF0RHdTSG54QJFyg==
 
 "@types/scheduler@*":
   version "0.16.2"
@@ -7352,7 +7347,7 @@ react-color@2.17.3:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-color@^2.17.3:
+react-color@2.19.3:
   version "2.19.3"
   resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/react-color/-/react-color-2.19.3.tgz#ec6c6b4568312a3c6a18420ab0472e146aa5683d"
   integrity sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
@@ -7405,14 +7400,12 @@ react-redux@^8.0.5:
     react-is "^18.0.0"
     use-sync-external-store "^1.0.0"
 
-react-resize-detector@^6.6.4:
-  version "6.7.8"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/react-resize-detector/-/react-resize-detector-6.7.8.tgz#318c85d1335e50f99d4fb8eb9ec34e066db597d0"
-  integrity sha512-0FaEcUBAbn+pq3PT5a9hHRebUfuS1SRLGLpIw8LydU7zX429I6XJgKerKAMPsJH0qWAl6o5bVKNqFJqr6tGPYw==
+react-resize-detector@^7.0.0:
+  version "7.1.2"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/react-resize-detector/-/react-resize-detector-7.1.2.tgz#8ef975dd8c3d56f9a5160ac382ef7136dcd2d86c"
+  integrity sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==
   dependencies:
-    "@types/resize-observer-browser" "^0.1.6"
     lodash "^4.17.21"
-    resize-observer-polyfill "^1.5.1"
 
 react-router-dom@^6.2.1:
   version "6.2.1"
