@@ -1,4 +1,4 @@
-import { mount } from 'cypress/react18';
+import { mount, MountReturn } from 'cypress/react18';
 import Chainable = Cypress.Chainable;
 import { match, P } from 'ts-pattern';
 import {
@@ -44,10 +44,12 @@ const keycloakAuth: KeycloakAuth = {
 	logout: () => {}
 };
 
-export const mountApp = (config?: Partial<MountConfig>): Chainable<unknown> => {
+export const mountApp = (
+	config?: Partial<MountConfig>
+): Chainable<MountReturn> => {
 	handleViewport(config);
 	const initialEntries = getInitialEntries(config);
-	mount(
+	return mount(
 		<MemoryRouter initialEntries={initialEntries}>
 			<KeycloakAuthContext.Provider value={keycloakAuth}>
 				<App />
