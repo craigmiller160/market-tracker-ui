@@ -130,7 +130,7 @@ describe('Navbar', () => {
 		expect(
 			screen.getByText('Recognition').closest('li')?.className
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
-		userEvent.click(screen.getByText('Search'));
+		await userEvent.click(screen.getByText('Search'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/search'
@@ -156,7 +156,7 @@ describe('Navbar', () => {
 			screen.getByText('Recognition').closest('li')?.className
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -184,7 +184,7 @@ describe('Navbar', () => {
 			screen.getByText('Watchlists').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Watchlists'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/watchlists'
@@ -212,7 +212,7 @@ describe('Navbar', () => {
 			screen.getByText('Markets').closest('li')?.className
 		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		userEvent.click(screen.getByText('Markets'));
+		await userEvent.click(screen.getByText('Markets'));
 
 		expect(window.location.href).toEqual(
 			'http://localhost/market-tracker/markets'
@@ -229,7 +229,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Week'));
+		await userEvent.click(screen.getByText('1 Week'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Week');
 	});
@@ -241,7 +241,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Month'));
+		await userEvent.click(screen.getByText('1 Month'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Month');
 	});
@@ -255,7 +255,7 @@ describe('Navbar', () => {
 		menuItemIsSelected('1 Week');
 		menuItemIsNotSelected('Today');
 
-		userEvent.click(screen.getByText('Today'));
+		await userEvent.click(screen.getByText('Today'));
 		menuItemIsNotSelected('1 Week');
 		menuItemIsSelected('Today');
 	});
@@ -267,7 +267,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('3 Months'));
+		await userEvent.click(screen.getByText('3 Months'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('3 Months');
 	});
@@ -279,7 +279,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('1 Year'));
+		await userEvent.click(screen.getByText('1 Year'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('1 Year');
 	});
@@ -291,7 +291,7 @@ describe('Navbar', () => {
 		);
 		menuItemIsSelected('Today');
 
-		userEvent.click(screen.getByText('5 Years'));
+		await userEvent.click(screen.getByText('5 Years'));
 		menuItemIsNotSelected('Today');
 		menuItemIsSelected('5 Years');
 	});
