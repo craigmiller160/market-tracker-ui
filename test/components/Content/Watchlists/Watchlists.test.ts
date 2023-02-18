@@ -223,8 +223,8 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
 		);
-		userEvent.type(getSymbolField(), 'MSFT');
-		userEvent.click(getSearchBtn());
+		await userEvent.type(getSymbolField(), 'MSFT');
+		await userEvent.click(getSearchBtn());
 		await waitFor(() =>
 			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
 		);
@@ -239,7 +239,7 @@ describe('Watchlists', () => {
 			}
 		);
 		const addWatchlistBtn = within(card).getByText(/\+ Watchlist/);
-		userEvent.click(addWatchlistBtn);
+		await userEvent.click(addWatchlistBtn);
 
 		expect(screen.queryByText(/Add .* to Watchlist/)).toHaveTextContent(
 			'Add MSFT to Watchlist'
