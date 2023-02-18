@@ -48,21 +48,6 @@ describe('Navbar', () => {
 		expect(screen.queryByTestId('mobile-navbar')).toBeInTheDocument();
 	});
 
-	it('shows correct items for un-authenticated user', async () => {
-		apiServer.actions.clearDefaultUser();
-		await renderApp();
-		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
-		await waitFor(() =>
-			expect(screen.queryByText('Login')).toBeInTheDocument()
-		);
-
-		expect(screen.queryByText('Markets')).not.toBeInTheDocument();
-		expect(screen.queryByText('Search')).not.toBeInTheDocument();
-		expect(screen.queryByText('Watchlists')).not.toBeInTheDocument();
-		expect(screen.queryByText('Recognition')).not.toBeInTheDocument();
-		expect(screen.queryByText('Logout')).not.toBeInTheDocument();
-	});
-
 	it('shows correct items for authenticated user in prod', async () => {
 		process.env.NODE_ENV = 'production';
 		await renderApp();

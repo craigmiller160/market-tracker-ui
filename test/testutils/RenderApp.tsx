@@ -10,6 +10,11 @@ import { RootLayout } from '../../src/components/RootLayout';
 import { marketSettingsSlice } from '../../src/store/marketSettings/slice';
 import { authSlice } from '../../src/store/auth/slice';
 import { notificationSlice } from '../../src/store/notification/slice';
+import {
+	KeycloakAuth,
+	KeycloakAuthContext
+} from '@craigmiller160/react-keycloak';
+import { MarketTrackerKeycloakBridge } from '../../src/components/keycloak/MarketTrackerKeycloakBridge';
 
 interface RenderConfig {
 	readonly initialPath: string;
@@ -24,6 +29,13 @@ const resetStore = () => {
 	store.dispatch(marketSettingsSlice.actions.reset());
 	store.dispatch(notificationSlice.actions.reset());
 	store.dispatch(authSlice.actions.reset());
+};
+
+const keycloakAuth: KeycloakAuth = {
+	status: 'authorized',
+	isPostAuthorization: true,
+	isPreAuthorization: false,
+	logout: jest.fn()
 };
 
 export const renderApp = (
@@ -41,11 +53,15 @@ export const renderApp = (
 
 	render(
 		<Provider store={store}>
-			<ScreenContext.Provider value={screenContextValue}>
-				<BrowserRouter basename="/">
-					<RootLayout />
-				</BrowserRouter>
-			</ScreenContext.Provider>
+			<KeycloakAuthContext.Provider value={keycloakAuth}>
+				<MarketTrackerKeycloakBridge>
+					<ScreenContext.Provider value={screenContextValue}>
+						<BrowserRouter basename="/">
+							<RootLayout />
+						</BrowserRouter>
+					</ScreenContext.Provider>
+				</MarketTrackerKeycloakBridge>
+			</KeycloakAuthContext.Provider>
 		</Provider>
 	);
 	return {

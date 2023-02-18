@@ -1,4 +1,4 @@
-import { Breakpoint as AntdBreakpoint } from 'antd/es/_util/responsiveObserve';
+import { Breakpoint as AntdBreakpoint } from 'antd/es/_util/responsiveObserver';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { useContext } from 'react';

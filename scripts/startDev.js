@@ -1,6 +1,6 @@
 const spawn = require('cross-spawn');
 
-spawn('vite', [], {
+spawn('vite', process.argv.slice(2), {
 	stdio: 'inherit'
 });
 

@@ -223,7 +223,7 @@ export const AddToWatchlistModal = (props: Props) => {
 			title={`Add ${props.symbol} to Watchlist`}
 			className="AddToWatchlistModal"
 			data-testid="add-to-watchlist-modal"
-			visible={props.show}
+			open={props.show}
 			onCancel={onClose}
 			onOk={onOk}
 			okButtonProps={{
