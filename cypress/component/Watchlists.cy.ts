@@ -3,7 +3,7 @@ import { watchlistApi } from './api/watchlists';
 import { watchlistPage } from './pages/watchlists';
 import { accordion } from './pages/accordion';
 import { investments } from './pages/investments';
-import {navbarPage} from './pages/navbar';
+import { navbarPage } from './pages/navbar';
 
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
@@ -22,7 +22,7 @@ describe('Watchlists', () => {
 			.should('have.text', 'Investment Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
-		// TODO need to select 1week here
+		navbarPage.desktop.getOneWeekItem().click();
 
 		cy.repeat(3, (index) => {
 			accordion
