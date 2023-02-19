@@ -4,15 +4,8 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 
 describe('Navigation', () => {
 	it('navigation on mobile does not use selected class', () => {
-		cy.mockGet({
-			matcher: '/api/tradier/markets/calendar?year=2023&month=02',
-			reply: [200, 'Hello World']
-		});
 		cy.mount({
 			viewport: 'mobile'
-		});
-		cy.mockApiHistory((history) => {
-			cy.log(history);
 		});
 		navbarPage.getTitle().should('have.text', 'Market Tracker');
 		navbarPage
