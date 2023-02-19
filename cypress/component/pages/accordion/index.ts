@@ -1,6 +1,6 @@
-import Chainable = Cypress.Chainable;
 import { createDesktopAccordion } from './desktopAccordion';
 import { GetPanel } from './types';
+import { createMobileAccordion } from './mobileAccordion';
 
 const getPanels = () => cy.get('.Accordion .AccordionPanel');
 
@@ -20,5 +20,6 @@ export const accordion = {
 	getPanels,
 	getPanelTitle,
 	getPanelBody,
-	desktop: createDesktopAccordion(getPanel)
+	desktop: createDesktopAccordion(getPanel),
+	mobile: createMobileAccordion(getPanel)
 };

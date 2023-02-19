@@ -98,18 +98,19 @@ describe('Watchlists', () => {
 						.getPanelTitle($elem)
 						.should('have.text', WATCHLIST_NAMES[index]);
 					if (index != 1) {
-						accordion
-							.getPanelRenameButton($elem)
+						accordion.mobile
+							.getPanelActionsButton($elem)
+							.should('have.text', '...')
+							.click();
+						accordion.mobile
+							.getPanelRenameButton()
 							.should('have.text', 'Rename');
-						accordion
-							.getPanelRemoveButton($elem)
+						accordion.mobile
+							.getPanelRemoveButton()
 							.should('have.text', 'Remove');
 					} else {
-						accordion
-							.getPanelRenameButton($elem)
-							.should('not.exist');
-						accordion
-							.getPanelRemoveButton($elem)
+						accordion.mobile
+							.getPanelActionsButton($elem)
 							.should('not.exist');
 					}
 				});
