@@ -86,7 +86,8 @@ describe('Watchlists', () => {
 			.contains('Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
-		navbarPage.desktop.getOneWeekItem().click();
+		navbarPage.mobile.getTimeMenu().click();
+		navbarPage.mobile.getOneWeekItem().click();
 
 		cy.repeat(3, (index) => {
 			accordion
