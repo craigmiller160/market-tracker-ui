@@ -36,17 +36,17 @@ describe('Watchlists', () => {
 						.getPanelTitle($elem)
 						.should('have.text', WATCHLIST_NAMES[index]);
 					if (index != 1) {
-						accordion
+						accordion.desktop
 							.getPanelRenameButton($elem)
 							.should('have.text', 'Rename');
-						accordion
+						accordion.desktop
 							.getPanelRemoveButton($elem)
 							.should('have.text', 'Remove');
 					} else {
-						accordion
+						accordion.desktop
 							.getPanelRenameButton($elem)
 							.should('not.exist');
-						accordion
+						accordion.desktop
 							.getPanelRemoveButton($elem)
 							.should('not.exist');
 					}

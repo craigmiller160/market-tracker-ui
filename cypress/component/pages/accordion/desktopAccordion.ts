@@ -1,8 +1,9 @@
 import Chainable = Cypress.Chainable;
+import { GetPanel, ViewportAccordion } from './types';
 
 export const createDesktopAccordion = (
-	getPanel: (panel: JQuery | number) => Chainable<JQuery>
-) => {
+	getPanel: GetPanel
+): ViewportAccordion => {
 	const getPanelRenameButton = (panel: JQuery | number) =>
 		getPanel(panel).find(
 			'.ant-collapse-header .ant-collapse-extra button:nth-child(1)'

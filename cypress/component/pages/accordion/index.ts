@@ -1,9 +1,10 @@
 import Chainable = Cypress.Chainable;
 import { createDesktopAccordion } from './desktopAccordion';
+import { GetPanel } from './types';
 
 const getPanels = () => cy.get('.Accordion .AccordionPanel');
 
-const getPanel = (panel: JQuery | number): Chainable<JQuery> => {
+const getPanel: GetPanel = (panel) => {
 	if (typeof panel === 'number') {
 		return getPanels().eq(panel);
 	}
