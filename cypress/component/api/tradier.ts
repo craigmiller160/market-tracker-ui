@@ -1,10 +1,10 @@
 import Chainable = Cypress.Chainable;
 
-export const mockGetCalendar = (
-	year: string,
-	month: string
-): Chainable<unknown> =>
-	cy.mockGet({
-		url: `/tradier/markets/calendar?year=${year}&month=${month}`,
-		reply: [200, cy.fixture('calendar.json')]
+export const getCalendar = (year: string, month: string): Chainable<unknown> =>
+	cy.intercept(`/tradier/markets/calendar?year=${year}&month=${month}`, {
+		fixture: 'calendar.json'
 	});
+
+export const tradierApi = {
+	getCalendar
+};

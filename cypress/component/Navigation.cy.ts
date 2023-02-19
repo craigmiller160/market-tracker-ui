@@ -1,9 +1,11 @@
 import { navbarPage } from './pages/navbar';
+import { tradierApi } from './api/tradier';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
 describe('Navigation', () => {
 	it('navigation on mobile does not use selected class', () => {
+		tradierApi.getCalendar('2023', '02');
 		cy.mount({
 			viewport: 'mobile'
 		});
