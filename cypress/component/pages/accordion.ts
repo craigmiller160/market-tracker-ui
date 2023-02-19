@@ -22,7 +22,7 @@ const getPanelRemoveButton = (panel: JQuery | number) =>
 const getPanelBody = (panel: JQuery | number) =>
 	getPanel(panel).find('.ant-collapse-content-active');
 
-export const accordionPage = {
+export const accordion = {
 	getPanels,
 	getPanelTitle,
 	getPanelRenameButton,
