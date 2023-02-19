@@ -1,10 +1,9 @@
-import Chainable = Cypress.Chainable;
 import { format } from 'date-fns/fp';
 
 const formatYear = format('yyyy');
 const formatMonth = format('MM');
 
-const getCalendar = (): Chainable<unknown> => {
+const getCalendar = () => {
 	const year = formatYear(new Date());
 	const month = formatMonth(new Date());
 	return cy.intercept(

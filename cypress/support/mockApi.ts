@@ -42,7 +42,9 @@ export type RequestConfig<T> = {
 const isChainable = (value?: any): value is Chainable<string> =>
 	typeof value === 'object' && 'intercept' in value;
 
-export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
+export const mockGet = <T>(
+	config: RequestConfig<T>
+): Chainable<RequestHandler> => {
 	let requestChainable: Chainable<RequestHandler>;
 	if (isChainable(config.body)) {
 		requestChainable = config.body.then((payload) =>
@@ -58,9 +60,10 @@ export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 		if (config.reply instanceof Function) {
 			requestHandler.reply(config.reply);
 		} else if (isChainable(config.reply[1])) {
-			config.reply[1].then((payload) =>
-				requestHandler.reply(config.reply[0], payload, config.reply[2])
-			);
+			config.reply[1].then((payload) => {
+				const reply = config.reply as ReplyValues<T>;
+				return requestHandler.reply(reply[0], payload, reply[2]);
+			});
 		} else {
 			requestHandler.reply(...config.reply);
 		}
@@ -69,7 +72,7 @@ export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 
 export const mockApiHistory = (
 	fn: (h: MockApiHistory) => void
-): Chainable<unknown> => {
+): Chainable<null> => {
 	fn(mockApiInstance.history as unknown as MockApiHistory);
 	return cy.wrap(null);
 };

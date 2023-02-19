@@ -1,8 +1,8 @@
 import Chainable = Cypress.Chainable;
 
-export const repeat = <T>(
+export const repeat = (
 	times: number,
-	fn: (index: number) => Chainable<T>
+	fn: (index: number) => void
 ): Chainable<unknown> =>
 	cy
 		.wrap([...new Array(times).keys()])
