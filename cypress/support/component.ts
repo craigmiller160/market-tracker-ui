@@ -35,5 +35,9 @@ declare global {
 
 Cypress.Commands.add('mount', mountApp);
 
+beforeEach(() => {
+	console.log('HELLO WORLD');
+});
+
 // Example use:
 // cy.mount(<MyComponent />)
