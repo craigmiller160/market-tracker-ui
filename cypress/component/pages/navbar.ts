@@ -7,10 +7,9 @@ const getMobileTimeMenu = () => getMobileMenus().eq(1);
 
 const getMobileMenuItems = () =>
 	cy.get('.ant-menu-sub .ant-menu-title-content');
-const getMobileMarketsItem = () => getMobileMenuItems().eq(0);
 const getMobileSearchItem = () => getMobileMenuItems().eq(1);
-const getMobileWatchlistsItem = () => getMobileMenuItems().eq(2);
-const getMobileRecognitionItem = () => getMobileMenuItems().eq(3);
+const getMobileWatchlistsItem = () => getMobileMenuItems().eq(0);
+const getMobileRecognitionItem = () => getMobileMenuItems().eq(2);
 
 const getMobileTodayItem = () => getMobileMenuItems().eq(0);
 const getMobileOneWeekItem = () => getMobileMenuItems().eq(1);
@@ -23,7 +22,6 @@ export const navbarPage = {
 	getTitle,
 	getMobilePageMenu,
 	getMobileTimeMenu,
-	getMobileMarketsItem,
 	getMobileSearchItem,
 	getMobileWatchlistsItem,
 	getMobileRecognitionItem,
