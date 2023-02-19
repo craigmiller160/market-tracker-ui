@@ -14,8 +14,6 @@ describe('Watchlists', () => {
 		watchlistApi.getAllWatchlists();
 		tradierApi.getStockData('GHI', '1week');
 		tradierApi.getStockData('DEF', '1week');
-		tradierApi.getStockData('VTI', '1week');
-		tradierApi.getStockData('VXUS', '1week');
 		coinGeckoApi.getCryptoData('BTC', '1week');
 		coinGeckoApi.getCryptoData('ETH', '1week');
 		cy.mount();
@@ -72,8 +70,6 @@ describe('Watchlists', () => {
 		watchlistApi.getAllWatchlists();
 		tradierApi.getStockData('GHI', '1week');
 		tradierApi.getStockData('DEF', '1week');
-		tradierApi.getStockData('VTI', '1week');
-		tradierApi.getStockData('VXUS', '1week');
 		coinGeckoApi.getCryptoData('BTC', '1week');
 		coinGeckoApi.getCryptoData('ETH', '1week');
 		cy.mount({
