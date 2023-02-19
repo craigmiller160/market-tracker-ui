@@ -3,6 +3,7 @@ import { watchlistApi } from './api/watchlists';
 import { watchlistPage } from './pages/watchlists';
 import { accordion } from './pages/accordion';
 import { investments } from './pages/investments';
+import {navbarPage} from './pages/navbar';
 
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
@@ -10,16 +11,18 @@ describe('Watchlists', () => {
 	it('renders all the watchlists on desktop', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
-		tradierApi.getQuote('GHI');
-		tradierApi.getQuote('DEF');
-		tradierApi.getQuote('VTI');
-		tradierApi.getQuote('VXUS');
+		tradierApi.getStockData('GHI', '1week');
+		tradierApi.getStockData('DEF', '1week');
+		tradierApi.getStockData('VTI', '1week');
+		tradierApi.getStockData('VXUS', '1week');
 		cy.mount();
 
 		watchlistPage
 			.getPageTitle()
 			.should('have.text', 'Investment Watchlists');
 		accordion.getPanels().should('have.length', 3);
+
+		// TODO need to select 1week here
 
 		cy.repeat(3, (index) => {
 			accordion
