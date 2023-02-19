@@ -26,7 +26,6 @@ const panelConfigToPanels = (config: AccordionPanelConfig) => (
 
 export const Accordion = (props: Props) => {
 	const { panels } = props;
-	console.log('ACCORDION')
 	const panelComponents = panels.map(panelConfigToPanels);
 	return (
 		<Collapse className="Accordion" accordion destroyInactivePanel>
