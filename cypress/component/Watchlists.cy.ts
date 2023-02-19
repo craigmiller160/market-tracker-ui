@@ -50,8 +50,15 @@ describe('Watchlists', () => {
 		accordion.getPanels().eq(0).click();
 		accordion.getPanelBody(0).should('be.visible');
 		investments.getCards().should('have.length', 2);
+		investments
+			.getCardActions(0)
+			.should('have.length', 1)
+			.should('have.text', 'Remove');
 
-		// Remove investment from watchlist, except crypto
+		accordion.getPanels().eq(1).click();
+		accordion.getPanelBody(1).should('be.visible');
+		investments.getCards().should('have.length', 2);
+		investments.getCardActions(0).should('not.exist');
 	});
 
 	it('renders all the watchlists on mobile', () => {
