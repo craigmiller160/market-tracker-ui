@@ -1,9 +1,12 @@
 export {};
 
 describe('Watchlists', () => {
-	it('the tests to make', () => {
-		// Shows the watchlists in alphabetical order, with the crypos
-		// Remove/Rename on all watchlists except crypto
+	it('renders all the watchlists on mobile', () => {
+		// Remove investment from watchlist, except crypto
+		throw new Error();
+	});
+
+	it('renders all the watchlists on desktop', () => {
 		// Remove investment from watchlist, except crypto
 		throw new Error();
 	});
