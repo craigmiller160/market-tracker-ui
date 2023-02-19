@@ -20,8 +20,14 @@ type MockApiHistory = {
 	readonly put: ReadonlyArray<AxiosRequestConfig>;
 };
 
-type ReplyValues<T> = [status: number, data?: T, headers?: object];
-type ReplyFunc<T> = (config: AxiosRequestConfig) => ReplyValues<T>;
+type ReplyValues<T> = [
+	status: number,
+	data?: T | Chainable<string>,
+	headers?: object
+];
+type ReplyFunc<T> = (
+	config: AxiosRequestConfig
+) => [status: number, data?: T, headers?: object];
 
 export type RequestConfig<T> = {
 	readonly matcher?: string | RegExp;
@@ -30,13 +36,13 @@ export type RequestConfig<T> = {
 	readonly reply: ReplyValues<T> | ReplyFunc<T>;
 };
 
-const isChainableBody = (
-	body?: string | AsymmetricRequestDataMatcher | Chainable<string>
-): body is Chainable<string> => typeof body === 'object' && 'intercept' in body;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isChainable = (value?: any): value is Chainable<string> =>
+	typeof value === 'object' && 'intercept' in value;
 
 export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 	let requestChainable: Chainable<RequestHandler>;
-	if (isChainableBody(config.body)) {
+	if (isChainable(config.body)) {
 		requestChainable = config.body.then((payload) =>
 			mockApiInstance.onGet(config.matcher, payload, config.headers)
 		);
@@ -49,6 +55,10 @@ export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 	return requestChainable.then((requestHandler) => {
 		if (config.reply instanceof Function) {
 			requestHandler.reply(config.reply);
+		} else if (isChainable(config.reply[1])) {
+			config.reply[1].then((payload) =>
+				requestHandler.reply(config.reply[0], payload, config.reply[2])
+			);
 		} else {
 			requestHandler.reply(...config.reply);
 		}
