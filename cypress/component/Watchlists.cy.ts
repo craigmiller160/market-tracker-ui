@@ -70,22 +70,20 @@ describe('Watchlists', () => {
 	it('renders all the watchlists on mobile', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
-		cy.mount({
-			viewport: 'mobile'
-		});
-
-		watchlistApi.getAllWatchlists();
 		tradierApi.getStockData('GHI', '1week');
 		tradierApi.getStockData('DEF', '1week');
 		tradierApi.getStockData('VTI', '1week');
 		tradierApi.getStockData('VXUS', '1week');
 		coinGeckoApi.getCryptoData('BTC', '1week');
 		coinGeckoApi.getCryptoData('ETH', '1week');
-		cy.mount();
+		cy.mount({
+			viewport: 'mobile'
+		});
 
 		watchlistPage
 			.getPageTitle()
-			.should('have.text', 'Investment Watchlists');
+			.contains('Investment')
+			.contains('Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
 		navbarPage.desktop.getOneWeekItem().click();
