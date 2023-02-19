@@ -40,7 +40,7 @@ const getCryptoData = (symbol: string, time: HistoryTime): Chainable<null> => {
 		.as(`coingecko_getPrice_${symbol}`)
 		.intercept(
 			RegExp(
-				`/market-tracker/api/coingecko/coins/${cgSymbol}/market_chart/range?vs_currency=usd&from=\\d+&to=\\d+`
+				`\\/market-tracker\\/api\\/coingecko\\/coins\\/${cgSymbol}\\/market_chart\\/range\\?vs_currency=usd&from=\\d+&to=\\d+`
 			),
 			{
 				fixture: rangeFixture
