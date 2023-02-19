@@ -1,4 +1,4 @@
-import MockAdapter from 'axios-mock-adapter';
+import MockAdapter, { RequestHandler } from 'axios-mock-adapter';
 import { ajaxApi } from '../../src/services/AjaxApi';
 import {
 	AsymmetricHeadersMatcher,
@@ -25,23 +25,34 @@ type ReplyFunc<T> = (config: AxiosRequestConfig) => ReplyValues<T>;
 
 export type RequestConfig<T> = {
 	readonly matcher?: string | RegExp;
-	readonly body?: string | AsymmetricRequestDataMatcher;
+	readonly body?: string | AsymmetricRequestDataMatcher | Chainable<string>;
 	readonly headers?: AsymmetricHeadersMatcher;
 	readonly reply: ReplyValues<T> | ReplyFunc<T>;
 };
 
+const isChainableBody = (
+	body?: string | AsymmetricRequestDataMatcher | Chainable<string>
+): body is Chainable<string> => typeof body === 'object' && 'intercept' in body;
+
 export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
-	const requestHandler = mockApiInstance.onGet(
-		config.matcher,
-		config.body,
-		config.headers
-	);
-	if (config.reply instanceof Function) {
-		requestHandler.reply(config.reply);
+	let requestChainable: Chainable<RequestHandler>;
+	if (isChainableBody(config.body)) {
+		requestChainable = config.body.then((payload) =>
+			mockApiInstance.onGet(config.matcher, payload, config.headers)
+		);
 	} else {
-		requestHandler.reply(...config.reply);
+		requestChainable = cy.wrap(
+			mockApiInstance.onGet(config.matcher, config.body, config.headers)
+		);
 	}
-	return cy.wrap(null);
+
+	return requestChainable.then((requestHandler) => {
+		if (config.reply instanceof Function) {
+			requestHandler.reply(config.reply);
+		} else {
+			requestHandler.reply(...config.reply);
+		}
+	});
 };
 
 export const mockApiHistory = (
