@@ -12,7 +12,7 @@ import { TradierQuotes } from '../../../src/types/tradier/quotes';
 import { TradierSeries } from '../../../src/types/tradier/timesales';
 import { TradierHistory } from '../../../src/types/tradier/history';
 
-const USER_ID = 1;
+const USER_ID = nanoid();
 
 export interface TradierData {
 	readonly calendar: TradierCalendar;

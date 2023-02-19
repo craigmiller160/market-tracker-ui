@@ -275,23 +275,27 @@ export const Watchlists = () => {
 		onRemoveStock: showConfirmRemoveStock
 	};
 
-	const combinedWatchlists: ReadonlyArray<DbWatchlist> = [
-		...state.watchlists,
-		{
-			_id: '',
-			userId: '',
-			watchlistName: 'Cryptocurrency',
-			stocks: [],
-			cryptos: [
+	const combinedWatchlists = useMemo(
+		() =>
+			[
+				...state.watchlists,
 				{
-					symbol: 'BTC'
-				},
-				{
-					symbol: 'ETH'
+					_id: '',
+					userId: '',
+					watchlistName: 'Cryptocurrency',
+					stocks: [],
+					cryptos: [
+						{
+							symbol: 'BTC'
+						},
+						{
+							symbol: 'ETH'
+						}
+					]
 				}
-			]
-		}
-	];
+			].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName)),
+		[state.watchlists]
+	);
 
 	const panels = createPanels(combinedWatchlists, panelConfig);
 	const body = match(state)
