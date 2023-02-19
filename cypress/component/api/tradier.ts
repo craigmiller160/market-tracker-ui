@@ -37,14 +37,13 @@ const getStockData = (symbol: string, time: HistoryTime): Chainable<null> => {
 	const interval = getInterval(time);
 	const historyFixture = getFixture(time);
 
+	cy.intercept(
+		`/market-tracker/api/tradier/markets/quotes?symbols=${symbol}`,
+		{
+			fixture: 'tradier_quote_vti.json'
+		}
+	).as(`tradier_getQuote_${symbol}`);
 	return cy
-		.intercept(
-			`/market-tracker/api/tradier/markets/quotes?symbols=${symbol}`,
-			{
-				fixture: 'tradier_quote_vti.json'
-			}
-		)
-		.as(`tradier_getQuote_${symbol}`)
 		.intercept(
 			`/market-tracker/tradier/markets/history?symbol=${symbol}&start=${start}&end=${end}&interval=${interval}`,
 			{
