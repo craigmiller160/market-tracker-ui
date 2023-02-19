@@ -19,7 +19,7 @@ import './commands';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 import { mountApp } from './mountApp';
-import { mockApiHistory, mockApiInstance, mockGet } from './mockApi';
+import { repeat } from './repeat';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -29,19 +29,13 @@ declare global {
 	namespace Cypress {
 		interface Chainable {
 			mount: typeof mountApp;
-			mockGet: typeof mockGet;
-			mockApiHistory: typeof mockApiHistory;
+			range: typeof repeat;
 		}
 	}
 }
 
 Cypress.Commands.add('mount', mountApp);
-Cypress.Commands.add('mockGet', mockGet);
-Cypress.Commands.add('mockApiHistory', mockApiHistory);
-
-beforeEach(() => {
-	mockApiInstance.reset();
-});
+Cypress.Commands.add('repeat', repeat);
 
 // Example use:
 // cy.mount(<MyComponent />)

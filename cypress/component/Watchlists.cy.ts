@@ -13,28 +13,34 @@ describe('Watchlists', () => {
 		watchlistPage
 			.getPageTitle()
 			.should('have.text', 'Investment Watchlists');
-		watchlistPage
-			.getWatchlistPanels()
-			.should('have.length', 3)
-			.each(($elem, index) => {
-				expect($elem.text()).eq(WATCHLIST_NAMES[index]);
-			});
+		watchlistPage.getWatchlistPanels().should('have.length', 3);
 
-		watchlistPage
-			.getWatchlistPanelRenameButton(0)
-			.should('have.text', 'Rename');
-		watchlistPage.getWatchlistPanelRenameButton(1).should('not.exist');
-		watchlistPage
-			.getWatchlistPanelRenameButton(2)
-			.should('have.text', 'Rename');
+		cy.repeat(3, (index) => {
+			watchlistPage
+				.getWatchlistPanels()
+				.eq(index)
+				.then(($elem) => {
+					watchlistPage
+						.getWatchlistPanelTitle($elem)
+						.should('have.text', WATCHLIST_NAMES[index]);
+					if (index != 1) {
+						watchlistPage
+							.getWatchlistPanelRenameButton($elem)
+							.should('have.text', 'Rename');
+						watchlistPage
+							.getWatchlistPanelRemoveButton($elem)
+							.should('have.text', 'Remove');
+					} else {
+						watchlistPage
+							.getWatchlistPanelRenameButton($elem)
+							.should('not.exist');
+						watchlistPage
+							.getWatchlistPanelRemoveButton($elem)
+							.should('not.exist');
+					}
+				});
+		});
 
-		watchlistPage
-			.getWatchlistPanelRemoveButton(0)
-			.should('have.text', 'Remove');
-		watchlistPage.getWatchlistPanelRemoveButton(1).should('not.exist');
-		watchlistPage
-			.getWatchlistPanelRemoveButton(2)
-			.should('have.text', 'Remove');
 		// Remove investment from watchlist, except crypto
 	});
 
