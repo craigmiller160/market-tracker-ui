@@ -68,7 +68,7 @@ describe('Navbar', () => {
 		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
 		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Markets');
+		menuItemIsSelected('Watchlists');
 		menuItemIsSelected('Today');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -129,7 +129,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -154,7 +154,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -173,34 +173,6 @@ describe('Navbar', () => {
 			'http://localhost/market-tracker/watchlists'
 		);
 		expect(screen.getByText('Watchlists').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
-	});
-
-	it('starts on recognition page due to route, then navigates to markets page', async () => {
-		await renderApp({
-			initialPath: '/market-tracker/recognition'
-		});
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
-		);
-		expect(
-			screen.getByText('Recognition').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-		expect(
-			screen.getByText('Markets').closest('li')?.className
-		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
-
-		await userEvent.click(screen.getByText('Markets'));
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
-		);
-		expect(screen.getByText('Markets').closest('li')?.className).toEqual(
 			expect.stringContaining(SELECTED_CLASS)
 		);
 	});
