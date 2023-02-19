@@ -1,11 +1,16 @@
 import { navbarPage } from './pages/navbar';
 import { tradierApi } from './api/tradier';
+import { format } from 'date-fns/fp';
+import { watchlistApi } from './api/watchlists';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
+const formatYear = format('yyyy');
+const formatMonth = format('MM');
 
 describe('Navigation', () => {
 	it('navigation on mobile does not use selected class', () => {
-		tradierApi.getCalendar('2023', '02');
+		tradierApi.getCalendar(formatYear(new Date()), formatMonth(new Date()));
+		watchlistApi.getAllWatchlists();
 		cy.mount({
 			viewport: 'mobile'
 		});
