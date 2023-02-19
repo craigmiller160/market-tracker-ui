@@ -3,5 +3,11 @@
   "compilerOptions": {
     "types": ["cypress", "node"]
   },
-  "include": ["**/*"]
+  "include": ["**/*"],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "build",
+    ".yalc"
+  ]
 }
