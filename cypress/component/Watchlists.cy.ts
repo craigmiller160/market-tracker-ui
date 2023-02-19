@@ -1,6 +1,7 @@
 import { tradierApi } from './api/tradier';
 import { watchlistApi } from './api/watchlists';
 import { watchlistPage } from './pages/watchlists';
+import { accordionPage } from './pages/accordion';
 
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
@@ -17,36 +18,36 @@ describe('Watchlists', () => {
 		watchlistPage
 			.getPageTitle()
 			.should('have.text', 'Investment Watchlists');
-		watchlistPage.getPanels().should('have.length', 3);
+		accordionPage.getPanels().should('have.length', 3);
 
 		cy.repeat(3, (index) => {
-			watchlistPage
+			accordionPage
 				.getPanels()
 				.eq(index)
 				.then(($elem) => {
-					watchlistPage
+					accordionPage
 						.getPanelTitle($elem)
 						.should('have.text', WATCHLIST_NAMES[index]);
 					if (index != 1) {
-						watchlistPage
+						accordionPage
 							.getPanelRenameButton($elem)
 							.should('have.text', 'Rename');
-						watchlistPage
+						accordionPage
 							.getPanelRemoveButton($elem)
 							.should('have.text', 'Remove');
 					} else {
-						watchlistPage
+						accordionPage
 							.getPanelRenameButton($elem)
 							.should('not.exist');
-						watchlistPage
+						accordionPage
 							.getPanelRemoveButton($elem)
 							.should('not.exist');
 					}
 				});
 		});
 
-		watchlistPage.getPanels().eq(0).click();
-		watchlistPage.getPanelBody(0).should('be.visible');
+		accordionPage.getPanels().eq(0).click();
+		accordionPage.getPanelBody(0).should('be.visible');
 		watchlistPage.getInvestmentCards().should('have.length', 2);
 
 		// Remove investment from watchlist, except crypto
