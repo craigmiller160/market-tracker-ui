@@ -4,6 +4,7 @@ import { watchlistPage } from './pages/watchlists';
 import { accordion } from './pages/accordion';
 import { investments } from './pages/investments';
 import { navbarPage } from './pages/navbar';
+import {coinGeckoApi} from './api/coingecko';
 
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
@@ -15,6 +16,8 @@ describe('Watchlists', () => {
 		tradierApi.getStockData('DEF', '1week');
 		tradierApi.getStockData('VTI', '1week');
 		tradierApi.getStockData('VXUS', '1week');
+		coinGeckoApi.getCryptoData('BTC', '1week');
+		coinGeckoApi.getCryptoData('ETH', '1week');
 		cy.mount();
 
 		watchlistPage
