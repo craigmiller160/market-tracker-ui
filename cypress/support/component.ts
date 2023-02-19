@@ -20,7 +20,7 @@ import './commands';
 // require('./commands')
 
 import { mountApp } from './mountApp';
-import { mockApiInstance, mockGet } from './mockApi';
+import { mockApiInstance, mockGet, mockApiHistory } from './mockApi';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -31,12 +31,14 @@ declare global {
 		interface Chainable {
 			mount: typeof mountApp;
 			mockGet: typeof mockGet;
+			mockApiHistory: typeof mockApiHistory;
 		}
 	}
 }
 
 Cypress.Commands.add('mount', mountApp);
 Cypress.Commands.add('mockGet', mockGet);
+Cypress.Commands.add('mockApiHistory', mockApiHistory);
 
 beforeEach(() => {
 	mockApiInstance.reset();

@@ -9,6 +9,8 @@ import { AxiosRequestConfig } from 'axios';
 
 export const mockApiInstance = new MockAdapter(ajaxApi.instance);
 
+type MockApiHistory = typeof mockApiInstance.history;
+
 type ReplyValues<T> = [status: number, data?: T, headers?: object];
 type ReplyFunc<T> = (config: AxiosRequestConfig) => ReplyValues<T>;
 
@@ -30,5 +32,12 @@ export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 	} else {
 		requestHandler.reply(...config.reply);
 	}
+	return cy.wrap(null);
+};
+
+export const mockApiHistory = (
+	fn: (h: MockApiHistory) => void
+): Chainable<unknown> => {
+	fn(mockApiInstance.history);
 	return cy.wrap(null);
 };
