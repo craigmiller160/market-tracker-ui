@@ -8,7 +8,7 @@ const getCard = (card: JQuery | number): Chainable<JQuery> => {
 	return cy.wrap(card);
 };
 const getCardActions = (card: JQuery | number) =>
-	getCard(card).find('.ant-card.actions');
+	getCard(card).find('.ant-card-actions');
 
 export const investments = {
 	getCards,
