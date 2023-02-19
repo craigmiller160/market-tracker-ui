@@ -8,6 +8,10 @@ describe('Watchlists', () => {
 	it('renders all the watchlists on desktop', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
+		tradierApi.getQuote('GHI');
+		tradierApi.getQuote('DEF');
+		tradierApi.getQuote('VTI');
+		tradierApi.getQuote('VXUS');
 		cy.mount();
 
 		watchlistPage
@@ -43,6 +47,7 @@ describe('Watchlists', () => {
 
 		watchlistPage.getPanels().eq(0).click();
 		watchlistPage.getPanelBody(0).should('be.visible');
+		watchlistPage.getInvestmentCards().should('have.length', 2);
 
 		// Remove investment from watchlist, except crypto
 	});

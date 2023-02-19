@@ -14,7 +14,17 @@ const getCalendar = (): Chainable<unknown> => {
 		}
 	);
 };
+const getQuote = (symbol: string) =>
+	cy
+		.intercept(
+			`/market-tracker/api/tradier/markets/quotes?symbols=${symbol}`,
+			{
+				statusCode: 204
+			}
+		)
+		.as(`tradier_getQuote_${symbol}`);
 
 export const tradierApi = {
-	getCalendar
+	getCalendar,
+	getQuote
 };

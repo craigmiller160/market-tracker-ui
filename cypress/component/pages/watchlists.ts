@@ -24,6 +24,8 @@ const getPanelRemoveButton = (panel: JQuery | number) =>
 	);
 const getPanelBody = (panel: JQuery | number) =>
 	getPanel(panel).find('.ant-collapse-content-active');
+
+const getInvestmentCards = () => cy.get('.InvestmentCard');
 export const watchlistPage = {
 	getPageTitle,
 	getAddButton,
@@ -31,5 +33,6 @@ export const watchlistPage = {
 	getPanelTitle,
 	getPanelRenameButton,
 	getPanelRemoveButton,
-	getPanelBody
+	getPanelBody,
+	getInvestmentCards
 };
