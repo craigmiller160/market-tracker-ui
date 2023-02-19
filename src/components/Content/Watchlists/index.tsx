@@ -275,7 +275,25 @@ export const Watchlists = () => {
 		onRemoveStock: showConfirmRemoveStock
 	};
 
-	const panels = createPanels(state.watchlists, panelConfig);
+	const combinedWatchlists: ReadonlyArray<DbWatchlist> = [
+		...state.watchlists,
+		{
+			_id: '',
+			userId: '',
+			watchlistName: 'Cryptocurrency',
+			stocks: [],
+			cryptos: [
+				{
+					symbol: 'BTC'
+				},
+				{
+					symbol: 'ETH'
+				}
+			]
+		}
+	];
+
+	const panels = createPanels(combinedWatchlists, panelConfig);
 	const body = match(state)
 		.with({ loading: true }, () => <Spinner />)
 		.otherwise(() => <Accordion panels={panels} />);

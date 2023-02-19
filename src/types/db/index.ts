@@ -3,5 +3,5 @@ export interface DbRecord {
 }
 
 export interface UserRecord {
-	readonly userId: number;
+	readonly userId: string;
 }
