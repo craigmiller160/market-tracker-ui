@@ -44,5 +44,14 @@ beforeEach(() => {
 	mockApiInstance.reset();
 });
 
+afterEach(() => {
+	const apiCalls = Object.entries(mockApiInstance.history)
+		.flatMap(([method, configArray]) =>
+			configArray.map((config) => `* ${method} ${config.url}`)
+		)
+		.join('\n');
+	cy.log(`API Calls\n${apiCalls}`);
+});
+
 // Example use:
 // cy.mount(<MyComponent />)
