@@ -41,6 +41,9 @@ describe('Watchlists', () => {
 				});
 		});
 
+		watchlistPage.getPanels().eq(0).click();
+		watchlistPage.getPanelBody(0).should('be.visible');
+
 		// Remove investment from watchlist, except crypto
 	});
 
