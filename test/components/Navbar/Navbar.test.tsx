@@ -208,7 +208,7 @@ describe('Navbar', () => {
 	it('selects 1 Week', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -220,7 +220,7 @@ describe('Navbar', () => {
 	it('selects 1 Month', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -232,7 +232,7 @@ describe('Navbar', () => {
 	it('selects Today', async () => {
 		const { store } = await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
 		await waitFor(() => menuItemIsSelected('1 Week'));
@@ -246,7 +246,7 @@ describe('Navbar', () => {
 	it('selects 3 Months', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -258,7 +258,7 @@ describe('Navbar', () => {
 	it('selects 1 Year', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -270,7 +270,7 @@ describe('Navbar', () => {
 	it('selects 5 Years', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
