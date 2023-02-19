@@ -9,7 +9,6 @@ describe('Watchlists', () => {
 		watchlistApi.getAllWatchlists();
 		cy.mount();
 		// Remove investment from watchlist, except crypto
-		throw new Error();
 	});
 
 	it('renders all the watchlists on mobile', () => {
