@@ -189,23 +189,32 @@ const createPanels = (
 				/>
 			),
 			key: watchlist._id,
-			investments: watchlist.stocks.map(
-				(stock): AccordionInvestment => ({
-					symbol: stock.symbol,
-					type: InvestmentType.STOCK,
-					name: '',
-					getActions: (symbol: string) => [
-						<Button
-							key="remove"
-							onClick={() =>
-								config.onRemoveStock(watchlist._id, symbol)
-							}
-						>
-							Remove
-						</Button>
-					]
-				})
-			)
+			investments: [
+				...watchlist.stocks.map(
+					(stock): AccordionInvestment => ({
+						symbol: stock.symbol,
+						type: InvestmentType.STOCK,
+						name: '',
+						getActions: (symbol: string) => [
+							<Button
+								key="remove"
+								onClick={() =>
+									config.onRemoveStock(watchlist._id, symbol)
+								}
+							>
+								Remove
+							</Button>
+						]
+					})
+				),
+				...watchlist.cryptos.map(
+					(crypto): AccordionInvestment => ({
+						symbol: crypto.symbol,
+						type: InvestmentType.CRYPTO,
+						name: ''
+					})
+				)
+			]
 		})
 	);
 
@@ -275,32 +284,34 @@ export const Watchlists = () => {
 		onRemoveStock: showConfirmRemoveStock
 	};
 
-	const combinedWatchlists = useMemo(
-		() =>
-			[
-				...state.watchlists,
-				{
-					_id: '',
-					userId: '',
-					watchlistName: 'Cryptocurrency',
-					stocks: [],
-					cryptos: [
-						{
-							symbol: 'BTC'
-						},
-						{
-							symbol: 'ETH'
-						}
-					]
-				}
-			].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName)),
-		[state.watchlists]
-	);
+	const combinedWatchlists = useMemo(() => {
+		return [
+			...state.watchlists,
+			{
+				_id: '',
+				userId: '',
+				watchlistName: 'Cryptocurrency',
+				stocks: [],
+				cryptos: [
+					{
+						symbol: 'BTC'
+					},
+					{
+						symbol: 'ETH'
+					}
+				]
+			}
+		].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
+	}, [state.watchlists]);
+	console.log('WATCHLISTS');
+
 
 	const panels = createPanels(combinedWatchlists, panelConfig);
-	const body = match(state)
-		.with({ loading: true }, () => <Spinner />)
-		.otherwise(() => <Accordion panels={panels} />);
+	// TODO restore this
+	const body = <Accordion panels={panels} />
+	// const body = match(state)
+	// 	.with({ loading: true }, () => <Spinner />)
+	// 	.otherwise(() => <Accordion panels={panels} />);
 
 	return (
 		<RefreshProvider>

@@ -210,7 +210,9 @@ export const InvestmentCard = (props: Props) => {
 	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	const status = useSelector(marketStatusSelector);
+	// TODO restore this
+	// const status = useSelector(marketStatusSelector);
+	const status = MarketStatus.OPEN;
 
 	const { loading, data, error, respectMarketStatus } = useInvestmentData(
 		time,
