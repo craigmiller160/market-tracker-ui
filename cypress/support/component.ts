@@ -29,7 +29,7 @@ declare global {
 	namespace Cypress {
 		interface Chainable {
 			mount: typeof mountApp;
-			range: typeof repeat;
+			repeat: typeof repeat;
 		}
 	}
 }

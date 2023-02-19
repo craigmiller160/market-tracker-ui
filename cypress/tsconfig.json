@@ -1,12 +1,7 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2022",
-    "lib": ["esnext", "dom"],
-    "types": ["cypress", "node"],
-    "jsx": "react-jsx",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node"
+    "types": ["cypress"]
   },
-  "include": ["**/*"]
+  "include": ["./**/*"]
 }
