@@ -12,29 +12,29 @@ describe('Navigation', () => {
 			viewport: 'mobile'
 		});
 		navbarPage.getTitle().should('have.text', 'Market Tracker');
-		navbarPage
-			.getMobilePageMenu()
+		navbarPage.mobile
+			.getPageMenu()
 			.should('have.text', 'Watchlists')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
-		navbarPage
-			.getMobileTimeMenu()
+		navbarPage.mobile
+			.getTimeMenu()
 			.should('have.text', 'Today')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
 
-		navbarPage.getMobilePageMenu().click();
-		navbarPage.getMobileSearchItem().click();
-		navbarPage
-			.getMobilePageMenu()
+		navbarPage.mobile.getPageMenu().click();
+		navbarPage.mobile.getSearchItem().click();
+		navbarPage.mobile
+			.getPageMenu()
 			.should('have.text', 'Search')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
 
-		navbarPage.getMobileTimeMenu().click();
-		navbarPage.getMobileFiveYearsItem().click();
-		navbarPage
-			.getMobileTimeMenu()
+		navbarPage.mobile.getTimeMenu().click();
+		navbarPage.mobile.getFiveYearsItem().click();
+		navbarPage.mobile
+			.getTimeMenu()
 			.should('have.text', '5 Years')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
