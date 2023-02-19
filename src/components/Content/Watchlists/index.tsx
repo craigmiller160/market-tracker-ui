@@ -303,15 +303,11 @@ export const Watchlists = () => {
 			}
 		].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
 	}, [state.watchlists]);
-	console.log('WATCHLISTS');
-
 
 	const panels = createPanels(combinedWatchlists, panelConfig);
-	// TODO restore this
-	const body = <Accordion panels={panels} />
-	// const body = match(state)
-	// 	.with({ loading: true }, () => <Spinner />)
-	// 	.otherwise(() => <Accordion panels={panels} />);
+	const body = match(state)
+		.with({ loading: true }, () => <Spinner />)
+		.otherwise(() => <Accordion panels={panels} />);
 
 	return (
 		<RefreshProvider>
