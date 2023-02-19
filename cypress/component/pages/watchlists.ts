@@ -8,13 +8,11 @@ const getWatchlistPanelTitle = (panel: JQuery) =>
 const getWatchlistPanelRenameButton = (panel: JQuery) =>
 	cy
 		.wrap(panel)
-		.find('.ant-collapse-header .ant-collapse-extra button')
-		.eq(0);
+		.find('.ant-collapse-header .ant-collapse-extra button:nth-child(1)');
 const getWatchlistPanelRemoveButton = (panel: JQuery) =>
 	cy
 		.wrap(panel)
-		.find('.ant-collapse-header .ant-collapse-extra button')
-		.eq(1);
+		.find('.ant-collapse-header .ant-collapse-extra button:nth-child(2)');
 export const watchlistPage = {
 	getPageTitle,
 	getAddButton,
