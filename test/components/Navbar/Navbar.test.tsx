@@ -53,7 +53,7 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
@@ -71,7 +71,6 @@ describe('Navbar', () => {
 		menuItemIsSelected('Markets');
 		menuItemIsSelected('Today');
 
-		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
@@ -79,10 +78,9 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		expect(screen.queryByText('Search')).toBeInTheDocument();
-		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
@@ -95,7 +93,7 @@ describe('Navbar', () => {
 		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
 		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Markets');
+		menuItemIsSelected('Watchlists');
 		menuItemIsSelected('Today');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
