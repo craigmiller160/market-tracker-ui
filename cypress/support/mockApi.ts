@@ -7,7 +7,9 @@ import {
 import Chainable = Cypress.Chainable;
 import { AxiosRequestConfig } from 'axios';
 
-export const mockApiInstance = new MockAdapter(ajaxApi.instance);
+export const mockApiInstance = new MockAdapter(ajaxApi.instance, {
+	onNoMatch: 'passthrough'
+});
 
 type MockApiHistory = {
 	readonly delete: ReadonlyArray<AxiosRequestConfig>;
@@ -30,7 +32,7 @@ type ReplyFunc<T> = (
 ) => [status: number, data?: T, headers?: object];
 
 export type RequestConfig<T> = {
-	readonly matcher?: string | RegExp;
+	readonly url?: string | RegExp;
 	readonly body?: string | AsymmetricRequestDataMatcher | Chainable<string>;
 	readonly headers?: AsymmetricHeadersMatcher;
 	readonly reply: ReplyValues<T> | ReplyFunc<T>;
@@ -44,11 +46,11 @@ export const mockGet = <T>(config: RequestConfig<T>): Chainable<unknown> => {
 	let requestChainable: Chainable<RequestHandler>;
 	if (isChainable(config.body)) {
 		requestChainable = config.body.then((payload) =>
-			mockApiInstance.onGet(config.matcher, payload, config.headers)
+			mockApiInstance.onGet(config.url, payload, config.headers)
 		);
 	} else {
 		requestChainable = cy.wrap(
-			mockApiInstance.onGet(config.matcher, config.body, config.headers)
+			mockApiInstance.onGet(config.url, config.body, config.headers)
 		);
 	}
 

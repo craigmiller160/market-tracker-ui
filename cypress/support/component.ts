@@ -18,9 +18,8 @@ import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
-
 import { mountApp } from './mountApp';
-import { mockApiInstance, mockGet, mockApiHistory } from './mockApi';
+import { mockApiHistory, mockApiInstance, mockGet } from './mockApi';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -42,15 +41,6 @@ Cypress.Commands.add('mockApiHistory', mockApiHistory);
 
 beforeEach(() => {
 	mockApiInstance.reset();
-});
-
-afterEach(() => {
-	const apiCalls = Object.entries(mockApiInstance.history)
-		.flatMap(([method, configArray]) =>
-			configArray.map((config) => `* ${method} ${config.url}`)
-		)
-		.join('\n');
-	cy.log(`API Calls\n${apiCalls}`);
 });
 
 // Example use:
