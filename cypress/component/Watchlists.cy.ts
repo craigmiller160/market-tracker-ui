@@ -13,29 +13,29 @@ describe('Watchlists', () => {
 		watchlistPage
 			.getPageTitle()
 			.should('have.text', 'Investment Watchlists');
-		watchlistPage.getWatchlistPanels().should('have.length', 3);
+		watchlistPage.getPanels().should('have.length', 3);
 
 		cy.repeat(3, (index) => {
 			watchlistPage
-				.getWatchlistPanels()
+				.getPanels()
 				.eq(index)
 				.then(($elem) => {
 					watchlistPage
-						.getWatchlistPanelTitle($elem)
+						.getPanelTitle($elem)
 						.should('have.text', WATCHLIST_NAMES[index]);
 					if (index != 1) {
 						watchlistPage
-							.getWatchlistPanelRenameButton($elem)
+							.getPanelRenameButton($elem)
 							.should('have.text', 'Rename');
 						watchlistPage
-							.getWatchlistPanelRemoveButton($elem)
+							.getPanelRemoveButton($elem)
 							.should('have.text', 'Remove');
 					} else {
 						watchlistPage
-							.getWatchlistPanelRenameButton($elem)
+							.getPanelRenameButton($elem)
 							.should('not.exist');
 						watchlistPage
-							.getWatchlistPanelRemoveButton($elem)
+							.getPanelRemoveButton($elem)
 							.should('not.exist');
 					}
 				});
