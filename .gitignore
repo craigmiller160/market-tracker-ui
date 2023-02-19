@@ -12,3 +12,4 @@ reports
 deploy/chart/charts
 *.tgz
 .terraform
+cypress/videos

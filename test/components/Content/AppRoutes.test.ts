@@ -24,14 +24,16 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/markets'
+					'http://localhost/market-tracker/watchlists'
 				),
 			{
 				timeout: 2000
 			}
 		);
 		await waitFor(() =>
-			expect(screen.queryByText('All Markets')).toBeInTheDocument()
+			expect(
+				screen.queryByText('Investment Watchlists')
+			).toBeInTheDocument()
 		);
 	});
 
@@ -42,31 +44,13 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/markets'
+					'http://localhost/market-tracker/watchlists'
 				),
 			{
 				timeout: 2000
 			}
 		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
-	});
-
-	it('renders markets route', async () => {
-		await renderApp({
-			initialPath: '/market-tracker/markets'
-		});
-		await waitFor(
-			() =>
-				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/markets'
-				),
-			{
-				timeout: 2000
-			}
-		);
-		await waitFor(() =>
-			expect(screen.queryByText('All Markets')).toBeInTheDocument()
-		);
+		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
 	});
 
 	it('renders portfolios route', async () => {
@@ -135,12 +119,12 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/markets'
+					'http://localhost/market-tracker/watchlists'
 				),
 			{
 				timeout: 2000
 			}
 		);
-		expect(screen.queryByText('All Markets')).toBeInTheDocument();
+		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
 	});
 });

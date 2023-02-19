@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "63f13cbdb66cbbe7c811dd8f",
+    "userId": "7a8e0603-dca6-474c-a0f7-34a748567aee",
+    "watchlistName": "My Investments",
+    "stocks": [
+      {
+        "symbol": "VTI",
+        "_id": "63f13cc6b66cbbe7c811dd93"
+      },
+      {
+        "symbol": "VXUS",
+        "_id": "63f13cceb66cbbe7c811dd98"
+      }
+    ],
+    "cryptos": [],
+    "__v": 0
+  },
+  {
+    "_id": "63f13cc6b66cbbe7c811dd93",
+    "userId": "7a8e0603-dca6-474c-a0f7-34a748567aee",
+    "watchlistName": "ABC",
+    "stocks": [
+      {
+        "symbol": "DEF",
+        "_id": "63f13cc6b66cbbe7c811dd93"
+      },
+      {
+        "symbol": "GHI",
+        "_id": "63f13cceb66cbbe7c811dd98"
+      }
+    ],
+    "cryptos": [],
+    "__v": 0
+  }
+]

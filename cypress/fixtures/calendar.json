@@ -152,13 +152,13 @@
         },
         {
           "date": "2023-02-11",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-12",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-13",
@@ -247,18 +247,18 @@
         },
         {
           "date": "2023-02-18",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-19",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-20",
-          "status": "closed",
-          "description": "Market is closed for Washington's Birthday"
+          "status": "open",
+          "description": "Market is open for Washington's Birthday"
         },
         {
           "date": "2023-02-21",
@@ -330,13 +330,13 @@
         },
         {
           "date": "2023-02-25",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-26",
-          "status": "closed",
-          "description": "Market is closed"
+          "status": "open",
+          "description": "Market is open"
         },
         {
           "date": "2023-02-27",

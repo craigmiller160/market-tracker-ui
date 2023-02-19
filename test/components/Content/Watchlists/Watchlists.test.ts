@@ -5,18 +5,6 @@ import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import { ScreenContextValue } from '../../../../src/components/ScreenContext';
 
-const PRICE_REGEX = /\$\d+\.\d{2}/;
-
-const testCard = (symbol: string, price: string) => {
-	const card = screen.getByTestId(`market-card-${symbol}`);
-	expect(within(card).queryByText(new RegExp(symbol))).toHaveTextContent(
-		`(${symbol}) My Stock`
-	);
-	const priceNodes = within(card).getAllByText(PRICE_REGEX);
-	expect(priceNodes).toHaveLength(2);
-	expect(priceNodes[0]).toHaveTextContent(price);
-};
-
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 
@@ -28,111 +16,6 @@ describe('Watchlists', () => {
 
 	afterEach(() => {
 		apiServer.server.shutdown();
-	});
-	it('renders all watchlists on mobile', async () => {
-		const screenContextValue: ScreenContextValue = {
-			breakpoints: {
-				xs: true
-			}
-		};
-		renderApp({
-			initialPath: '/market-tracker/watchlists',
-			screenContextValue
-		});
-		await waitFor(() =>
-			expect(
-				screen.queryByText(/Investment.*Watchlists/)
-			).toBeInTheDocument()
-		);
-		await waitFor(() =>
-			expect(
-				screen.queryAllByTestId('watchlist-panel-title')
-			).toHaveLength(2)
-		);
-		apiServer.database.data.watchlists.forEach((watchlist) => {
-			expect(
-				screen.queryByText(watchlist.watchlistName)
-			).toBeInTheDocument();
-		});
-
-		expect(screen.queryAllByTestId('mobile-panel-actions')).toHaveLength(
-			apiServer.database.data.watchlists.length
-		);
-
-		expect(screen.getByTestId('watchlist-page').className).toContain('xs');
-		expect(screen.getAllByText('...')).toHaveLength(
-			apiServer.database.data.watchlists.length
-		);
-
-		await userEvent.click(
-			screen.getAllByTestId('watchlist-panel-title')[0]
-		);
-		await waitFor(() =>
-			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
-		);
-
-		testCard('VTI', '$100.00');
-		testCard('VOO', '$101.00');
-
-		await userEvent.click(
-			screen.getAllByTestId('watchlist-panel-title')[1]
-		);
-		await waitFor(
-			() =>
-				expect(screen.queryAllByText('Chart is Here')).toHaveLength(2),
-			{
-				timeout: 3000
-			}
-		);
-		testCard('AAPL', '$102.00');
-		testCard('GOOG', '$103.00');
-	});
-
-	it('renders all watchlists', async () => {
-		renderApp({
-			initialPath: '/market-tracker/watchlists'
-		});
-		await waitFor(() =>
-			expect(
-				screen.queryByText('Investment Watchlists')
-			).toBeInTheDocument()
-		);
-		await waitFor(() =>
-			expect(
-				screen.queryAllByTestId('watchlist-panel-title')
-			).toHaveLength(2)
-		);
-		apiServer.database.data.watchlists.forEach((watchlist) => {
-			expect(
-				screen.queryByText(watchlist.watchlistName)
-			).toBeInTheDocument();
-		});
-
-		expect(screen.queryAllByTestId('desktop-panel-actions')).toHaveLength(
-			apiServer.database.data.watchlists.length
-		);
-		expect(screen.getByTestId('watchlist-page').className).not.toContain(
-			'xs'
-		);
-
-		await userEvent.click(
-			screen.getAllByTestId('watchlist-panel-title')[0]
-		);
-		await waitFor(() =>
-			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
-		);
-
-		testCard('VTI', '$100.00');
-		testCard('VOO', '$101.00');
-
-		await userEvent.click(
-			screen.getAllByTestId('watchlist-panel-title')[1]
-		);
-		await waitFor(() =>
-			expect(screen.queryAllByText('Chart is Here')).toHaveLength(2)
-		);
-		testCard('AAPL', '$102.00');
-		testCard('GOOG', '$103.00');
 	});
 
 	it.skip('renames a watchlist on mobile', async () => {
@@ -194,7 +77,7 @@ describe('Watchlists', () => {
 		await waitFor(() =>
 			expect(
 				screen.queryAllByTestId('watchlist-panel-title')
-			).toHaveLength(2)
+			).toHaveLength(3)
 		);
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 		expect(screen.queryByText('Save')).not.toBeInTheDocument();

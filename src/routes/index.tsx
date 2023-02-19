@@ -4,7 +4,6 @@ import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';
 import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists';
-import { Markets } from '../components/Content/Markets';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { Recognition } from '../components/Content/Recognition';
 import { Search } from '../components/Content/Search';
@@ -20,16 +19,12 @@ const isNotProd: PredicateT<string | undefined> = (_) => _ !== 'production';
 const getAuthorizedRoutes = ({ env }: RouteRules) => {
 	const allEnvRoutes = [
 		{
-			path: 'markets',
-			element: <Markets />
+			path: 'watchlists',
+			element: <Watchlists />
 		},
 		{
 			path: 'search',
 			element: <Search />
-		},
-		{
-			path: 'watchlists',
-			element: <Watchlists />
 		},
 		{
 			path: 'recognition',
@@ -39,11 +34,11 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 	const fallbackRoutes = [
 		{
 			path: '',
-			element: <Navigate to="markets" />
+			element: <Navigate to="watchlists" />
 		},
 		{
 			path: '*',
-			element: <Navigate to="markets" />
+			element: <Navigate to="watchlists" />
 		}
 	];
 	const envDependentRoutes = match(env)

@@ -3,18 +3,19 @@ import * as WatchlistService from '../../src/services/WatchlistService';
 import '@relmify/jest-fp-ts';
 import MockAdapter from 'axios-mock-adapter';
 import { ajaxApi } from '../../src/services/AjaxApi';
+import { nanoid } from '@reduxjs/toolkit';
 
 const watchlists: ReadonlyArray<DbWatchlist> = [
 	{
 		_id: '1',
-		userId: 2,
+		userId: nanoid(),
 		watchlistName: 'Watchlist',
 		stocks: [],
 		cryptos: []
 	},
 	{
 		_id: '2',
-		userId: 2,
+		userId: nanoid(),
 		watchlistName: 'Watchlist2',
 		stocks: [],
 		cryptos: []
@@ -80,7 +81,7 @@ describe('WatchlistService', () => {
 		};
 		const response: DbWatchlist = {
 			...body,
-			userId: 1,
+			userId: nanoid(),
 			_id: '2'
 		};
 		mockApi.onPost('/watchlists', body).reply(200, response);
@@ -101,7 +102,7 @@ describe('WatchlistService', () => {
 		};
 		const response: DbWatchlist = {
 			...body,
-			userId: 1,
+			userId: nanoid(),
 			_id: '2'
 		};
 		mockApi.onPost('/watchlists', body).reply(200, response);

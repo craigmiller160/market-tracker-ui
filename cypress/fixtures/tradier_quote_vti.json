@@ -1,0 +1,33 @@
+{
+  "quotes": {
+    "quote": {
+      "symbol": "VTI",
+      "description": "Vanguard Total Stock Market ETF",
+      "exch": "P",
+      "type": "etf",
+      "last": 205.08,
+      "change": -0.6,
+      "volume": 2324041,
+      "open": 204.77,
+      "high": 205.2327,
+      "low": 203.531,
+      "close": 205.08,
+      "bid": 205.05,
+      "ask": 205.76,
+      "change_percentage": -0.3,
+      "average_volume": 3733272,
+      "last_volume": 0,
+      "trade_date": 1676682000002,
+      "prevclose": 205.68,
+      "week_52_high": 233.36,
+      "week_52_low": 174.84,
+      "bidsize": 7,
+      "bidexch": "P",
+      "bid_date": 1676677420000,
+      "asksize": 7,
+      "askexch": "P",
+      "ask_date": 1676681196000,
+      "root_symbols": "VTI"
+    }
+  }
+}

@@ -53,7 +53,7 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
@@ -68,10 +68,9 @@ describe('Navbar', () => {
 		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
 		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Markets');
+		menuItemIsSelected('Watchlists');
 		menuItemIsSelected('Today');
 
-		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
 	});
 
@@ -79,10 +78,9 @@ describe('Navbar', () => {
 		await renderApp();
 		expect(screen.queryByText('Market Tracker')).toBeInTheDocument();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		expect(screen.queryByText('Search')).toBeInTheDocument();
-		expect(screen.queryByText('Watchlists')).toBeInTheDocument();
 		expect(screen.queryByText('Recognition')).toBeInTheDocument();
 		expect(screen.queryByText('Logout')).toBeInTheDocument();
 
@@ -95,7 +93,7 @@ describe('Navbar', () => {
 		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
 		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Markets');
+		menuItemIsSelected('Watchlists');
 		menuItemIsSelected('Today');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();
@@ -106,7 +104,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -131,7 +129,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -156,7 +154,7 @@ describe('Navbar', () => {
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 
 		expect(window.location.href).toEqual(
@@ -179,38 +177,10 @@ describe('Navbar', () => {
 		);
 	});
 
-	it('starts on recognition page due to route, then navigates to markets page', async () => {
-		await renderApp({
-			initialPath: '/market-tracker/recognition'
-		});
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
-		);
-		expect(
-			screen.getByText('Recognition').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-		expect(
-			screen.getByText('Markets').closest('li')?.className
-		).not.toEqual(expect.stringContaining(SELECTED_CLASS));
-
-		await userEvent.click(screen.getByText('Markets'));
-
-		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/markets'
-		);
-		expect(screen.getByText('Markets').closest('li')?.className).toEqual(
-			expect.stringContaining(SELECTED_CLASS)
-		);
-	});
-
 	it('selects 1 Week', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -222,7 +192,7 @@ describe('Navbar', () => {
 	it('selects 1 Month', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -234,7 +204,7 @@ describe('Navbar', () => {
 	it('selects Today', async () => {
 		const { store } = await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
 		await waitFor(() => menuItemIsSelected('1 Week'));
@@ -248,7 +218,7 @@ describe('Navbar', () => {
 	it('selects 3 Months', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -260,7 +230,7 @@ describe('Navbar', () => {
 	it('selects 1 Year', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
@@ -272,7 +242,7 @@ describe('Navbar', () => {
 	it('selects 5 Years', async () => {
 		await renderApp();
 		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
+			expect(screen.queryByText('Watchlists')).toBeInTheDocument()
 		);
 		menuItemIsSelected('Today');
 
