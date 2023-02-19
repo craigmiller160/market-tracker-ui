@@ -30,28 +30,26 @@ const getCalendar = (): Chainable<null> => {
 		}
 	);
 };
-const getQuote = (symbol: string) =>
-	cy
+
+const getStockData = (symbol: string, time: HistoryTime): Chainable<null> => {
+	const date = new Date();
+	const start = toOneWeekStart(date);
+	const end = formatDate(date);
+	const interval = getInterval(time);
+	const historyFixture = getFixture(time);
+
+	return cy
 		.intercept(
 			`/market-tracker/api/tradier/markets/quotes?symbols=${symbol}`,
 			{
 				fixture: 'quote_vti.json'
 			}
 		)
-		.as(`tradier_getQuote_${symbol}`);
-
-const getHistory = (symbol: string, time: HistoryTime): Chainable<null> => {
-	const date = new Date();
-	const start = toOneWeekStart(date);
-	const end = formatDate(date);
-	const interval = getInterval(time);
-	const fixture = getFixture(time);
-
-	return cy
+		.as(`tradier_getQuote_${symbol}`)
 		.intercept(
 			`/market-tracker/tradier/markets/history?symbol=${symbol}&start=${start}&end=${end}&interval=${interval}`,
 			{
-				fixture
+				fixture: historyFixture
 			}
 		)
 		.as(`tradier_getHistory_${symbol}_${time}`);
@@ -59,6 +57,5 @@ const getHistory = (symbol: string, time: HistoryTime): Chainable<null> => {
 
 export const tradierApi = {
 	getCalendar,
-	getQuote,
-	getHistory
+	getStockData
 };
