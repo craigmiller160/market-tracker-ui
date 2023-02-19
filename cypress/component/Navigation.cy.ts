@@ -11,7 +11,9 @@ describe('Navigation', () => {
 		cy.mount({
 			viewport: 'mobile'
 		});
-		cy.get('.ant-notification-close-x').click();
+		cy.mockApiHistory((history) => {
+			cy.log(history);
+		});
 		navbarPage.getTitle().should('have.text', 'Market Tracker');
 		navbarPage
 			.getMobilePageMenu()
@@ -40,9 +42,5 @@ describe('Navigation', () => {
 			.should('have.text', '5 Years')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
-
-		cy.mockApiHistory((history) => {
-			cy.log(history);
-		});
 	});
 });
