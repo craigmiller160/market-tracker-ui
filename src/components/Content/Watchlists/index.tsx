@@ -176,18 +176,19 @@ const createPanels = (
 					}
 				/>
 			),
-			actions: (
-				<WatchlistPanelActions
-					breakpointName={config.breakpointName}
-					onRenameWatchlist={() =>
-						config.onRenameWatchlist(watchlist._id)
-					}
-					onRemoveWatchlist={() =>
-						config.onRemoveWatchlist(watchlist._id)
-					}
-					renameWatchlistId={config.renameWatchlistId}
-				/>
-			),
+			actions:
+				watchlist.cryptos.length === 0 ? (
+					<WatchlistPanelActions
+						breakpointName={config.breakpointName}
+						onRenameWatchlist={() =>
+							config.onRenameWatchlist(watchlist._id)
+						}
+						onRemoveWatchlist={() =>
+							config.onRemoveWatchlist(watchlist._id)
+						}
+						renameWatchlistId={config.renameWatchlistId}
+					/>
+				) : undefined,
 			key: watchlist._id,
 			investments: [
 				...watchlist.stocks.map(
