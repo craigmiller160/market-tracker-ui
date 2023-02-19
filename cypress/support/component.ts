@@ -20,6 +20,7 @@ import './commands';
 // require('./commands')
 
 import { mountApp } from './mountApp';
+import { mockApiInstance } from './mockApi';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -36,7 +37,7 @@ declare global {
 Cypress.Commands.add('mount', mountApp);
 
 beforeEach(() => {
-	console.log('HELLO WORLD');
+	mockApiInstance.reset();
 });
 
 // Example use:
