@@ -1,4 +1,5 @@
 import Chainable = Cypress.Chainable;
+import { createDesktopAccordion } from './desktopAccordion';
 
 const getPanels = () => cy.get('.Accordion .AccordionPanel');
 
@@ -11,21 +12,12 @@ const getPanel = (panel: JQuery | number): Chainable<JQuery> => {
 
 const getPanelTitle = (panel: JQuery | number) =>
 	getPanel(panel).find('.ant-collapse-header-text h4');
-const getPanelRenameButton = (panel: JQuery | number) =>
-	getPanel(panel).find(
-		'.ant-collapse-header .ant-collapse-extra button:nth-child(1)'
-	);
-const getPanelRemoveButton = (panel: JQuery | number) =>
-	getPanel(panel).find(
-		'.ant-collapse-header .ant-collapse-extra button:nth-child(2)'
-	);
 const getPanelBody = (panel: JQuery | number) =>
 	getPanel(panel).find('.ant-collapse-content-active');
 
 export const accordion = {
 	getPanels,
 	getPanelTitle,
-	getPanelRenameButton,
-	getPanelRemoveButton,
-	getPanelBody
+	getPanelBody,
+	desktop: createDesktopAccordion(getPanel)
 };
