@@ -9,13 +9,7 @@ import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import {
-	createWatchlist,
-	renameWatchlist
-} from '../../../services/WatchlistService';
-import { pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
+import { renameWatchlist } from '../../../services/WatchlistService';
 import { castDraft } from 'immer';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
