@@ -9,6 +9,14 @@ import { coinGeckoApi } from './api/coingecko';
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
 describe('Watchlists', () => {
+	it('removes stock from watchlist', () => {
+		throw new Error();
+	});
+
+	it('removes watchlist on mobile', () => {
+		throw new Error();
+	});
+
 	it('renders all the watchlists on desktop', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();

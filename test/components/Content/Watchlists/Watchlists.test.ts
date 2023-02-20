@@ -264,10 +264,12 @@ describe('Watchlists', () => {
 			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
 		);
 		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
+
+		throw new Error('Delete when cypress test is ready');
 	});
 
-	it.skip('removes watchlist on mobile', async () => {
-		throw new Error();
+	it('removes watchlist on mobile', async () => {
+		throw new Error('Delete when cypress test is ready');
 	});
 
 	it('removes watchlist', async () => {
