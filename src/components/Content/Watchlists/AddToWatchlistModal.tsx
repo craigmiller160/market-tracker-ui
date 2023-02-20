@@ -14,17 +14,20 @@ import {
 	addStockToWatchlist,
 	createWatchlist
 } from '../../../services/WatchlistService';
-import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
+import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
-import { DbWatchlist } from '../../../types/Watchlist';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
-import { useGetWatchlistNames } from '../../../queries/WatchlistQueries';
+import {
+	useAddStockToWatchlist,
+	useCreateWatchlist,
+	useGetWatchlistNames
+} from '../../../queries/WatchlistQueries';
 
 interface Props {
 	readonly show: boolean;
@@ -90,7 +93,38 @@ const ModalForm = (props: ModalFormProps) => {
 	);
 };
 
-type WatchlistAndSave = [string, TaskTryT<DbWatchlist>];
+type WatchlistAndSave = [
+	name: string,
+	fn: (args: { watchlistName: string; stockSymbol: string }) => void
+];
+
+type OnOk = () => void;
+const useOnOk = (
+	stockSymbol: string,
+	form: FormInstance<ModalFormData>,
+	onClose: () => void
+): OnOk => {
+	const dispatch = useDispatch();
+	const { mutate: addStockToWatchlist } = useAddStockToWatchlist();
+	const { mutate: createWatchlist } = useCreateWatchlist();
+	return () => {
+		const values: ModalFormData = form.getFieldsValue();
+		const [watchlistName, saveAction] = match(values)
+			.with(
+				{ watchlistSelectionType: 'existing' },
+				(_): WatchlistAndSave => [
+					_.existingWatchlistName,
+					addStockToWatchlist
+				]
+			)
+			.otherwise(
+				(_): WatchlistAndSave => [_.newWatchListName, createWatchlist]
+			);
+		saveAction({ watchlistName, stockSymbol });
+		// TODO how to do onSuccess?
+		onClose();
+	};
+};
 
 const createOnOk =
 	(
@@ -146,7 +180,6 @@ const isOkButtonDisabled = (form: FormInstance<ModalFormData>): boolean => {
 export const AddToWatchlistModal = (props: Props) => {
 	const forceUpdate = useForceUpdate();
 	const [form] = Form.useForm<ModalFormData>();
-	const dispatch = useDispatch();
 	const {
 		data: watchlistNames,
 		isFetching: getWatchlistNamesLoading,
@@ -179,7 +212,7 @@ export const AddToWatchlistModal = (props: Props) => {
 		props.onClose();
 	};
 
-	const onOk = createOnOk(props.symbol, dispatch, form, onClose);
+	const onOk = useOnOk(props.symbol, form, onClose);
 	const okButtonDisabled = isOkButtonDisabled(form);
 
 	return (
