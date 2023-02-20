@@ -25,10 +25,9 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 import { WatchlistPanelActions } from './WatchlistPanelActions';
 import { BreakpointName, useBreakpointName } from '../../utils/Breakpoints';
+import { useGetAllWatchlists } from '../../../queries/WatchlistQueries';
 
 interface State {
-	readonly loading: boolean;
-	readonly watchlists: ReadonlyArray<DbWatchlist>;
 	readonly renameWatchlistId?: string;
 	readonly confirmModal: {
 		readonly show: boolean;
@@ -40,17 +39,6 @@ interface State {
 		readonly show: boolean;
 	};
 }
-
-const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
-	pipe(
-		getAllWatchlists(),
-		TaskEither.map((watchlists) =>
-			setState((draft) => {
-				draft.watchlists = castDraft(watchlists);
-				draft.loading = false;
-			})
-		)
-	);
 
 const createHandleAddWatchlistResult =
 	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
@@ -221,8 +209,6 @@ const createPanels = (
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
-		loading: true,
-		watchlists: [],
 		confirmModal: {
 			show: false,
 			message: '',
@@ -233,14 +219,7 @@ export const Watchlists = () => {
 		}
 	});
 
-	const getWatchlists = useMemo(
-		() => createGetWatchlists(setState),
-		[setState]
-	);
-
-	useEffect(() => {
-		getWatchlists();
-	}, [getWatchlists]);
+	const { data: watchlists, isFetching } = useGetAllWatchlists();
 
 	const showAddWatchlistModal = useMemo(
 		() => createShowAddWatchlistModal(setState),
@@ -286,24 +265,27 @@ export const Watchlists = () => {
 	};
 
 	const combinedWatchlists = useMemo(() => {
-		return [
-			...state.watchlists,
-			{
-				_id: '',
-				userId: '',
-				watchlistName: 'Cryptocurrency',
-				stocks: [],
-				cryptos: [
-					{
-						symbol: 'BTC'
-					},
-					{
-						symbol: 'ETH'
-					}
-				]
-			}
-		].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
-	}, [state.watchlists]);
+		if (watchlists) {
+			return [
+				...watchlists,
+				{
+					_id: '',
+					userId: '',
+					watchlistName: 'Cryptocurrency',
+					stocks: [],
+					cryptos: [
+						{
+							symbol: 'BTC'
+						},
+						{
+							symbol: 'ETH'
+						}
+					]
+				}
+			].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
+		}
+		return [];
+	}, [watchlists]);
 
 	const panels = createPanels(combinedWatchlists, panelConfig);
 	const body = match(state)
