@@ -1,8 +1,7 @@
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { getAuthUser } from '../../src/services/AuthService';
 import { AuthUser } from '../../src/types/auth';
-import '@relmify/jest-fp-ts';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 import { nanoid } from '@reduxjs/toolkit';
 
@@ -16,7 +15,7 @@ const authUser: AuthUser = {
 	userId: nanoid()
 };
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 
 describe('AuthService', () => {
 	let location: Location;
@@ -33,7 +32,7 @@ describe('AuthService', () => {
 	it('getAuthUser', async () => {
 		mockApi.onGet('/oauth/user').reply(200, authUser);
 
-		const result = await getAuthUser()();
-		expect(result).toEqualRight(authUser);
+		const result = await getAuthUser();
+		expect(result).toEqual(authUser);
 	});
 });

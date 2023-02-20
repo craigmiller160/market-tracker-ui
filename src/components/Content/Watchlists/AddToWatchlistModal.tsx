@@ -8,26 +8,17 @@ import {
 	Space,
 	Typography
 } from 'antd';
-import { Updater, useImmer } from 'use-immer';
-import { constVoid, pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import {
-	addStockToWatchlist,
-	createWatchlist,
-	getWatchlistNames
-} from '../../../services/WatchlistService';
-import { useEffect, useMemo } from 'react';
-import { castDraft } from 'immer';
-import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
-import { DbWatchlist } from '../../../types/Watchlist';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
-import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
+import {
+	useAddStockToWatchlist,
+	useCreateWatchlist,
+	useGetWatchlistNames
+} from '../../../queries/WatchlistQueries';
 
 interface Props {
 	readonly show: boolean;
@@ -42,35 +33,6 @@ interface ModalFormData {
 	readonly newWatchListName: string;
 	readonly existingWatchlistName: string;
 }
-
-interface State {
-	readonly loading: boolean;
-	readonly hadError: boolean;
-	readonly existingWatchlistNames: ReadonlyArray<string>;
-}
-
-const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
-	setState((draft) => {
-		draft.loading = true;
-		draft.existingWatchlistNames = [];
-		draft.hadError = false;
-	});
-	return pipe(
-		getWatchlistNames(),
-		TaskEither.fold(
-			() => async () =>
-				setState((draft) => {
-					draft.loading = false;
-					draft.hadError = true;
-				}),
-			(names) => async () =>
-				setState((draft) => {
-					draft.loading = false;
-					draft.existingWatchlistNames = castDraft(names);
-				})
-		)
-	);
-};
 
 interface ModalFormProps {
 	readonly form: FormInstance<ModalFormData>;
@@ -122,47 +84,45 @@ const ModalForm = (props: ModalFormProps) => {
 	);
 };
 
-type WatchlistAndSave = [string, TaskTryT<DbWatchlist>];
+type WatchlistAndSave = [
+	name: string,
+	fn: (args: { watchlistName: string; stockSymbol: string }) => void
+];
 
-const createOnOk =
-	(
-		symbol: string,
-		dispatch: Dispatch,
-		form: FormInstance<ModalFormData>,
-		onClose: () => void
-	): TaskT<void> =>
-	(): Promise<void> => {
+type OnOk = () => void;
+const useOnOk = (
+	stockSymbol: string,
+	form: FormInstance<ModalFormData>,
+	onClose: () => void
+): OnOk => {
+	const dispatch = useDispatch();
+
+	const onSuccess = () =>
+		dispatch(
+			notificationSlice.actions.addSuccess(
+				`Added ${stockSymbol} to watchlist`
+			)
+		);
+
+	const { mutate: addStockToWatchlist } = useAddStockToWatchlist(onSuccess);
+	const { mutate: createWatchlist } = useCreateWatchlist(onSuccess);
+	return () => {
 		const values: ModalFormData = form.getFieldsValue();
-		const [watchlistName, saveAction]: WatchlistAndSave = match(values)
+		const [watchlistName, saveAction] = match(values)
 			.with(
 				{ watchlistSelectionType: 'existing' },
 				(_): WatchlistAndSave => [
 					_.existingWatchlistName,
-					addStockToWatchlist(_.existingWatchlistName, symbol)
+					addStockToWatchlist
 				]
 			)
 			.otherwise(
-				(_): WatchlistAndSave => [
-					_.newWatchListName,
-					createWatchlist(_.newWatchListName, symbol)
-				]
+				(_): WatchlistAndSave => [_.newWatchListName, createWatchlist]
 			);
-		return pipe(
-			saveAction,
-			TaskEither.fold(
-				() => async () => constVoid(),
-				() => async () => {
-					dispatch(
-						notificationSlice.actions.addSuccess(
-							`Added ${symbol} to watchlist ${watchlistName}`
-						)
-					);
-					return constVoid();
-				}
-			),
-			Task.map(onClose)
-		)();
+		saveAction({ watchlistName, stockSymbol });
+		onClose();
 	};
+};
 
 const isOkButtonDisabled = (form: FormInstance<ModalFormData>): boolean => {
 	const formValues = form.getFieldsValue();
@@ -178,35 +138,30 @@ const isOkButtonDisabled = (form: FormInstance<ModalFormData>): boolean => {
 export const AddToWatchlistModal = (props: Props) => {
 	const forceUpdate = useForceUpdate();
 	const [form] = Form.useForm<ModalFormData>();
-	const dispatch = useDispatch();
-	const [state, setState] = useImmer<State>({
-		loading: false,
-		hadError: false,
-		existingWatchlistNames: []
-	});
-	const getWatchlistNames = useMemo(
-		() => createGetWatchlistNames(setState),
-		[setState]
-	);
+	const {
+		data: watchlistNames,
+		isFetching: getWatchlistNamesLoading,
+		isError: getWatchlistNamesError
+	} = useGetWatchlistNames();
 
-	useEffect(() => {
-		if (props.show) {
-			getWatchlistNames();
-		}
-	}, [getWatchlistNames, props.show, form]);
-
-	const Body = match(state)
-		.with({ loading: true }, () => <Spinner />)
-		.with({ loading: false, hadError: true }, () => (
-			<Typography.Title className="ErrorMsg" level={3}>
-				Error Loading Watchlist Names
-			</Typography.Title>
-		))
+	const Body = match({
+		getWatchlistNamesLoading,
+		getWatchlistNamesError
+	})
+		.with({ getWatchlistNamesLoading: true }, () => <Spinner />)
+		.with(
+			{ getWatchlistNamesLoading: false, getWatchlistNamesError: true },
+			() => (
+				<Typography.Title className="ErrorMsg" level={3}>
+					Error Loading Watchlist Names
+				</Typography.Title>
+			)
+		)
 		.otherwise(() => (
 			<ModalForm
 				form={form}
 				onFormChange={forceUpdate}
-				existingWatchlistNames={state.existingWatchlistNames}
+				existingWatchlistNames={watchlistNames ?? []}
 			/>
 		));
 
@@ -215,7 +170,7 @@ export const AddToWatchlistModal = (props: Props) => {
 		props.onClose();
 	};
 
-	const onOk = createOnOk(props.symbol, dispatch, form, onClose);
+	const onOk = useOnOk(props.symbol, form, onClose);
 	const okButtonDisabled = isOkButtonDisabled(form);
 
 	return (

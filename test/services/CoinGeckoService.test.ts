@@ -1,5 +1,5 @@
 import { CoinGeckoPrice } from '../../src/types/coingecko/price';
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
 import {
@@ -61,7 +61,7 @@ const history: ReadonlyArray<HistoryRecord> = [
 	}
 ];
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 
 describe('CoinGeckoService', () => {
 	beforeEach(() => {

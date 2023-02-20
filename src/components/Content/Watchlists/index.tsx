@@ -2,33 +2,27 @@ import { Updater, useImmer } from 'use-immer';
 import { DbWatchlist } from '../../../types/Watchlist';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Typography } from 'antd';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
-import {
-	createWatchlist,
-	getAllWatchlists,
-	removeStockFromWatchlist,
-	removeWatchlist,
-	renameWatchlist
-} from '../../../services/WatchlistService';
-import { pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { castDraft } from 'immer';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 import { WatchlistPanelActions } from './WatchlistPanelActions';
 import { BreakpointName, useBreakpointName } from '../../utils/Breakpoints';
+import {
+	useCreateWatchlist,
+	useGetAllWatchlists,
+	useRemoveStockFromWatchlist,
+	useRemoveWatchlist,
+	useRenameWatchlist
+} from '../../../queries/WatchlistQueries';
 
 interface State {
-	readonly loading: boolean;
-	readonly watchlists: ReadonlyArray<DbWatchlist>;
 	readonly renameWatchlistId?: string;
 	readonly confirmModal: {
 		readonly show: boolean;
@@ -41,30 +35,20 @@ interface State {
 	};
 }
 
-const createGetWatchlists = (setState: Updater<State>): TaskTryT<void> =>
-	pipe(
-		getAllWatchlists(),
-		TaskEither.map((watchlists) =>
-			setState((draft) => {
-				draft.watchlists = castDraft(watchlists);
-				draft.loading = false;
-			})
-		)
-	);
-
-const createHandleAddWatchlistResult =
-	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(value?: string) => {
+type HandleAddWatchlistResult = (value?: string) => void;
+const useHandleAddWatchlistResult = (
+	setState: Updater<State>
+): HandleAddWatchlistResult => {
+	const { mutate: createWatchlist } = useCreateWatchlist();
+	return (watchlistName) => {
 		setState((draft) => {
 			draft.inputModal.show = false;
 		});
-		if (value) {
-			pipe(
-				createWatchlist(value),
-				TaskEither.chain(() => getWatchlists)
-			)();
+		if (watchlistName) {
+			createWatchlist({ watchlistName });
 		}
 	};
+};
 
 const getTitleSpace = (breakpointName: BreakpointName): string | JSX.Element =>
 	match(breakpointName)
@@ -76,73 +60,106 @@ const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
 		draft.inputModal.show = true;
 	});
 
-const createHandleConfirmModalAction =
-	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(result: ConfirmModalResult, watchlistName: string, symbol?: string) => {
-		if (ConfirmModalResult.OK === result) {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-				draft.loading = true;
-			});
-			const action = symbol
-				? removeStockFromWatchlist(watchlistName, symbol)
-				: removeWatchlist(watchlistName);
-			pipe(
-				action,
-				TaskEither.chain(() => getWatchlists)
-			)();
+type HandleConfirmModalAction = (
+	result: ConfirmModalResult,
+	watchlistName: string,
+	symbol?: string
+) => void;
+
+const useHandleConfirmModalAction = (
+	setState: Updater<State>
+): HandleConfirmModalAction => {
+	const { mutate: removeStockFromWatchlist } = useRemoveStockFromWatchlist();
+	const { mutate: removeWatchlist } = useRemoveWatchlist();
+
+	return (result, watchlistName, stockSymbol) => {
+		setState((draft) => {
+			draft.confirmModal.show = false;
+		});
+
+		if (ConfirmModalResult.CANCEL === result) {
+			return;
+		}
+
+		if (stockSymbol) {
+			removeStockFromWatchlist({ watchlistName, stockSymbol });
 		} else {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-			});
+			removeWatchlist({ watchlistName });
 		}
 	};
+};
 
 const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
 	setState((draft) => {
 		draft.renameWatchlistId = id;
 	});
 
-const createOnSaveRenamedWatchlist =
-	(setState: Updater<State>) => (id: string, newName: string) =>
+type OnSaveRenamedWatchlist = (id: string, newName: string) => void;
+const useOnSaveRenamedWatchlist = (
+	setState: Updater<State>
+): OnSaveRenamedWatchlist => {
+	const { mutate: renameWatchlist } = useRenameWatchlist();
+	const { data } = useGetAllWatchlists();
+	return (id, newName) => {
+		if (!data) {
+			return;
+		}
+
+		const watchlistToChangeIndex = data.findIndex(
+			(watchlist) => watchlist._id === id
+		);
+		const oldName = data[watchlistToChangeIndex].watchlistName;
+
 		setState((draft) => {
-			const watchlistToChangeIndex = draft.watchlists.findIndex(
-				(watchlist) => watchlist._id === id
-			);
-			const watchlistToChange = draft.watchlists[watchlistToChangeIndex];
-			const oldName = watchlistToChange.watchlistName;
 			draft.renameWatchlistId = undefined;
-			draft.watchlists[watchlistToChangeIndex] = castDraft({
-				...watchlistToChange,
-				watchlistName: newName
-			});
-			renameWatchlist(oldName, newName)();
 		});
 
-const createShowConfirmRemoveWatchlist =
-	(setState: Updater<State>) => (id: string) =>
-		setState((draft) => {
-			const foundWatchlist = draft.watchlists.find(
-				(watchlist) => watchlist._id === id
-			);
-			if (foundWatchlist) {
+		renameWatchlist({ oldName, newName });
+	};
+};
+
+type ShowConfirmRemoveWatchlist = (id: string) => void;
+const useShowConfirmRemoveWatchlist = (
+	setState: Updater<State>
+): ShowConfirmRemoveWatchlist => {
+	const { data } = useGetAllWatchlists();
+	return (id) => {
+		if (!data) {
+			return;
+		}
+
+		const foundWatchlist = data.find((watchlist) => watchlist._id === id);
+		if (foundWatchlist) {
+			setState((draft) => {
 				draft.confirmModal = {
 					show: true,
 					message: `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`,
 					watchlistName: foundWatchlist.watchlistName
 				};
-			}
-		});
+			});
+		}
+	};
+};
 
-const createShowConfirmRemoveStock =
-	(setState: Updater<State>) => (watchlistId: string, symbol: string) =>
+type ShowConfirmRemoveStock = (watchlistId: string, symbol: string) => void;
+const useShowConfirmRemoveStock = (
+	setState: Updater<State>
+): ShowConfirmRemoveStock => {
+	const { data } = useGetAllWatchlists();
+	return (watchlistId, symbol) => {
+		if (!data) {
+			return;
+		}
+
+		const watchlistName = data.find(
+			(watchlist) => watchlist._id === watchlistId
+		)?.watchlistName;
+
+		if (!watchlistName) {
+			return;
+		}
+
 		setState((draft) => {
-			const watchlistName = draft.watchlists.find(
-				(watchlist) => watchlist._id === watchlistId
-			)?.watchlistName;
-			if (!watchlistName) {
-				return;
-			}
 			draft.confirmModal = {
 				show: true,
 				watchlistName,
@@ -150,6 +167,8 @@ const createShowConfirmRemoveStock =
 				message: `Are you sure you want to remove "${symbol}" from watchlist "${watchlistName}"`
 			};
 		});
+	};
+};
 
 interface WatchlistPanelConfig {
 	readonly breakpointName: BreakpointName;
@@ -221,8 +240,6 @@ const createPanels = (
 
 export const Watchlists = () => {
 	const [state, setState] = useImmer<State>({
-		loading: true,
-		watchlists: [],
 		confirmModal: {
 			show: false,
 			message: '',
@@ -233,27 +250,25 @@ export const Watchlists = () => {
 		}
 	});
 
-	const getWatchlists = useMemo(
-		() => createGetWatchlists(setState),
-		[setState]
-	);
+	const { data: watchlists, isFetching: getAllWatchlistsLoading } =
+		useGetAllWatchlists();
+	const { isLoading: removeStockFromWatchlistLoading } =
+		useRemoveStockFromWatchlist();
+	const { isLoading: createWatchlistLoading } = useCreateWatchlist();
+	const { isLoading: renameWatchlistLoading } = useRenameWatchlist();
 
-	useEffect(() => {
-		getWatchlists();
-	}, [getWatchlists]);
+	const loading =
+		getAllWatchlistsLoading ||
+		removeStockFromWatchlistLoading ||
+		createWatchlistLoading ||
+		renameWatchlistLoading;
 
 	const showAddWatchlistModal = useMemo(
 		() => createShowAddWatchlistModal(setState),
 		[setState]
 	);
-	const handleConfirmModalAction = useMemo(
-		() => createHandleConfirmModalAction(setState, getWatchlists),
-		[setState, getWatchlists]
-	);
-	const handleAddWatchlistResult = useMemo(
-		() => createHandleAddWatchlistResult(setState, getWatchlists),
-		[setState, getWatchlists]
-	);
+	const handleConfirmModalAction = useHandleConfirmModalAction(setState);
+	const handleAddWatchlistResult = useHandleAddWatchlistResult(setState);
 
 	const breakpointName = useBreakpointName();
 	const titleSpace = getTitleSpace(breakpointName);
@@ -262,19 +277,10 @@ export const Watchlists = () => {
 		() => createOnRenameWatchlist(setState),
 		[setState]
 	);
-	const onSaveRenamedWatchlist = useMemo(
-		() => createOnSaveRenamedWatchlist(setState),
-		[setState]
-	);
-	const showConfirmRemoveWatchlist = useMemo(
-		() => createShowConfirmRemoveWatchlist(setState),
-		[setState]
-	);
+	const onSaveRenamedWatchlist = useOnSaveRenamedWatchlist(setState);
+	const showConfirmRemoveWatchlist = useShowConfirmRemoveWatchlist(setState);
 
-	const showConfirmRemoveStock = useMemo(
-		() => createShowConfirmRemoveStock(setState),
-		[setState]
-	);
+	const showConfirmRemoveStock = useShowConfirmRemoveStock(setState);
 
 	const panelConfig: WatchlistPanelConfig = {
 		breakpointName,
@@ -286,28 +292,31 @@ export const Watchlists = () => {
 	};
 
 	const combinedWatchlists = useMemo(() => {
-		return [
-			...state.watchlists,
-			{
-				_id: '',
-				userId: '',
-				watchlistName: 'Cryptocurrency',
-				stocks: [],
-				cryptos: [
-					{
-						symbol: 'BTC'
-					},
-					{
-						symbol: 'ETH'
-					}
-				]
-			}
-		].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
-	}, [state.watchlists]);
+		if (watchlists) {
+			return [
+				...watchlists,
+				{
+					_id: '',
+					userId: '',
+					watchlistName: 'Cryptocurrency',
+					stocks: [],
+					cryptos: [
+						{
+							symbol: 'BTC'
+						},
+						{
+							symbol: 'ETH'
+						}
+					]
+				}
+			].sort((a, b) => a.watchlistName.localeCompare(b.watchlistName));
+		}
+		return [];
+	}, [watchlists]);
 
 	const panels = createPanels(combinedWatchlists, panelConfig);
-	const body = match(state)
-		.with({ loading: true }, () => <Spinner />)
+	const body = match(loading)
+		.with(true, () => <Spinner />)
 		.otherwise(() => <Accordion panels={panels} />);
 
 	return (

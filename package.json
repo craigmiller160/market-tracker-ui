@@ -70,6 +70,7 @@
     "@craigmiller160/react-keycloak": "1.1.4",
     "@craigmiller160/ts-functions": "1.6.0",
     "@reduxjs/toolkit": "^1.9.2",
+    "@tanstack/react-query": "^4.24.9",
     "antd": "^5.2.1",
     "date-fns": "^2.28.0",
     "date-fns-tz": "^1.2.2",

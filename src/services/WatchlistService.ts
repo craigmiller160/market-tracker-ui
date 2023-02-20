@@ -1,46 +1,43 @@
 import { ajaxApi, getResponseData } from './AjaxApi';
 import { DbWatchlist, Watchlist } from '../types/Watchlist';
-import { pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 
-export const getAllWatchlists = (): TaskTryT<ReadonlyArray<DbWatchlist>> =>
-	pipe(
-		ajaxApi.get<ReadonlyArray<DbWatchlist>>({
+export const getAllWatchlists = (): Promise<ReadonlyArray<DbWatchlist>> =>
+	ajaxApi
+		.get<ReadonlyArray<DbWatchlist>>({
 			uri: '/watchlists/all'
-		}),
-		TaskEither.map(getResponseData)
-	);
+		})
+		.then(getResponseData);
 
 export const renameWatchlist = (
 	oldName: string,
 	newName: string
-): TaskTryT<unknown> => {
+): Promise<unknown> => {
 	const encodedOldName = encodeURIComponent(oldName);
 	const encodedNewName = encodeURIComponent(newName);
-	return ajaxApi.put<void, void>({
-		uri: `/watchlists/${encodedOldName}/rename/${encodedNewName}`
-	});
+	return ajaxApi
+		.put<void, void>({
+			uri: `/watchlists/${encodedOldName}/rename/${encodedNewName}`
+		})
+		.then(getResponseData);
 };
 
 export const addStockToWatchlist = (
 	watchlistName: string,
 	stockSymbol: string
-): TaskTryT<DbWatchlist> => {
+): Promise<DbWatchlist> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
-	return pipe(
-		ajaxApi.put<DbWatchlist, void>({
+	return ajaxApi
+		.put<DbWatchlist, void>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
-		}),
-		TaskEither.map(getResponseData)
-	);
+		})
+		.then(getResponseData);
 };
 
 export const createWatchlist = (
 	watchlistName: string,
 	stockSymbol?: string
-): TaskTryT<DbWatchlist> => {
+): Promise<DbWatchlist> => {
 	const stocks = stockSymbol
 		? [
 				{
@@ -53,40 +50,39 @@ export const createWatchlist = (
 		stocks,
 		cryptos: []
 	};
-	return pipe(
-		ajaxApi.post<DbWatchlist, Watchlist>({
+	return ajaxApi
+		.post<DbWatchlist, Watchlist>({
 			uri: '/watchlists',
 			body: input
-		}),
-		TaskEither.map(getResponseData)
-	);
+		})
+		.then(getResponseData);
 };
 
-export const getWatchlistNames = (): TaskTryT<ReadonlyArray<string>> =>
-	pipe(
-		ajaxApi.get<ReadonlyArray<string>>({
+export const getWatchlistNames = (): Promise<ReadonlyArray<string>> =>
+	ajaxApi
+		.get<ReadonlyArray<string>>({
 			uri: '/watchlists/names'
-		}),
-		TaskEither.map(getResponseData)
-	);
+		})
+		.then(getResponseData);
 
 export const removeStockFromWatchlist = (
 	watchlistName: string,
 	stockSymbol: string
-): TaskTryT<DbWatchlist> => {
+): Promise<DbWatchlist> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
-	return pipe(
-		ajaxApi.delete<DbWatchlist>({
+	return ajaxApi
+		.delete<DbWatchlist>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
-		}),
-		TaskEither.map(getResponseData)
-	);
+		})
+		.then(getResponseData);
 };
 
-export const removeWatchlist = (watchlistName: string): TaskTryT<unknown> => {
+export const removeWatchlist = (watchlistName: string): Promise<unknown> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
-	return ajaxApi.delete<unknown>({
-		uri: `/watchlists/${encodedWatchlistName}`
-	});
+	return ajaxApi
+		.delete<unknown>({
+			uri: `/watchlists/${encodedWatchlistName}`
+		})
+		.then(getResponseData);
 };

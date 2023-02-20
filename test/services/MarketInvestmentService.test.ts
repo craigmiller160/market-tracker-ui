@@ -7,7 +7,7 @@ import {
 import { MarketTime } from '../../src/types/MarketTime';
 import * as tradierService from '../../src/services/TradierService';
 import * as coinGeckoService from '../../src/services/CoinGeckoService';
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@relmify/jest-fp-ts';
 import {
@@ -31,7 +31,7 @@ const parseTimesaleTime: (time: string) => Date = Time.parse(
 	"yyyy-MM-dd'T'HH:mm:ss"
 );
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 
 const tradierHistory: TradierHistory = {
 	history: {

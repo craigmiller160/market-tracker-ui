@@ -15,6 +15,7 @@ import {
 	KeycloakAuthContext
 } from '@craigmiller160/react-keycloak';
 import { MarketTrackerKeycloakBridge } from '../../src/components/keycloak/MarketTrackerKeycloakBridge';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface RenderConfig {
 	readonly initialPath: string;
@@ -38,6 +39,15 @@ const keycloakAuth: KeycloakAuth = {
 	logout: jest.fn()
 };
 
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			cacheTime: 0
+		}
+	}
+});
+
 export const renderApp = (
 	renderConfig?: Partial<RenderConfig>
 ): RenderResult => {
@@ -53,15 +63,17 @@ export const renderApp = (
 
 	render(
 		<Provider store={store}>
-			<KeycloakAuthContext.Provider value={keycloakAuth}>
-				<MarketTrackerKeycloakBridge>
-					<ScreenContext.Provider value={screenContextValue}>
-						<BrowserRouter basename="/">
-							<RootLayout />
-						</BrowserRouter>
-					</ScreenContext.Provider>
-				</MarketTrackerKeycloakBridge>
-			</KeycloakAuthContext.Provider>
+			<QueryClientProvider client={queryClient}>
+				<KeycloakAuthContext.Provider value={keycloakAuth}>
+					<MarketTrackerKeycloakBridge>
+						<ScreenContext.Provider value={screenContextValue}>
+							<BrowserRouter basename="/">
+								<RootLayout />
+							</BrowserRouter>
+						</ScreenContext.Provider>
+					</MarketTrackerKeycloakBridge>
+				</KeycloakAuthContext.Provider>
+			</QueryClientProvider>
 		</Provider>
 	);
 	return {

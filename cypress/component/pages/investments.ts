@@ -7,10 +7,10 @@ const getCard = (card: JQuery | number): Chainable<JQuery> => {
 	}
 	return cy.wrap(card);
 };
-const getCardActions = (card: JQuery | number) =>
-	getCard(card).find('.ant-card-actions');
+const getRemoveButton = (card: JQuery | number) =>
+	getCard(card).find('.ant-card-actions button');
 
 export const investments = {
 	getCards,
-	getCardActions
+	getRemoveButton
 };
