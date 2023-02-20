@@ -1,6 +1,5 @@
 import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
-import '@relmify/jest-fp-ts';
 import MockAdapter from 'axios-mock-adapter';
 import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import { nanoid } from '@reduxjs/toolkit';
@@ -31,7 +30,7 @@ describe('WatchlistService', () => {
 
 	it('getAllWatchlists', async () => {
 		mockApi.onGet('/watchlists/all').reply(200, watchlists);
-		const result = await WatchlistService.getAllWatchlists()();
+		const result = await WatchlistService.getAllWatchlists();
 		expect(result).toEqualRight(watchlists);
 	});
 
@@ -39,11 +38,10 @@ describe('WatchlistService', () => {
 		mockApi
 			.onPut('/watchlists/First%20Watchlist/rename/NewWatchlist')
 			.reply(200);
-		const result = await WatchlistService.renameWatchlist(
+		await WatchlistService.renameWatchlist(
 			'First Watchlist',
 			'NewWatchlist'
-		)();
-		expect(result).toBeRight();
+		);
 	});
 
 	it('addStockToWatchlist', async () => {
@@ -61,14 +59,14 @@ describe('WatchlistService', () => {
 		const result = await WatchlistService.addStockToWatchlist(
 			'First Watchlist',
 			'VTI'
-		)();
-		expect(result).toEqualRight(newWatchlist);
+		);
+		expect(result).toEqual(newWatchlist);
 	});
 
 	it('getWatchlistNames', async () => {
 		mockApi.onGet('/watchlists/names').reply(200, ['One', 'Two']);
-		const result = await WatchlistService.getWatchlistNames()();
-		expect(result).toEqualRight(['One', 'Two']);
+		const result = await WatchlistService.getWatchlistNames();
+		expect(result).toEqual(['One', 'Two']);
 	});
 
 	it('createWatchlist with stock', async () => {
@@ -89,8 +87,8 @@ describe('WatchlistService', () => {
 		const result = await WatchlistService.createWatchlist(
 			watchlistName,
 			symbol
-		)();
-		expect(result).toEqualRight(response);
+		);
+		expect(result).toEqual(response);
 	});
 
 	it('createWatchlist without stock', async () => {
@@ -107,8 +105,8 @@ describe('WatchlistService', () => {
 		};
 		mockApi.onPost('/watchlists', body).reply(200, response);
 
-		const result = await WatchlistService.createWatchlist(watchlistName)();
-		expect(result).toEqualRight(response);
+		const result = await WatchlistService.createWatchlist(watchlistName);
+		expect(result).toEqual(response);
 	});
 
 	it('removeStockFromWatchlist', async () => {
@@ -122,15 +120,12 @@ describe('WatchlistService', () => {
 		const result = await WatchlistService.removeStockFromWatchlist(
 			'First Watchlist',
 			'VTI'
-		)();
-		expect(result).toEqualRight(newWatchlist);
+		);
+		expect(result).toEqual(newWatchlist);
 	});
 
 	it('removeWatchlist', async () => {
 		mockApi.onDelete('/watchlists/First%20Watchlist').reply(200);
-		const result = await WatchlistService.removeWatchlist(
-			'First Watchlist'
-		)();
-		expect(result).toBeRight();
+		await WatchlistService.removeWatchlist('First Watchlist');
 	});
 });
