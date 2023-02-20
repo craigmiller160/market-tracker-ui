@@ -1,14 +1,14 @@
 import {
-	createApi,
+	createBaseApi,
 	DefaultErrorHandler,
-	isAxiosError
+	isAxiosError,
+	wrapApi
 } from '@craigmiller160/ajax-api-fp-ts';
 import { store } from '../store';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { authSlice } from '../store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { notificationSlice } from '../store/notification/slice';
-import { AxiosError } from 'axios';
 import { match, P } from 'ts-pattern';
 import * as Json from '@craigmiller160/ts-functions/es/Json';
 import { pipe } from 'fp-ts/es6/function';
@@ -82,8 +82,10 @@ const ajaxErrorHandler: DefaultErrorHandler = (status, error) => {
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
 
-export const ajaxApi = createApi({
+export const ajaxApi = createBaseApi({
 	baseURL: '/market-tracker/api',
 	useCsrf: false,
 	defaultErrorHandler: ajaxErrorHandler
 });
+
+export const ajaxApiFpTs = wrapApi(ajaxApi);

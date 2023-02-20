@@ -1,4 +1,4 @@
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { getAuthUser } from '../../src/services/AuthService';
 import { AuthUser } from '../../src/types/auth';
@@ -16,7 +16,7 @@ const authUser: AuthUser = {
 	userId: nanoid()
 };
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 
 describe('AuthService', () => {
 	let location: Location;

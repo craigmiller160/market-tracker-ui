@@ -1,5 +1,5 @@
 import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
-import { ajaxApi, getResponseData } from './AjaxApi';
+import { ajaxApiFpTs, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
@@ -184,7 +184,7 @@ export const getTimesales = (
 	const start = getTodayStartString();
 	const end = getTodayEndString();
 	return pipe(
-		ajaxApi.get<TradierSeries>({
+		ajaxApiFpTs.get<TradierSeries>({
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		}),
 		TaskEither.map(getResponseData),
@@ -197,7 +197,7 @@ export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
 	pipe(
-		ajaxApi.get<TradierQuotes>({
+		ajaxApiFpTs.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
@@ -210,7 +210,7 @@ const getHistoryQuote = (
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
 	const queryString = qs.stringify(historyQuery);
 	return pipe(
-		ajaxApi.get<TradierHistory>({
+		ajaxApiFpTs.get<TradierHistory>({
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
@@ -285,7 +285,7 @@ export const getMarketStatus = (): TaskTryT<MarketStatus> => {
 	const month = formatCalendarMonth(today);
 	const calendarDate = formatCalendarDate(today);
 	return pipe(
-		ajaxApi.get<TradierCalendar>({
+		ajaxApiFpTs.get<TradierCalendar>({
 			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
 		}),
 		TaskEither.map(getResponseData),

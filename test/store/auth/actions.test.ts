@@ -1,4 +1,4 @@
-import { ajaxApi } from '../../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import createMockStore from 'redux-mock-store';
@@ -16,7 +16,7 @@ const authUser: AuthUser = {
 	userId: nanoid()
 };
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 const mockStore = createMockStore<RootState, DispatchExts>([thunk])(
 	defaultState
 );

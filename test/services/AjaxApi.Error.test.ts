@@ -1,4 +1,4 @@
-import { ajaxApi, isNestedAxiosError } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs, isNestedAxiosError } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { MockStore } from 'redux-mock-store';
@@ -15,7 +15,7 @@ jest.mock('../../src/store', () => {
 	};
 });
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 const mockStore = store as MockStore;
 
 const axiosError: AxiosError = {
@@ -63,7 +63,7 @@ describe('AjaxApi Error Handling', () => {
 	describe('Error handler', () => {
 		it('is 500 error, no body', async () => {
 			mockApi.onGet('/foo').reply(500);
-			await ajaxApi.get({
+			await ajaxApiFpTs.get({
 				uri: '/foo'
 			})();
 			expect(mockStore.getActions()).toEqual([
@@ -77,7 +77,7 @@ describe('AjaxApi Error Handling', () => {
 
 		it('is 401 error, no body', async () => {
 			mockApi.onGet('/foo').reply(401);
-			await ajaxApi.get({
+			await ajaxApiFpTs.get({
 				uri: '/foo'
 			})();
 			await sleep550ms();
@@ -95,7 +95,7 @@ describe('AjaxApi Error Handling', () => {
 
 		it('is 500 error, with body', async () => {
 			mockApi.onGet('/foo').reply(500, { hello: 'world' });
-			await ajaxApi.get({
+			await ajaxApiFpTs.get({
 				uri: '/foo'
 			})();
 			const text = JSON.stringify({ hello: 'world' });

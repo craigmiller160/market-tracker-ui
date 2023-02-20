@@ -1,4 +1,4 @@
-import { ajaxApi, getResponseData } from './AjaxApi';
+import { ajaxApiFpTs, getResponseData } from './AjaxApi';
 import { DbWatchlist, Watchlist } from '../types/Watchlist';
 import { pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -6,7 +6,7 @@ import { TaskTryT } from '@craigmiller160/ts-functions/es/types';
 
 export const getAllWatchlists = (): TaskTryT<ReadonlyArray<DbWatchlist>> =>
 	pipe(
-		ajaxApi.get<ReadonlyArray<DbWatchlist>>({
+		ajaxApiFpTs.get<ReadonlyArray<DbWatchlist>>({
 			uri: '/watchlists/all'
 		}),
 		TaskEither.map(getResponseData)
@@ -18,7 +18,7 @@ export const renameWatchlist = (
 ): TaskTryT<unknown> => {
 	const encodedOldName = encodeURIComponent(oldName);
 	const encodedNewName = encodeURIComponent(newName);
-	return ajaxApi.put<void, void>({
+	return ajaxApiFpTs.put<void, void>({
 		uri: `/watchlists/${encodedOldName}/rename/${encodedNewName}`
 	});
 };
@@ -30,7 +30,7 @@ export const addStockToWatchlist = (
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
 	return pipe(
-		ajaxApi.put<DbWatchlist, void>({
+		ajaxApiFpTs.put<DbWatchlist, void>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
 		}),
 		TaskEither.map(getResponseData)
@@ -54,7 +54,7 @@ export const createWatchlist = (
 		cryptos: []
 	};
 	return pipe(
-		ajaxApi.post<DbWatchlist, Watchlist>({
+		ajaxApiFpTs.post<DbWatchlist, Watchlist>({
 			uri: '/watchlists',
 			body: input
 		}),
@@ -64,7 +64,7 @@ export const createWatchlist = (
 
 export const getWatchlistNames = (): TaskTryT<ReadonlyArray<string>> =>
 	pipe(
-		ajaxApi.get<ReadonlyArray<string>>({
+		ajaxApiFpTs.get<ReadonlyArray<string>>({
 			uri: '/watchlists/names'
 		}),
 		TaskEither.map(getResponseData)
@@ -77,7 +77,7 @@ export const removeStockFromWatchlist = (
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
 	return pipe(
-		ajaxApi.delete<DbWatchlist>({
+		ajaxApiFpTs.delete<DbWatchlist>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
 		}),
 		TaskEither.map(getResponseData)
@@ -86,7 +86,7 @@ export const removeStockFromWatchlist = (
 
 export const removeWatchlist = (watchlistName: string): TaskTryT<unknown> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
-	return ajaxApi.delete<unknown>({
+	return ajaxApiFpTs.delete<unknown>({
 		uri: `/watchlists/${encodedWatchlistName}`
 	});
 };

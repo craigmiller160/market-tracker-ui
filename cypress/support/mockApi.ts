@@ -1,5 +1,5 @@
 import MockAdapter, { RequestHandler } from 'axios-mock-adapter';
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import {
 	AsymmetricHeadersMatcher,
 	AsymmetricRequestDataMatcher
@@ -7,7 +7,7 @@ import {
 import Chainable = Cypress.Chainable;
 import { AxiosRequestConfig } from 'axios';
 
-export const mockApiInstance = new MockAdapter(ajaxApi.instance, {
+export const mockApiInstance = new MockAdapter(ajaxApiFpTs.instance, {
 	onNoMatch: 'passthrough'
 });
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { ajaxApi } from '../../src/services/AjaxApi';
+import { ajaxApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { TradierQuote } from '../../src/types/tradier/quotes';
 import {
@@ -36,7 +36,7 @@ const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
 const formatCalendarDate = Time.format('yyyy-MM-dd');
 
-const mockApi = new MockAdapter(ajaxApi.instance);
+const mockApi = new MockAdapter(ajaxApiFpTs.instance);
 
 const createTradierQuote = (symbol: string): TradierQuote => ({
 	symbol,
