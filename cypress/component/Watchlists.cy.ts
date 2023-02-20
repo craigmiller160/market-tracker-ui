@@ -12,6 +12,7 @@ describe('Watchlists', () => {
 	it('renders all the watchlists on desktop', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
+		watchlistApi.getWatchlistNames();
 		tradierApi.getStockData('GHI', '1week');
 		tradierApi.getStockData('DEF', '1week');
 		coinGeckoApi.getCryptoData('BTC', '1week');
@@ -68,6 +69,7 @@ describe('Watchlists', () => {
 	it('renders all the watchlists on mobile', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
+		watchlistApi.getWatchlistNames();
 		tradierApi.getStockData('GHI', '1week');
 		tradierApi.getStockData('DEF', '1week');
 		coinGeckoApi.getCryptoData('BTC', '1week');
