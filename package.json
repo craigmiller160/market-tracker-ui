@@ -18,7 +18,8 @@
     "prepare": "husky install",
     "validate": "yarn typeCheck && yarn lint && yarn test && yarn cypress:headless",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run --component"
+    "cypress:headless": "cypress run --component",
+    "vitest": "vitest"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
