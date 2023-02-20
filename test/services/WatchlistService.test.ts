@@ -31,7 +31,7 @@ describe('WatchlistService', () => {
 	it('getAllWatchlists', async () => {
 		mockApi.onGet('/watchlists/all').reply(200, watchlists);
 		const result = await WatchlistService.getAllWatchlists();
-		expect(result).toEqualRight(watchlists);
+		expect(result).toEqual(watchlists);
 	});
 
 	it('renameWatchlist', async () => {
