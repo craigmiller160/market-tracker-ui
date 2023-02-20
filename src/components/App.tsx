@@ -6,6 +6,7 @@ import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
 import { ConfigProvider } from 'antd';
 import { MarketTrackerKeycloakBridge } from './keycloak/MarketTrackerKeycloakBridge';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -14,19 +15,22 @@ const createScreenContextValue = (
 });
 
 const nonce = '**CSP_NONCE**';
+const queryClient = new QueryClient();
 
 export const App = () => {
 	const breakpoints = useBreakpoint();
 	const screenContextValue = createScreenContextValue(breakpoints);
 	return (
 		<ConfigProvider csp={{ nonce }}>
-			<Provider store={store}>
-				<MarketTrackerKeycloakBridge>
-					<ScreenContext.Provider value={screenContextValue}>
-						<RootLayout />
-					</ScreenContext.Provider>
-				</MarketTrackerKeycloakBridge>
-			</Provider>
+			<QueryClientProvider client={queryClient}>
+				<Provider store={store}>
+					<MarketTrackerKeycloakBridge>
+						<ScreenContext.Provider value={screenContextValue}>
+							<RootLayout />
+						</ScreenContext.Provider>
+					</MarketTrackerKeycloakBridge>
+				</Provider>
+			</QueryClientProvider>
 		</ConfigProvider>
 	);
 };
