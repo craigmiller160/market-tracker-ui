@@ -8,7 +8,7 @@ import {
 	Space,
 	Typography
 } from 'antd';
-import { Updater, useImmer } from 'use-immer';
+import { Updater } from 'use-immer';
 import { constVoid, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import {
@@ -16,7 +16,6 @@ import {
 	createWatchlist,
 	getWatchlistNames
 } from '../../../services/WatchlistService';
-import { useEffect, useMemo } from 'react';
 import { castDraft } from 'immer';
 import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
@@ -28,6 +27,7 @@ import { Dispatch } from 'redux';
 import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
+import { useGetWatchlistNames } from '../../../queries/WatchlistQueries';
 
 interface Props {
 	readonly show: boolean;
@@ -41,12 +41,6 @@ interface ModalFormData {
 	readonly watchlistSelectionType: WatchlistSelectionType;
 	readonly newWatchListName: string;
 	readonly existingWatchlistName: string;
-}
-
-interface State {
-	readonly loading: boolean;
-	readonly hadError: boolean;
-	readonly existingWatchlistNames: ReadonlyArray<string>;
 }
 
 const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
@@ -179,34 +173,30 @@ export const AddToWatchlistModal = (props: Props) => {
 	const forceUpdate = useForceUpdate();
 	const [form] = Form.useForm<ModalFormData>();
 	const dispatch = useDispatch();
-	const [state, setState] = useImmer<State>({
-		loading: false,
-		hadError: false,
-		existingWatchlistNames: []
-	});
-	const getWatchlistNames = useMemo(
-		() => createGetWatchlistNames(setState),
-		[setState]
-	);
+	const {
+		data: watchlistNames,
+		isFetching: getWatchlistNamesLoading,
+		isError: getWatchlistNamesError
+	} = useGetWatchlistNames();
 
-	useEffect(() => {
-		if (props.show) {
-			getWatchlistNames();
-		}
-	}, [getWatchlistNames, props.show, form]);
-
-	const Body = match(state)
-		.with({ loading: true }, () => <Spinner />)
-		.with({ loading: false, hadError: true }, () => (
-			<Typography.Title className="ErrorMsg" level={3}>
-				Error Loading Watchlist Names
-			</Typography.Title>
-		))
+	const Body = match({
+		getWatchlistNamesLoading,
+		getWatchlistNamesError
+	})
+		.with({ getWatchlistNamesLoading: true }, () => <Spinner />)
+		.with(
+			{ getWatchlistNamesLoading: false, getWatchlistNamesError: true },
+			() => (
+				<Typography.Title className="ErrorMsg" level={3}>
+					Error Loading Watchlist Names
+				</Typography.Title>
+			)
+		)
 		.otherwise(() => (
 			<ModalForm
 				form={form}
 				onFormChange={forceUpdate}
-				existingWatchlistNames={state.existingWatchlistNames}
+				existingWatchlistNames={watchlistNames ?? []}
 			/>
 		));
 
