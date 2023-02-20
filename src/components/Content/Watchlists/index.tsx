@@ -77,6 +77,10 @@ const useHandleConfirmModalAction = (
 			draft.confirmModal.show = false;
 		});
 
+		if (ConfirmModalResult.CANCEL === result) {
+			return;
+		}
+
 		if (stockSymbol) {
 			removeStockFromWatchlist({ watchlistName, stockSymbol });
 		} else {
