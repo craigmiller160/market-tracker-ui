@@ -43,7 +43,35 @@ describe('Watchlists', () => {
 	});
 
 	it('removes watchlist on mobile', () => {
-		throw new Error();
+		tradierApi.getCalendar();
+		watchlistApi.getAllWatchlists();
+		watchlistApi.getWatchlistNames();
+		tradierApi.getStockData('GHI', '1week');
+		tradierApi.getStockData('DEF', '1week');
+		watchlistApi.removeStockFromWatchlist('DEF', 'ABC');
+		cy.mount({
+			viewport: 'mobile'
+		});
+
+		accordion.getPanels().should('have.length', 3);
+
+		navbarPage.mobile.getTimeMenu().click();
+		navbarPage.mobile.getOneWeekItem().click();
+
+		accordion.getPanels().eq(0).click();
+		investments.getCards().should('have.length', 2);
+
+		investments.getRemoveButton(0).click();
+		confirmDialog.getTitle().should('have.text', 'Remove');
+		confirmDialog
+			.getBody()
+			.should(
+				'have.text',
+				'Are you sure you want to remove "DEF" from watchlist "ABC"'
+			);
+		confirmDialog.getOkButton().click();
+
+		cy.wait('@removeStockFromWatchlist_DEF_ABC');
 	});
 
 	it('renders all the watchlists on desktop', () => {
