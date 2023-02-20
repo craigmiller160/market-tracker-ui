@@ -48,12 +48,15 @@ type AddStockToWatchlistParams = {
 	readonly stockSymbol: string;
 };
 
-export const useAddStockToWatchlist = () => {
+export const useAddStockToWatchlist = (onSuccess?: () => void) => {
 	const queryClient = useQueryClient();
 	return useMutation<DbWatchlist, Error, AddStockToWatchlistParams>({
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			addStockToWatchlist(watchlistName, stockSymbol),
-		onSuccess: () => invalidateQueries(queryClient)
+		onSuccess: () => {
+			invalidateQueries(queryClient);
+			onSuccess?.();
+		}
 	});
 };
 
@@ -62,12 +65,15 @@ type CreateWatchlistParams = {
 	readonly stockSymbol?: string;
 };
 
-export const useCreateWatchlist = () => {
+export const useCreateWatchlist = (onSuccess?: () => void) => {
 	const queryClient = useQueryClient();
 	return useMutation<DbWatchlist, Error, CreateWatchlistParams>({
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			createWatchlist(watchlistName, stockSymbol),
-		onSuccess: () => invalidateQueries(queryClient)
+		onSuccess: () => {
+			invalidateQueries(queryClient);
+			onSuccess?.();
+		}
 	});
 };
 

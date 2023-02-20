@@ -8,19 +8,10 @@ import {
 	Space,
 	Typography
 } from 'antd';
-import { constVoid, pipe } from 'fp-ts/es6/function';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
-import {
-	addStockToWatchlist,
-	createWatchlist
-} from '../../../services/WatchlistService';
-import { TaskT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
-import * as Task from 'fp-ts/es6/Task';
 import { notificationSlice } from '../../../store/notification/slice';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
 import {
@@ -105,8 +96,16 @@ const useOnOk = (
 	onClose: () => void
 ): OnOk => {
 	const dispatch = useDispatch();
-	const { mutate: addStockToWatchlist } = useAddStockToWatchlist();
-	const { mutate: createWatchlist } = useCreateWatchlist();
+
+	const onSuccess = () =>
+		dispatch(
+			notificationSlice.actions.addSuccess(
+				`Added ${stockSymbol} to watchlist`
+			)
+		);
+
+	const { mutate: addStockToWatchlist } = useAddStockToWatchlist(onSuccess);
+	const { mutate: createWatchlist } = useCreateWatchlist(onSuccess);
 	return () => {
 		const values: ModalFormData = form.getFieldsValue();
 		const [watchlistName, saveAction] = match(values)
@@ -121,50 +120,9 @@ const useOnOk = (
 				(_): WatchlistAndSave => [_.newWatchListName, createWatchlist]
 			);
 		saveAction({ watchlistName, stockSymbol });
-		// TODO how to do onSuccess?
 		onClose();
 	};
 };
-
-const createOnOk =
-	(
-		symbol: string,
-		dispatch: Dispatch,
-		form: FormInstance<ModalFormData>,
-		onClose: () => void
-	): TaskT<void> =>
-	(): Promise<void> => {
-		const values: ModalFormData = form.getFieldsValue();
-		const [watchlistName, saveAction]: WatchlistAndSave = match(values)
-			.with(
-				{ watchlistSelectionType: 'existing' },
-				(_): WatchlistAndSave => [
-					_.existingWatchlistName,
-					addStockToWatchlist(_.existingWatchlistName, symbol)
-				]
-			)
-			.otherwise(
-				(_): WatchlistAndSave => [
-					_.newWatchListName,
-					createWatchlist(_.newWatchListName, symbol)
-				]
-			);
-		return pipe(
-			saveAction,
-			TaskEither.fold(
-				() => async () => constVoid(),
-				() => async () => {
-					dispatch(
-						notificationSlice.actions.addSuccess(
-							`Added ${symbol} to watchlist ${watchlistName}`
-						)
-					);
-					return constVoid();
-				}
-			),
-			Task.map(onClose)
-		)();
-	};
 
 const isOkButtonDisabled = (form: FormInstance<ModalFormData>): boolean => {
 	const formValues = form.getFieldsValue();
