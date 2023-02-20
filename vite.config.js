@@ -65,8 +65,9 @@ export default defineConfig({
 		emptyOutDir: true
 	},
 	test: {
+		root: path.join(process.cwd(), 'test'),
 		watch: false,
 		environment: 'jsdom',
-		setupFiles: './test/setup.tsx'
+		setupFiles: './setup.tsx'
 	}
 });
