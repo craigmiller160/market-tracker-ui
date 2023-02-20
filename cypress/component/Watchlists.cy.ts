@@ -5,12 +5,41 @@ import { accordion } from './pages/accordion';
 import { investments } from './pages/investments';
 import { navbarPage } from './pages/navbar';
 import { coinGeckoApi } from './api/coingecko';
+import { confirmDialog } from './pages/confirmDialog';
 
 const WATCHLIST_NAMES = ['ABC', 'Cryptocurrency', 'My Investments'];
 
 describe('Watchlists', () => {
 	it('removes stock from watchlist', () => {
-		throw new Error();
+		tradierApi.getCalendar();
+		watchlistApi.getAllWatchlists();
+		watchlistApi.getWatchlistNames();
+		tradierApi.getStockData('GHI', '1week');
+		tradierApi.getStockData('DEF', '1week');
+		watchlistApi.removeStockFromWatchlist('DEF', 'ABC');
+		cy.mount();
+
+		watchlistPage
+			.getPageTitle()
+			.should('have.text', 'Investment Watchlists');
+		accordion.getPanels().should('have.length', 3);
+
+		navbarPage.desktop.getOneWeekItem().click();
+
+		accordion.getPanels().eq(0).click();
+		investments.getCards().should('have.length', 2);
+
+		investments.getRemoveButton(0).click();
+		confirmDialog.getTitle().should('have.text', 'Remove');
+		confirmDialog
+			.getBody()
+			.should(
+				'have.text',
+				'Are you sure you want to remove "DEF" from watchlist "ABC"'
+			);
+		confirmDialog.getOkButton().click();
+
+		cy.wait('@removeStockFromWatchlist_DEF_ABC');
 	});
 
 	it('removes watchlist on mobile', () => {
@@ -64,14 +93,14 @@ describe('Watchlists', () => {
 		accordion.getPanelBody(0).should('be.visible');
 		investments.getCards().should('have.length', 2);
 		investments
-			.getCardActions(0)
+			.getRemoveButton(0)
 			.should('have.length', 1)
 			.should('have.text', 'Remove');
 
 		accordion.getPanels().eq(1).click();
 		accordion.getPanelBody(1).should('be.visible');
 		investments.getCards().should('have.length', 2);
-		investments.getCardActions(0).should('not.exist');
+		investments.getRemoveButton(0).should('not.exist');
 	});
 
 	it('renders all the watchlists on mobile', () => {
@@ -126,13 +155,13 @@ describe('Watchlists', () => {
 		accordion.getPanelBody(0).should('be.visible');
 		investments.getCards().should('have.length', 2);
 		investments
-			.getCardActions(0)
+			.getRemoveButton(0)
 			.should('have.length', 1)
 			.should('have.text', 'Remove');
 
 		accordion.getPanels().eq(1).click();
 		accordion.getPanelBody(1).should('be.visible');
 		investments.getCards().should('have.length', 2);
-		investments.getCardActions(0).should('not.exist');
+		investments.getRemoveButton(0).should('not.exist');
 	});
 });
