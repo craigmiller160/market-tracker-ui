@@ -8,15 +8,12 @@ import {
 	Space,
 	Typography
 } from 'antd';
-import { Updater } from 'use-immer';
 import { constVoid, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import {
 	addStockToWatchlist,
-	createWatchlist,
-	getWatchlistNames
+	createWatchlist
 } from '../../../services/WatchlistService';
-import { castDraft } from 'immer';
 import { TaskT, TaskTryT } from '@craigmiller160/ts-functions/es/types';
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
@@ -42,29 +39,6 @@ interface ModalFormData {
 	readonly newWatchListName: string;
 	readonly existingWatchlistName: string;
 }
-
-const createGetWatchlistNames = (setState: Updater<State>): TaskT<void> => {
-	setState((draft) => {
-		draft.loading = true;
-		draft.existingWatchlistNames = [];
-		draft.hadError = false;
-	});
-	return pipe(
-		getWatchlistNames(),
-		TaskEither.fold(
-			() => async () =>
-				setState((draft) => {
-					draft.loading = false;
-					draft.hadError = true;
-				}),
-			(names) => async () =>
-				setState((draft) => {
-					draft.loading = false;
-					draft.existingWatchlistNames = castDraft(names);
-				})
-		)
-	);
-};
 
 interface ModalFormProps {
 	readonly form: FormInstance<ModalFormData>;
