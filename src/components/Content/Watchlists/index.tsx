@@ -114,30 +114,48 @@ const useOnSaveRenamedWatchlist = (
 	};
 };
 
-const createShowConfirmRemoveWatchlist =
-	(setState: Updater<State>) => (id: string) =>
-		setState((draft) => {
-			const foundWatchlist = draft.watchlists.find(
-				(watchlist) => watchlist._id === id
-			);
-			if (foundWatchlist) {
+type ShowConfirmRemoveWatchlist = (id: string) => void;
+const useShowConfirmRemoveWatchlist = (
+	setState: Updater<State>
+): ShowConfirmRemoveWatchlist => {
+	const { data } = useGetAllWatchlists();
+	return (id) => {
+		if (!data) {
+			return;
+		}
+
+		const foundWatchlist = data.find((watchlist) => watchlist._id === id);
+		if (foundWatchlist) {
+			setState((draft) => {
 				draft.confirmModal = {
 					show: true,
 					message: `Are you sure you want to remove watchlist "${foundWatchlist.watchlistName}"`,
 					watchlistName: foundWatchlist.watchlistName
 				};
-			}
-		});
+			});
+		}
+	};
+};
 
-const createShowConfirmRemoveStock =
-	(setState: Updater<State>) => (watchlistId: string, symbol: string) =>
+type ShowConfirmRemoveStock = (watchlistId: string, symbol: string) => void;
+const useShowConfirmRemoveStock = (
+	setState: Updater<State>
+): ShowConfirmRemoveStock => {
+	const { data } = useGetAllWatchlists();
+	return (watchlistId, symbol) => {
+		if (!data) {
+			return;
+		}
+
+		const watchlistName = data.find(
+			(watchlist) => watchlist._id === watchlistId
+		)?.watchlistName;
+
+		if (!watchlistName) {
+			return;
+		}
+
 		setState((draft) => {
-			const watchlistName = draft.watchlists.find(
-				(watchlist) => watchlist._id === watchlistId
-			)?.watchlistName;
-			if (!watchlistName) {
-				return;
-			}
 			draft.confirmModal = {
 				show: true,
 				watchlistName,
@@ -145,6 +163,8 @@ const createShowConfirmRemoveStock =
 				message: `Are you sure you want to remove "${symbol}" from watchlist "${watchlistName}"`
 			};
 		});
+	};
+};
 
 interface WatchlistPanelConfig {
 	readonly breakpointName: BreakpointName;
@@ -254,15 +274,9 @@ export const Watchlists = () => {
 		[setState]
 	);
 	const onSaveRenamedWatchlist = useOnSaveRenamedWatchlist(setState);
-	const showConfirmRemoveWatchlist = useMemo(
-		() => createShowConfirmRemoveWatchlist(setState),
-		[setState]
-	);
+	const showConfirmRemoveWatchlist = useShowConfirmRemoveWatchlist(setState);
 
-	const showConfirmRemoveStock = useMemo(
-		() => createShowConfirmRemoveStock(setState),
-		[setState]
-	);
+	const showConfirmRemoveStock = useShowConfirmRemoveStock(setState);
 
 	const panelConfig: WatchlistPanelConfig = {
 		breakpointName,
