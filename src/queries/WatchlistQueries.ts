@@ -5,9 +5,15 @@ import {
 	useQueryClient
 } from '@tanstack/react-query';
 import {
+	addStockToWatchlist,
+	createWatchlist,
 	getAllWatchlists,
+	getWatchlistNames,
+	removeStockFromWatchlist,
+	removeWatchlist,
 	renameWatchlist
 } from '../services/WatchlistService';
+import { DbWatchlist } from '../types/Watchlist';
 
 export const GET_ALL_WATCHLISTS_KEY = 'WatchlistQueries_GetAllWatchlists';
 export const GET_WATCHLIST_NAMES_KEY = 'WatchlistQueries_GetWatchlistNames';
@@ -31,8 +37,68 @@ type RenameWatchlistParams = {
 
 export const useRenameWatchlist = () => {
 	const queryClient = useQueryClient();
-	useMutation<unknown, Error, RenameWatchlistParams>({
+	return useMutation<unknown, Error, RenameWatchlistParams>({
 		mutationFn: ({ oldName, newName }) => renameWatchlist(oldName, newName),
+		onSuccess: () => invalidateQueries(queryClient)
+	});
+};
+
+type AddStockToWatchlistParams = {
+	readonly watchlistName: string;
+	readonly stockSymbol: string;
+};
+
+export const useAddStockToWatchlist = () => {
+	const queryClient = useQueryClient();
+	return useMutation<DbWatchlist, Error, AddStockToWatchlistParams>({
+		mutationFn: ({ watchlistName, stockSymbol }) =>
+			addStockToWatchlist(watchlistName, stockSymbol),
+		onSuccess: () => invalidateQueries(queryClient)
+	});
+};
+
+type CreateWatchlistParams = {
+	readonly watchlistName: string;
+	readonly stockSymbol?: string;
+};
+
+export const useCreateWatchlist = () => {
+	const queryClient = useQueryClient();
+	return useMutation<DbWatchlist, Error, CreateWatchlistParams>({
+		mutationFn: ({ watchlistName, stockSymbol }) =>
+			createWatchlist(watchlistName, stockSymbol),
+		onSuccess: () => invalidateQueries(queryClient)
+	});
+};
+
+export const useGetWatchlistNames = () =>
+	useQuery({
+		queryKey: [GET_WATCHLIST_NAMES_KEY],
+		queryFn: getWatchlistNames
+	});
+
+type RemoveStockFromWatchlistParams = {
+	readonly watchlistName: string;
+	readonly stockSymbol: string;
+};
+
+export const useRemoveStockFromWatchlist = () => {
+	const queryClient = useQueryClient();
+	return useMutation<DbWatchlist, Error, RemoveStockFromWatchlistParams>({
+		mutationFn: ({ watchlistName, stockSymbol }) =>
+			removeStockFromWatchlist(watchlistName, stockSymbol),
+		onSuccess: () => invalidateQueries(queryClient)
+	});
+};
+
+type RemoveWatchlistParams = {
+	readonly watchlistName: string;
+};
+
+export const useRemoveWatchlist = () => {
+	const queryClient = useQueryClient();
+	return useMutation<unknown, Error, RemoveWatchlistParams>({
+		mutationFn: ({ watchlistName }) => removeWatchlist(watchlistName),
 		onSuccess: () => invalidateQueries(queryClient)
 	});
 };
