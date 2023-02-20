@@ -8,6 +8,7 @@ describe('Navigation', () => {
 	it('navigation on mobile does not use selected class', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
+		watchlistApi.getWatchlistNames();
 		cy.mount({
 			viewport: 'mobile'
 		});

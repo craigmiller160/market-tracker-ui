@@ -3,6 +3,12 @@ const getAllWatchlists = () =>
 		fixture: 'watchlists.json'
 	});
 
+const getWatchlistNames = () =>
+	cy.intercept('/market-tracker/api/watchlists/names', {
+		fixture: 'watchlistNames.json'
+	});
+
 export const watchlistApi = {
-	getAllWatchlists
+	getAllWatchlists,
+	getWatchlistNames
 };
