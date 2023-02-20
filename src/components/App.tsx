@@ -15,7 +15,14 @@ const createScreenContextValue = (
 });
 
 const nonce = '**CSP_NONCE**';
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			cacheTime: 0
+		}
+	}
+});
 
 export const App = () => {
 	const breakpoints = useBreakpoint();

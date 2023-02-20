@@ -10,6 +10,7 @@ export const GET_WATCHLIST_NAMES_KEY = 'WatchlistQueries_GetWatchlistNames';
 export const REMOVE_STOCK_FROM_WATCHLIST_KEY =
 	'WatchlistQueries_RemoveStockFromWatchlist';
 export const REMOVE_WATCHLIST_KEY = 'WatchlistQueries_RemoveWatchlist';
+
 export const useGetAllWatchlists = () =>
 	useQuery({
 		queryKey: [GET_ALL_WATCHLISTS_KEY],
