@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import fs from 'fs';
@@ -62,5 +63,10 @@ export default defineConfig({
 	build: {
 		outDir: path.join(process.cwd(), 'build'),
 		emptyOutDir: true
+	},
+	test: {
+		watch: false,
+		environment: 'jsdom',
+		setupFiles: './test/setup.tsx'
 	}
 });
