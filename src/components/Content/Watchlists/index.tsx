@@ -25,7 +25,12 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 import { WatchlistPanelActions } from './WatchlistPanelActions';
 import { BreakpointName, useBreakpointName } from '../../utils/Breakpoints';
-import { useGetAllWatchlists } from '../../../queries/WatchlistQueries';
+import {
+	useGetAllWatchlists,
+	useRemoveStockFromWatchlist,
+	useRemoveWatchlist
+} from '../../../queries/WatchlistQueries';
+import { useMutation } from '@tanstack/react-query';
 
 interface State {
 	readonly renameWatchlistId?: string;
@@ -64,27 +69,30 @@ const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
 		draft.inputModal.show = true;
 	});
 
-const createHandleConfirmModalAction =
-	(setState: Updater<State>, getWatchlists: TaskTryT<void>) =>
-	(result: ConfirmModalResult, watchlistName: string, symbol?: string) => {
-		if (ConfirmModalResult.OK === result) {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-				draft.loading = true;
-			});
-			const action = symbol
-				? removeStockFromWatchlist(watchlistName, symbol)
-				: removeWatchlist(watchlistName);
-			pipe(
-				action,
-				TaskEither.chain(() => getWatchlists)
-			)();
+type HandleConfirmModalAction = (
+	result: ConfirmModalResult,
+	watchlistName: string,
+	symbol?: string
+) => void;
+
+const useHandleConfirmModalAction = (
+	setState: Updater<State>
+): HandleConfirmModalAction => {
+	const { mutate: removeStockFromWatchlist } = useRemoveStockFromWatchlist();
+	const { mutate: removeWatchlist } = useRemoveWatchlist();
+
+	return (result, watchlistName, stockSymbol) => {
+		setState((draft) => {
+			draft.confirmModal.show = false;
+		});
+
+		if (stockSymbol) {
+			removeStockFromWatchlist({ watchlistName, stockSymbol });
 		} else {
-			setState((draft) => {
-				draft.confirmModal.show = false;
-			});
+			removeWatchlist({ watchlistName });
 		}
 	};
+};
 
 const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
 	setState((draft) => {
@@ -219,16 +227,18 @@ export const Watchlists = () => {
 		}
 	});
 
-	const { data: watchlists, isFetching } = useGetAllWatchlists();
+	const { data: watchlists, isFetching: getAllWatchlistsLoading } =
+		useGetAllWatchlists();
+	const { isLoading: removeStockFromWatchlistLoading } =
+		useRemoveStockFromWatchlist();
+
+	const loading = getAllWatchlistsLoading || removeStockFromWatchlistLoading;
 
 	const showAddWatchlistModal = useMemo(
 		() => createShowAddWatchlistModal(setState),
 		[setState]
 	);
-	const handleConfirmModalAction = useMemo(
-		() => createHandleConfirmModalAction(setState, getWatchlists),
-		[setState, getWatchlists]
-	);
+	const handleConfirmModalAction = useHandleConfirmModalAction(setState);
 	const handleAddWatchlistResult = useMemo(
 		() => createHandleAddWatchlistResult(setState, getWatchlists),
 		[setState, getWatchlists]
