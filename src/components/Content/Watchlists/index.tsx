@@ -9,8 +9,6 @@ import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
-import { renameWatchlist } from '../../../services/WatchlistService';
-import { castDraft } from 'immer';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
@@ -20,7 +18,8 @@ import {
 	useCreateWatchlist,
 	useGetAllWatchlists,
 	useRemoveStockFromWatchlist,
-	useRemoveWatchlist
+	useRemoveWatchlist,
+	useRenameWatchlist
 } from '../../../queries/WatchlistQueries';
 
 interface State {
@@ -41,12 +40,12 @@ const useHandleAddWatchlistResult = (
 	setState: Updater<State>
 ): HandleAddWatchlistResult => {
 	const { mutate: createWatchlist } = useCreateWatchlist();
-	return (value) => {
+	return (watchlistName) => {
 		setState((draft) => {
 			draft.inputModal.show = false;
 		});
-		if (value) {
-			createWatchlist(value);
+		if (watchlistName) {
+			createWatchlist({ watchlistName });
 		}
 	};
 };
@@ -91,21 +90,29 @@ const createOnRenameWatchlist = (setState: Updater<State>) => (id?: string) =>
 		draft.renameWatchlistId = id;
 	});
 
-const createOnSaveRenamedWatchlist =
-	(setState: Updater<State>) => (id: string, newName: string) =>
+type OnSaveRenamedWatchlist = (id: string, newName: string) => void;
+const useOnSaveRenamedWatchlist = (
+	setState: Updater<State>
+): OnSaveRenamedWatchlist => {
+	const { mutate: renameWatchlist } = useRenameWatchlist();
+	const { data } = useGetAllWatchlists();
+	return (id, newName) => {
+		if (!data) {
+			return;
+		}
+
+		const watchlistToChangeIndex = data.findIndex(
+			(watchlist) => watchlist._id === id
+		);
+		const oldName = data[watchlistToChangeIndex].watchlistName;
+
 		setState((draft) => {
-			const watchlistToChangeIndex = draft.watchlists.findIndex(
-				(watchlist) => watchlist._id === id
-			);
-			const watchlistToChange = draft.watchlists[watchlistToChangeIndex];
-			const oldName = watchlistToChange.watchlistName;
 			draft.renameWatchlistId = undefined;
-			draft.watchlists[watchlistToChangeIndex] = castDraft({
-				...watchlistToChange,
-				watchlistName: newName
-			});
-			renameWatchlist(oldName, newName)();
 		});
+
+		renameWatchlist({ oldName, newName });
+	};
+};
 
 const createShowConfirmRemoveWatchlist =
 	(setState: Updater<State>) => (id: string) =>
@@ -224,11 +231,13 @@ export const Watchlists = () => {
 	const { isLoading: removeStockFromWatchlistLoading } =
 		useRemoveStockFromWatchlist();
 	const { isLoading: createWatchlistLoading } = useCreateWatchlist();
+	const { isLoading: renameWatchlistLoading } = useRenameWatchlist();
 
 	const loading =
 		getAllWatchlistsLoading ||
 		removeStockFromWatchlistLoading ||
-		createWatchlistLoading;
+		createWatchlistLoading ||
+		renameWatchlistLoading;
 
 	const showAddWatchlistModal = useMemo(
 		() => createShowAddWatchlistModal(setState),
@@ -244,10 +253,7 @@ export const Watchlists = () => {
 		() => createOnRenameWatchlist(setState),
 		[setState]
 	);
-	const onSaveRenamedWatchlist = useMemo(
-		() => createOnSaveRenamedWatchlist(setState),
-		[setState]
-	);
+	const onSaveRenamedWatchlist = useOnSaveRenamedWatchlist(setState);
 	const showConfirmRemoveWatchlist = useMemo(
 		() => createShowConfirmRemoveWatchlist(setState),
 		[setState]
