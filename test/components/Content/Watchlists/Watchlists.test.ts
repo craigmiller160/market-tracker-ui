@@ -221,57 +221,6 @@ describe('Watchlists', () => {
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
-	it('remove stock from watchlist', async () => {
-		renderApp({
-			initialPath: '/market-tracker/watchlists'
-		});
-		await waitFor(() =>
-			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
-		);
-		await waitFor(() =>
-			expect(screen.queryByText('First Watchlist')).toBeVisible()
-		);
-
-		await userEvent.click(screen.getByText('First Watchlist'));
-		await waitFor(() =>
-			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
-		);
-		expect(screen.queryByText(/\(VOO\)/)).toBeVisible();
-
-		const vooCard = screen.getByTestId('market-card-VOO');
-		await waitFor(() =>
-			expect(within(vooCard).queryByText('Remove')).toBeVisible()
-		);
-		await userEvent.click(within(vooCard).getByText('Remove'));
-
-		const confirmMsg =
-			'Are you sure you want to remove "VOO" from watchlist "First Watchlist"';
-
-		await waitFor(() =>
-			expect(screen.queryByText(confirmMsg)).toBeVisible()
-		);
-
-		await userEvent.click(screen.getByText('OK'));
-		await waitFor(() =>
-			expect(screen.queryByText(confirmMsg)).not.toBeVisible()
-		);
-		await waitFor(() =>
-			expect(screen.queryByText('First Watchlist')).toBeVisible()
-		);
-
-		await userEvent.click(screen.getByText('First Watchlist'));
-		await waitFor(() =>
-			expect(screen.queryByText(/\(VTI\)/)).toBeVisible()
-		);
-		expect(screen.queryByText(/\(VOO\)/)).not.toBeInTheDocument();
-
-		throw new Error('Delete when cypress test is ready');
-	});
-
-	it('removes watchlist on mobile', async () => {
-		throw new Error('Delete when cypress test is ready');
-	});
-
 	it('removes watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/watchlists'
