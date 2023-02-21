@@ -14,17 +14,13 @@ import './InvestmentCard.scss';
 import { MarketTime } from '../../../../types/MarketTime';
 import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
-import {
-	marketStatusSelector,
-	timeValueSelector
-} from '../../../../store/marketSettings/selectors';
-import { InvestmentData } from '../../../../services/MarketInvestmentService';
+import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import { Chart as ChartComp } from '../../../UI/Chart';
-import { ErrorInfo, useInvestmentData } from '../../../hooks/useInvestmentData';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
+import { InvestmentData } from '../../../../types/data/InvestmentData';
 
 interface Props {
 	readonly info: InvestmentInfo;
