@@ -4,6 +4,7 @@ import { MarketTime } from '../types/MarketTime';
 import { HistoryRecord } from '../types/history';
 import { getHistoryFn, GetHistoryQueryKey, getRefetchInterval } from './utils';
 import { InvestmentType } from '../types/data/InvestmentType';
+// TODO delete this file
 
 export const GET_QUOTES_KEY = 'TradierQueries_GetQuotes';
 export const GET_HISTORY_KEY = 'TradierQueries_GetHistory';
