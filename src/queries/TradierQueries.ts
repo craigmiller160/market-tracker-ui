@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
 	getFiveYearHistory,
+	getMarketStatus,
 	getOneMonthHistory,
 	getOneWeekHistory,
 	getOneYearHistory,
@@ -15,6 +16,7 @@ import { match } from 'ts-pattern';
 
 export const GET_QUOTES_KEY = 'TradierQueries_GetQuotes';
 export const GET_HISTORY_KEY = 'TradierQueries_GetHistory';
+export const GET_MARKET_STATUS_KEY = 'TradierQueries_GetMarketStatus';
 
 const getRefetchInterval = (time: MarketTime): number =>
 	time === MarketTime.ONE_DAY ? TODAY_REFETCH_INTERVAL : 0;
@@ -50,4 +52,10 @@ export const useGetHistory = (time: MarketTime, symbol: string) =>
 		queryFn: ({ queryKey: [, theTime, theSymbol] }) =>
 			getHistoryFn(theTime)(theSymbol),
 		refetchInterval: getRefetchInterval(time)
+	});
+
+export const useGetMarketStatus = () =>
+	useQuery({
+		queryKey: [GET_MARKET_STATUS_KEY],
+		queryFn: getMarketStatus
 	});
