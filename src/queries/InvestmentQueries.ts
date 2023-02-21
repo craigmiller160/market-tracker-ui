@@ -9,8 +9,13 @@ import { match, P } from 'ts-pattern';
 import * as tradierService from '../services/TradierService';
 import * as coinGeckoService from '../services/CoinGeckoService';
 import { Quote } from '../types/quote';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';
+import { useMemo } from 'react';
+import * as Either from 'fp-ts/es6/Either';
+import { pipe } from 'fp-ts/es6/function';
+import { TryT } from '@craigmiller160/ts-functions/es/types';
+import { handleInvestmentData } from '../services/MarketInvestmentService';
 
 export type InvestmentData = {
 	readonly name: string;
@@ -87,21 +92,15 @@ export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 		.otherwise(() => coinGeckoService.getQuotes);
 
 type GetQuoteQueryKey = [string, MarketTime, InvestmentType, string];
-// TODO narrow to a single quote
 export const useGetQuote = (
 	time: MarketTime,
 	type: InvestmentType,
 	symbol: string
 ) =>
-	useQuery<
-		ReadonlyArray<Quote>,
-		Error,
-		ReadonlyArray<Quote>,
-		GetQuoteQueryKey
-	>({
+	useQuery<Quote, Error, Quote, GetQuoteQueryKey>({
 		queryKey: [GET_QUOTE_KEY, time, type, symbol],
 		queryFn: ({ queryKey: [, , theType, theSymbol] }) =>
-			getQuoteFn(theType)([theSymbol]),
+			getQuoteFn(theType)([theSymbol]).then((list) => list[0]),
 		refetchInterval: getRefetchInterval(time)
 	});
 
@@ -125,16 +124,66 @@ export const useGetHistory = (
 		enabled: shouldLoad
 	});
 
+type UseGetInvestmentDataResult = {
+	readonly data?: InvestmentData;
+	readonly error?: Error;
+	readonly isFetching: boolean;
+};
+
+// TODO is InvestmentInfo safe as a reference for controlling re-enders/re-queries?
 export const useGetInvestmentData = (
 	time: MarketTime,
 	info: InvestmentInfo,
 	shouldLoadHistoryData: boolean
-): UseQueryResult<InvestmentData, Error> => {
-	const { error: quoteError } = useGetQuote(time, info.type, info.symbol);
-	const { error: historyError } = useGetHistory(
-		time,
-		info.type,
-		info.symbol,
-		shouldLoadHistoryData
+): UseGetInvestmentDataResult => {
+	const {
+		data: quote,
+		error: quoteError,
+		isFetching: quoteIsFetching
+	} = useGetQuote(time, info.type, info.symbol);
+	const {
+		data: history,
+		error: historyError,
+		isFetching: historyIsFetching
+	} = useGetHistory(time, info.type, info.symbol, shouldLoadHistoryData);
+
+	const dataEither: TryT<InvestmentData | undefined> = useMemo(() => {
+		if (quoteError || historyError) {
+			return Either.left<Error, InvestmentData | undefined>(
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				(quoteError || historyError)!
+			);
+		}
+
+		if (quote && history) {
+			return handleInvestmentData(time, info, quote, history);
+		}
+
+		return Either.right<Error, InvestmentData | undefined>(undefined);
+	}, [time, info, quote, history, quoteError, historyError]);
+
+	const isFetching = quoteIsFetching || historyIsFetching;
+
+	return pipe(
+		dataEither,
+		Either.mapLeft(
+			(ex) =>
+				new Error(
+					`Error getting data for ${info.symbol}: ${ex.message}`,
+					{
+						cause: ex
+					}
+				)
+		),
+		Either.fold(
+			(error): UseGetInvestmentDataResult => ({
+				error,
+				isFetching
+			}),
+			(data): UseGetInvestmentDataResult => ({
+				data,
+				isFetching
+			})
+		)
 	);
 };

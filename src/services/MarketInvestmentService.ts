@@ -42,11 +42,6 @@ export interface InvestmentData {
 	readonly history: ReadonlyArray<HistoryRecord>;
 }
 
-interface IntermediateInvestmentData {
-	readonly history: ReadonlyArray<HistoryRecord>;
-	readonly quote: Quote;
-}
-
 export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 	match(type)
 		.when(isStock, () => tradierService.getQuotes)
@@ -276,26 +271,29 @@ const getInvestmentName = (info: InvestmentInfo, quote: Quote): string =>
 		.with({ info: { name: P.when(notEmpty) } }, () => info.name)
 		.otherwise(() => quote.name);
 
-const handleInvestmentData =
-	(time: MarketTime, info: InvestmentInfo) =>
-	({ history, quote }: IntermediateInvestmentData): TryT<InvestmentData> => {
-		const currentPrice = getCurrentPrice(info, time, quote, history);
-		return pipe(
-			getStartPrice(time, quote, history),
-			Either.bindTo('startPrice'),
-			Either.bind('newHistory', ({ startPrice }) =>
-				updateHistory(time, startPrice, history)
-			),
-			Either.map(
-				({ startPrice, newHistory }): InvestmentData => ({
-					name: getInvestmentName(info, quote),
-					startPrice,
-					currentPrice,
-					history: newHistory
-				})
-			)
-		);
-	};
+export const handleInvestmentData = (
+	time: MarketTime,
+	info: InvestmentInfo,
+	quote: Quote,
+	history: ReadonlyArray<HistoryRecord>
+): TryT<InvestmentData> => {
+	const currentPrice = getCurrentPrice(info, time, quote, history);
+	return pipe(
+		getStartPrice(time, quote, history),
+		Either.bindTo('startPrice'),
+		Either.bind('newHistory', ({ startPrice }) =>
+			updateHistory(time, startPrice, history)
+		),
+		Either.map(
+			({ startPrice, newHistory }): InvestmentData => ({
+				name: getInvestmentName(info, quote),
+				startPrice,
+				currentPrice,
+				history: newHistory
+			})
+		)
+	);
+};
 
 export const getInvestmentData = (
 	time: MarketTime,
