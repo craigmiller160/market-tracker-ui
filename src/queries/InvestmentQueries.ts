@@ -29,7 +29,10 @@ const getRefetchInterval = (time: MarketTime): number =>
 	time === MarketTime.ONE_DAY ? TODAY_REFETCH_INTERVAL : 0;
 
 type HistoryFn = (symbol: string) => Promise<ReadonlyArray<HistoryRecord>>;
-const getHistoryFn = (time: MarketTime, type: InvestmentType): HistoryFn =>
+export const getHistoryFn = (
+	time: MarketTime,
+	type: InvestmentType
+): HistoryFn =>
 	match({ time, type })
 		.with(
 			{ time: MarketTime.ONE_DAY, type: P.when(isStock) },
