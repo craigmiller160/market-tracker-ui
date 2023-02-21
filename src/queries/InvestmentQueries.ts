@@ -18,6 +18,8 @@ import { TryT } from '@craigmiller160/ts-functions/es/types';
 import { handleInvestmentData } from '../services/MarketInvestmentService';
 import { InvestmentData } from '../types/data/InvestmentData';
 import { MarketStatus } from '../types/MarketStatus';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../store/marketSettings/selectors';
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
@@ -94,13 +96,15 @@ type GetQuoteQueryKey = [string, MarketTime, InvestmentType, string];
 export const useGetQuote = (
 	time: MarketTime,
 	type: InvestmentType,
-	symbol: string
+	symbol: string,
+	shoudLoad: boolean
 ) =>
 	useQuery<Quote, Error, Quote, GetQuoteQueryKey>({
 		queryKey: [GET_QUOTE_KEY, time, type, symbol],
 		queryFn: ({ queryKey: [, , theType, theSymbol] }) =>
 			getQuoteFn(theType)([theSymbol]).then((list) => list[0]),
-		refetchInterval: getRefetchInterval(time)
+		refetchInterval: getRefetchInterval(time),
+		enabled: shoudLoad
 	});
 
 type GetHistoryQueryKey = [string, MarketTime, InvestmentType, string];
@@ -129,17 +133,26 @@ type UseGetInvestmentDataResult = {
 	readonly isFetching: boolean;
 };
 
+const shouldRespectMarketStatus = (info: InvestmentInfo) =>
+	info.type !== InvestmentType.CRYPTO;
+
 // TODO is InvestmentInfo safe as a reference for controlling re-enders/re-queries?
 export const useGetInvestmentData = (
-	time: MarketTime,
-	info: InvestmentInfo,
-	shouldLoadHistoryData: boolean
+	info: InvestmentInfo
 ): UseGetInvestmentDataResult => {
+	const time = useSelector(timeValueSelector);
+	const respectMarketStatus = shouldRespectMarketStatus(info);
+	const { data: status } = useCheckMarketStatus();
+
+	const shouldLoadQuoteData = status !== MarketStatus.UNKNOWN;
+	const shouldLoadHistoryData =
+		status === MarketStatus.OPEN ||
+		(status === MarketStatus.CLOSED && !respectMarketStatus);
 	const {
 		data: quote,
 		error: quoteError,
 		isFetching: quoteIsFetching
-	} = useGetQuote(time, info.type, info.symbol);
+	} = useGetQuote(time, info.type, info.symbol, shouldLoadQuoteData);
 	const {
 		data: history,
 		error: historyError,
@@ -188,10 +201,9 @@ export const useGetInvestmentData = (
 };
 
 // TODO what happens when this is disabled
-export const useCheckMarketStatus = (
-	time: MarketTime
-): UseQueryResult<MarketStatus, Error> =>
-	useQuery<MarketStatus, Error>({
+export const useCheckMarketStatus = (): UseQueryResult<MarketStatus, Error> => {
+	const time = useSelector(timeValueSelector);
+	return useQuery<MarketStatus, Error>({
 		queryKey: [GET_MARKET_STATUS, time],
 		queryFn: tradierService.getMarketStatus,
 		enabled: MarketTime.ONE_DAY === time,
@@ -200,3 +212,4 @@ export const useCheckMarketStatus = (
 				? MarketStatus.UNKNOWN
 				: MarketStatus.OPEN
 	});
+};
