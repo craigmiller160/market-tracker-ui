@@ -130,7 +130,9 @@ export const useGetHistory = (
 type UseGetInvestmentDataResult = {
 	readonly data?: InvestmentData;
 	readonly error?: Error;
-	readonly isFetching: boolean;
+	readonly loading: boolean;
+	readonly respectMarketStatus: boolean;
+	readonly status: MarketStatus;
 };
 
 const shouldRespectMarketStatus = (info: InvestmentInfo) =>
@@ -174,7 +176,11 @@ export const useGetInvestmentData = (
 		return Either.right<Error, InvestmentData | undefined>(undefined);
 	}, [time, info, quote, history, quoteError, historyError]);
 
-	const isFetching = quoteIsFetching || historyIsFetching;
+	const baseResult: UseGetInvestmentDataResult = {
+		loading: quoteIsFetching || historyIsFetching,
+		respectMarketStatus,
+		status: status ?? MarketStatus.UNKNOWN
+	};
 
 	return pipe(
 		dataEither,
@@ -189,12 +195,12 @@ export const useGetInvestmentData = (
 		),
 		Either.fold(
 			(error): UseGetInvestmentDataResult => ({
-				error,
-				isFetching
+				...baseResult,
+				error
 			}),
 			(data): UseGetInvestmentDataResult => ({
-				data,
-				isFetching
+				...baseResult,
+				data
 			})
 		)
 	);

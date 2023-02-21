@@ -21,6 +21,7 @@ import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFou
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { InvestmentData } from '../../../../types/data/InvestmentData';
+import { useGetInvestmentData } from '../../../../queries/InvestmentQueries';
 
 interface Props {
 	readonly info: InvestmentInfo;
@@ -206,13 +207,8 @@ export const InvestmentCard = (props: Props) => {
 	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	const status = useSelector(marketStatusSelector);
-
-	const { loading, data, error, respectMarketStatus } = useInvestmentData(
-		time,
-		info,
-		status
-	);
+	const { respectMarketStatus, status, loading, error, data } =
+		useGetInvestmentData(info);
 
 	const { Price, Body } = getPriceAndBody(
 		status,
