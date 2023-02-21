@@ -98,3 +98,19 @@ export const useGetQuote = (
 	});
 
 type GetHistoryQueryKey = [string, MarketTime, InvestmentType, string];
+export const useGetHistory = (
+	time: MarketTime,
+	type: InvestmentType,
+	symbol: string
+) =>
+	useQuery<
+		ReadonlyArray<HistoryRecord>,
+		Error,
+		ReadonlyArray<HistoryRecord>,
+		GetHistoryQueryKey
+	>({
+		queryKey: [GET_HISTORY_KEY, time, type, symbol],
+		queryFn: ({ queryKey: [, theTime, theType, theSymbol] }) =>
+			getHistoryFn(theTime, theType)(theSymbol),
+		refetchInterval: getRefetchInterval(time)
+	});
