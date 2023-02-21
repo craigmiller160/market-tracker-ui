@@ -2,13 +2,9 @@ import { MarketTime } from '../types/MarketTime';
 import {
 	OptionT,
 	PredicateT,
-	TaskT,
 	TryT
 } from '@craigmiller160/ts-functions/es/types';
-import { MarketStatus } from '../types/MarketStatus';
 import { match, P } from 'ts-pattern';
-import * as tradierService from './TradierService';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
@@ -25,22 +21,6 @@ const parseDateTime = Time.parse(DATE_TIME_FORMAT);
 const formatTime = Time.format('HH:mm:ss');
 const subtractOneHour = Time.subHours(1);
 const formatDate = Time.format('yyyy-MM-dd');
-
-export const checkMarketStatus = (
-	timeValue: MarketTime
-): TaskT<MarketStatus> => {
-	const statusTE = match(timeValue)
-		.with(MarketTime.ONE_DAY, () => tradierService.getMarketStatus())
-		.otherwise(() => TaskEither.right(MarketStatus.OPEN));
-
-	return pipe(
-		statusTE,
-		TaskEither.fold(
-			() => async () => MarketStatus.UNKNOWN,
-			(status) => async () => status
-		)
-	);
-};
 
 const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 	Option.fold(
