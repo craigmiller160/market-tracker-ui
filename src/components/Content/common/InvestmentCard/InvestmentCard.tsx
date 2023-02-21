@@ -17,7 +17,6 @@ import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import { Chart as ChartComp } from '../../../UI/Chart';
 import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
-import { getInvestmentNotFoundMessage } from '../../../../error/InvestmentNotFoundError';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { InvestmentData } from '../../../../types/data/InvestmentData';
@@ -28,10 +27,13 @@ interface Props {
 	readonly getActions?: (symbol: string) => ReactNode[];
 }
 
-const createTitle = (info: InvestmentInfo, data: InvestmentData): ReactNode => (
+const createTitle = (
+	info: InvestmentInfo,
+	data: InvestmentData | undefined
+): ReactNode => (
 	<div className="Title">
 		<h3>
-			<strong>{`(${info.symbol}) ${data.name}`}</strong>
+			<strong>{`(${info.symbol}) ${data?.name ?? ''}`}</strong>
 		</h3>
 	</div>
 );
@@ -147,16 +149,11 @@ const createTime = (time: MarketTime): ReactNode => {
 	);
 };
 
-const createErrorMessage = (error: ErrorInfo): ReactNode => {
-	const message = match(error)
-		.with({ name: 'InvestmentNotFoundError' }, getInvestmentNotFoundMessage)
-		.otherwise(() => 'Unable to Get Data');
-	return (
-		<Typography.Title className="ErrorMsg" level={3}>
-			Error: {message}
-		</Typography.Title>
-	);
-};
+const createErrorMessage = (error: Error): ReactNode => (
+	<Typography.Title className="ErrorMsg" level={3}>
+		Error: {error.message}
+	</Typography.Title>
+);
 
 const createMarketClosed = (data: InvestmentData): ReactNode => (
 	<div>
@@ -165,18 +162,20 @@ const createMarketClosed = (data: InvestmentData): ReactNode => (
 	</div>
 );
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 const getPriceAndBody = (
 	status: MarketStatus,
 	respectMarketStatus: boolean,
 	loading: boolean,
-	error: ErrorInfo | undefined,
-	data: InvestmentData
+	error: Error | undefined,
+	data: InvestmentData | undefined
 ): { Price: ReactNode; Body: ReactNode } =>
 	match({
 		status,
 		respectMarketStatus,
 		loading,
-		error
+		error,
+		data
 	})
 		.with({ status: MarketStatus.UNKNOWN }, () => ({
 			Price: <div />,
@@ -190,17 +189,22 @@ const getPriceAndBody = (
 			Price: <div />,
 			Body: createErrorMessage(errorInfo)
 		}))
+		.with({ data: P.nullish }, () => ({
+			Price: <div />,
+			Body: <div />
+		}))
 		.with(
 			{ status: MarketStatus.CLOSED, respectMarketStatus: true },
 			() => ({
-				Price: createMarketClosed(data),
+				Price: createMarketClosed(data!),
 				Body: <div />
 			})
 		)
 		.otherwise(() => ({
-			Price: createPrice(data, MarketStatus.OPEN),
-			Body: <ChartComp data={data} />
+			Price: createPrice(data!, MarketStatus.OPEN),
+			Body: <ChartComp data={data!} />
 		}));
+/* eslint-enable @typescript-eslint/no-non-null-assertion */
 
 export const InvestmentCard = (props: Props) => {
 	const { info, getActions = () => [] } = props;
