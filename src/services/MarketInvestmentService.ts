@@ -3,14 +3,12 @@ import {
 	OptionT,
 	PredicateT,
 	TaskT,
-	TaskTryT,
 	TryT
 } from '@craigmiller160/ts-functions/es/types';
 import { MarketStatus } from '../types/MarketStatus';
 import { match, P } from 'ts-pattern';
 import * as tradierService from './TradierService';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
-import * as coinGeckoService from './CoinGeckoService';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/es6/function';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
@@ -18,89 +16,15 @@ import * as Option from 'fp-ts/es6/Option';
 import { Quote } from '../types/quote';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import * as Either from 'fp-ts/es6/Either';
-import {
-	InvestmentType,
-	isCrypto,
-	isStock
-} from '../types/data/InvestmentType';
+import { isStock } from '../types/data/InvestmentType';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';
-import { InvestmentNotFoundError } from '../error/InvestmentNotFoundError';
+import { InvestmentData } from '../types/data/InvestmentData';
 
 const DATE_TIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 const parseDateTime = Time.parse(DATE_TIME_FORMAT);
 const formatTime = Time.format('HH:mm:ss');
 const subtractOneHour = Time.subHours(1);
 const formatDate = Time.format('yyyy-MM-dd');
-
-type HistoryFn = (s: string) => TaskTryT<ReadonlyArray<HistoryRecord>>;
-type QuoteFn = (s: ReadonlyArray<string>) => TaskTryT<ReadonlyArray<Quote>>;
-
-export interface InvestmentData {
-	readonly name: string;
-	readonly startPrice: number;
-	readonly currentPrice: number;
-	readonly history: ReadonlyArray<HistoryRecord>;
-}
-
-export const getQuoteFn = (type: InvestmentType): QuoteFn =>
-	match(type)
-		.when(isStock, () => tradierService.getQuotes)
-		.otherwise(() => coinGeckoService.getQuotes);
-
-export const getHistoryFn = (
-	time: MarketTime,
-	type: InvestmentType
-): HistoryFn =>
-	match({ time, type })
-		.with(
-			{ time: MarketTime.ONE_DAY, type: P.when(isStock) },
-			() => tradierService.getTimesales
-		)
-		.with(
-			{ time: MarketTime.ONE_DAY, type: P.when(isCrypto) },
-			() => coinGeckoService.getTodayHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_WEEK, type: P.when(isStock) },
-			() => tradierService.getOneWeekHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_WEEK, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneWeekHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_MONTH, type: P.when(isStock) },
-			() => tradierService.getOneMonthHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_MONTH, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneMonthHistory
-		)
-		.with(
-			{ time: MarketTime.THREE_MONTHS, type: P.when(isStock) },
-			() => tradierService.getThreeMonthHistory
-		)
-		.with(
-			{ time: MarketTime.THREE_MONTHS, type: P.when(isCrypto) },
-			() => coinGeckoService.getThreeMonthHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_YEAR, type: P.when(isStock) },
-			() => tradierService.getOneYearHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_YEAR, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneYearHistory
-		)
-		.with(
-			{ time: MarketTime.FIVE_YEARS, type: P.when(isStock) },
-			() => tradierService.getFiveYearHistory
-		)
-		.with(
-			{ time: MarketTime.FIVE_YEARS, type: P.when(isCrypto) },
-			() => coinGeckoService.getFiveYearHistory
-		)
-		.run();
 
 export const checkMarketStatus = (
 	timeValue: MarketTime
@@ -127,21 +51,6 @@ const isLaterThanNow: PredicateT<OptionT<HistoryRecord>> = (mostRecentRecord) =>
 const getMostRecentHistoryRecord = (
 	history: ReadonlyArray<HistoryRecord>
 ): OptionT<HistoryRecord> => RArray.last(history);
-
-const getQuote = (info: InvestmentInfo): TaskTryT<Quote> =>
-	pipe(
-		getQuoteFn(info.type)([info.symbol]),
-		TaskEither.map(RArray.head),
-		TaskEither.chain(
-			Option.fold(
-				() =>
-					TaskEither.left<Error>(
-						new InvestmentNotFoundError(info.symbol)
-					),
-				(_) => TaskEither.right(_)
-			)
-		)
-	);
 
 const getFirstHistoryRecordDate = (
 	history: ReadonlyArray<HistoryRecord>
@@ -294,28 +203,3 @@ export const handleInvestmentData = (
 		)
 	);
 };
-
-export const getInvestmentData = (
-	time: MarketTime,
-	info: InvestmentInfo,
-	shouldLoadHistoryData: boolean
-): TaskTryT<InvestmentData> =>
-	pipe(
-		getQuote(info),
-		TaskEither.bindTo('quote'),
-		TaskEither.bind('history', () =>
-			match(shouldLoadHistoryData)
-				.with(true, () => getHistoryFn(time, info.type)(info.symbol))
-				.otherwise(() => TaskEither.right([]))
-		),
-		TaskEither.chainEitherK(handleInvestmentData(time, info)),
-		TaskEither.mapLeft(
-			(ex) =>
-				new Error(
-					`Error getting data for ${info.symbol}: ${ex.message}`,
-					{
-						cause: ex
-					}
-				)
-		)
-	);

@@ -16,13 +16,7 @@ import * as Either from 'fp-ts/es6/Either';
 import { pipe } from 'fp-ts/es6/function';
 import { TryT } from '@craigmiller160/ts-functions/es/types';
 import { handleInvestmentData } from '../services/MarketInvestmentService';
-
-export type InvestmentData = {
-	readonly name: string;
-	readonly startPrice: number;
-	readonly currentPrice: number;
-	readonly history: ReadonlyArray<HistoryRecord>;
-};
+import { InvestmentData } from '../types/data/InvestmentData';
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
