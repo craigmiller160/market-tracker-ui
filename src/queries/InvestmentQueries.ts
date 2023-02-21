@@ -169,8 +169,8 @@ export const useGetInvestmentData = (
 			);
 		}
 
-		if (quote && history) {
-			return handleInvestmentData(time, info, quote, history);
+		if (quote) {
+			return handleInvestmentData(time, info, quote, history ?? []);
 		}
 
 		return Either.right<Error, InvestmentData | undefined>(undefined);
