@@ -75,8 +75,8 @@ describe('CoinGeckoService', () => {
 			)
 			.reply(200, price);
 
-		const result = await getQuotes(symbols)();
-		expect(result).toEqualRight([
+		const result = await getQuotes(symbols);
+		expect(result).toEqual([
 			{
 				name: '',
 				symbol: 'BTC',
@@ -100,8 +100,8 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getTodayHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getTodayHistory('BTC');
+		expect(result).toEqual(history);
 	});
 
 	it('gets 1 week history', async () => {
@@ -112,8 +112,8 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getOneWeekHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getOneWeekHistory('BTC');
+		expect(result).toEqual(history);
 	});
 
 	it('gets 1 month history', async () => {
@@ -124,8 +124,8 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getOneMonthHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getOneMonthHistory('BTC');
+		expect(result).toEqual(history);
 	});
 
 	it('gets 3 months history', async () => {
@@ -136,8 +136,8 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getThreeMonthHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getThreeMonthHistory('BTC');
+		expect(result).toEqual(history);
 	});
 
 	it('gets 1 year history', async () => {
@@ -148,8 +148,8 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getOneYearHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getOneYearHistory('BTC');
+		expect(result).toEqual(history);
 	});
 
 	it('gets 5 years history', async () => {
@@ -160,7 +160,7 @@ describe('CoinGeckoService', () => {
 				`/coingecko/coins/bitcoin/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			)
 			.reply(200, chart);
-		const result = await getFiveYearHistory('BTC')();
-		expect(result).toEqualRight(history);
+		const result = await getFiveYearHistory('BTC');
+		expect(result).toEqual(history);
 	});
 });
