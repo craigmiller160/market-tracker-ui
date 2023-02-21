@@ -1,4 +1,4 @@
-import { TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { TryT } from '@craigmiller160/ts-functions/es/types';
 import { ajaxApiFpTs, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
@@ -196,21 +196,24 @@ export const getTimesales = (
 	);
 };
 
+// TODO needs query
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> =>
+): Promise<ReadonlyArray<Quote>> =>
 	pipe(
 		ajaxApiFpTs.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeQuotes),
-		TaskEither.chainEitherK(formatTradierQuotes)
+		TaskEither.chainEitherK(formatTradierQuotes),
+		taskEitherToPromise
 	);
 
+// TODO needs query
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const queryString = qs.stringify(historyQuery);
 	return pipe(
 		ajaxApiFpTs.get<TradierHistory>({
@@ -218,13 +221,15 @@ const getHistoryQuote = (
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeHistory),
-		TaskEither.map(formatTradierHistory)
+		TaskEither.map(formatTradierHistory),
+		taskEitherToPromise
 	);
 };
 
+// TODO needs query
 export const getOneWeekHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -234,9 +239,10 @@ export const getOneWeekHistory = (
 	});
 };
 
+// TODO needs query
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -246,9 +252,10 @@ export const getOneMonthHistory = (
 	});
 };
 
+// TODO needs query
 export const getThreeMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -258,9 +265,10 @@ export const getThreeMonthHistory = (
 	});
 };
 
+// TODO needs query
 export const getOneYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -270,9 +278,10 @@ export const getOneYearHistory = (
 	});
 };
 
+// TODO needs query
 export const getFiveYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
 	return getHistoryQuote({
 		symbol,
@@ -282,7 +291,8 @@ export const getFiveYearHistory = (
 	});
 };
 
-export const getMarketStatus = (): TaskTryT<MarketStatus> => {
+// TODO needs query
+export const getMarketStatus = (): Promise<MarketStatus> => {
 	const today = new Date();
 	const year = formatCalendarYear(today);
 	const month = formatCalendarMonth(today);
@@ -304,6 +314,7 @@ export const getMarketStatus = (): TaskTryT<MarketStatus> => {
 				})
 			)
 		),
-		TaskEither.map(toMarketStatus)
+		TaskEither.map(toMarketStatus),
+		taskEitherToPromise
 	);
 };
