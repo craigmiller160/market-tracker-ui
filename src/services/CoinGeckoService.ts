@@ -89,6 +89,7 @@ const formatPrice =
 			Either.sequenceArray
 		);
 
+// TODO needs query
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): TaskTryT<ReadonlyArray<Quote>> =>
@@ -130,6 +131,7 @@ const formatMarketChart = (
 		)
 	);
 
+// TODO needs query
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
@@ -149,6 +151,7 @@ const getHistoryQuote = (
 	);
 };
 
+// TODO needs query
 export const getTodayHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
@@ -164,6 +167,7 @@ export const getDays = (historyDate: string): number =>
 		Time.differenceInDays(new Date())
 	);
 
+// TODO needs query
 export const getOneWeekHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
@@ -172,6 +176,7 @@ export const getOneWeekHistory = (
 		start: getOneWeekStartDate()
 	});
 
+// TODO needs query
 export const getOneMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> => {
@@ -181,6 +186,7 @@ export const getOneMonthHistory = (
 	});
 };
 
+// TODO needs query
 export const getThreeMonthHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
@@ -189,6 +195,7 @@ export const getThreeMonthHistory = (
 		start: getThreeMonthStartDate()
 	});
 
+// TODO needs query
 export const getOneYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
@@ -197,6 +204,7 @@ export const getOneYearHistory = (
 		start: getOneYearStartDate()
 	});
 
+// TODO needs query
 export const getFiveYearHistory = (
 	symbol: string
 ): TaskTryT<ReadonlyArray<HistoryRecord>> =>
