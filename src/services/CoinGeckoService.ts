@@ -1,4 +1,4 @@
-import { MonoidT, TaskTryT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
 import { flow, pipe } from 'fp-ts/es6/function';
 import { ajaxApiFpTs, getResponseData } from './AjaxApi';
@@ -31,6 +31,7 @@ import {
 	getAltIdForSymbol,
 	getSymbolForAltId
 } from '../data/MarketPageInvestmentParsing';
+import { taskEitherToPromise } from '../function/TaskEitherToPromise';
 
 const decodePrice = TypeValidation.decode(coinGeckoPriceV);
 const decodeMarketChart = TypeValidation.decode(coinGeckoMarketChartV);
@@ -92,7 +93,7 @@ const formatPrice =
 // TODO needs query
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
-): TaskTryT<ReadonlyArray<Quote>> =>
+): Promise<ReadonlyArray<Quote>> =>
 	pipe(
 		symbols,
 		RArray.map(getAltIdForSymbol),
@@ -113,7 +114,8 @@ export const getQuotes = (
 		),
 		TaskEither.chainEitherK(({ ids, response }) =>
 			formatPrice(ids)(response)
-		)
+		),
+		taskEitherToPromise
 	);
 
 const formatMarketChart = (
@@ -134,7 +136,7 @@ const formatMarketChart = (
 // TODO needs query
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
 	const end = Math.floor(getTodayEnd().getTime() / 1000);
 	return pipe(
@@ -147,14 +149,15 @@ const getHistoryQuote = (
 		),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeMarketChart),
-		TaskEither.map(formatMarketChart)
+		TaskEither.map(formatMarketChart),
+		taskEitherToPromise
 	);
 };
 
 // TODO needs query
 export const getTodayHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
+): Promise<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
 		start: getTodayStart()
@@ -170,7 +173,7 @@ export const getDays = (historyDate: string): number =>
 // TODO needs query
 export const getOneWeekHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
+): Promise<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
 		start: getOneWeekStartDate()
@@ -179,7 +182,7 @@ export const getOneWeekHistory = (
 // TODO needs query
 export const getOneMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	return getHistoryQuote({
 		symbol,
 		start: getOneMonthStartDate()
@@ -189,7 +192,7 @@ export const getOneMonthHistory = (
 // TODO needs query
 export const getThreeMonthHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
+): Promise<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
 		start: getThreeMonthStartDate()
@@ -198,7 +201,7 @@ export const getThreeMonthHistory = (
 // TODO needs query
 export const getOneYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
+): Promise<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
 		start: getOneYearStartDate()
@@ -207,7 +210,7 @@ export const getOneYearHistory = (
 // TODO needs query
 export const getFiveYearHistory = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> =>
+): Promise<ReadonlyArray<HistoryRecord>> =>
 	getHistoryQuote({
 		symbol,
 		start: getFiveYearStartDate()
