@@ -3,7 +3,7 @@ import {
 	ChartRecord,
 	useFormattedChartData
 } from '../../../../src/components/UI/Chart/useFormattedChartData';
-import { InvestmentData } from '../../../../src/services/MarketInvestmentService';
+import { InvestmentData } from '../../../../src/types/data/InvestmentData';
 
 const marketData: InvestmentData = {
 	currentPrice: 50,
