@@ -9,7 +9,7 @@ import { match, P } from 'ts-pattern';
 import * as tradierService from '../services/TradierService';
 import * as coinGeckoService from '../services/CoinGeckoService';
 import { Quote } from '../types/quote';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';
 import { useMemo } from 'react';
 import * as Either from 'fp-ts/es6/Either';
@@ -17,9 +17,11 @@ import { pipe } from 'fp-ts/es6/function';
 import { TryT } from '@craigmiller160/ts-functions/es/types';
 import { handleInvestmentData } from '../services/MarketInvestmentService';
 import { InvestmentData } from '../types/data/InvestmentData';
+import { MarketStatus } from '../types/MarketStatus';
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
+export const GET_MARKET_STATUS = 'InvestmentQueries_GetMarketStatus';
 
 const TODAY_REFETCH_INTERVAL = 300_000;
 
@@ -181,3 +183,17 @@ export const useGetInvestmentData = (
 		)
 	);
 };
+
+// TODO what happens when this is disabled
+export const useCheckMarketStatus = (
+	time: MarketTime
+): UseQueryResult<MarketStatus, Error> =>
+	useQuery<MarketStatus, Error>({
+		queryKey: [GET_MARKET_STATUS, time],
+		queryFn: tradierService.getMarketStatus,
+		enabled: MarketTime.ONE_DAY === time,
+		placeholderData:
+			MarketTime.ONE_DAY === time
+				? MarketStatus.UNKNOWN
+				: MarketStatus.OPEN
+	});
