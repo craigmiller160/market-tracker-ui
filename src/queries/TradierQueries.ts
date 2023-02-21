@@ -1,47 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-	getFiveYearHistory,
-	getMarketStatus,
-	getOneMonthHistory,
-	getOneWeekHistory,
-	getOneYearHistory,
-	getQuotes,
-	getThreeMonthHistory,
-	getTimesales
-} from '../services/TradierService';
+import { getMarketStatus, getQuotes } from '../services/TradierService';
 import { MarketTime } from '../types/MarketTime';
-import { TODAY_REFETCH_INTERVAL } from './constants';
 import { HistoryRecord } from '../types/history';
-import { match } from 'ts-pattern';
+import { getHistoryFn, GetHistoryQueryKey, getRefetchInterval } from './utils';
+import { InvestmentType } from '../types/data/InvestmentType';
 
 export const GET_QUOTES_KEY = 'TradierQueries_GetQuotes';
 export const GET_HISTORY_KEY = 'TradierQueries_GetHistory';
 export const GET_MARKET_STATUS_KEY = 'TradierQueries_GetMarketStatus';
 
-const getRefetchInterval = (time: MarketTime): number =>
-	time === MarketTime.ONE_DAY ? TODAY_REFETCH_INTERVAL : 0;
-
-export const useGetQuote = (time: MarketTime, symbol: string) =>
+export const useGetStockQuote = (time: MarketTime, symbol: string) =>
 	useQuery({
 		queryKey: [GET_QUOTES_KEY, time, symbol],
 		queryFn: () => getQuotes([symbol]),
 		refetchInterval: getRefetchInterval(time)
 	});
 
-type HistoryFn = (symbol: string) => Promise<ReadonlyArray<HistoryRecord>>;
-const getHistoryFn = (time: MarketTime): HistoryFn =>
-	match(time)
-		.with(MarketTime.ONE_DAY, () => getTimesales)
-		.with(MarketTime.ONE_WEEK, () => getOneWeekHistory)
-		.with(MarketTime.ONE_MONTH, () => getOneMonthHistory)
-		.with(MarketTime.THREE_MONTHS, () => getThreeMonthHistory)
-		.with(MarketTime.ONE_YEAR, () => getOneYearHistory)
-		.with(MarketTime.FIVE_YEARS, () => getFiveYearHistory)
-		.run();
-
-type GetHistoryQueryKey = [string, MarketTime, string];
-
-export const useGetHistory = (time: MarketTime, symbol: string) =>
+export const useGetStockHistory = (time: MarketTime, symbol: string) =>
 	useQuery<
 		ReadonlyArray<HistoryRecord>,
 		Error,
@@ -50,7 +25,7 @@ export const useGetHistory = (time: MarketTime, symbol: string) =>
 	>({
 		queryKey: [GET_HISTORY_KEY, time, symbol],
 		queryFn: ({ queryKey: [, theTime, theSymbol] }) =>
-			getHistoryFn(theTime)(theSymbol),
+			getHistoryFn(theTime, InvestmentType.STOCK)(theSymbol),
 		refetchInterval: getRefetchInterval(time)
 	});
 
