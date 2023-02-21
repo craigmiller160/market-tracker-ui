@@ -9,7 +9,15 @@ import { match, P } from 'ts-pattern';
 import * as tradierService from '../services/TradierService';
 import * as coinGeckoService from '../services/CoinGeckoService';
 import { Quote } from '../types/quote';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { InvestmentInfo } from '../types/data/InvestmentInfo';
+
+export type InvestmentData = {
+	readonly name: string;
+	readonly startPrice: number;
+	readonly currentPrice: number;
+	readonly history: ReadonlyArray<HistoryRecord>;
+};
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
@@ -101,7 +109,8 @@ type GetHistoryQueryKey = [string, MarketTime, InvestmentType, string];
 export const useGetHistory = (
 	time: MarketTime,
 	type: InvestmentType,
-	symbol: string
+	symbol: string,
+	shouldLoad: boolean
 ) =>
 	useQuery<
 		ReadonlyArray<HistoryRecord>,
@@ -112,5 +121,20 @@ export const useGetHistory = (
 		queryKey: [GET_HISTORY_KEY, time, type, symbol],
 		queryFn: ({ queryKey: [, theTime, theType, theSymbol] }) =>
 			getHistoryFn(theTime, theType)(theSymbol),
-		refetchInterval: getRefetchInterval(time)
+		refetchInterval: getRefetchInterval(time),
+		enabled: shouldLoad
 	});
+
+export const useGetInvestmentData = (
+	time: MarketTime,
+	info: InvestmentInfo,
+	shouldLoadHistoryData: boolean
+): UseQueryResult<InvestmentData, Error> => {
+	const { error: quoteError } = useGetQuote(time, info.type, info.symbol);
+	const { error: historyError } = useGetHistory(
+		time,
+		info.type,
+		info.symbol,
+		shouldLoadHistoryData
+	);
+};
