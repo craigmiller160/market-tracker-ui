@@ -4,7 +4,6 @@ import { SearchForm } from './SearchForm';
 import { InvestmentCard } from '../common/InvestmentCard/InvestmentCard';
 import { InvestmentInfo } from '../../../types/data/InvestmentInfo';
 import { InvestmentType } from '../../../types/data/InvestmentType';
-import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { Updater, useImmer } from 'use-immer';
 import { SearchValues } from './constants';
 import { ReactNode, useEffect, useMemo } from 'react';
@@ -81,7 +80,7 @@ export const Search = () => {
 		});
 
 	return (
-		<RefreshProvider>
+		<>
 			<div className="SearchPage" data-testid="search-page">
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
@@ -94,6 +93,6 @@ export const Search = () => {
 				show={state.addToWatchlistModal.show}
 				onClose={closeAddToWatchlistModal}
 			/>
-		</RefreshProvider>
+		</>
 	);
 };

@@ -13,7 +13,6 @@ import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
 } from '../../../types/data/MarketInvestmentType';
-import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 
 interface InvestmentResult {
@@ -73,11 +72,11 @@ export const Markets = () => {
 	useHandleInvestmentError(investmentResult.error);
 	const panels = createPanels(investmentResult.investments);
 	return (
-		<RefreshProvider>
+		<>
 			<div className="GlobalMarkets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
 				<Accordion panels={panels} />
 			</div>
-		</RefreshProvider>
+		</>
 	);
 };

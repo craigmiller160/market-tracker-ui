@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Typography } from 'antd';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
-import { RefreshProvider } from '../common/refresh/RefreshProvider';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
 import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
@@ -320,7 +319,7 @@ export const Watchlists = () => {
 		.otherwise(() => <Accordion panels={panels} />);
 
 	return (
-		<RefreshProvider>
+		<>
 			<div
 				className={`WatchlistsPage ${breakpointName}`}
 				data-testid="watchlist-page"
@@ -351,6 +350,6 @@ export const Watchlists = () => {
 				label="Name"
 				onClose={handleAddWatchlistResult}
 			/>
-		</RefreshProvider>
+		</>
 	);
 };
