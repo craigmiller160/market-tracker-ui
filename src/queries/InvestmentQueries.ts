@@ -206,7 +206,6 @@ export const useGetInvestmentData = (
 	);
 };
 
-// TODO what happens when this is disabled
 export const useCheckMarketStatus = (): UseQueryResult<MarketStatus, Error> => {
 	const time = useSelector(timeValueSelector);
 	return useQuery<MarketStatus, Error>({
