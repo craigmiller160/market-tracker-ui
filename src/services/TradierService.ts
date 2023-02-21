@@ -44,6 +44,7 @@ import {
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 import * as Either from 'fp-ts/es6/Either';
 import { InvestmentNotFoundError } from '../error/InvestmentNotFoundError';
+import { taskEitherToPromise } from '../function/TaskEitherToPromise';
 
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');
@@ -178,9 +179,10 @@ const formatTimesales = (
 		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
 	);
 
+// TODO needs query
 export const getTimesales = (
 	symbol: string
-): TaskTryT<ReadonlyArray<HistoryRecord>> => {
+): Promise<ReadonlyArray<HistoryRecord>> => {
 	const start = getTodayStartString();
 	const end = getTodayEndString();
 	return pipe(
@@ -189,7 +191,8 @@ export const getTimesales = (
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeTimesales),
-		TaskEither.map(formatTimesales)
+		TaskEither.map(formatTimesales),
+		taskEitherToPromise
 	);
 };
 
