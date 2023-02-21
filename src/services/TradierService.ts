@@ -179,7 +179,6 @@ const formatTimesales = (
 		Option.getOrElse((): ReadonlyArray<HistoryRecord> => [])
 	);
 
-// TODO needs query
 export const getTimesales = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -196,7 +195,6 @@ export const getTimesales = (
 	);
 };
 
-// TODO needs query
 export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): Promise<ReadonlyArray<Quote>> =>
@@ -210,7 +208,6 @@ export const getQuotes = (
 		taskEitherToPromise
 	);
 
-// TODO needs query
 const getHistoryQuote = (
 	historyQuery: HistoryQuery
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -226,7 +223,6 @@ const getHistoryQuote = (
 	);
 };
 
-// TODO needs query
 export const getOneWeekHistory = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -239,7 +235,6 @@ export const getOneWeekHistory = (
 	});
 };
 
-// TODO needs query
 export const getOneMonthHistory = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -252,7 +247,6 @@ export const getOneMonthHistory = (
 	});
 };
 
-// TODO needs query
 export const getThreeMonthHistory = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -265,7 +259,6 @@ export const getThreeMonthHistory = (
 	});
 };
 
-// TODO needs query
 export const getOneYearHistory = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -278,7 +271,6 @@ export const getOneYearHistory = (
 	});
 };
 
-// TODO needs query
 export const getFiveYearHistory = (
 	symbol: string
 ): Promise<ReadonlyArray<HistoryRecord>> => {
@@ -291,7 +283,6 @@ export const getFiveYearHistory = (
 	});
 };
 
-// TODO needs query
 export const getMarketStatus = (): Promise<MarketStatus> => {
 	const today = new Date();
 	const year = formatCalendarYear(today);
