@@ -14,13 +14,30 @@ export interface ChartRecord {
 	readonly price: number;
 }
 
+const sortRecordsByPrice: (
+	records: ReadonlyArray<ChartRecord>
+) => ReadonlyArray<ChartRecord> = RArray.sort<ChartRecord>({
+	compare: (a, b) => {
+		if (a.price > b.price) {
+			return 1;
+		} else if (a.price < b.price) {
+			return -1;
+		} else {
+			return 0;
+		}
+	},
+	equals: (a, b) => {
+		return a.price === b.price;
+	}
+});
+
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
 
 type ChartData = {
 	readonly records: ReadonlyArray<ChartRecord>;
-	readonly firstPrice: number;
-	readonly currentPrice: number;
+	readonly minPrice: number;
+	readonly maxPrice: number;
 };
 
 const formatData = (data: InvestmentData): ChartData => {
@@ -38,10 +55,13 @@ const formatData = (data: InvestmentData): ChartData => {
 			price: data.currentPrice
 		})
 	);
+
+	const sortedByPrice = sortRecordsByPrice(records);
+
 	return {
-		firstPrice,
+		minPrice: sortedByPrice[0].price,
 		records,
-		currentPrice: data.currentPrice
+		maxPrice: sortedByPrice[sortedByPrice.length - 1].price
 	};
 };
 
