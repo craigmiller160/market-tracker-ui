@@ -1,7 +1,4 @@
-import {
-	changeSelectedTime,
-	checkAndUpdateMarketStatus
-} from '../../../src/store/marketSettings/actions';
+import { changeSelectedTime } from '../../../src/store/marketSettings/actions';
 import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
@@ -10,7 +7,6 @@ import { RootState, StoreType } from '../../../src/store';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
-import { MarketStatus } from '../../../src/types/MarketStatus';
 import { ajaxApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
@@ -75,10 +71,6 @@ describe('marketSettings actions', () => {
 				{
 					type: marketSettingsSlice.actions.setTime.type,
 					payload: todayKey
-				},
-				{
-					type: marketSettingsSlice.actions.setStatus.type,
-					payload: MarketStatus.CLOSED
 				}
 			]);
 		});
@@ -94,43 +86,6 @@ describe('marketSettings actions', () => {
 				{
 					type: marketSettingsSlice.actions.setTime.type,
 					payload: oneWeekKey
-				},
-				{
-					type: marketSettingsSlice.actions.setStatus.type,
-					payload: MarketStatus.OPEN
-				}
-			]);
-		});
-	});
-
-	describe('checkAndUpdateMarketStatus', () => {
-		it('checks market status for today', async () => {
-			mockApi
-				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
-				.reply(200, tradierCalendar);
-			const mockStore = newMockStore(defaultState) as MockStoreType;
-			await mockStore.dispatch(
-				checkAndUpdateMarketStatus(MarketTime.ONE_DAY)
-			);
-
-			expect(mockStore.getActions()).toEqual([
-				{
-					type: marketSettingsSlice.actions.setStatus.type,
-					payload: MarketStatus.CLOSED
-				}
-			]);
-		});
-
-		it('checks market status for another time', async () => {
-			const mockStore = newMockStore(defaultState) as MockStoreType;
-			await mockStore.dispatch(
-				checkAndUpdateMarketStatus(MarketTime.ONE_WEEK)
-			);
-
-			expect(mockStore.getActions()).toEqual([
-				{
-					type: marketSettingsSlice.actions.setStatus.type,
-					payload: MarketStatus.OPEN
 				}
 			]);
 		});

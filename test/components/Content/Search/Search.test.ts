@@ -107,7 +107,9 @@ describe('Search', () => {
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		expect(within(card).queryByText(/Chart/)).not.toBeInTheDocument();
-		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
+		await waitFor(() =>
+			expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00')
+		);
 		expect(within(card).queryByText(/225/)).not.toBeInTheDocument();
 		expect(within(card).queryByText('Market Closed')).toBeInTheDocument();
 	});
@@ -262,8 +264,10 @@ describe('Search', () => {
 			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
 		);
 		const card = screen.getByTestId('market-card-VTI');
-		expect(within(card).queryByText(/Error/)).toHaveTextContent(
-			'Error: Investment not found. Symbol: VTI'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Error/)).toHaveTextContent(
+				/Investment not found. Symbol: VTI/
+			)
 		);
 	});
 });

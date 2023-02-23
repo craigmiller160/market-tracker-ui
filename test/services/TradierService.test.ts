@@ -166,8 +166,8 @@ describe('TradierService', () => {
 				quote: createTradierQuote('VTI')
 			}
 		});
-		const result = await getQuotes(['VTI'])();
-		expect(result).toEqualRight([createQuote('VTI')]);
+		const result = await getQuotes(['VTI']);
+		expect(result).toEqual([createQuote('VTI')]);
 	});
 
 	it('get multiple quotes', async () => {
@@ -176,8 +176,8 @@ describe('TradierService', () => {
 				quote: [createTradierQuote('VTI'), createTradierQuote('VOO')]
 			}
 		});
-		const result = await getQuotes(['VTI', 'VOO'])();
-		expect(result).toEqualRight([createQuote('VTI'), createQuote('VOO')]);
+		const result = await getQuotes(['VTI', 'VOO']);
+		expect(result).toEqual([createQuote('VTI'), createQuote('VOO')]);
 	});
 
 	describe('NaN', () => {
@@ -205,8 +205,8 @@ describe('TradierService', () => {
 				.onGet(`/tradier/markets/history?${queryString}`)
 				.reply(200, history);
 
-			const result = await getOneWeekHistory('VTI')();
-			expect(result).toEqualRight([
+			const result = await getOneWeekHistory('VTI');
+			expect(result).toEqual([
 				createHistory()[0],
 				createHistory()[1],
 				createHistory()[3]
@@ -237,8 +237,8 @@ describe('TradierService', () => {
 				.onGet(`/tradier/markets/history?${queryString}`)
 				.reply(200, history);
 
-			const result = await getOneWeekHistory('VTI')();
-			expect(result).toEqualRight([
+			const result = await getOneWeekHistory('VTI');
+			expect(result).toEqual([
 				createHistory()[0],
 				createHistory()[1],
 				createHistory()[2]
@@ -270,11 +270,8 @@ describe('TradierService', () => {
 				.onGet(`/tradier/markets/history?${queryString}`)
 				.reply(200, history);
 
-			const result = await getOneWeekHistory('VTI')();
-			expect(result).toEqualRight([
-				createHistory()[0],
-				createHistory()[1]
-			]);
+			const result = await getOneWeekHistory('VTI');
+			expect(result).toEqual([createHistory()[0], createHistory()[1]]);
 		});
 	});
 
@@ -291,8 +288,8 @@ describe('TradierService', () => {
 			.onGet(`/tradier/markets/history?${queryString}`)
 			.reply(200, createTradierHistory());
 
-		const result = await getOneWeekHistory('VTI')();
-		expect(result).toEqualRight(createHistory());
+		const result = await getOneWeekHistory('VTI');
+		expect(result).toEqual(createHistory());
 	});
 
 	it('get 1 month history', async () => {
@@ -308,8 +305,8 @@ describe('TradierService', () => {
 			.onGet(`/tradier/markets/history?${queryString}`)
 			.reply(200, createTradierHistory());
 
-		const result = await getOneMonthHistory('VTI')();
-		expect(result).toEqualRight(createHistory());
+		const result = await getOneMonthHistory('VTI');
+		expect(result).toEqual(createHistory());
 	});
 
 	it('get 3 months history', async () => {
@@ -325,8 +322,8 @@ describe('TradierService', () => {
 			.onGet(`/tradier/markets/history?${queryString}`)
 			.reply(200, createTradierHistory());
 
-		const result = await getThreeMonthHistory('VTI')();
-		expect(result).toEqualRight(createHistory());
+		const result = await getThreeMonthHistory('VTI');
+		expect(result).toEqual(createHistory());
 	});
 
 	it('get 1 year history', async () => {
@@ -342,8 +339,8 @@ describe('TradierService', () => {
 			.onGet(`/tradier/markets/history?${queryString}`)
 			.reply(200, createTradierHistory());
 
-		const result = await getOneYearHistory('VTI')();
-		expect(result).toEqualRight(createHistory());
+		const result = await getOneYearHistory('VTI');
+		expect(result).toEqual(createHistory());
 	});
 
 	it('get 5 years history', async () => {
@@ -359,8 +356,8 @@ describe('TradierService', () => {
 			.onGet(`/tradier/markets/history?${queryString}`)
 			.reply(200, createTradierHistory());
 
-		const result = await getFiveYearHistory('VTI')();
-		expect(result).toEqualRight(createHistory());
+		const result = await getFiveYearHistory('VTI');
+		expect(result).toEqual(createHistory());
 	});
 
 	it('gets timesales for today', async () => {
@@ -372,8 +369,8 @@ describe('TradierService', () => {
 			)
 			.reply(200, createTimesale());
 
-		const result = await getTimesales('VTI')();
-		expect(result).toEqualRight(createTimesaleHistory());
+		const result = await getTimesales('VTI');
+		expect(result).toEqual(createTimesaleHistory());
 	});
 
 	it('gets timesales for today with null response', async () => {
@@ -387,8 +384,8 @@ describe('TradierService', () => {
 				series: null
 			});
 
-		const result = await getTimesales('VTI')();
-		expect(result).toEqualRight([]);
+		const result = await getTimesales('VTI');
+		expect(result).toEqual([]);
 	});
 
 	describe('getMarketStatus', () => {
@@ -415,8 +412,8 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await getMarketStatus()();
-			expect(result).toEqualRight(MarketStatus.CLOSED);
+			const result = await getMarketStatus();
+			expect(result).toEqual(MarketStatus.CLOSED);
 		});
 
 		it('is not closed', async () => {
@@ -437,8 +434,8 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await getMarketStatus()();
-			expect(result).toEqualRight(MarketStatus.OPEN);
+			const result = await getMarketStatus();
+			expect(result).toEqual(MarketStatus.OPEN);
 		});
 
 		it('no matching date', async () => {
@@ -459,8 +456,8 @@ describe('TradierService', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, calendar);
-			const result = await getMarketStatus()();
-			expect(result).toEqualRight(MarketStatus.CLOSED);
+			const result = await getMarketStatus();
+			expect(result).toEqual(MarketStatus.CLOSED);
 		});
 	});
 });
