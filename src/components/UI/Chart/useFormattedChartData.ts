@@ -17,9 +17,15 @@ export interface ChartRecord {
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
 
-const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
+type ChartData = {
+	readonly records: ReadonlyArray<ChartRecord>;
+	readonly firstPrice: number;
+	readonly currentPrice: number;
+};
+
+const formatData = (data: InvestmentData): ChartData => {
 	const firstPrice = getFirstPrice(data.history);
-	return pipe(
+	const records = pipe(
 		data.history,
 		RArray.map((record) => ({
 			date: formatHistoryDate(`${record.date} ${record.time}`),
@@ -32,8 +38,12 @@ const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
 			price: data.currentPrice
 		})
 	);
+	return {
+		firstPrice,
+		records,
+		currentPrice: data.currentPrice
+	};
 };
 
-export const useFormattedChartData = (
-	data: InvestmentData
-): ReadonlyArray<ChartRecord> => useMemo(() => formatData(data), [data]);
+export const useFormattedChartData = (data: InvestmentData): ChartData =>
+	useMemo(() => formatData(data), [data]);
