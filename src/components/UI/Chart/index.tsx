@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const Chart = (props: Props) => {
-	const data = useFormattedChartData(props.data);
+	const { records, minPrice, maxPrice } = useFormattedChartData(props.data);
 	const isGain =
 		props.data.currentPrice - getFirstPrice(props.data.history) >= 0;
 
@@ -19,8 +19,12 @@ export const Chart = (props: Props) => {
 				height={250}
 				padding="auto"
 				xField="date"
-				yField="change"
-				data={castDraft(data)}
+				yField="price"
+				yAxis={{
+					min: minPrice,
+					max: maxPrice
+				}}
+				data={castDraft(records)}
 				color={isGain ? 'green' : 'red'}
 			/>
 		</div>

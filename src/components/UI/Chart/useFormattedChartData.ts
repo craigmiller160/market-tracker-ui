@@ -14,12 +14,35 @@ export interface ChartRecord {
 	readonly price: number;
 }
 
+const sortRecordsByPrice: (
+	records: ReadonlyArray<ChartRecord>
+) => ReadonlyArray<ChartRecord> = RArray.sort<ChartRecord>({
+	compare: (a, b) => {
+		if (a.price > b.price) {
+			return 1;
+		} else if (a.price < b.price) {
+			return -1;
+		} else {
+			return 0;
+		}
+	},
+	equals: (a, b) => {
+		return a.price === b.price;
+	}
+});
+
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
 
-const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
+type ChartData = {
+	readonly records: ReadonlyArray<ChartRecord>;
+	readonly minPrice: number;
+	readonly maxPrice: number;
+};
+
+const formatData = (data: InvestmentData): ChartData => {
 	const firstPrice = getFirstPrice(data.history);
-	return pipe(
+	const records = pipe(
 		data.history,
 		RArray.map((record) => ({
 			date: formatHistoryDate(`${record.date} ${record.time}`),
@@ -32,8 +55,15 @@ const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
 			price: data.currentPrice
 		})
 	);
+
+	const sortedByPrice = sortRecordsByPrice(records);
+
+	return {
+		minPrice: sortedByPrice[0].price,
+		records,
+		maxPrice: sortedByPrice[sortedByPrice.length - 1].price
+	};
 };
 
-export const useFormattedChartData = (
-	data: InvestmentData
-): ReadonlyArray<ChartRecord> => useMemo(() => formatData(data), [data]);
+export const useFormattedChartData = (data: InvestmentData): ChartData =>
+	useMemo(() => formatData(data), [data]);
