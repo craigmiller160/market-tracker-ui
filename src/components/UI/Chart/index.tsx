@@ -19,7 +19,10 @@ export const Chart = (props: Props) => {
 				height={250}
 				padding="auto"
 				xField="date"
-				yField="change"
+				yField="price"
+				yAxis={{
+					min: 350
+				}}
 				data={castDraft(data)}
 				color={isGain ? 'green' : 'red'}
 			/>
