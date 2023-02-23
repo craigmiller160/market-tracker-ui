@@ -138,7 +138,6 @@ type UseGetInvestmentDataResult = {
 const shouldRespectMarketStatus = (info: InvestmentInfo) =>
 	info.type !== InvestmentType.CRYPTO;
 
-// TODO is InvestmentInfo safe as a reference for controlling re-enders/re-queries?
 export const useGetInvestmentData = (
 	info: InvestmentInfo
 ): UseGetInvestmentDataResult => {
