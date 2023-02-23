@@ -93,7 +93,7 @@ const useOnOk = (
 	form: FormInstance<ModalFormData>,
 	onClose: () => void
 ): OnOk => {
-	const { mutate: addStockToWatchlist } = useAddStockToWatchlist(onSuccess);
+	const { mutate: addStockToWatchlist } = useAddStockToWatchlist();
 	const { mutate: createWatchlist } = useCreateWatchlist();
 	return () => {
 		const values: ModalFormData = form.getFieldsValue();
