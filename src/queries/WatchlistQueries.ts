@@ -14,6 +14,9 @@ import {
 	renameWatchlist
 } from '../services/WatchlistService';
 import { DbWatchlist } from '../types/Watchlist';
+import { notificationSlice } from '../store/notification/slice';
+import { useDispatch } from 'react-redux';
+import { match, P } from 'ts-pattern';
 
 export const GET_ALL_WATCHLISTS_KEY = 'WatchlistQueries_GetAllWatchlists';
 export const GET_WATCHLIST_NAMES_KEY = 'WatchlistQueries_GetWatchlistNames';
@@ -65,14 +68,26 @@ type CreateWatchlistParams = {
 	readonly stockSymbol?: string;
 };
 
-export const useCreateWatchlist = (onSuccess?: () => void) => {
+export const useCreateWatchlist = () => {
 	const queryClient = useQueryClient();
+	const dispatch = useDispatch();
 	return useMutation<DbWatchlist, Error, CreateWatchlistParams>({
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			createWatchlist(watchlistName, stockSymbol),
-		onSuccess: () => {
+		onSuccess: (_, variables) => {
 			invalidateQueries(queryClient);
-			onSuccess?.();
+			const message = match(variables)
+				.with(
+					{
+						stockSymbol: P.not(P.nullish)
+					},
+					({ stockSymbol, watchlistName }) =>
+						`Created watchlist ${watchlistName} and added stock ${stockSymbol}`
+				)
+				.otherwise(
+					({ watchlistName }) => `Created watchlist ${watchlistName}`
+				);
+			dispatch(notificationSlice.actions.addSuccess(message));
 		}
 	});
 };

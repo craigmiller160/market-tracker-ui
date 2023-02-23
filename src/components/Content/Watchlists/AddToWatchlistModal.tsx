@@ -11,8 +11,6 @@ import {
 import { match } from 'ts-pattern';
 import { Spinner } from '../../UI/Spinner';
 import './AddToWatchlistModal.scss';
-import { useDispatch } from 'react-redux';
-import { notificationSlice } from '../../../store/notification/slice';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
 import {
 	useAddStockToWatchlist,
@@ -95,17 +93,8 @@ const useOnOk = (
 	form: FormInstance<ModalFormData>,
 	onClose: () => void
 ): OnOk => {
-	const dispatch = useDispatch();
-
-	const onSuccess = () =>
-		dispatch(
-			notificationSlice.actions.addSuccess(
-				`Added ${stockSymbol} to watchlist`
-			)
-		);
-
-	const { mutate: addStockToWatchlist } = useAddStockToWatchlist(onSuccess);
-	const { mutate: createWatchlist } = useCreateWatchlist(onSuccess);
+	const { mutate: addStockToWatchlist } = useAddStockToWatchlist();
+	const { mutate: createWatchlist } = useCreateWatchlist();
 	return () => {
 		const values: ModalFormData = form.getFieldsValue();
 		const [watchlistName, saveAction] = match(values)
