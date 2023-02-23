@@ -11,6 +11,7 @@ const formatTableDate = Time.format("M/d/yy'\n'HH:mm");
 export interface ChartRecord {
 	readonly date: string;
 	readonly change: number;
+	readonly price: number;
 }
 
 const formatHistoryDate = (tableDate: string): string =>
@@ -22,11 +23,13 @@ const formatData = (data: InvestmentData): ReadonlyArray<ChartRecord> => {
 		data.history,
 		RArray.map((record) => ({
 			date: formatHistoryDate(`${record.date} ${record.time}`),
-			change: record.price - firstPrice
+			change: record.price - firstPrice,
+			price: record.price
 		})),
 		RArray.append({
 			date: 'Now',
-			change: data.currentPrice - firstPrice
+			change: data.currentPrice - firstPrice,
+			price: data.currentPrice
 		})
 	);
 };
