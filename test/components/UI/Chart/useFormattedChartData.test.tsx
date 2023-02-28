@@ -59,46 +59,46 @@ describe('useFormattedChartData', () => {
 	it('formats the chart data', () => {
 		let result: ChartData = {
 			records: [],
-			minPrice: '0',
-			maxPrice: '0'
+			minPrice: 0,
+			maxPrice: 0
 		};
 		const callback = (r: ChartData) => {
 			result = r;
 		};
 		render(<TestComp data={marketData} callback={callback} />);
 		expect(result).toEqual({
-			minPrice: '10.00',
-			maxPrice: '50.00',
+			minPrice: 10,
+			maxPrice: 50,
 			records: [
 				{
 					date: '1/1/22\n00:00',
-					change: '0.00',
-					price: '10.00'
+					change: 0,
+					price: 10
 				},
 				{
 					date: '1/1/22\n23:59',
-					change: '5.00',
-					price: '15.00'
+					change: 5,
+					price: 15
 				},
 				{
 					date: '1/2/22\n00:00',
-					change: '11.00',
-					price: '21.00'
+					change: 11,
+					price: 21
 				},
 				{
 					date: '1/2/22\n23:59',
-					change: '7.00',
-					price: '17.00'
+					change: 7,
+					price: 17
 				},
 				{
 					date: '1/3/22\n00:00',
-					change: '18.00',
-					price: '28.00'
+					change: 18,
+					price: 28
 				},
 				{
 					date: 'Now',
-					change: '40.00',
-					price: '50.00'
+					change: 40,
+					price: 50
 				}
 			]
 		});
