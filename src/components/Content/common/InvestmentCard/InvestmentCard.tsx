@@ -40,7 +40,7 @@ const createTitle = (
 
 const localeOptions: Intl.NumberFormatOptions = {
 	minimumFractionDigits: 2,
-	maximumFractionDigits: 4
+	maximumFractionDigits: 2
 };
 
 const gt0 = (value: number) => value > 0;

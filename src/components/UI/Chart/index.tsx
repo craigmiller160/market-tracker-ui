@@ -8,6 +8,11 @@ interface Props {
 	readonly data: InvestmentData;
 }
 
+const localeOptions: Intl.NumberFormatOptions = {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2
+};
+
 export const Chart = (props: Props) => {
 	const { records, minPrice, maxPrice } = useFormattedChartData(props.data);
 	const isGain =
@@ -22,7 +27,15 @@ export const Chart = (props: Props) => {
 				yField="price"
 				yAxis={{
 					min: minPrice,
-					max: maxPrice
+					max: maxPrice,
+					label: {
+						formatter: (text) => {
+							return parseFloat(text).toLocaleString(
+								undefined,
+								localeOptions
+							);
+						}
+					}
 				}}
 				data={castDraft(records)}
 				color={isGain ? 'green' : 'red'}
