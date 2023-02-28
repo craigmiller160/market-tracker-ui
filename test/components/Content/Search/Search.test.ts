@@ -86,7 +86,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/225/)).toHaveTextContent(
-			'(+$70.00, +225.8065%)'
+			'(+$70.00, +225.81%)'
 		);
 	});
 
@@ -137,7 +137,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
-			'(+$50.00, +98.0392%)'
+			'(+$50.00, +98.04%)'
 		);
 	});
 
@@ -164,7 +164,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
-			'(+$50.00, +98.0392%)'
+			'(+$50.00, +98.04%)'
 		);
 	});
 
@@ -191,7 +191,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
-			'(+$50.00, +98.0392%)'
+			'(+$50.00, +98.04%)'
 		);
 	});
 
@@ -218,7 +218,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
-			'(+$50.00, +98.0392%)'
+			'(+$50.00, +98.04%)'
 		);
 	});
 
@@ -245,7 +245,7 @@ describe('Search', () => {
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
-			'(+$50.00, +98.0392%)'
+			'(+$50.00, +98.04%)'
 		);
 	});
 
