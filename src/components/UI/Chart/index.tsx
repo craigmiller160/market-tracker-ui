@@ -22,7 +22,12 @@ export const Chart = (props: Props) => {
 				yField="price"
 				yAxis={{
 					min: minPrice,
-					max: maxPrice
+					max: maxPrice,
+					label: {
+						formatter: (text) => {
+							return parseFloat(text).toFixed(2);
+						}
+					}
 				}}
 				data={castDraft(records)}
 				color={isGain ? 'green' : 'red'}
