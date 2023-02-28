@@ -34,7 +34,7 @@ const sortRecordsByPrice: (
 const formatHistoryDate = (tableDate: string): string =>
 	pipe(parseTableDate(tableDate), formatTableDate);
 
-type ChartData = {
+export type ChartData = {
 	readonly records: ReadonlyArray<ChartRecord>;
 	readonly minPrice: number;
 	readonly maxPrice: number;

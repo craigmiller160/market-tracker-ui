@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import {
-	ChartRecord,
+	ChartData,
 	useFormattedChartData
 } from '../../../../src/components/UI/Chart/useFormattedChartData';
 import { InvestmentData } from '../../../../src/types/data/InvestmentData';
@@ -45,7 +45,7 @@ const marketData: InvestmentData = {
 
 interface Props {
 	readonly data: InvestmentData;
-	readonly callback: (result: ReadonlyArray<ChartRecord>) => void;
+	readonly callback: (result: ChartData) => void;
 }
 
 const TestComp = (props: Props) => {
@@ -57,36 +57,50 @@ const TestComp = (props: Props) => {
 
 describe('useFormattedChartData', () => {
 	it('formats the chart data', () => {
-		let result: ReadonlyArray<ChartRecord> = [];
-		const callback = (r: ReadonlyArray<ChartRecord>) => {
+		let result: ChartData = {
+			records: [],
+			minPrice: 0,
+			maxPrice: 0
+		};
+		const callback = (r: ChartData) => {
 			result = r;
 		};
 		render(<TestComp data={marketData} callback={callback} />);
-		expect(result).toEqual([
-			{
-				date: '1/1/22\n00:00',
-				change: 0
-			},
-			{
-				date: '1/1/22\n23:59',
-				change: 5
-			},
-			{
-				date: '1/2/22\n00:00',
-				change: 11
-			},
-			{
-				date: '1/2/22\n23:59',
-				change: 7
-			},
-			{
-				date: '1/3/22\n00:00',
-				change: 18
-			},
-			{
-				date: 'Now',
-				change: 40
-			}
-		]);
+		expect(result).toEqual({
+			minPrice: 10,
+			maxPrice: 50,
+			records: [
+				{
+					date: '1/1/22\n00:00',
+					change: 0,
+					price: 10
+				},
+				{
+					date: '1/1/22\n23:59',
+					change: 5,
+					price: 15
+				},
+				{
+					date: '1/2/22\n00:00',
+					change: 11,
+					price: 21
+				},
+				{
+					date: '1/2/22\n23:59',
+					change: 7,
+					price: 17
+				},
+				{
+					date: '1/3/22\n00:00',
+					change: 18,
+					price: 28
+				},
+				{
+					date: 'Now',
+					change: 40,
+					price: 50
+				}
+			]
+		});
 	});
 });
