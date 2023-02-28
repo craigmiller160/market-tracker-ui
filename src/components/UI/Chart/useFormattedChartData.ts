@@ -10,8 +10,8 @@ const formatTableDate = Time.format("M/d/yy'\n'HH:mm");
 
 export interface ChartRecord {
 	readonly date: string;
-	readonly change: number;
-	readonly price: number;
+	readonly change: string;
+	readonly price: string;
 }
 
 const sortRecordsByPrice: (
@@ -36,23 +36,25 @@ const formatHistoryDate = (tableDate: string): string =>
 
 export type ChartData = {
 	readonly records: ReadonlyArray<ChartRecord>;
-	readonly minPrice: number;
-	readonly maxPrice: number;
+	readonly minPrice: string;
+	readonly maxPrice: string;
 };
 
 const formatData = (data: InvestmentData): ChartData => {
 	const firstPrice = getFirstPrice(data.history);
 	const records = pipe(
 		data.history,
-		RArray.map((record) => ({
-			date: formatHistoryDate(`${record.date} ${record.time}`),
-			change: record.price - firstPrice,
-			price: record.price
-		})),
+		RArray.map(
+			(record): ChartRecord => ({
+				date: formatHistoryDate(`${record.date} ${record.time}`),
+				change: (record.price - firstPrice).toFixed(2),
+				price: record.price.toFixed(2)
+			})
+		),
 		RArray.append({
 			date: 'Now',
-			change: data.currentPrice - firstPrice,
-			price: data.currentPrice
+			change: (data.currentPrice - firstPrice).toFixed(2),
+			price: data.currentPrice.toFixed(2)
 		})
 	);
 
