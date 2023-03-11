@@ -6,7 +6,6 @@ import {
 } from '@craigmiller160/ajax-api-fp-ts';
 import { store } from '../store';
 import { AxiosError, AxiosResponse } from 'axios';
-import { authSlice } from '../store/auth/slice';
 import * as Option from 'fp-ts/es6/Option';
 import { notificationSlice } from '../store/notification/slice';
 import { match, P } from 'ts-pattern';
@@ -69,7 +68,6 @@ const debouncedUnauthorizedNotification = debounce(
 
 const ajaxErrorHandler: DefaultErrorHandler = (status, error) => {
 	if (status === 401) {
-		store.dispatch(authSlice.actions.setUserData(Option.none));
 		debouncedUnauthorizedNotification();
 	} else {
 		store.dispatch(
