@@ -2,7 +2,6 @@ import { ajaxApiFpTs, isNestedAxiosError } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { store } from '../../src/store';
 import { MockStore } from 'redux-mock-store';
-import * as Option from 'fp-ts/es6/Option';
 import * as Sleep from '@craigmiller160/ts-functions/es/Sleep';
 import { AxiosError } from 'axios';
 
@@ -82,10 +81,6 @@ describe('AjaxApi Error Handling', () => {
 			})();
 			await sleep550ms();
 			expect(mockStore.getActions()).toEqual([
-				{
-					type: 'auth/setUserData',
-					payload: Option.none
-				},
 				{
 					type: 'notification/addError',
 					payload: 'Unauthorized'
