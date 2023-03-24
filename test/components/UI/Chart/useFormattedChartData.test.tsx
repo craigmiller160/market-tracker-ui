@@ -68,6 +68,7 @@ describe('useFormattedChartData', () => {
 		};
 		render(<TestComp data={marketData} callback={callback} />);
 		expect(result).toEqual({
+			firstPrice: 10,
 			minPrice: 10,
 			maxPrice: 50,
 			records: [
