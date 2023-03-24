@@ -38,6 +38,7 @@ export type ChartData = {
 	readonly records: ReadonlyArray<ChartRecord>;
 	readonly minPrice: number;
 	readonly maxPrice: number;
+	readonly firstPrice: number;
 };
 
 const round = (value: number): number =>
@@ -64,6 +65,7 @@ const formatData = (data: InvestmentData): ChartData => {
 	const sortedByPrice = sortRecordsByPrice(records);
 
 	return {
+		firstPrice,
 		minPrice: sortedByPrice[0].price,
 		records,
 		maxPrice: sortedByPrice[sortedByPrice.length - 1].price

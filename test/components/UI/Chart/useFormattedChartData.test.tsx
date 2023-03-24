@@ -60,7 +60,8 @@ describe('useFormattedChartData', () => {
 		let result: ChartData = {
 			records: [],
 			minPrice: 0,
-			maxPrice: 0
+			maxPrice: 0,
+			firstPrice: 0
 		};
 		const callback = (r: ChartData) => {
 			result = r;
