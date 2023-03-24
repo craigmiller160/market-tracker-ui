@@ -6,7 +6,8 @@ import { ScreenContext, ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
 import { ConfigProvider } from 'antd';
 import { MarketTrackerKeycloakBridge } from './keycloak/MarketTrackerKeycloakBridge';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '../queries/queryClient';
 
 const createScreenContextValue = (
 	breakpoints: Breakpoints
@@ -15,15 +16,6 @@ const createScreenContextValue = (
 });
 
 const nonce = '**CSP_NONCE**';
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnWindowFocus: false,
-			cacheTime: 0,
-			staleTime: 0
-		}
-	}
-});
 
 export const App = () => {
 	const breakpoints = useBreakpoint();
