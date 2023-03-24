@@ -8,22 +8,19 @@ export const formatHistoryDate = Time.format(HISTORY_DATE_FORMAT);
 export const formatDisplayDate = Time.format(DISPLAY_DATE_FORMAT);
 const formatInEST = Time.formatTZ('America/New_York');
 export const formatTimesalesDate = formatInEST(TIMESALES_FORMAT);
-// TODO much better but won't handle daylight savings time changes
-export const setTodayStartTime: (d: Date) => Date = Time.setUtc({
-	hours: 5,
+export const setTodayStartTime: (d: Date) => Date = Time.set({
+	hours: 0,
 	minutes: 0,
 	seconds: 0,
 	milliseconds: 0
 });
-// TODO much better but won't handle daylight savings time changes
 export const setTodayEndTime: (d: Date) => Date = flow(
-	Time.setUtc({
-		hours: 4,
+	Time.set({
+		hours: 23,
 		minutes: 0,
 		seconds: 0,
 		milliseconds: 0
-	}),
-	Time.addDays(1)
+	})
 );
 
 export const getTodayHistoryDate = (): string => formatHistoryDate(new Date());
