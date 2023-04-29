@@ -19,9 +19,7 @@ describe('Watchlists', () => {
 		watchlistApi.removeStockFromWatchlist('DEF', 'ABC');
 		cy.mount();
 
-		watchlistPage
-			.getPageTitle()
-			.should('have.text', 'Investment Watchlists');
+		watchlistPage.getPageTitle().should('have.text', 'Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
 		navbarPage.desktop.getOneWeekItem().click();
@@ -84,9 +82,7 @@ describe('Watchlists', () => {
 		coinGeckoApi.getCryptoData('ETH', '1week');
 		cy.mount();
 
-		watchlistPage
-			.getPageTitle()
-			.should('have.text', 'Investment Watchlists');
+		watchlistPage.getPageTitle().should('have.text', 'Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
 		navbarPage.desktop.getOneWeekItem().click();
