@@ -4,7 +4,7 @@ import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';
 import { Recognition } from '../components/Content/Recognition';
 import { Search } from '../components/Content/Search';
-import { Investments } from '../components/Content/Investments';
+import { InvestmentInfo } from '../components/Content/InvestmentInfo';
 
 export interface RouteRules {
 	isAuthorized: boolean;
@@ -16,7 +16,7 @@ const getAuthorizedRoutes = () => {
 	const allEnvRoutes = [
 		{
 			path: 'investments',
-			element: <Investments />
+			element: <InvestmentInfo />
 		},
 		{
 			path: 'search',

@@ -318,7 +318,7 @@ export const Watchlists = () => {
 				className={`WatchlistsPage ${breakpointName}`}
 				data-testid="watchlist-page"
 			>
-				<Typography.Title>Watchlists</Typography.Title>
+				<Typography.Title level={2}>Watchlists</Typography.Title>
 				<div className="RootActions">
 					<Button onClick={showAddWatchlistModal}>Add</Button>
 				</div>
