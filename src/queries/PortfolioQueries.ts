@@ -7,7 +7,12 @@ import {
 } from '@tanstack/react-query';
 import {
 	downloadUpdatedPortfolioData,
-	getPortfolioList
+	getCurrentSharesForStockInCombinedPortfolios,
+	getCurrentSharesForStockInPortfolio,
+	getPortfolioList,
+	getSharesHistoryForStockInCombinedPortfolios,
+	getStocksForCombinedPortfolios,
+	getStocksForPortfolio
 } from '../services/PortfolioService';
 
 export const GET_PORTFOLIO_LIST_KEY = 'PortfolioQueries_GetPortfolioList';
@@ -58,4 +63,55 @@ export const useGetPortfolioList = () =>
 	useQuery({
 		queryKey: [GET_PORTFOLIO_LIST_KEY],
 		queryFn: getPortfolioList
+	});
+
+export const useGetStocksForCombinedPortfolios = () =>
+	useQuery({
+		queryKey: [GET_STOCKS_FOR_COMBINED_PORTFOLIOS_KEY],
+		queryFn: getStocksForCombinedPortfolios
+	});
+
+export const useGetCurrentSharesForStockInCombinedPortfolios = (
+	symbol: string
+) =>
+	useQuery({
+		queryKey: [
+			GET_CURRENT_SHARES_FOR_STOCK_IN_COMBINED_PORTFOLIOS_KEY,
+			symbol
+		],
+		queryFn: ({ queryKey: [, symbol] }) =>
+			getCurrentSharesForStockInCombinedPortfolios(symbol)
+	});
+
+export const useGetSharesHistoryForStockInCombinedPortfolios = (
+	symbol: string
+) =>
+	useQuery({
+		queryKey: [
+			GET_SHARES_HISTORY_FOR_STOCK_IN_COMBINED_PORTFOLIOS_KEY,
+			symbol
+		],
+		queryFn: ({ queryKey: [, symbol] }) =>
+			getSharesHistoryForStockInCombinedPortfolios(symbol)
+	});
+
+export const useGetStocksForPortfolio = (portfolioId: string) =>
+	useQuery({
+		queryKey: [GET_STOCKS_FOR_PORTFOLIO_KEY, portfolioId],
+		queryFn: ({ queryKey: [, portfolioId] }) =>
+			getStocksForPortfolio(portfolioId)
+	});
+
+export const useGetCurrentSharesForStockInPortfolio = (
+	portfolioId: string,
+	symbol: string
+) =>
+	useQuery({
+		queryKey: [
+			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY,
+			portfolioId,
+			symbol
+		],
+		queryFn: ({ queryKey: [, portfolioId, symbol] }) =>
+			getCurrentSharesForStockInPortfolio(portfolioId, symbol)
 	});
