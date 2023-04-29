@@ -3,7 +3,10 @@ import {
 	PortfolioResponse,
 	SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
-import { StockHistoryRequest } from '../types/portfolios';
+import {
+	StockHistoryInPortfolioRequest,
+	StockHistoryRequest
+} from '../types/portfolios';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
@@ -43,14 +46,17 @@ export const getCurrentSharesForStockInCombinedPortfolios = (
 		})
 		.then(getResponseData);
 
-export const getSharesHistoryForStockInCombinedPortfolios = (
-	request: StockHistoryRequest
-): Promise<ReadonlyArray<SharesOwnedResponse>> => {
-	const queryString = qs.stringify({
+const createHistoryQueryString = (request: StockHistoryRequest): string =>
+	qs.stringify({
 		startDate: formatDateForFilter(request.startDate),
 		endDate: formatDateForFilter(request.endDate),
 		interval: request.interval
 	});
+
+export const getSharesHistoryForStockInCombinedPortfolios = (
+	request: StockHistoryRequest
+): Promise<ReadonlyArray<SharesOwnedResponse>> => {
+	const queryString = createHistoryQueryString(request);
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<SharesOwnedResponse>>({
 			uri: `/portfolios/combined/stocks/${request.symbol}/history?${queryString}`,
@@ -68,3 +74,26 @@ export const getStocksForPortfolio = (
 			errorCustomizer: `Error getting stocks for portfolio ${portfolioId}`
 		})
 		.then(getResponseData);
+
+export const getCurrentSharesForStockInPortfolio = (
+	portfolioId: string,
+	symbol: string
+): Promise<SharesOwnedResponse> =>
+	marketTrackerPortfoliosApi
+		.get<SharesOwnedResponse>({
+			uri: `/portfolios/${portfolioId}/stocks/${symbol}/current`,
+			errorCustomizer: `Error getting current shares for stock ${symbol} in portfolio ${portfolioId}`
+		})
+		.then(getResponseData);
+
+export const getSharesHistoryForStockInPortfolio = (
+	request: StockHistoryInPortfolioRequest
+): Promise<ReadonlyArray<SharesOwnedResponse>> => {
+	const queryString = createHistoryQueryString(request);
+	return marketTrackerPortfoliosApi
+		.get<ReadonlyArray<SharesOwnedResponse>>({
+			uri: `/portfolios/${request.portfolioId}/stocks/${request.symbol}/history?${queryString}`,
+			errorCustomizer: `Error getting shares history for stock ${request.symbol} in portfolio ${request.portfolioId}`
+		})
+		.then(getResponseData);
+};
