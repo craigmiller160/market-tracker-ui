@@ -2,9 +2,7 @@ import { RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';
-import { Portfolios } from '../components/Content/Portfolios';
 import { Watchlists } from '../components/Content/Watchlists';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { Recognition } from '../components/Content/Recognition';
 import { Search } from '../components/Content/Search';
 
@@ -14,12 +12,10 @@ export interface RouteRules {
 	env: string | undefined;
 }
 
-const isNotProd: PredicateT<string | undefined> = (_) => _ !== 'production';
-
-const getAuthorizedRoutes = ({ env }: RouteRules) => {
+const getAuthorizedRoutes = () => {
 	const allEnvRoutes = [
 		{
-			path: 'watchlists',
+			path: 'investments',
 			element: <Watchlists />
 		},
 		{
@@ -34,22 +30,14 @@ const getAuthorizedRoutes = ({ env }: RouteRules) => {
 	const fallbackRoutes = [
 		{
 			path: '',
-			element: <Navigate to="watchlists" />
+			element: <Navigate to="investments" />
 		},
 		{
 			path: '*',
-			element: <Navigate to="watchlists" />
+			element: <Navigate to="investments" />
 		}
 	];
-	const envDependentRoutes = match(env)
-		.when(isNotProd, () => [
-			{
-				path: 'portfolios',
-				element: <Portfolios />
-			}
-		])
-		.otherwise(() => []);
-	return [...allEnvRoutes, ...envDependentRoutes, ...fallbackRoutes];
+	return [...allEnvRoutes, ...fallbackRoutes];
 };
 
 export const routes = (rules: RouteRules): RouteObject[] => [

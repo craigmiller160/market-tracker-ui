@@ -29,8 +29,8 @@ interface AllItems {
 const ITEMS: AllItems = {
 	pages: [
 		{
-			key: 'page.watchlists',
-			name: 'Watchlists'
+			key: 'page.investments',
+			name: 'Investments'
 		},
 		{
 			key: 'page.search',
