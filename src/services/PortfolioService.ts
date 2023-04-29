@@ -1,12 +1,23 @@
-import { marketTrackerPortfoliosApi } from './AjaxApi';
+import { getResponseData, marketTrackerPortfoliosApi } from './AjaxApi';
+import { PortfolioResponse } from '../types/generated/market-tracker-portfolio-service';
 
-export const updatePortfolioData = () =>
+export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
 		uri: '/download',
-		errorCustomizer: 'Error updating portfolio data'
+		errorCustomizer: 'Error downloading updated portfolio data'
 	});
 
-export const getPortfolioList = () =>
+export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
+	marketTrackerPortfoliosApi
+		.get<ReadonlyArray<PortfolioResponse>>({
+			uri: '/portfolios',
+			errorCustomizer: 'Error getting list of portfolios'
+		})
+		.then((res) => getResponseData(res));
+
+export const getStocksForCombinedPortfolios = () => {
 	marketTrackerPortfoliosApi.get({
-		uri: '/portfolios'
+		uri: '/portfolios/combined/stocks',
+		errorCustomizer: 'Error getting stocks for combined portfolios'
 	});
+};
