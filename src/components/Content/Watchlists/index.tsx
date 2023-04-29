@@ -49,11 +49,6 @@ const useHandleAddWatchlistResult = (
 	};
 };
 
-const getTitleSpace = (breakpointName: BreakpointName): string | JSX.Element =>
-	match(breakpointName)
-		.with(BreakpointName.XS, () => <br />)
-		.otherwise(() => ' ');
-
 const createShowAddWatchlistModal = (setState: Updater<State>) => () =>
 	setState((draft) => {
 		draft.inputModal.show = true;
@@ -270,7 +265,6 @@ export const Watchlists = () => {
 	const handleAddWatchlistResult = useHandleAddWatchlistResult(setState);
 
 	const breakpointName = useBreakpointName();
-	const titleSpace = getTitleSpace(breakpointName);
 
 	const onRenameWatchlist = useMemo(
 		() => createOnRenameWatchlist(setState),
@@ -324,9 +318,7 @@ export const Watchlists = () => {
 				className={`WatchlistsPage ${breakpointName}`}
 				data-testid="watchlist-page"
 			>
-				<Typography.Title>
-					Investment{titleSpace}Watchlists
-				</Typography.Title>
+				<Typography.Title>Watchlists</Typography.Title>
 				<div className="RootActions">
 					<Button onClick={showAddWatchlistModal}>Add</Button>
 				</div>
