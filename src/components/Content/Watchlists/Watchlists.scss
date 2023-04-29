@@ -1,4 +1,9 @@
 .WatchlistsPage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .RootActions {
     width: 100%;
     display: flex;

@@ -2,9 +2,9 @@ import { RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';
-import { Watchlists } from '../components/Content/Watchlists';
 import { Recognition } from '../components/Content/Recognition';
 import { Search } from '../components/Content/Search';
+import { Investments } from '../components/Content/Investments';
 
 export interface RouteRules {
 	isAuthorized: boolean;
@@ -16,7 +16,7 @@ const getAuthorizedRoutes = () => {
 	const allEnvRoutes = [
 		{
 			path: 'investments',
-			element: <Watchlists />
+			element: <Investments />
 		},
 		{
 			path: 'search',
