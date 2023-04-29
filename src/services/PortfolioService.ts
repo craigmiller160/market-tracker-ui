@@ -15,9 +15,22 @@ export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
 		})
 		.then(getResponseData);
 
-export const getStocksForCombinedPortfolios = () => {
-	marketTrackerPortfoliosApi.get({
-		uri: '/portfolios/combined/stocks',
-		errorCustomizer: 'Error getting stocks for combined portfolios'
-	});
-};
+export const getStocksForCombinedPortfolios = (): Promise<
+	ReadonlyArray<string>
+> =>
+	marketTrackerPortfoliosApi
+		.get<ReadonlyArray<string>>({
+			uri: '/portfolios/combined/stocks',
+			errorCustomizer: 'Error getting stocks for combined portfolios'
+		})
+		.then(getResponseData);
+
+export const getStocksForPortfolio = (
+	portfolioId: string
+): Promise<ReadonlyArray<string>> =>
+	marketTrackerPortfoliosApi
+		.get<ReadonlyArray<string>>({
+			uri: `/portfolios/${portfolioId}/stocks`,
+			errorCustomizer: `Error getting stocks for portfolio ${portfolioId}`
+		})
+		.then(getResponseData);
