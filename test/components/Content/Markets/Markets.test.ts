@@ -1,4 +1,4 @@
-import { ajaxApiFpTs } from '../../../../src/services/AjaxApi';
+import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/es6/function';
 import * as Try from '@craigmiller160/ts-functions/es/Try';
@@ -46,7 +46,7 @@ const localeOptions: Intl.NumberFormatOptions = {
 	maximumFractionDigits: 4
 };
 
-const mockApi = new MockAdapter(ajaxApiFpTs.instance);
+const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 const investmentInfo: ReadonlyArray<MarketInvestmentInfo> = pipe(
 	allMarketInvestmentInfo,
 	Try.getOrThrow

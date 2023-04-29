@@ -1,7 +1,7 @@
 import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import MockAdapter from 'axios-mock-adapter';
-import { ajaxApiFpTs } from '../../src/services/AjaxApi';
+import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import { nanoid } from '@reduxjs/toolkit';
 
 const watchlists: ReadonlyArray<DbWatchlist> = [
@@ -21,7 +21,7 @@ const watchlists: ReadonlyArray<DbWatchlist> = [
 	}
 ];
 
-const mockApi = new MockAdapter(ajaxApiFpTs.instance);
+const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('WatchlistService', () => {
 	beforeEach(() => {

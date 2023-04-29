@@ -1,7 +1,7 @@
 import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
 import { flow, pipe } from 'fp-ts/es6/function';
-import { ajaxApiFpTs, getResponseData } from './AjaxApi';
+import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import { CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
 import * as RArray from 'fp-ts/es6/ReadonlyArray';
@@ -104,7 +104,7 @@ export const getQuotes = (
 		),
 		TaskEither.bind('response', ({ idString }) =>
 			pipe(
-				ajaxApiFpTs.get<CoinGeckoPrice>({
+				marketTrackerApiFpTs.get<CoinGeckoPrice>({
 					uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
 				}),
 				TaskEither.map(getResponseData),
@@ -141,7 +141,7 @@ const getHistoryQuote = (
 		getAltIdForSymbol(historyQuery.symbol),
 		TaskEither.fromEither,
 		TaskEither.chain((id) =>
-			ajaxApiFpTs.get<CoinGeckoMarketChart>({
+			marketTrackerApiFpTs.get<CoinGeckoMarketChart>({
 				uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
 			})
 		),

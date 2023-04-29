@@ -1,9 +1,9 @@
 import { AuthUser } from '../types/auth';
-import { ajaxApi, getResponseData } from './AjaxApi';
+import { marketTrackerApi, getResponseData } from './AjaxApi';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
 
 export const getAuthUser = (): Promise<AuthUser> =>
-	ajaxApi
+	marketTrackerApi
 		.get<AuthUser>({
 			uri: '/oauth/user',
 			errorCustomizer: 'Error getting authenticated user',
