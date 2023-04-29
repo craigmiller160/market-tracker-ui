@@ -1,9 +1,4 @@
-@import "src/styles/page";
-
 .WatchlistsPage {
-  @include PageRoot;
-  width: 95%;
-
   .RootActions {
     width: 100%;
     display: flex;
