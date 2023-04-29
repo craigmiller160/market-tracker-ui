@@ -5,7 +5,7 @@ const getTimeMenu = () => getMenus().eq(1);
 
 const getMenuItems = () => cy.get('.ant-menu-sub .ant-menu-title-content');
 const getSearchItem = () => getMenuItems().eq(1);
-const getWatchlistsItem = () => getMenuItems().eq(0);
+const getInvestmentInfoItem = () => getMenuItems().eq(0);
 const getRecognitionItem = () => getMenuItems().eq(2);
 
 const getTodayItem = () => getMenuItems().eq(0);
@@ -19,7 +19,7 @@ export const mobileNavbar = {
 	getPageMenu,
 	getTimeMenu,
 	getSearchItem,
-	getWatchlistsItem,
+	getInvestmentInfoItem,
 	getRecognitionItem,
 	getTodayItem,
 	getOneWeekItem,
