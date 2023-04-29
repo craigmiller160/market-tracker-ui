@@ -15,7 +15,7 @@ describe('Navigation', () => {
 		navbarPage.getTitle().should('have.text', 'Market Tracker');
 		navbarPage.mobile
 			.getPageMenu()
-			.should('have.text', 'Watchlists')
+			.should('have.text', 'Investment Info')
 			.closest('li')
 			.should('not.have.class', SELECTED_CLASS);
 		navbarPage.mobile

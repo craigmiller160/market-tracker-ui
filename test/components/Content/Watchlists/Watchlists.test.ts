@@ -161,7 +161,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
 		);
 
-		await userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Investment Info'));
 		await waitFor(() =>
 			expect(screen.queryByText('First Watchlist')).toBeVisible()
 		);
@@ -213,7 +213,7 @@ describe('Watchlists', () => {
 			expect(screen.queryByText(/Add .* to Watchlist/)).not.toBeVisible()
 		);
 
-		await userEvent.click(screen.getByText('Watchlists'));
+		await userEvent.click(screen.getByText('Investment Info'));
 		await waitFor(() =>
 			expect(screen.queryByText('New Watchlist')).toBeVisible()
 		);
@@ -223,10 +223,10 @@ describe('Watchlists', () => {
 
 	it('removes watchlist', async () => {
 		renderApp({
-			initialPath: '/market-tracker/watchlists'
+			initialPath: '/market-tracker/investments'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+			expect(screen.queryByText('Watchlists')).toBeVisible()
 		);
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(2)
@@ -255,10 +255,10 @@ describe('Watchlists', () => {
 
 	it('add watchlist from watchlists page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/watchlists'
+			initialPath: '/market-tracker/investments'
 		});
 		await waitFor(() =>
-			expect(screen.queryByText('Investment Watchlists')).toBeVisible()
+			expect(screen.queryByText('Watchlists')).toBeVisible()
 		);
 		await waitFor(() =>
 			expect(screen.queryAllByText('Remove')).toHaveLength(2)

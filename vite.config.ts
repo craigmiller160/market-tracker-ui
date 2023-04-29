@@ -30,6 +30,13 @@ export default defineConfig({
 	publicDir: path.join(process.cwd(), 'public'),
 	envDir: path.join(process.cwd(), 'environment'),
 	define,
+	optimizeDeps: {
+		include: [
+			'@ant-design/icons',
+			'@ant-design/plots',
+			'@ant-design/charts'
+		]
+	},
 	server: {
 		port: 3000,
 		host: true,
@@ -39,16 +46,7 @@ export default defineConfig({
 				target: 'https://localhost:8080',
 				changeOrigin: true,
 				secure: false,
-				rewrite: (path) => path.replace(/^\/market-tracker\/api/, ''),
-				logLevel: 'debug'
-			},
-			'/market-tracker/oauth2': {
-				target: 'https://localhost:7003',
-				changeOrigin: true,
-				secure: false,
-				rewrite: (path) =>
-					path.replace(/^\/market-tracker\/oauth2/, ''),
-				logLevel: 'debug'
+				rewrite: (path) => path.replace(/^\/market-tracker\/api/, '')
 			},
 			'/market-tracker/service-worker.js': {
 				target: 'https://localhost:3000',

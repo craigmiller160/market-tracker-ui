@@ -1,0 +1,6 @@
+@import "src/styles/page";
+
+.InvestmentInfoPage {
+  @include PageRoot;
+  width: 95%;
+}

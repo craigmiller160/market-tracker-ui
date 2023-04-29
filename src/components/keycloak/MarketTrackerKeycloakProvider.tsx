@@ -1,7 +1,10 @@
 /// <reference types="vite/client" />
 
 import { PropsWithChildren } from 'react';
-import { KeycloakAuthProvider } from '@craigmiller160/react-keycloak';
+import {
+	KeycloakAuthProvider,
+	RequiredRoles
+} from '@craigmiller160/react-keycloak';
 import { BEARER_TOKEN_KEY } from '@craigmiller160/ajax-api-fp-ts';
 
 const getRealm = (): string => {
@@ -11,11 +14,19 @@ const getRealm = (): string => {
 	return '';
 };
 
+const requiredRoles: RequiredRoles = {
+	client: {
+		'market-tracker-api': ['access'],
+		'market-tracker-portfolio-service': ['access']
+	}
+};
+
 export const MarketTrackerKeycloakProvider = (props: PropsWithChildren) => (
 	<KeycloakAuthProvider
 		realm={getRealm()}
 		clientId="market-tracker-ui"
 		localStorageKey={BEARER_TOKEN_KEY}
+		requiredRoles={requiredRoles}
 	>
 		{props.children}
 	</KeycloakAuthProvider>
