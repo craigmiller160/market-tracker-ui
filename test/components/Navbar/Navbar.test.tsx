@@ -68,7 +68,7 @@ describe('Navbar', () => {
 		expect(within(navbar).queryByText('1 Year')).toBeInTheDocument();
 		expect(within(navbar).queryByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Watchlists');
+		menuItemIsSelected('Investment Info');
 		menuItemIsSelected('Today');
 
 		expect(screen.queryByText('Login')).not.toBeInTheDocument();

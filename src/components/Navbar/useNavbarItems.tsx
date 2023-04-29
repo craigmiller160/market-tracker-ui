@@ -30,7 +30,7 @@ const ITEMS: AllItems = {
 	pages: [
 		{
 			key: 'page.investments',
-			name: 'Investments'
+			name: 'Investment Info'
 		},
 		{
 			key: 'page.search',
