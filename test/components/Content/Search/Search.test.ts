@@ -1,6 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import { screen, waitFor, within } from '@testing-library/react';
-import { ajaxApiFpTs } from '../../../../src/services/AjaxApi';
+import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import { renderApp } from '../../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
@@ -14,7 +14,7 @@ import {
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { ApiServer, newApiServer } from '../../../testutils/server';
 
-const mockApi = new MockAdapter(ajaxApiFpTs.instance);
+const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');

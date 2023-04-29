@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from '@testing-library/react';
-import { ajaxApiFpTs } from '../../../src/services/AjaxApi';
+import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
@@ -15,7 +15,7 @@ import { ApiServer, newApiServer } from '../../testutils/server';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
-const mockApi = new MockAdapter(ajaxApiFpTs.instance);
+const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('Navbar', () => {
 	let apiServer: ApiServer;

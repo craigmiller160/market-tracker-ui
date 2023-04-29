@@ -1,8 +1,8 @@
-import { ajaxApi, getResponseData } from './AjaxApi';
+import { marketTrackerApi, getResponseData } from './AjaxApi';
 import { DbWatchlist, Watchlist } from '../types/Watchlist';
 
 export const getAllWatchlists = (): Promise<ReadonlyArray<DbWatchlist>> =>
-	ajaxApi
+	marketTrackerApi
 		.get<ReadonlyArray<DbWatchlist>>({
 			uri: '/watchlists/all'
 		})
@@ -14,7 +14,7 @@ export const renameWatchlist = (
 ): Promise<unknown> => {
 	const encodedOldName = encodeURIComponent(oldName);
 	const encodedNewName = encodeURIComponent(newName);
-	return ajaxApi
+	return marketTrackerApi
 		.put<void, void>({
 			uri: `/watchlists/${encodedOldName}/rename/${encodedNewName}`
 		})
@@ -27,7 +27,7 @@ export const addStockToWatchlist = (
 ): Promise<DbWatchlist> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
-	return ajaxApi
+	return marketTrackerApi
 		.put<DbWatchlist, void>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
 		})
@@ -50,7 +50,7 @@ export const createWatchlist = (
 		stocks,
 		cryptos: []
 	};
-	return ajaxApi
+	return marketTrackerApi
 		.post<DbWatchlist, Watchlist>({
 			uri: '/watchlists',
 			body: input
@@ -59,7 +59,7 @@ export const createWatchlist = (
 };
 
 export const getWatchlistNames = (): Promise<ReadonlyArray<string>> =>
-	ajaxApi
+	marketTrackerApi
 		.get<ReadonlyArray<string>>({
 			uri: '/watchlists/names'
 		})
@@ -71,7 +71,7 @@ export const removeStockFromWatchlist = (
 ): Promise<DbWatchlist> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
 	const encodedStockSymbol = encodeURIComponent(stockSymbol);
-	return ajaxApi
+	return marketTrackerApi
 		.delete<DbWatchlist>({
 			uri: `/watchlists/${encodedWatchlistName}/stock/${encodedStockSymbol}`
 		})
@@ -80,7 +80,7 @@ export const removeStockFromWatchlist = (
 
 export const removeWatchlist = (watchlistName: string): Promise<unknown> => {
 	const encodedWatchlistName = encodeURIComponent(watchlistName);
-	return ajaxApi
+	return marketTrackerApi
 		.delete<unknown>({
 			uri: `/watchlists/${encodedWatchlistName}`
 		})

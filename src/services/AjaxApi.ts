@@ -3,9 +3,14 @@ import { AxiosResponse } from 'axios';
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
 
-export const ajaxApi = createBaseApi({
+export const marketTrackerApi = createBaseApi({
 	baseURL: '/market-tracker/api',
 	useCsrf: false
 });
 
-export const ajaxApiFpTs = wrapApi(ajaxApi);
+export const marketTrackerPortfoliosApi = createBaseApi({
+	baseURL: '/market-tracker/portfolios',
+	useCsrf: false
+});
+
+export const marketTrackerApiFpTs = wrapApi(marketTrackerApi);

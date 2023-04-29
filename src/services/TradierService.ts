@@ -1,5 +1,5 @@
 import { TryT } from '@craigmiller160/ts-functions/es/types';
-import { ajaxApiFpTs, getResponseData } from './AjaxApi';
+import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/es6/function';
 import * as TaskEither from 'fp-ts/es6/TaskEither';
 import qs from 'qs';
@@ -185,7 +185,7 @@ export const getTimesales = (
 	const start = getTodayStartString();
 	const end = getTodayEndString();
 	return pipe(
-		ajaxApiFpTs.get<TradierSeries>({
+		marketTrackerApiFpTs.get<TradierSeries>({
 			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
 		}),
 		TaskEither.map(getResponseData),
@@ -199,7 +199,7 @@ export const getQuotes = (
 	symbols: ReadonlyArray<string>
 ): Promise<ReadonlyArray<Quote>> =>
 	pipe(
-		ajaxApiFpTs.get<TradierQuotes>({
+		marketTrackerApiFpTs.get<TradierQuotes>({
 			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
 		}),
 		TaskEither.map(getResponseData),
@@ -213,7 +213,7 @@ const getHistoryQuote = (
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const queryString = qs.stringify(historyQuery);
 	return pipe(
-		ajaxApiFpTs.get<TradierHistory>({
+		marketTrackerApiFpTs.get<TradierHistory>({
 			uri: `/tradier/markets/history?${queryString}`
 		}),
 		TaskEither.map(getResponseData),
@@ -289,7 +289,7 @@ export const getMarketStatus = (): Promise<MarketStatus> => {
 	const month = formatCalendarMonth(today);
 	const calendarDate = formatCalendarDate(today);
 	return pipe(
-		ajaxApiFpTs.get<TradierCalendar>({
+		marketTrackerApiFpTs.get<TradierCalendar>({
 			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
 		}),
 		TaskEither.map(getResponseData),

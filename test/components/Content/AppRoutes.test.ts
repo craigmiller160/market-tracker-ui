@@ -1,11 +1,11 @@
 import { screen, waitFor } from '@testing-library/react';
-import { ajaxApiFpTs } from '../../../src/services/AjaxApi';
+import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { renderApp } from '../../testutils/RenderApp';
 import '@testing-library/jest-dom/extend-expect';
 import { ApiServer, newApiServer } from '../../testutils/server';
 
-const mockApi = new MockAdapter(ajaxApiFpTs.instance);
+const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('AppRoutes', () => {
 	let apiServer: ApiServer;
