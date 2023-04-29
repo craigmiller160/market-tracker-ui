@@ -27,7 +27,8 @@
   "resolutions": {
     "rc-util": ">=5.27.2",
     "@babel/runtime": ">=7.18.3",
-    "@antv/x6-react-components": ">=1.1.20"
+    "@antv/x6-react-components": ">=1.1.20",
+    "axios": "0.27.2"
   },
   "devDependencies": {
     "@craigmiller160/babel-config": "^1.1.1",

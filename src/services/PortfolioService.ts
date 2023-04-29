@@ -13,7 +13,7 @@ export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
 			uri: '/portfolios',
 			errorCustomizer: 'Error getting list of portfolios'
 		})
-		.then((res) => getResponseData(res));
+		.then(getResponseData);
 
 export const getStocksForCombinedPortfolios = () => {
 	marketTrackerPortfoliosApi.get({
