@@ -11,9 +11,15 @@ import {
 	getCurrentSharesForStockInPortfolio,
 	getPortfolioList,
 	getSharesHistoryForStockInCombinedPortfolios,
+	getSharesHistoryForStockInPortfolio,
 	getStocksForCombinedPortfolios,
 	getStocksForPortfolio
 } from '../services/PortfolioService';
+import {
+	StockHistoryInPortfolioRequest,
+	StockHistoryRequest
+} from '../types/portfolios';
+import { SharesOwnedResponse } from '../types/generated/market-tracker-portfolio-service';
 
 export const GET_PORTFOLIO_LIST_KEY = 'PortfolioQueries_GetPortfolioList';
 export const GET_STOCKS_FOR_COMBINED_PORTFOLIOS_KEY =
@@ -84,15 +90,20 @@ export const useGetCurrentSharesForStockInCombinedPortfolios = (
 	});
 
 export const useGetSharesHistoryForStockInCombinedPortfolios = (
-	symbol: string
+	request: StockHistoryRequest
 ) =>
-	useQuery({
+	useQuery<
+		ReadonlyArray<SharesOwnedResponse>,
+		Error,
+		ReadonlyArray<SharesOwnedResponse>,
+		[string, StockHistoryRequest]
+	>({
 		queryKey: [
 			GET_SHARES_HISTORY_FOR_STOCK_IN_COMBINED_PORTFOLIOS_KEY,
-			symbol
+			request
 		],
-		queryFn: ({ queryKey: [, symbol] }) =>
-			getSharesHistoryForStockInCombinedPortfolios(symbol)
+		queryFn: ({ queryKey: [, request] }) =>
+			getSharesHistoryForStockInCombinedPortfolios(request)
 	});
 
 export const useGetStocksForPortfolio = (portfolioId: string) =>
@@ -114,4 +125,18 @@ export const useGetCurrentSharesForStockInPortfolio = (
 		],
 		queryFn: ({ queryKey: [, portfolioId, symbol] }) =>
 			getCurrentSharesForStockInPortfolio(portfolioId, symbol)
+	});
+
+export const useGetSharesHistoryForStockInPortfolio = (
+	request: StockHistoryInPortfolioRequest
+) =>
+	useQuery<
+		ReadonlyArray<SharesOwnedResponse>,
+		Error,
+		ReadonlyArray<SharesOwnedResponse>,
+		[string, StockHistoryInPortfolioRequest]
+	>({
+		queryKey: [GET_SHARES_HISTORY_FOR_STOCK_IN_PORTFOLIO_KEY, request],
+		queryFn: ({ queryKey: [, request] }) =>
+			getSharesHistoryForStockInPortfolio(request)
 	});
