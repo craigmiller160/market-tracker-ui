@@ -18,7 +18,8 @@
     "prepare": "husky install",
     "validate": "yarn typeCheck && yarn lint && yarn test && yarn cypress:headless",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run --component"
+    "cypress:headless": "cypress run --component",
+    "generateTypes": "craig-swagger market-tracker-portfolio http://127.0.0.1:8081/v3/api-docs"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix --max-warnings=0"
@@ -41,6 +42,7 @@
     "@craigmiller160/eslint-config-ts": "1.1.1",
     "@craigmiller160/jest-config": "2.0.0",
     "@craigmiller160/prettier-config": "1.0.1",
+    "@craigmiller160/swagger-typescript-api-formatted": "^1.0.0",
     "@relmify/jest-fp-ts": "^2.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
