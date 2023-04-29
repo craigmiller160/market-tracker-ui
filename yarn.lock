@@ -1910,10 +1910,10 @@
     "@vitejs/plugin-react-swc" "^3.2.0"
     keycloak-js "^20.0.3"
 
-"@craigmiller160/swagger-typescript-api-formatted@^1.1.0":
-  version "1.1.0"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/swagger-typescript-api-formatted/-/swagger-typescript-api-formatted-1.1.0.tgz#4929016a787b62f9e1dd7e1fbd6aaf82a4252810"
-  integrity sha512-gvOmkHRkIt9ulOg6PGgeGaIIGa0emC17tHOIMr8gyYot4v4qxXx7ldZPAyiE9YtaFjtI+EJxAXjiX9U+rcNsGg==
+"@craigmiller160/swagger-typescript-api-formatted@^1.1.2":
+  version "1.1.2"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/swagger-typescript-api-formatted/-/swagger-typescript-api-formatted-1.1.2.tgz#f14f2d8072bc4e927e41f57133bf3aef3307ed6f"
+  integrity sha512-wBdeu1U3sEeutXvpaXk2R14PkwZ4QwKzkmToKuLp4SqkzqLkjQ4IMCUXiGKz6CmG+rXpJ6Xo06RgqtanAscvoQ==
   dependencies:
     swagger-typescript-api "^10.0.2"
 
