@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node scripts/startDev.js",
     "build": "yarn validate && yarn forceBuild",
-    "forceBuild": "vite build && vite --config vite.config.sw.js build",
+    "forceBuild": "vite build && vite --config vite.config.sw.ts build",
     "typeCheck": "tsc --noEmit && cd cypress && tsc --noEmit",
     "lint": "eslint --fix --max-warnings=0 '{src,test,cypress}/**/*.{ts,tsx}'",
     "test": "craig-test",
