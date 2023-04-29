@@ -24,16 +24,14 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/watchlists'
+					'http://localhost/market-tracker/investments'
 				),
 			{
 				timeout: 2000
 			}
 		);
 		await waitFor(() =>
-			expect(
-				screen.queryByText('Investment Watchlists')
-			).toBeInTheDocument()
+			expect(screen.queryAllByText('Investment Info')).toHaveLength(2)
 		);
 	});
 
@@ -44,50 +42,30 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/watchlists'
+					'http://localhost/market-tracker/investments'
 				),
 			{
 				timeout: 2000
 			}
 		);
-		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
+		expect(screen.getAllByText('Investment Info')).toHaveLength(2);
 	});
 
-	it('renders portfolios route', async () => {
+	it('renders investment info route', async () => {
 		await renderApp({
-			initialPath: '/market-tracker/portfolios'
+			initialPath: '/market-tracker/investments'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/portfolios'
+					'http://localhost/market-tracker/investments'
 				),
 			{
 				timeout: 2000
 			}
 		);
 		await waitFor(() =>
-			expect(screen.queryByText('Portfolios Page')).toBeInTheDocument()
-		);
-	});
-
-	it('renders watchlists route', async () => {
-		await renderApp({
-			initialPath: '/market-tracker/watchlists'
-		});
-		await waitFor(
-			() =>
-				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/watchlists'
-				),
-			{
-				timeout: 2000
-			}
-		);
-		await waitFor(() =>
-			expect(
-				screen.queryByText('Investment Watchlists')
-			).toBeInTheDocument()
+			expect(screen.queryAllByText('Investment Info')).toHaveLength(2)
 		);
 	});
 
@@ -109,22 +87,5 @@ describe('AppRoutes', () => {
 				screen.queryByText('Data Source Recognition')
 			).toBeInTheDocument()
 		);
-	});
-
-	it('will not render portfolios route in prod', async () => {
-		process.env.NODE_ENV = 'production';
-		await renderApp({
-			initialPath: '/market-tracker/portfolios'
-		});
-		await waitFor(
-			() =>
-				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/watchlists'
-				),
-			{
-				timeout: 2000
-			}
-		);
-		expect(screen.queryByText('Investment Watchlists')).toBeInTheDocument();
 	});
 });
