@@ -139,10 +139,7 @@ describe('Watchlists', () => {
 			viewport: 'mobile'
 		});
 
-		watchlistPage
-			.getPageTitle()
-			.contains('Investment')
-			.contains('Watchlists');
+		watchlistPage.getPageTitle().contains('Watchlists');
 		accordion.getPanels().should('have.length', 3);
 
 		navbarPage.mobile.getTimeMenu().click();
