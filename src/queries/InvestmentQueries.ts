@@ -143,7 +143,8 @@ export const useGetInvestmentData = (
 ): UseGetInvestmentDataResult => {
 	const time = useSelector(timeValueSelector);
 	const respectMarketStatus = shouldRespectMarketStatus(info);
-	const { data: status } = useCheckMarketStatus();
+	const { data: status, isFetching: statusIsFetching } =
+		useCheckMarketStatus();
 
 	const shouldLoadQuoteData = status !== MarketStatus.UNKNOWN;
 	const shouldLoadHistoryData =
@@ -176,7 +177,7 @@ export const useGetInvestmentData = (
 	}, [time, info, quote, history, quoteError, historyError]);
 
 	const baseResult: UseGetInvestmentDataResult = {
-		loading: quoteIsFetching || historyIsFetching,
+		loading: quoteIsFetching || historyIsFetching || statusIsFetching,
 		respectMarketStatus,
 		status: status ?? MarketStatus.UNKNOWN
 	};
