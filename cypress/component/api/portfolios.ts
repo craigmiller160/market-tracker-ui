@@ -10,7 +10,15 @@ const getPortfolioList_empty = () =>
 		})
 		.as('portfolioList_empty');
 
+const downloadPortfolioData = () =>
+	cy
+		.intercept('post', '/market-tracker/portfolios/download', {
+			statusCode: 204
+		})
+		.as('downloadPortfolioData');
+
 export const portfolioApi = {
 	getPortfolioList,
-	getPortfolioList_empty
+	getPortfolioList_empty,
+	downloadPortfolioData
 };
