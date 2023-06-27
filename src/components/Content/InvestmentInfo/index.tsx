@@ -6,7 +6,9 @@ import { Portfolios } from '../Portfolios';
 export const InvestmentInfo = () => (
 	<div className="InvestmentInfoPage">
 		<Typography.Title>Investment Info</Typography.Title>
-		<Portfolios />
-		<Watchlists />
+		<div className="ContentWrapper">
+			<Portfolios />
+			<Watchlists />
+		</div>
 	</div>
 );
