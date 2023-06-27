@@ -54,6 +54,10 @@ describe('Portfolios', () => {
 	});
 
 	it('can trigger portfolio downloads', () => {
+		tradierApi.getCalendar();
+		watchlistApi.getAllWatchlists();
+		portfolioApi.getPortfolioList();
+		cy.mount();
 		throw new Error();
 	});
 });

@@ -1,6 +1,9 @@
 import './Portfolios.scss';
 import { Button, Typography } from 'antd';
-import { useGetPortfolioList } from '../../../queries/PortfolioQueries';
+import {
+	useDownloadUpdatedPortfolioData,
+	useGetPortfolioList
+} from '../../../queries/PortfolioQueries';
 import { PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
@@ -19,6 +22,7 @@ const createPanels = (
 
 export const Portfolios = () => {
 	const { data, isFetching } = useGetPortfolioList();
+	const { mutate: downloadPortfolioData } = useDownloadUpdatedPortfolioData();
 
 	const panels = createPanels(data ?? []);
 	const body = match({ data, isFetching })
@@ -30,7 +34,12 @@ export const Portfolios = () => {
 					Portfolios
 				</Typography.Title>
 				<div className="ButtonWrapper">
-					<Button>Update Data Now</Button>
+					<Button
+						id="downloadPortfolioDataBtn"
+						onClick={downloadPortfolioData}
+					>
+						Update Portfolios Now
+					</Button>
 				</div>
 				<Accordion id="portfolioAccordion" panels={panels} />
 			</>
