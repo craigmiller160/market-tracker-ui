@@ -3,6 +3,8 @@ import { Typography } from 'antd';
 import { useGetPortfolioList } from '../../../queries/PortfolioQueries';
 import { PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
+import { Spinner } from '../../UI/Spinner';
+import { match } from 'ts-pattern';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -16,19 +18,20 @@ const createPanels = (
 	);
 
 export const Portfolios = () => {
-	const { data } = useGetPortfolioList();
-	if (!data || data.length === 0) {
-		return <></>;
-	}
+	const { data, isFetching } = useGetPortfolioList();
 
 	const panels = createPanels(data ?? []);
+	const body = match({ data, isFetching })
+		.with({ isFetching: true }, () => <Spinner />)
+		.with({ data: [] }, () => <div />)
+		.otherwise(() => (
+			<>
+				<Typography.Title id="portfoliosPageTitle" level={2}>
+					Portfolios
+				</Typography.Title>
+				<Accordion panels={panels} />
+			</>
+		));
 
-	return (
-		<div className="Portfolios">
-			<Typography.Title id="portfoliosPageTitle" level={2}>
-				Portfolios
-			</Typography.Title>
-			<Accordion panels={panels} />
-		</div>
-	);
+	return <div className="Portfolios">{body}</div>;
 };
