@@ -21,6 +21,9 @@ describe('Portfolios', () => {
 		portfoliosPage
 			.getPortfoliosPageTitle()
 			.should('have.text', 'Portfolios');
+		portfoliosPage
+			.getDownloadDataButton()
+			.should('have.text', 'Update Portfolios Now');
 
 		accordion.getPanels(ACCORDION_ID).should('have.length', 3);
 
@@ -51,6 +54,7 @@ describe('Portfolios', () => {
 
 		cy.wait('@portfolioList_empty');
 		portfoliosPage.getPortfoliosPageTitle().should('not.exist');
+		portfoliosPage.getDownloadDataButton().should('not.exist');
 	});
 
 	it('can trigger portfolio downloads', () => {
