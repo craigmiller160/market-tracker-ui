@@ -25,7 +25,9 @@ export const Portfolios = () => {
 
 	return (
 		<div className="Portfolios">
-			<Typography.Title level={2}>Portfolios</Typography.Title>
+			<Typography.Title id="portfoliosPageTitle" level={2}>
+				Portfolios
+			</Typography.Title>
 			<Accordion panels={panels} />
 		</div>
 	);
