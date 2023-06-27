@@ -21,12 +21,19 @@ const createPanels = (
 	);
 
 export const Portfolios = () => {
-	const { data, isFetching } = useGetPortfolioList();
-	const { mutate: downloadPortfolioData } = useDownloadUpdatedPortfolioData();
+	const { data, isFetching: getPortfolioListIsLoading } =
+		useGetPortfolioList();
+	const {
+		mutate: downloadPortfolioData,
+		isLoading: downloadPortfolioDataIsLoading
+	} = useDownloadUpdatedPortfolioData();
+
+	const isLoading =
+		getPortfolioListIsLoading || downloadPortfolioDataIsLoading;
 
 	const panels = createPanels(data ?? []);
-	const body = match({ data, isFetching })
-		.with({ isFetching: true }, () => <Spinner />)
+	const body = match({ data, isLoading })
+		.with({ isLoading: true }, () => <Spinner />)
 		.with({ data: [] }, () => <div />)
 		.otherwise(() => (
 			<>
