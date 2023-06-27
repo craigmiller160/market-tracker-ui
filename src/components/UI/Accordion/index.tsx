@@ -11,9 +11,10 @@ export interface AccordionPanelConfig {
 	readonly investments: ReadonlyArray<AccordionInvestment>;
 }
 
-interface Props {
-	readonly panels: ReadonlyArray<AccordionPanelConfig>;
-}
+type Props = Readonly<{
+	id?: string;
+	panels: ReadonlyArray<AccordionPanelConfig>;
+}>;
 
 const panelConfigToPanels = (config: AccordionPanelConfig) => (
 	<AccordionPanel
@@ -28,8 +29,10 @@ export const Accordion = (props: Props) => {
 	const { panels } = props;
 	const panelComponents = panels.map(panelConfigToPanels);
 	return (
-		<Collapse className="Accordion" accordion destroyInactivePanel>
-			{panelComponents}
-		</Collapse>
+		<div id={props.id} style={{ width: '100%' }}>
+			<Collapse className="Accordion" accordion destroyInactivePanel>
+				{panelComponents}
+			</Collapse>
+		</div>
 	);
 };

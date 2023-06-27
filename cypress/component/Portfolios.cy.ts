@@ -2,6 +2,11 @@ import { tradierApi } from './api/tradier';
 import { watchlistApi } from './api/watchlists';
 import { portfolioApi } from './api/portfolios';
 import { portfoliosPage } from './pages/portfolios';
+import portfolios from '../fixtures/portfolios.json';
+import { PortfolioResponse } from '../../src/types/generated/market-tracker-portfolio-service';
+
+const portfolioList = portfolios as ReadonlyArray<PortfolioResponse>;
+const portfolioNames = portfolioList.map((p) => p.name);
 
 describe('Portfolios', () => {
 	it('shows the list of portfolios', () => {
