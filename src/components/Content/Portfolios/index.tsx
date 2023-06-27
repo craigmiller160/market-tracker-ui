@@ -17,7 +17,7 @@ const createPanels = (
 
 export const Portfolios = () => {
 	const { data } = useGetPortfolioList();
-	if (!data) {
+	if (!data || data.length === 0) {
 		return <></>;
 	}
 
