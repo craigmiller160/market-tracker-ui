@@ -62,6 +62,12 @@ describe('Portfolios', () => {
 		watchlistApi.getAllWatchlists();
 		portfolioApi.getPortfolioList();
 		cy.mount();
-		throw new Error();
+
+		portfoliosPage
+			.getDownloadDataButton()
+			.should('have.text', 'Update Portfolios Now');
+
+		portfoliosPage.getDownloadDataButton().click();
+		cy.wait('@downloadPortfolioData');
 	});
 });
