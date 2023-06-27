@@ -29,7 +29,7 @@ export const Portfolios = () => {
 				<Typography.Title id="portfoliosPageTitle" level={2}>
 					Portfolios
 				</Typography.Title>
-				<Accordion panels={panels} />
+				<Accordion id="portfolioAccordion" panels={panels} />
 			</>
 		));
 
