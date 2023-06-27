@@ -1,5 +1,5 @@
 import './Portfolios.scss';
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { useGetPortfolioList } from '../../../queries/PortfolioQueries';
 import { PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
@@ -25,12 +25,15 @@ export const Portfolios = () => {
 		.with({ isFetching: true }, () => <Spinner />)
 		.with({ data: [] }, () => <div />)
 		.otherwise(() => (
-			<div className="ContentWrapper">
+			<>
 				<Typography.Title id="portfoliosPageTitle" level={2}>
 					Portfolios
 				</Typography.Title>
+				<div className="ButtonWrapper">
+					<Button>Update Data Now</Button>
+				</div>
 				<Accordion id="portfolioAccordion" panels={panels} />
-			</div>
+			</>
 		));
 
 	return <div className="Portfolios">{body}</div>;
