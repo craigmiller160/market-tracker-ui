@@ -63,6 +63,8 @@ describe('Portfolios', () => {
 		portfolioApi.getPortfolioList();
 		cy.mount();
 
+		portfolioApi.downloadPortfolioData();
+
 		portfoliosPage
 			.getDownloadDataButton()
 			.should('have.text', 'Update Portfolios Now');
