@@ -52,4 +52,8 @@ describe('Portfolios', () => {
 		cy.wait('@portfolioList_empty');
 		portfoliosPage.getPortfoliosPageTitle().should('not.exist');
 	});
+
+	it('can trigger portfolio downloads', () => {
+		throw new Error();
+	});
 });
