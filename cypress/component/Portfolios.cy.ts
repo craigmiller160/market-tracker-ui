@@ -21,6 +21,7 @@ describe('Portfolios', () => {
 		portfolioApi.getPortfolioList_empty();
 		cy.mount();
 
+		cy.wait('@portfolioList_empty');
 		portfoliosPage.getPortfoliosPageTitle().should('not.exist');
 	});
 });
