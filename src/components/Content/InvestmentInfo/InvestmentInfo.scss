@@ -3,4 +3,11 @@
 .InvestmentInfoPage {
   @include PageRoot;
   width: 95%;
+
+  .ContentWrapper {
+    width: 100%;
+    >* {
+      margin-bottom: 2rem;
+    }
+  }
 }
