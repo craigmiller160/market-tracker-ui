@@ -48,6 +48,13 @@ export default defineConfig({
 				secure: false,
 				rewrite: (path) => path.replace(/^\/market-tracker\/api/, '')
 			},
+			'/market-tracker/portfolios': {
+				target: 'http://localhost:8081',
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) =>
+					path.replace(/^\/market-tracker\/portfolios/, '')
+			},
 			'/market-tracker/service-worker.js': {
 				target: 'https://localhost:3000',
 				changeOrigin: true,
