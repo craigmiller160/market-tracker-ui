@@ -25,12 +25,12 @@ export const Portfolios = () => {
 		.with({ isFetching: true }, () => <Spinner />)
 		.with({ data: [] }, () => <div />)
 		.otherwise(() => (
-			<>
+			<div className="ContentWrapper">
 				<Typography.Title id="portfoliosPageTitle" level={2}>
 					Portfolios
 				</Typography.Title>
 				<Accordion id="portfolioAccordion" panels={panels} />
-			</>
+			</div>
 		));
 
 	return <div className="Portfolios">{body}</div>;
