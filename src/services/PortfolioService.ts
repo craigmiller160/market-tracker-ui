@@ -13,6 +13,10 @@ import { MarketTime } from '../types/MarketTime';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
 
+export const getDateRangeForMarketTime = (
+	time: MarketTime
+): [string, string] => ['', ''];
+
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
 		uri: '/download',
