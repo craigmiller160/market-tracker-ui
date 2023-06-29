@@ -61,6 +61,11 @@ describe('Portfolios', () => {
 			.click();
 
 		investmentCardPage.getInvestmentCards().should('have.length', 1);
+		investmentCardPage
+			.getInvestmentCards()
+			.eq(0)
+			.then(investmentCardPage.getTitle)
+			.should('have.text', 'VTI');
 	});
 
 	it('hides the list of portfolios when there are none', () => {
