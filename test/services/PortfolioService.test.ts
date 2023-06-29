@@ -6,17 +6,15 @@ import {
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
 	getOneYearHistoryStartDate,
-	getThreeMonthHistoryStartDate,
-	getTodayEndString,
-	getTodayStartString
+	getThreeMonthHistoryStartDate
 } from '../../src/utils/timeUtils';
 
 describe('PortfolioService', () => {
 	describe('getDateRangeForMarketTime', () => {
 		it('today', () => {
 			const [start, end] = getDateRangeForMarketTime(MarketTime.ONE_DAY);
-			expect(start).toEqual(getTodayStartString()); // TODO wrong
-			expect(end).toEqual(getTodayEndString());
+			expect(start).toEqual(formatHistoryDate(new Date()));
+			expect(end).toEqual(formatHistoryDate(new Date()));
 		});
 
 		it('one week', () => {
