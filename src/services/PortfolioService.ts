@@ -9,8 +9,52 @@ import {
 } from '../types/portfolios';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { MarketTime } from '../types/MarketTime';
+import { match } from 'ts-pattern';
+import {
+	formatHistoryDate,
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
+} from '../utils/timeUtils';
+import { flow } from 'fp-ts/es6/function';
+import { addDays } from 'date-fns/fp';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
+
+const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
+
+export const getDateRangeForMarketTime = (
+	time: MarketTime
+): [string, string] => {
+	const today = new Date();
+	const todayString = formatHistoryDate(today);
+	return match<MarketTime, [string, string]>(time)
+		.with(MarketTime.ONE_DAY, () => [todayString, plusOneDay(today)])
+		.with(MarketTime.ONE_WEEK, () => [
+			getOneWeekHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.ONE_MONTH, () => [
+			getOneMonthHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.THREE_MONTHS, () => [
+			getThreeMonthHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.ONE_YEAR, () => [
+			getOneYearHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.FIVE_YEARS, () => [
+			getFiveYearHistoryStartDate(),
+			todayString
+		])
+		.run();
+};
 
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
@@ -18,13 +62,17 @@ export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 		errorCustomizer: 'Error downloading updated portfolio data'
 	});
 
-export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
-	marketTrackerPortfoliosApi
+export const getPortfolioList = (
+	time: MarketTime
+): Promise<ReadonlyArray<PortfolioResponse>> => {
+	const [start, end] = getDateRangeForMarketTime(time);
+	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<PortfolioResponse>>({
-			uri: '/portfolios',
+			uri: `/portfolios?startDate=${start}&endDate=${end}`,
 			errorCustomizer: 'Error getting list of portfolios'
 		})
 		.then(getResponseData);
+};
 
 const createHistoryQueryString = (request: StockHistoryRequest): string =>
 	qs.stringify({
