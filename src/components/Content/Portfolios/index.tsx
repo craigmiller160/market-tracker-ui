@@ -8,6 +8,7 @@ import { PortfolioResponse } from '../../../types/generated/market-tracker-portf
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
 import { match } from 'ts-pattern';
+import { InvestmentType } from '../../../types/data/InvestmentType';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -15,7 +16,11 @@ const createPanels = (
 	data.map(
 		(res): AccordionPanelConfig => ({
 			key: res.id,
-			investments: [],
+			investments: res.stockSymbols.map((symbol) => ({
+				symbol,
+				name: '',
+				type: InvestmentType.STOCK
+			})),
 			title: <Typography.Title level={4}>{res.name}</Typography.Title>
 		})
 	);
