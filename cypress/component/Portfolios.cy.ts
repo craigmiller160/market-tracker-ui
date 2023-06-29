@@ -47,7 +47,7 @@ describe('Portfolios', () => {
 			.should('have.text', portfolioNames[2]);
 	});
 
-	it('can open the portfolio to load stock data', () => {
+	it('can open the portfolio to show stock cards', () => {
 		tradierApi.getCalendar();
 		watchlistApi.getAllWatchlists();
 		portfolioApi.getPortfolioList();
@@ -65,7 +65,7 @@ describe('Portfolios', () => {
 			.getInvestmentCards()
 			.eq(0)
 			.then(investmentCardPage.getTitle)
-			.should('have.text', 'VTI');
+			.should('have.text', '(VTI) Vanguard Total Stock Market ETF');
 	});
 
 	it('hides the list of portfolios when there are none', () => {
