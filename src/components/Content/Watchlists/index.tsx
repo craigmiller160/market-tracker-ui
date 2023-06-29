@@ -20,6 +20,8 @@ import {
 	useRemoveWatchlist,
 	useRenameWatchlist
 } from '../../../queries/WatchlistQueries';
+import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
+import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
 
 interface State {
 	readonly renameWatchlistId?: string;
@@ -310,7 +312,13 @@ export const Watchlists = () => {
 	const panels = createPanels(combinedWatchlists, panelConfig);
 	const body = match(loading)
 		.with(true, () => <Spinner />)
-		.otherwise(() => <Accordion panels={panels} />);
+		.otherwise(() => (
+			<InvestmentCardDataLoadingContext.Provider
+				value={useGetInvestmentData}
+			>
+				<Accordion panels={panels} />
+			</InvestmentCardDataLoadingContext.Provider>
+		));
 
 	return (
 		<>

@@ -127,7 +127,7 @@ export const useGetHistory = (
 		enabled: shouldLoad
 	});
 
-type UseGetInvestmentDataResult = {
+export type UseGetInvestmentDataResult = {
 	readonly data?: InvestmentData;
 	readonly error?: Error;
 	readonly loading: boolean;
