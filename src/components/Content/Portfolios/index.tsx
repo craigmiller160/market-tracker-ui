@@ -11,6 +11,8 @@ import { match, P } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
+import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
+import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -63,7 +65,11 @@ export const Portfolios = () => {
 						Update Portfolios Now
 					</Button>
 				</div>
-				<Accordion id="portfolioAccordion" panels={panels} />
+				<InvestmentCardDataLoadingContext.Provider
+					value={useGetPortfolioInvestmentData}
+				>
+					<Accordion id="portfolioAccordion" panels={panels} />
+				</InvestmentCardDataLoadingContext.Provider>
 			</>
 		));
 
