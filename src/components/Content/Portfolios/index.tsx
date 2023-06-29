@@ -36,12 +36,19 @@ export const Portfolios = () => {
 		isLoading: downloadPortfolioDataIsLoading
 	} = useDownloadUpdatedPortfolioData();
 
-	const isLoading =
-		getPortfolioListIsLoading || downloadPortfolioDataIsLoading;
-
 	const panels = createPanels(data ?? []);
-	const body = match({ data, isLoading })
-		.with({ isLoading: true, data: P.nullish }, () => <Spinner />)
+	const body = match({
+		data,
+		getPortfolioListIsLoading,
+		downloadPortfolioDataIsLoading
+	})
+		.with(
+			P.union(
+				{ downloadPortfolioDataIsLoading: true },
+				{ getPortfolioListIsLoading: true, data: P.nullish }
+			),
+			() => <Spinner />
+		)
 		.with({ data: [] }, () => <div />)
 		.otherwise(() => (
 			<>
