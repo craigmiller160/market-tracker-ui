@@ -9,6 +9,7 @@ import {
 } from '../types/portfolios';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { MarketTime } from '../types/MarketTime';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
 
@@ -18,13 +19,16 @@ export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 		errorCustomizer: 'Error downloading updated portfolio data'
 	});
 
-export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
-	marketTrackerPortfoliosApi
+export const getPortfolioList = (
+	time: MarketTime
+): Promise<ReadonlyArray<PortfolioResponse>> => {
+	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<PortfolioResponse>>({
 			uri: '/portfolios',
 			errorCustomizer: 'Error getting list of portfolios'
 		})
 		.then(getResponseData);
+};
 
 const createHistoryQueryString = (request: StockHistoryRequest): string =>
 	qs.stringify({

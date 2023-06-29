@@ -97,14 +97,14 @@ export const useGetQuote = (
 	time: MarketTime,
 	type: InvestmentType,
 	symbol: string,
-	shoudLoad: boolean
+	shouldLoad: boolean
 ) =>
 	useQuery<Quote, Error, Quote, GetQuoteQueryKey>({
 		queryKey: [GET_QUOTE_KEY, time, type, symbol],
 		queryFn: ({ queryKey: [, , theType, theSymbol] }) =>
 			getQuoteFn(theType)([theSymbol]).then((list) => list[0]),
 		refetchInterval: getRefetchInterval(time),
-		enabled: shoudLoad
+		enabled: shouldLoad
 	});
 
 type GetHistoryQueryKey = [string, MarketTime, InvestmentType, string];
