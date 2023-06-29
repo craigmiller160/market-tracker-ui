@@ -26,54 +26,12 @@ export const getPortfolioList = (): Promise<ReadonlyArray<PortfolioResponse>> =>
 		})
 		.then(getResponseData);
 
-export const getStocksForCombinedPortfolios = (): Promise<
-	ReadonlyArray<string>
-> =>
-	marketTrackerPortfoliosApi
-		.get<ReadonlyArray<string>>({
-			uri: '/portfolios/combined/stocks',
-			errorCustomizer: 'Error getting stocks for combined portfolios'
-		})
-		.then(getResponseData);
-
-export const getCurrentSharesForStockInCombinedPortfolios = (
-	symbol: string
-): Promise<SharesOwnedResponse> =>
-	marketTrackerPortfoliosApi
-		.get<SharesOwnedResponse>({
-			uri: `/portfolios/combined/stocks/${symbol}/current`,
-			errorCustomizer: `Error getting current shares for stock ${symbol} in combined portfolios`
-		})
-		.then(getResponseData);
-
 const createHistoryQueryString = (request: StockHistoryRequest): string =>
 	qs.stringify({
 		startDate: formatDateForFilter(request.startDate),
 		endDate: formatDateForFilter(request.endDate),
 		interval: request.interval
 	});
-
-export const getSharesHistoryForStockInCombinedPortfolios = (
-	request: StockHistoryRequest
-): Promise<ReadonlyArray<SharesOwnedResponse>> => {
-	const queryString = createHistoryQueryString(request);
-	return marketTrackerPortfoliosApi
-		.get<ReadonlyArray<SharesOwnedResponse>>({
-			uri: `/portfolios/combined/stocks/${request.symbol}/history?${queryString}`,
-			errorCustomizer: `Error getting shares history for stock ${request.symbol} in combined portfolios`
-		})
-		.then(getResponseData);
-};
-
-export const getStocksForPortfolio = (
-	portfolioId: string
-): Promise<ReadonlyArray<string>> =>
-	marketTrackerPortfoliosApi
-		.get<ReadonlyArray<string>>({
-			uri: `/portfolios/${portfolioId}/stocks`,
-			errorCustomizer: `Error getting stocks for portfolio ${portfolioId}`
-		})
-		.then(getResponseData);
 
 export const getCurrentSharesForStockInPortfolio = (
 	portfolioId: string,

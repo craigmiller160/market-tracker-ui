@@ -1,14 +1,17 @@
 [
   {
     "id": "5b9a3d32-6172-401b-831e-80949a2f7652",
-    "name": "Brokerage"
+    "name": "Brokerage",
+    "stockSymbols": ["VTI"]
   },
   {
     "id": "580feb90-d79e-4b63-a212-69f14406dd4a",
-    "name": "Rollover IRA"
+    "name": "Rollover IRA",
+    "stockSymbols": ["VXUS"]
   },
   {
     "id": "28d2a945-a8dd-4c00-b524-1e55448549bc",
-    "name": "Roth IRA"
+    "name": "Roth IRA",
+    "stockSymbols": ["VOO"]
   }
 ]

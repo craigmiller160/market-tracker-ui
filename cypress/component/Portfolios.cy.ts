@@ -5,6 +5,7 @@ import { portfoliosPage } from './pages/portfolios';
 import portfolios from '../fixtures/portfolios.json';
 import { PortfolioResponse } from '../../src/types/generated/market-tracker-portfolio-service';
 import { accordion } from './pages/accordion';
+import { investmentCardPage } from './pages/investmentCard';
 
 const portfolioList = portfolios as ReadonlyArray<PortfolioResponse>;
 const portfolioNames = portfolioList.map((p) => p.name);
@@ -44,6 +45,27 @@ describe('Portfolios', () => {
 			.eq(2)
 			.then(accordion.getPanelTitle)
 			.should('have.text', portfolioNames[2]);
+	});
+
+	it('can open the portfolio to show stock cards', () => {
+		tradierApi.getCalendar();
+		watchlistApi.getAllWatchlists();
+		portfolioApi.getPortfolioList();
+		tradierApi.getStockData('VTI', '1week');
+		cy.mount();
+
+		accordion
+			.getPanels(ACCORDION_ID)
+			.eq(0)
+			.then(accordion.getPanelTitle)
+			.click();
+
+		investmentCardPage.getInvestmentCards().should('have.length', 1);
+		investmentCardPage
+			.getInvestmentCards()
+			.eq(0)
+			.then(investmentCardPage.getTitle)
+			.should('have.text', '(VTI) Vanguard Total Stock Market ETF');
 	});
 
 	it('hides the list of portfolios when there are none', () => {
