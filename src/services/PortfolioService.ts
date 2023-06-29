@@ -19,8 +19,12 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
+import { flow } from 'fp-ts/es6/function';
+import { addDays } from 'date-fns/fp';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
+
+const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
 
 export const getDateRangeForMarketTime = (
 	time: MarketTime
@@ -28,7 +32,7 @@ export const getDateRangeForMarketTime = (
 	const today = new Date();
 	const todayString = formatHistoryDate(today);
 	return match<MarketTime, [string, string]>(time)
-		.with(MarketTime.ONE_DAY, () => [todayString, todayString])
+		.with(MarketTime.ONE_DAY, () => [todayString, plusOneDay(today)])
 		.with(MarketTime.ONE_WEEK, () => [
 			getOneWeekHistoryStartDate(),
 			todayString
