@@ -7,7 +7,7 @@ import {
 import { PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
-import { match } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
@@ -36,12 +36,19 @@ export const Portfolios = () => {
 		isLoading: downloadPortfolioDataIsLoading
 	} = useDownloadUpdatedPortfolioData();
 
-	const isLoading =
-		getPortfolioListIsLoading || downloadPortfolioDataIsLoading;
-
 	const panels = createPanels(data ?? []);
-	const body = match({ data, isLoading })
-		.with({ isLoading: true }, () => <Spinner />)
+	const body = match({
+		data,
+		getPortfolioListIsLoading,
+		downloadPortfolioDataIsLoading
+	})
+		.with(
+			P.union(
+				{ downloadPortfolioDataIsLoading: true },
+				{ getPortfolioListIsLoading: true, data: P.nullish }
+			),
+			() => <Spinner />
+		)
 		.with({ data: [] }, () => <div />)
 		.otherwise(() => (
 			<>

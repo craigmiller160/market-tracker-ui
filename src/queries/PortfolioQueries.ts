@@ -54,7 +54,8 @@ export const useGetPortfolioList = (time: MarketTime) =>
 		[string, MarketTime]
 	>({
 		queryKey: [GET_PORTFOLIO_LIST_KEY, time],
-		queryFn: ({ queryKey: [, theTime] }) => getPortfolioList(theTime)
+		queryFn: ({ queryKey: [, theTime] }) => getPortfolioList(theTime),
+		keepPreviousData: true
 	});
 
 export const useGetCurrentSharesForStockInPortfolio = (
