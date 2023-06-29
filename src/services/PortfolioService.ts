@@ -13,7 +13,11 @@ import { MarketTime } from '../types/MarketTime';
 import { match } from 'ts-pattern';
 import {
 	formatHistoryDate,
-	getOneWeekHistoryStartDate
+	getFiveYearHistoryStartDate,
+	getOneMonthHistoryStartDate,
+	getOneWeekHistoryStartDate,
+	getOneYearHistoryStartDate,
+	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
@@ -27,6 +31,22 @@ export const getDateRangeForMarketTime = (
 		.with(MarketTime.ONE_DAY, () => [todayString, todayString])
 		.with(MarketTime.ONE_WEEK, () => [
 			getOneWeekHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.ONE_MONTH, () => [
+			getOneMonthHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.THREE_MONTHS, () => [
+			getThreeMonthHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.ONE_YEAR, () => [
+			getOneYearHistoryStartDate(),
+			todayString
+		])
+		.with(MarketTime.FIVE_YEARS, () => [
+			getFiveYearHistoryStartDate(),
 			todayString
 		])
 		.run();
