@@ -13,6 +13,7 @@ import {
 } from '../services/PortfolioService';
 import { StockHistoryInPortfolioRequest } from '../types/portfolios';
 import { SharesOwnedResponse } from '../types/generated/market-tracker-portfolio-service';
+import { MarketTime } from '../types/MarketTime';
 
 export const GET_PORTFOLIO_LIST_KEY = 'PortfolioQueries_GetPortfolioList';
 export const GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY =
@@ -42,10 +43,10 @@ export const useDownloadUpdatedPortfolioData = (): UseMutationResult<
 	});
 };
 
-export const useGetPortfolioList = () =>
+export const useGetPortfolioList = (time: MarketTime) =>
 	useQuery({
-		queryKey: [GET_PORTFOLIO_LIST_KEY],
-		queryFn: getPortfolioList
+		queryKey: [GET_PORTFOLIO_LIST_KEY, time],
+		queryFn: ({ queryKey: [, theTime] }) => getPortfolioList(theTime)
 	});
 
 export const useGetCurrentSharesForStockInPortfolio = (

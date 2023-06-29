@@ -9,6 +9,8 @@ import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
 import { match } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../../../store/marketSettings/selectors';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -26,8 +28,9 @@ const createPanels = (
 	);
 
 export const Portfolios = () => {
+	const time = useSelector(timeValueSelector);
 	const { data, isFetching: getPortfolioListIsLoading } =
-		useGetPortfolioList();
+		useGetPortfolioList(time);
 	const {
 		mutate: downloadPortfolioData,
 		isLoading: downloadPortfolioDataIsLoading
