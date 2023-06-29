@@ -10,12 +10,27 @@ import {
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { MarketTime } from '../types/MarketTime';
+import { match } from 'ts-pattern';
+import {
+	formatHistoryDate,
+	getOneWeekHistoryStartDate
+} from '../utils/timeUtils';
 
 const formatDateForFilter = Time.format('yyyy-MM-dd');
 
 export const getDateRangeForMarketTime = (
 	time: MarketTime
-): [string, string] => ['', ''];
+): [string, string] => {
+	const today = new Date();
+	const todayString = formatHistoryDate(today);
+	return match<MarketTime, [string, string]>(time)
+		.with(MarketTime.ONE_DAY, () => [todayString, todayString])
+		.with(MarketTime.ONE_WEEK, () => [
+			getOneWeekHistoryStartDate(),
+			todayString
+		])
+		.run();
+};
 
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
