@@ -12,7 +12,10 @@ import {
 	getSharesHistoryForStockInPortfolio
 } from '../services/PortfolioService';
 import { StockHistoryInPortfolioRequest } from '../types/portfolios';
-import { SharesOwnedResponse } from '../types/generated/market-tracker-portfolio-service';
+import {
+	PortfolioResponse,
+	SharesOwnedResponse
+} from '../types/generated/market-tracker-portfolio-service';
 import { MarketTime } from '../types/MarketTime';
 
 export const GET_PORTFOLIO_LIST_KEY = 'PortfolioQueries_GetPortfolioList';
@@ -44,7 +47,12 @@ export const useDownloadUpdatedPortfolioData = (): UseMutationResult<
 };
 
 export const useGetPortfolioList = (time: MarketTime) =>
-	useQuery({
+	useQuery<
+		ReadonlyArray<PortfolioResponse>,
+		Error,
+		ReadonlyArray<PortfolioResponse>,
+		[string, MarketTime]
+	>({
 		queryKey: [GET_PORTFOLIO_LIST_KEY, time],
 		queryFn: ({ queryKey: [, theTime] }) => getPortfolioList(theTime)
 	});
