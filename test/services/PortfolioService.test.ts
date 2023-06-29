@@ -8,13 +8,17 @@ import {
 	getOneYearHistoryStartDate,
 	getThreeMonthHistoryStartDate
 } from '../../src/utils/timeUtils';
+import { pipe } from 'fp-ts/es6/function';
+import { addDays } from 'date-fns/fp';
 
 describe('PortfolioService', () => {
 	describe('getDateRangeForMarketTime', () => {
 		it('today', () => {
 			const [start, end] = getDateRangeForMarketTime(MarketTime.ONE_DAY);
 			expect(start).toEqual(formatHistoryDate(new Date()));
-			expect(end).toEqual(formatHistoryDate(new Date()));
+			expect(end).toEqual(
+				pipe(new Date(), addDays(1), formatHistoryDate)
+			);
 		});
 
 		it('one week', () => {
