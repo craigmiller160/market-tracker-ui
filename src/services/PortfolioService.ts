@@ -61,9 +61,10 @@ export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 export const getPortfolioList = (
 	time: MarketTime
 ): Promise<ReadonlyArray<PortfolioResponse>> => {
+	const [start, end] = getDateRangeForMarketTime(time);
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<PortfolioResponse>>({
-			uri: '/portfolios',
+			uri: `/portfolios?startDate=${start}&endDate=${end}`,
 			errorCustomizer: 'Error getting list of portfolios'
 		})
 		.then(getResponseData);
