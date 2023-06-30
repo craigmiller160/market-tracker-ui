@@ -72,6 +72,10 @@ export const useGetPortfolioInvestmentData = (
 		respectMarketStatus,
 		status
 	} = useGetInvestmentData(info);
+
+	console.log('INVESTMENT', investmentData);
+	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
+
 	// TODO need to figure out how to integrate portfolio stuff
 	return {
 		respectMarketStatus,

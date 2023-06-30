@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
+import { PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -20,11 +21,14 @@ const createPanels = (
 	data.map(
 		(res): AccordionPanelConfig => ({
 			key: res.id,
-			investments: res.stockSymbols.map((symbol) => ({
-				symbol,
-				name: '',
-				type: InvestmentType.STOCK
-			})),
+			investments: res.stockSymbols.map(
+				(symbol): PortfolioInvestmentInfo => ({
+					symbol,
+					name: '',
+					type: InvestmentType.STOCK,
+					portfolioId: res.id
+				})
+			),
 			title: <Typography.Title level={4}>{res.name}</Typography.Title>
 		})
 	);
