@@ -75,6 +75,18 @@ const mergeInvestmentData = (
 	) {
 		return undefined;
 	}
+
+	const startPrice = mergeStartPrice(
+		investmentData.startPrice,
+		portfolioHistoryData
+	);
+
+	return {
+		name: investmentData.name,
+		startPrice,
+		currentPrice: 0, // TODO
+		history: [] // TODO
+	};
 };
 
 export const useGetPortfolioInvestmentData = (
