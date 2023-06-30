@@ -74,8 +74,21 @@ const mergeHistory = (
 		);
 	}
 
-	// TODO fix this
-	return [];
+	return investmentHistory.map((record): HistoryRecord => {
+		const portfolioRecord = portfolioHistory.find(
+			(pRecord) => record.date === pRecord.date
+		);
+		if (!portfolioRecord) {
+			throw new Error(
+				`Unable to find portfolio history record with matching date: ${record.date}`
+			);
+		}
+
+		return {
+			...record,
+			price: record.price * portfolioRecord.totalShares
+		};
+	});
 };
 
 const mergeInvestmentData = (
@@ -96,7 +109,11 @@ const mergeInvestmentData = (
 		portfolioHistoryData[0].totalShares * investmentData.startPrice;
 	const currentPrice =
 		portfolioCurrentData.totalShares * investmentData.currentPrice;
-	const history = mergeHistory(time, investmentData.history, portfolioHistoryData);
+	const history = mergeHistory(
+		time,
+		investmentData.history,
+		portfolioHistoryData
+	);
 
 	return {
 		name: investmentData.name,
