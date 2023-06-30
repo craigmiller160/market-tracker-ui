@@ -26,7 +26,7 @@ export const getDateRangeForMarketTime = (
 	const today = new Date();
 	const todayString = formatHistoryDate(today);
 	return match<MarketTime, [string, string]>(time)
-		.with(MarketTime.ONE_DAY, () => [todayString, plusOneDay(today)])
+		.with(MarketTime.ONE_DAY, () => [todayString, todayString])
 		.with(MarketTime.ONE_WEEK, () => [
 			getOneWeekHistoryStartDate(),
 			todayString
