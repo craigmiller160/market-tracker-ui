@@ -10,6 +10,8 @@ import {
 	useGetCurrentSharesForStockInPortfolio,
 	useGetSharesHistoryForStockInPortfolio
 } from '../../../queries/PortfolioQueries';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../../../store/marketSettings/selectors';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -20,11 +22,10 @@ const useGetPortfolioData = (info: InvestmentInfo) => {
 		throw new Error('InvestmentInfo is not PortfolioInvestmentInfo');
 	}
 
+	const time = useSelector(timeValueSelector);
+
 	useGetCurrentSharesForStockInPortfolio(info.portfolioId, info.symbol);
-	useGetSharesHistoryForStockInPortfolio({
-		symbol: info.symbol,
-		portfolioId: info.portfolioId
-	});
+	useGetSharesHistoryForStockInPortfolio(info.portfolioId, info.symbol, time);
 };
 
 export const useGetPortfolioInvestmentData = (
