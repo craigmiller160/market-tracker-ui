@@ -158,8 +158,6 @@ export const useGetPortfolioInvestmentData = (
 		[time, investmentData, portfolioCurrentData, portfolioHistoryData]
 	);
 
-	// TODO weekly/monthly intervals do not come close to lining up between tradier & portfolio
-
 	return {
 		respectMarketStatus,
 		status,
