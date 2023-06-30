@@ -18,7 +18,6 @@ import { InvestmentData } from '../../../types/data/InvestmentData';
 import { MarketTime } from '../../../types/MarketTime';
 import { HistoryRecord } from '../../../types/history';
 import { match, P } from 'ts-pattern';
-import { startOfWeek } from 'date-fns';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -147,9 +146,6 @@ export const useGetPortfolioInvestmentData = (
 		respectMarketStatus,
 		status
 	} = useGetInvestmentData(info);
-
-	console.log('INVESTMENT', investmentData);
-	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
 
 	const mergedInvestmentData = useMemo(
 		() =>

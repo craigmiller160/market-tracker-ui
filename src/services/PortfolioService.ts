@@ -9,19 +9,15 @@ import { MarketTime } from '../types/MarketTime';
 import { match } from 'ts-pattern';
 import {
 	formatHistoryDate,
-	getFiveYearHistoryStartDate,
 	getFiveYearStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
 	getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
 import { flow } from 'fp-ts/es6/function';
-import { addDays, addWeeks, startOfMonth, addMonths } from 'date-fns/fp';
+import { addMonths, addWeeks, startOfMonth } from 'date-fns/fp';
 import startOfWeek from 'date-fns/startOfWeek/index';
-
-const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
 
 const curriedStartOfWeek =
 	(opts: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }) => (d: Date) =>
