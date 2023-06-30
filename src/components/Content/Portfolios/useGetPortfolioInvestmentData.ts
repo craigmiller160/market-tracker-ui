@@ -58,11 +58,6 @@ const useGetPortfolioData = (
 	};
 };
 
-const mergeStartPrice = (
-	investmentStartPrice: number,
-	portfolioHistoryData: ReadonlyArray<SharesOwnedResponse>
-): number => portfolioHistoryData[0].totalShares * investmentStartPrice;
-
 const mergeInvestmentData = (
 	investmentData?: InvestmentData,
 	portfolioCurrentData?: SharesOwnedResponse,
@@ -76,15 +71,14 @@ const mergeInvestmentData = (
 		return undefined;
 	}
 
-	const startPrice = mergeStartPrice(
-		investmentData.startPrice,
-		portfolioHistoryData
-	);
+	const startPrice =
+		portfolioHistoryData[0].totalShares * investmentData.startPrice;
+	const currentPrice = portfolioCurrentData.totalShares * investmentData.currentPrice;
 
 	return {
 		name: investmentData.name,
 		startPrice,
-		currentPrice: 0, // TODO
+		currentPrice,
 		history: [] // TODO
 	};
 };
