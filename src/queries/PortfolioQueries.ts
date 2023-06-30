@@ -61,7 +61,12 @@ export const useGetCurrentSharesForStockInPortfolio = (
 	portfolioId: string,
 	symbol: string
 ) =>
-	useQuery({
+	useQuery<
+		SharesOwnedResponse,
+		Error,
+		SharesOwnedResponse,
+		[string, string, string]
+	>({
 		queryKey: [
 			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY,
 			portfolioId,

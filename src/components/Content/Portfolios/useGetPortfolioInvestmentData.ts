@@ -21,6 +21,7 @@ const isPortfolioInvestmentInfo = (
 type UseGetPortfolioDataReturn = Readonly<{
 	currentData?: SharesOwnedResponse;
 	historyData?: ReadonlyArray<SharesOwnedResponse>;
+	error?: Error;
 	isFetching: boolean;
 }>;
 
@@ -33,17 +34,24 @@ const useGetPortfolioData = (
 
 	const time = useSelector(timeValueSelector);
 
-	const { data: currentData, isFetching: currentIsFetching } =
-		useGetCurrentSharesForStockInPortfolio(info.portfolioId, info.symbol);
-	const { data: historyData, isFetching: historyIsFetching } =
-		useGetSharesHistoryForStockInPortfolio(
-			info.portfolioId,
-			info.symbol,
-			time
-		);
+	const {
+		data: currentData,
+		error: currentError,
+		isFetching: currentIsFetching
+	} = useGetCurrentSharesForStockInPortfolio(info.portfolioId, info.symbol);
+	const {
+		data: historyData,
+		error: historyError,
+		isFetching: historyIsFetching
+	} = useGetSharesHistoryForStockInPortfolio(
+		info.portfolioId,
+		info.symbol,
+		time
+	);
 	return {
 		currentData,
 		historyData,
+		error: currentError ?? historyError ?? undefined,
 		isFetching: currentIsFetching || historyIsFetching
 	};
 };
@@ -51,7 +59,11 @@ const useGetPortfolioData = (
 export const useGetPortfolioInvestmentData = (
 	info: InvestmentInfo
 ): UseGetInvestmentDataResult => {
-	useGetPortfolioData(info);
+	const {
+		currentData: portfolioCurrentData,
+		historyData: portfolioHistoryData,
+		isFetching: portfolioIsFetching
+	} = useGetPortfolioData(info);
 	const getInvestmentDataResult = useGetInvestmentData(info);
 	// TODO need to figure out how to integrate portfolio stuff
 	return getInvestmentDataResult;
