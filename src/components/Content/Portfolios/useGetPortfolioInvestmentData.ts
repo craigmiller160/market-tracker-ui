@@ -17,6 +17,7 @@ import { useMemo } from 'react';
 import { InvestmentData } from '../../../types/data/InvestmentData';
 import { MarketTime } from '../../../types/MarketTime';
 import { HistoryRecord } from '../../../types/history';
+import { match, P } from 'ts-pattern';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -59,24 +60,32 @@ const useGetPortfolioData = (
 	};
 };
 
+type PortfolioHistoryFinder = (
+	rec: HistoryRecord
+) => (pRec: SharesOwnedResponse) => boolean;
+const getPortfolioHistoryFinder = (time: MarketTime): PortfolioHistoryFinder =>
+	match<MarketTime, PortfolioHistoryFinder>(time)
+		.with(MarketTime.ONE_DAY, () => () => () => true)
+		.with(
+			P.union(
+				MarketTime.ONE_WEEK,
+				MarketTime.ONE_MONTH,
+				MarketTime.THREE_MONTHS
+			),
+			() => (rec) => (pRec) => rec.date === pRec.date
+		)
+		.run();
+
 const mergeHistory = (
 	time: MarketTime,
 	investmentHistory: ReadonlyArray<HistoryRecord>,
 	portfolioHistory: ReadonlyArray<SharesOwnedResponse>
 ): ReadonlyArray<HistoryRecord> => {
-	if (MarketTime.ONE_DAY === time) {
-		const singlePortfolioRecord = portfolioHistory[0];
-		return investmentHistory.map(
-			(record): HistoryRecord => ({
-				...record,
-				price: record.price * singlePortfolioRecord.totalShares
-			})
-		);
-	}
+	const portfolioHistoryFinder = getPortfolioHistoryFinder(time);
 
 	return investmentHistory.map((record): HistoryRecord => {
 		const portfolioRecord = portfolioHistory.find(
-			(pRecord) => record.date === pRecord.date
+			portfolioHistoryFinder(record)
 		);
 
 		return {
