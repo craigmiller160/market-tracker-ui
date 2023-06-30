@@ -62,9 +62,22 @@ export const useGetPortfolioInvestmentData = (
 	const {
 		currentData: portfolioCurrentData,
 		historyData: portfolioHistoryData,
-		isFetching: portfolioIsFetching
+		isFetching: portfolioIsFetching,
+		error: portfolioError
 	} = useGetPortfolioData(info);
-	const getInvestmentDataResult = useGetInvestmentData(info);
+	const {
+		data: investmentData,
+		error: investmentError,
+		loading: investmentIsFetching,
+		respectMarketStatus,
+		status
+	} = useGetInvestmentData(info);
 	// TODO need to figure out how to integrate portfolio stuff
-	return getInvestmentDataResult;
+	return {
+		respectMarketStatus,
+		status,
+		data: undefined, // TODO
+		error: undefined, // TODO
+		loading: false // TODO
+	};
 };
