@@ -15,6 +15,7 @@ import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { SharesOwnedResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { useMemo } from 'react';
 import { InvestmentData } from '../../../types/data/InvestmentData';
+import { MarketTime } from '../../../types/MarketTime';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -28,13 +29,12 @@ type UseGetPortfolioDataReturn = Readonly<{
 }>;
 
 const useGetPortfolioData = (
-	info: InvestmentInfo
+	info: InvestmentInfo,
+	time: MarketTime
 ): UseGetPortfolioDataReturn => {
 	if (!isPortfolioInvestmentInfo(info)) {
 		throw new Error('InvestmentInfo is not PortfolioInvestmentInfo');
 	}
-
-	const time = useSelector(timeValueSelector);
 
 	const {
 		data: currentData,
@@ -58,7 +58,10 @@ const useGetPortfolioData = (
 	};
 };
 
+const mergeHistory = () => {};
+
 const mergeInvestmentData = (
+	time: MarketTime,
 	investmentData?: InvestmentData,
 	portfolioCurrentData?: SharesOwnedResponse,
 	portfolioHistoryData?: ReadonlyArray<SharesOwnedResponse>
@@ -73,7 +76,8 @@ const mergeInvestmentData = (
 
 	const startPrice =
 		portfolioHistoryData[0].totalShares * investmentData.startPrice;
-	const currentPrice = portfolioCurrentData.totalShares * investmentData.currentPrice;
+	const currentPrice =
+		portfolioCurrentData.totalShares * investmentData.currentPrice;
 
 	return {
 		name: investmentData.name,
@@ -86,12 +90,13 @@ const mergeInvestmentData = (
 export const useGetPortfolioInvestmentData = (
 	info: InvestmentInfo
 ): UseGetInvestmentDataResult => {
+	const time = useSelector(timeValueSelector);
 	const {
 		currentData: portfolioCurrentData,
 		historyData: portfolioHistoryData,
 		isFetching: portfolioIsFetching,
 		error: portfolioError
-	} = useGetPortfolioData(info);
+	} = useGetPortfolioData(info, time);
 	const {
 		data: investmentData,
 		error: investmentError,
@@ -103,11 +108,12 @@ export const useGetPortfolioInvestmentData = (
 	const mergedInvestmentData = useMemo(
 		() =>
 			mergeInvestmentData(
+				time,
 				investmentData,
 				portfolioCurrentData,
 				portfolioHistoryData
 			),
-		[investmentData, portfolioCurrentData, portfolioHistoryData]
+		[time, investmentData, portfolioCurrentData, portfolioHistoryData]
 	);
 
 	console.log('INVESTMENT', investmentData);
