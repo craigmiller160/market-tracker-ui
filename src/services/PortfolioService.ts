@@ -23,22 +23,22 @@ const curriedStartOfWeek =
 	(opts: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }) => (d: Date) =>
 		startOfWeek(d, opts);
 
-const mondayAfterDate: (d: Date) => string = flow(
+export const mondayAfterDate: (d: Date) => string = flow(
 	curriedStartOfWeek({ weekStartsOn: 1 }),
 	addWeeks(1),
 	formatHistoryDate
 );
-const mondayBeforeDate: (d: Date) => string = flow(
+export const mondayBeforeDate: (d: Date) => string = flow(
 	curriedStartOfWeek({ weekStartsOn: 1 }),
 	formatHistoryDate
 );
 
-const monthStartAfterDate: (d: Date) => string = flow(
+export const monthStartAfterDate: (d: Date) => string = flow(
 	startOfMonth,
 	addMonths(1),
 	formatHistoryDate
 );
-const monthStartBeforeDate: (d: Date) => string = flow(
+export const monthStartBeforeDate: (d: Date) => string = flow(
 	startOfMonth,
 	formatHistoryDate
 );
