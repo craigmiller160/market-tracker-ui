@@ -76,6 +76,10 @@ export const useGetPortfolioInvestmentData = (
 	console.log('INVESTMENT', investmentData);
 	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
 
+	// TODO for today, one portfolio history record with lots of tradier records
+	// TODO for one week, portfolio has weekend dates, tradier does not. Also, tradier has two entries per day, portfolio has one
+	// TODO the other history intervals are probably the same as one-week
+
 	// TODO need to figure out how to integrate portfolio stuff
 	return {
 		respectMarketStatus,
