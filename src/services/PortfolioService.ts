@@ -12,13 +12,28 @@ import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
+	getOneYearHistoryStartDate, getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
 import { flow } from 'fp-ts/es6/function';
-import { addDays } from 'date-fns/fp';
+import { addDays, addWeeks } from 'date-fns/fp';
+import startOfWeek from 'date-fns/startOfWeek/index';
 
 const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
+
+const curriedStartOfWeek =
+	(opts: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }) => (d: Date) =>
+		startOfWeek(d, opts);
+
+const mondayAfterDate: (d: Date) => string = flow(
+	curriedStartOfWeek({ weekStartsOn: 1 }),
+	addWeeks(1),
+	formatHistoryDate
+);
+const mondayBeforeDate: (d: Date) => string = flow(
+	curriedStartOfWeek({ weekStartsOn: 1 }),
+	formatHistoryDate
+);
 
 export const getDateRangeForMarketTime = (
 	time: MarketTime
@@ -40,8 +55,8 @@ export const getDateRangeForMarketTime = (
 			todayString
 		])
 		.with(MarketTime.ONE_YEAR, () => [
-			getOneYearHistoryStartDate(),
-			todayString
+			mondayAfterDate(getOneYearStartDate()),
+			mondayBeforeDate(today)
 		])
 		.with(MarketTime.FIVE_YEARS, () => [
 			getFiveYearHistoryStartDate(),
