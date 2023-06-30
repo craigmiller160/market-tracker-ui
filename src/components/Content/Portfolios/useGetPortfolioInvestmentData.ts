@@ -71,7 +71,8 @@ const getPortfolioHistoryFinder = (time: MarketTime): PortfolioHistoryFinder =>
 			P.union(
 				MarketTime.ONE_WEEK,
 				MarketTime.ONE_MONTH,
-				MarketTime.THREE_MONTHS
+				MarketTime.THREE_MONTHS,
+				MarketTime.ONE_YEAR
 			),
 			() => (rec) => (pRec) => rec.date === pRec.date
 		)
