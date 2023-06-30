@@ -3,13 +3,8 @@ import {
 	PortfolioResponse,
 	SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
-import {
-	StockHistoryInPortfolioRequest,
-	StockHistoryInterval,
-	StockHistoryRequest
-} from '../types/portfolios';
+import { StockHistoryInterval } from '../types/portfolios';
 import qs from 'qs';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { MarketTime } from '../types/MarketTime';
 import { match } from 'ts-pattern';
 import {
@@ -22,8 +17,6 @@ import {
 } from '../utils/timeUtils';
 import { flow } from 'fp-ts/es6/function';
 import { addDays } from 'date-fns/fp';
-
-const formatDateForFilter = Time.format('yyyy-MM-dd');
 
 const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
 
@@ -87,13 +80,6 @@ export const getPortfolioList = (
 		.then(getResponseData);
 };
 
-const createHistoryQueryString = (request: StockHistoryRequest): string =>
-	qs.stringify({
-		startDate: formatDateForFilter(request.startDate),
-		endDate: formatDateForFilter(request.endDate),
-		interval: request.interval
-	});
-
 export const getCurrentSharesForStockInPortfolio = (
 	portfolioId: string,
 	symbol: string
@@ -106,13 +92,21 @@ export const getCurrentSharesForStockInPortfolio = (
 		.then(getResponseData);
 
 export const getSharesHistoryForStockInPortfolio = (
-	request: StockHistoryInPortfolioRequest
+	portfolioId: string,
+	symbol: string,
+	time: MarketTime
 ): Promise<ReadonlyArray<SharesOwnedResponse>> => {
-	const queryString = createHistoryQueryString(request);
+	const [start, end] = getDateRangeForMarketTime(time);
+	const interval = getIntervalForMarketTime(time);
+	const queryString = qs.stringify({
+		startDate: start,
+		endDate: end,
+		interval: interval
+	});
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<SharesOwnedResponse>>({
-			uri: `/portfolios/${request.portfolioId}/stocks/${request.symbol}/history?${queryString}`,
-			errorCustomizer: `Error getting shares history for stock ${request.symbol} in portfolio ${request.portfolioId}`
+			uri: `/portfolios/${portfolioId}/stocks/${symbol}/history?${queryString}`,
+			errorCustomizer: `Error getting shares history for stock ${symbol} in portfolio ${portfolioId}`
 		})
 		.then(getResponseData);
 };
