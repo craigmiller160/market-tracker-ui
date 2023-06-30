@@ -146,10 +146,8 @@ export const useGetPortfolioInvestmentData = (
 		status
 	} = useGetInvestmentData(info);
 
-	console.log('START', startOfWeek(new Date(), { weekStartsOn: 1 }));
-
-	// console.log('INVESTMENT', investmentData);
-	// console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
+	console.log('INVESTMENT', investmentData);
+	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
 
 	const mergedInvestmentData = useMemo(
 		() =>
