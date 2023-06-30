@@ -145,6 +145,9 @@ export const useGetPortfolioInvestmentData = (
 		status
 	} = useGetInvestmentData(info);
 
+	console.log('INVESTMENT', investmentData);
+	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
+
 	const mergedInvestmentData = useMemo(
 		() =>
 			mergeInvestmentData(
@@ -155,9 +158,6 @@ export const useGetPortfolioInvestmentData = (
 			),
 		[time, investmentData, portfolioCurrentData, portfolioHistoryData]
 	);
-
-	console.log('INVESTMENT', investmentData);
-	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
 
 	// TODO weekly/monthly intervals do not come close to lining up between tradier & portfolio
 
