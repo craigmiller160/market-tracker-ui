@@ -13,6 +13,8 @@ import {
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { SharesOwnedResponse } from '../../../types/generated/market-tracker-portfolio-service';
+import { useMemo } from 'react';
+import { InvestmentData } from '../../../types/data/InvestmentData';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -56,6 +58,25 @@ const useGetPortfolioData = (
 	};
 };
 
+const mergeStartPrice = (
+	investmentStartPrice: number,
+	portfolioHistoryData: ReadonlyArray<SharesOwnedResponse>
+): number => portfolioHistoryData[0].totalShares * investmentStartPrice;
+
+const mergeInvestmentData = (
+	investmentData?: InvestmentData,
+	portfolioCurrentData?: SharesOwnedResponse,
+	portfolioHistoryData?: ReadonlyArray<SharesOwnedResponse>
+): InvestmentData | undefined => {
+	if (
+		investmentData === undefined ||
+		portfolioCurrentData === undefined ||
+		portfolioHistoryData === undefined
+	) {
+		return undefined;
+	}
+};
+
 export const useGetPortfolioInvestmentData = (
 	info: InvestmentInfo
 ): UseGetInvestmentDataResult => {
@@ -73,6 +94,16 @@ export const useGetPortfolioInvestmentData = (
 		status
 	} = useGetInvestmentData(info);
 
+	const mergedInvestmentData = useMemo(
+		() =>
+			mergeInvestmentData(
+				investmentData,
+				portfolioCurrentData,
+				portfolioHistoryData
+			),
+		[investmentData, portfolioCurrentData, portfolioHistoryData]
+	);
+
 	console.log('INVESTMENT', investmentData);
 	console.log('PORTFOLIO', portfolioCurrentData, portfolioHistoryData);
 
@@ -80,12 +111,11 @@ export const useGetPortfolioInvestmentData = (
 	// TODO for one week, portfolio has weekend dates, tradier does not. Also, tradier has two entries per day, portfolio has one
 	// TODO the other history intervals are probably the same as one-week
 
-	// TODO need to figure out how to integrate portfolio stuff
 	return {
 		respectMarketStatus,
 		status,
-		data: undefined, // TODO
-		error: undefined, // TODO
-		loading: false // TODO
+		data: mergedInvestmentData,
+		error: investmentError ?? portfolioError,
+		loading: investmentIsFetching || portfolioIsFetching
 	};
 };
