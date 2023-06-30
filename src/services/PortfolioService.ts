@@ -5,6 +5,7 @@ import {
 } from '../types/generated/market-tracker-portfolio-service';
 import {
 	StockHistoryInPortfolioRequest,
+	StockHistoryInterval,
 	StockHistoryRequest
 } from '../types/portfolios';
 import qs from 'qs';
@@ -55,6 +56,10 @@ export const getDateRangeForMarketTime = (
 		])
 		.run();
 };
+
+export const getIntervalForMarketTime = (
+	time: MarketTime
+): StockHistoryInterval => 'SINGLE';
 
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
