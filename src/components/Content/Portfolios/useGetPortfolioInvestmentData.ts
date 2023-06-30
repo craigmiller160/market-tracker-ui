@@ -78,15 +78,10 @@ const mergeHistory = (
 		const portfolioRecord = portfolioHistory.find(
 			(pRecord) => record.date === pRecord.date
 		);
-		if (!portfolioRecord) {
-			throw new Error(
-				`Unable to find portfolio history record with matching date: ${record.date}`
-			);
-		}
 
 		return {
 			...record,
-			price: record.price * portfolioRecord.totalShares
+			price: record.price * (portfolioRecord?.totalShares ?? 0)
 		};
 	});
 };
