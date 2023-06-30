@@ -16,6 +16,7 @@ import { SharesOwnedResponse } from '../../../types/generated/market-tracker-por
 import { useMemo } from 'react';
 import { InvestmentData } from '../../../types/data/InvestmentData';
 import { MarketTime } from '../../../types/MarketTime';
+import { HistoryRecord } from '../../../types/history';
 
 const isPortfolioInvestmentInfo = (
 	info: InvestmentInfo
@@ -58,7 +59,24 @@ const useGetPortfolioData = (
 	};
 };
 
-const mergeHistory = () => {};
+const mergeHistory = (
+	time: MarketTime,
+	investmentHistory: ReadonlyArray<HistoryRecord>,
+	portfolioHistory: ReadonlyArray<SharesOwnedResponse>
+): ReadonlyArray<HistoryRecord> => {
+	if (MarketTime.ONE_DAY === time) {
+		const singlePortfolioRecord = portfolioHistory[0];
+		return investmentHistory.map(
+			(record): HistoryRecord => ({
+				...record,
+				price: record.price * singlePortfolioRecord.totalShares
+			})
+		);
+	}
+
+	// TODO fix this
+	return [];
+};
 
 const mergeInvestmentData = (
 	time: MarketTime,
@@ -78,12 +96,13 @@ const mergeInvestmentData = (
 		portfolioHistoryData[0].totalShares * investmentData.startPrice;
 	const currentPrice =
 		portfolioCurrentData.totalShares * investmentData.currentPrice;
+	const history = mergeHistory(time, investmentData.history, portfolioHistoryData);
 
 	return {
 		name: investmentData.name,
 		startPrice,
 		currentPrice,
-		history: [] // TODO
+		history
 	};
 };
 
