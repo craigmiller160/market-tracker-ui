@@ -59,7 +59,15 @@ export const getDateRangeForMarketTime = (
 
 export const getIntervalForMarketTime = (
 	time: MarketTime
-): StockHistoryInterval => 'SINGLE';
+): StockHistoryInterval =>
+	match<MarketTime, StockHistoryInterval>(time)
+		.with(MarketTime.ONE_DAY, () => 'SINGLE')
+		.with(MarketTime.ONE_WEEK, () => 'DAILY')
+		.with(MarketTime.ONE_MONTH, () => 'DAILY')
+		.with(MarketTime.THREE_MONTHS, () => 'DAILY')
+		.with(MarketTime.ONE_YEAR, () => 'WEEKLY')
+		.with(MarketTime.FIVE_YEARS, () => 'MONTHLY')
+		.run();
 
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
