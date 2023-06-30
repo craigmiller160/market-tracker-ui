@@ -1,4 +1,7 @@
-import {getDateRangeForMarketTime, getIntervalForMarketTime} from '../../src/services/PortfolioService';
+import {
+	getDateRangeForMarketTime,
+	getIntervalForMarketTime
+} from '../../src/services/PortfolioService';
 import { MarketTime } from '../../src/types/MarketTime';
 import {
 	formatHistoryDate,
@@ -61,38 +64,32 @@ describe('PortfolioService', () => {
 	describe('getIntervalForMarketTime', () => {
 		it('today', () => {
 			const interval = getIntervalForMarketTime(MarketTime.ONE_DAY);
-			throw new Error();
+			expect(interval).toEqual('SINGLE');
 		});
 
 		it('one week', () => {
 			const interval = getIntervalForMarketTime(MarketTime.ONE_WEEK);
-			throw new Error();
+			expect(interval).toEqual('DAILY');
 		});
 
 		it('one month', () => {
-			const interval = getIntervalForMarketTime(
-				MarketTime.ONE_MONTH
-			);
-			throw new Error();
+			const interval = getIntervalForMarketTime(MarketTime.ONE_MONTH);
+			expect(interval).toEqual('DAILY');
 		});
 
 		it('three months', () => {
-			const interval = getIntervalForMarketTime(
-				MarketTime.THREE_MONTHS
-			);
-			throw new Error();
+			const interval = getIntervalForMarketTime(MarketTime.THREE_MONTHS);
+			expect(interval).toEqual('DAILY');
 		});
 
 		it('one year', () => {
 			const interval = getIntervalForMarketTime(MarketTime.ONE_YEAR);
-			throw new Error();
+			expect(interval).toEqual('WEEKLY');
 		});
 
 		it('five years', () => {
-			const interval = getIntervalForMarketTime(
-				MarketTime.FIVE_YEARS
-			);
-			throw new Error();
+			const interval = getIntervalForMarketTime(MarketTime.FIVE_YEARS);
+			expect(interval).toEqual('MONTHLY');
 		});
 	});
 });
