@@ -1,22 +1,23 @@
-// export {};
-//
-// declare const self: ServiceWorkerGlobalScope;
+/// <reference no-default-lib="true"/>
+/// <reference lib="esnext" />
+/// <reference lib="webworker" />
+const sw = self as unknown as ServiceWorkerGlobalScope & typeof globalThis;
 
 const MARKET_DATA_CACHE = 'market-data-cache';
 const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
 
-const isCacheableStatus = (response) =>
+const isCacheableStatus = (response: Response) =>
 	response.status >= 200 && response.status <= 300;
 
-self.addEventListener('install', (event) => {
-	event.waitUntil(self.skipWaiting());
+sw.addEventListener('install', (event) => {
+	event.waitUntil(sw.skipWaiting());
 });
 
-self.addEventListener('activate', (event) => {
-	event.waitUntil(self.clients.claim());
+sw.addEventListener('activate', (event) => {
+	event.waitUntil(sw.clients.claim());
 });
 
-self.addEventListener('fetch', (event) => {
+sw.addEventListener('fetch', (event) => {
 	event.respondWith(
 		fetch(event.request)
 			.then((response) => {
