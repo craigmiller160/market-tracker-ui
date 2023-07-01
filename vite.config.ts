@@ -56,19 +56,14 @@ export default defineConfig({
 				rewrite: (path) =>
 					path.replace(/^\/market-tracker\/portfolios/, '')
 			}
-			// '/market-tracker/service-worker.js': {
-			// 	target: 'https://localhost:3000',
-			// 	changeOrigin: true,
-			// 	secure: false,
-			// 	rewrite: (path) => path.replace(/^\/market-tracker/, '')
-			// }
 		}
 	},
 	plugins: [
 		react(),
 		VitePWA({
 			filename: 'service-worker.ts',
-			srcDir: 'src/service-worker'
+			srcDir: 'src/service-worker',
+			injectRegister: 'script'
 		})
 	],
 	build: {
