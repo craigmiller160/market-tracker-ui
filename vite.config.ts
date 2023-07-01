@@ -2,6 +2,7 @@ import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import fs from 'fs';
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 const https =
 	process.env.CYPRESS === 'true'
@@ -54,16 +55,17 @@ export default defineConfig({
 				secure: false,
 				rewrite: (path) =>
 					path.replace(/^\/market-tracker\/portfolios/, '')
-			},
-			'/market-tracker/service-worker.js': {
-				target: 'https://localhost:3000',
-				changeOrigin: true,
-				secure: false,
-				rewrite: (path) => path.replace(/^\/market-tracker/, '')
 			}
 		}
 	},
-	plugins: [react()],
+	plugins: [
+		react(),
+		VitePWA({
+			filename: 'service-worker.ts',
+			srcDir: 'src/service-worker',
+			injectRegister: 'script'
+		})
+	],
 	build: {
 		outDir: path.join(process.cwd(), 'build'),
 		emptyOutDir: true
