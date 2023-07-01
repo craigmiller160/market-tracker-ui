@@ -3,8 +3,8 @@
 /// <reference lib="webworker" />
 const sw = self as unknown as ServiceWorkerGlobalScope & typeof globalThis;
 
-const MARKET_DATA_CACHE = 'market-data-cache';
-const MARKET_DATA_REGEX = /^.*\/api\/(tradier|coingecko)\/.*$/;
+const CACHE = 'application-cache';
+const CACHEABLE_URIS = /^.*\/(api|portfolios)\/.*$/;
 
 const isCacheableStatus = (response: Response) =>
 	response.status >= 200 && response.status <= 300;
@@ -22,11 +22,11 @@ sw.addEventListener('fetch', (event) => {
 		fetch(event.request)
 			.then((response) => {
 				if (
-					MARKET_DATA_REGEX.test(event.request.url) &&
+					CACHEABLE_URIS.test(event.request.url) &&
 					isCacheableStatus(response)
 				) {
 					return caches
-						.open(MARKET_DATA_CACHE)
+						.open(CACHE)
 						.then((cache) =>
 							cache.put(event.request, response.clone())
 						)
@@ -37,7 +37,7 @@ sw.addEventListener('fetch', (event) => {
 			.catch((ex) => {
 				console.error('Critical Error', ex);
 				return caches
-					.open(MARKET_DATA_CACHE)
+					.open(CACHE)
 					.then((cache) => cache.match(event.request))
 					.then(
 						(response) =>
