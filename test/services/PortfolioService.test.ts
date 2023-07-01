@@ -1,24 +1,28 @@
-import { getDateRangeForMarketTime } from '../../src/services/PortfolioService';
+import {
+	getDateRangeForMarketTime,
+	getIntervalForMarketTime,
+	mondayAfterDate,
+	mondayBeforeDate,
+	monthStartAfterDate,
+	monthStartBeforeDate
+} from '../../src/services/PortfolioService';
 import { MarketTime } from '../../src/types/MarketTime';
 import {
 	formatHistoryDate,
-	getFiveYearHistoryStartDate,
+	getFiveYearStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
+	getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/es6/function';
-import { addDays } from 'date-fns/fp';
 
 describe('PortfolioService', () => {
 	describe('getDateRangeForMarketTime', () => {
 		it('today', () => {
 			const [start, end] = getDateRangeForMarketTime(MarketTime.ONE_DAY);
 			expect(start).toEqual(formatHistoryDate(new Date()));
-			expect(end).toEqual(
-				pipe(new Date(), addDays(1), formatHistoryDate)
-			);
+			expect(end).toEqual(pipe(new Date(), formatHistoryDate));
 		});
 
 		it('one week', () => {
@@ -45,16 +49,48 @@ describe('PortfolioService', () => {
 
 		it('one year', () => {
 			const [start, end] = getDateRangeForMarketTime(MarketTime.ONE_YEAR);
-			expect(start).toEqual(getOneYearHistoryStartDate());
-			expect(end).toEqual(formatHistoryDate(new Date()));
+			expect(start).toEqual(mondayAfterDate(getOneYearStartDate()));
+			expect(end).toEqual(mondayBeforeDate(new Date()));
 		});
 
 		it('five years', () => {
 			const [start, end] = getDateRangeForMarketTime(
 				MarketTime.FIVE_YEARS
 			);
-			expect(start).toEqual(getFiveYearHistoryStartDate());
-			expect(end).toEqual(formatHistoryDate(new Date()));
+			expect(start).toEqual(monthStartAfterDate(getFiveYearStartDate()));
+			expect(end).toEqual(monthStartBeforeDate(new Date()));
+		});
+	});
+
+	describe('getIntervalForMarketTime', () => {
+		it('today', () => {
+			const interval = getIntervalForMarketTime(MarketTime.ONE_DAY);
+			expect(interval).toEqual('SINGLE');
+		});
+
+		it('one week', () => {
+			const interval = getIntervalForMarketTime(MarketTime.ONE_WEEK);
+			expect(interval).toEqual('DAILY');
+		});
+
+		it('one month', () => {
+			const interval = getIntervalForMarketTime(MarketTime.ONE_MONTH);
+			expect(interval).toEqual('DAILY');
+		});
+
+		it('three months', () => {
+			const interval = getIntervalForMarketTime(MarketTime.THREE_MONTHS);
+			expect(interval).toEqual('DAILY');
+		});
+
+		it('one year', () => {
+			const interval = getIntervalForMarketTime(MarketTime.ONE_YEAR);
+			expect(interval).toEqual('WEEKLY');
+		});
+
+		it('five years', () => {
+			const interval = getIntervalForMarketTime(MarketTime.FIVE_YEARS);
+			expect(interval).toEqual('MONTHLY');
 		});
 	});
 });

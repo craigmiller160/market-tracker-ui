@@ -22,7 +22,9 @@
   },
   "include": [
     "src/**/*",
-    "test/**/*"
+    "test/**/*",
+    "./vite.config.ts",
+    "./vite.config.sw.ts"
   ],
   "exclude": [
     "node_modules",

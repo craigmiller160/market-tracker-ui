@@ -5,3 +5,7 @@ export interface InvestmentInfo {
 	readonly name: string;
 	readonly type: InvestmentType;
 }
+
+export type PortfolioInvestmentInfo = InvestmentInfo & {
+	readonly portfolioId: string;
+};

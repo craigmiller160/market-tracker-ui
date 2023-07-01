@@ -3,28 +3,45 @@ import {
 	PortfolioResponse,
 	SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
-import {
-	StockHistoryInPortfolioRequest,
-	StockHistoryRequest
-} from '../types/portfolios';
+import { StockHistoryInterval } from '../types/portfolios';
 import qs from 'qs';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { MarketTime } from '../types/MarketTime';
 import { match } from 'ts-pattern';
 import {
 	formatHistoryDate,
-	getFiveYearHistoryStartDate,
+	getFiveYearStartDate,
 	getOneMonthHistoryStartDate,
 	getOneWeekHistoryStartDate,
-	getOneYearHistoryStartDate,
+	getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
 import { flow } from 'fp-ts/es6/function';
-import { addDays } from 'date-fns/fp';
+import { addMonths, addWeeks, startOfMonth } from 'date-fns/fp';
+import startOfWeek from 'date-fns/startOfWeek/index';
 
-const formatDateForFilter = Time.format('yyyy-MM-dd');
+const curriedStartOfWeek =
+	(opts: { weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }) => (d: Date) =>
+		startOfWeek(d, opts);
 
-const plusOneDay: (d: Date) => string = flow(addDays(1), formatHistoryDate);
+export const mondayAfterDate: (d: Date) => string = flow(
+	curriedStartOfWeek({ weekStartsOn: 1 }),
+	addWeeks(1),
+	formatHistoryDate
+);
+export const mondayBeforeDate: (d: Date) => string = flow(
+	curriedStartOfWeek({ weekStartsOn: 1 }),
+	formatHistoryDate
+);
+
+export const monthStartAfterDate: (d: Date) => string = flow(
+	startOfMonth,
+	addMonths(1),
+	formatHistoryDate
+);
+export const monthStartBeforeDate: (d: Date) => string = flow(
+	startOfMonth,
+	formatHistoryDate
+);
 
 export const getDateRangeForMarketTime = (
 	time: MarketTime
@@ -32,7 +49,7 @@ export const getDateRangeForMarketTime = (
 	const today = new Date();
 	const todayString = formatHistoryDate(today);
 	return match<MarketTime, [string, string]>(time)
-		.with(MarketTime.ONE_DAY, () => [todayString, plusOneDay(today)])
+		.with(MarketTime.ONE_DAY, () => [todayString, todayString])
 		.with(MarketTime.ONE_WEEK, () => [
 			getOneWeekHistoryStartDate(),
 			todayString
@@ -46,15 +63,27 @@ export const getDateRangeForMarketTime = (
 			todayString
 		])
 		.with(MarketTime.ONE_YEAR, () => [
-			getOneYearHistoryStartDate(),
-			todayString
+			mondayAfterDate(getOneYearStartDate()),
+			mondayBeforeDate(today)
 		])
 		.with(MarketTime.FIVE_YEARS, () => [
-			getFiveYearHistoryStartDate(),
-			todayString
+			monthStartAfterDate(getFiveYearStartDate()),
+			monthStartBeforeDate(today)
 		])
 		.run();
 };
+
+export const getIntervalForMarketTime = (
+	time: MarketTime
+): StockHistoryInterval =>
+	match<MarketTime, StockHistoryInterval>(time)
+		.with(MarketTime.ONE_DAY, () => 'SINGLE')
+		.with(MarketTime.ONE_WEEK, () => 'DAILY')
+		.with(MarketTime.ONE_MONTH, () => 'DAILY')
+		.with(MarketTime.THREE_MONTHS, () => 'DAILY')
+		.with(MarketTime.ONE_YEAR, () => 'WEEKLY')
+		.with(MarketTime.FIVE_YEARS, () => 'MONTHLY')
+		.run();
 
 export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	marketTrackerPortfoliosApi.post({
@@ -74,13 +103,6 @@ export const getPortfolioList = (
 		.then(getResponseData);
 };
 
-const createHistoryQueryString = (request: StockHistoryRequest): string =>
-	qs.stringify({
-		startDate: formatDateForFilter(request.startDate),
-		endDate: formatDateForFilter(request.endDate),
-		interval: request.interval
-	});
-
 export const getCurrentSharesForStockInPortfolio = (
 	portfolioId: string,
 	symbol: string
@@ -93,13 +115,21 @@ export const getCurrentSharesForStockInPortfolio = (
 		.then(getResponseData);
 
 export const getSharesHistoryForStockInPortfolio = (
-	request: StockHistoryInPortfolioRequest
+	portfolioId: string,
+	symbol: string,
+	time: MarketTime
 ): Promise<ReadonlyArray<SharesOwnedResponse>> => {
-	const queryString = createHistoryQueryString(request);
+	const [start, end] = getDateRangeForMarketTime(time);
+	const interval = getIntervalForMarketTime(time);
+	const queryString = qs.stringify({
+		startDate: start,
+		endDate: end,
+		interval: interval
+	});
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<SharesOwnedResponse>>({
-			uri: `/portfolios/${request.portfolioId}/stocks/${request.symbol}/history?${queryString}`,
-			errorCustomizer: `Error getting shares history for stock ${request.symbol} in portfolio ${request.portfolioId}`
+			uri: `/portfolios/${portfolioId}/stocks/${symbol}/history?${queryString}`,
+			errorCustomizer: `Error getting shares history for stock ${symbol} in portfolio ${portfolioId}`
 		})
 		.then(getResponseData);
 };

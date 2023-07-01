@@ -11,7 +11,6 @@ import {
 	getPortfolioList,
 	getSharesHistoryForStockInPortfolio
 } from '../services/PortfolioService';
-import { StockHistoryInPortfolioRequest } from '../types/portfolios';
 import {
 	PortfolioResponse,
 	SharesOwnedResponse
@@ -62,7 +61,12 @@ export const useGetCurrentSharesForStockInPortfolio = (
 	portfolioId: string,
 	symbol: string
 ) =>
-	useQuery({
+	useQuery<
+		SharesOwnedResponse,
+		Error,
+		SharesOwnedResponse,
+		[string, string, string]
+	>({
 		queryKey: [
 			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY,
 			portfolioId,
@@ -73,15 +77,26 @@ export const useGetCurrentSharesForStockInPortfolio = (
 	});
 
 export const useGetSharesHistoryForStockInPortfolio = (
-	request: StockHistoryInPortfolioRequest
+	portfolioId: string,
+	symbol: string,
+	time: MarketTime
 ) =>
 	useQuery<
 		ReadonlyArray<SharesOwnedResponse>,
 		Error,
 		ReadonlyArray<SharesOwnedResponse>,
-		[string, StockHistoryInPortfolioRequest]
+		[string, string, string, MarketTime]
 	>({
-		queryKey: [GET_SHARES_HISTORY_FOR_STOCK_IN_PORTFOLIO_KEY, request],
-		queryFn: ({ queryKey: [, request] }) =>
-			getSharesHistoryForStockInPortfolio(request)
+		queryKey: [
+			GET_SHARES_HISTORY_FOR_STOCK_IN_PORTFOLIO_KEY,
+			portfolioId,
+			symbol,
+			time
+		],
+		queryFn: ({ queryKey: [, thePortfolioId, theSymbol, theTime] }) =>
+			getSharesHistoryForStockInPortfolio(
+				thePortfolioId,
+				theSymbol,
+				theTime
+			)
 	});
