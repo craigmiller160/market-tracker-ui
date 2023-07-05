@@ -61,7 +61,7 @@ export default defineConfig({
 	plugins: [
 		react(),
 		VitePWA({
-			filename: 'service-worker.ts',
+			filename: 'service-worker.js',
 			srcDir: 'src/service-worker',
 			injectRegister: 'script'
 		})
