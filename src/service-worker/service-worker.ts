@@ -4,7 +4,7 @@
 const sw = self as unknown as ServiceWorkerGlobalScope & typeof globalThis;
 
 const CACHE = 'application-cache';
-const CACHEABLE_URIS = /^.*\/(api|portfolios)\/.*$/;
+const CACHEABLE_URIS = /^.*\/market-tracker\/(api|portfolios)\/.*$/;
 
 const isCacheableStatus = (response: Response) =>
 	response.status >= 200 && response.status <= 300;
