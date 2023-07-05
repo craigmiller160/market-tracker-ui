@@ -63,6 +63,7 @@ export default defineConfig({
 		VitePWA({
 			injectRegister: 'script',
 			registerType: 'autoUpdate',
+			strategies: 'generateSW',
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg}']
 			}
