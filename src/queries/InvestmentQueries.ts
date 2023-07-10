@@ -89,7 +89,10 @@ export const getHistoryFn = (
 		)
 		.run();
 
-type QuoteFn = (symbol: ReadonlyArray<string>) => Promise<ReadonlyArray<Quote>>;
+type QuoteFn = (
+	symbol: ReadonlyArray<string>,
+	signal?: AbortSignal
+) => Promise<ReadonlyArray<Quote>>;
 export const getQuoteFn = (type: InvestmentType): QuoteFn =>
 	match(type)
 		.when(isStock, () => tradierService.getQuotes)
@@ -104,8 +107,8 @@ export const useGetQuote = (
 ) =>
 	useQuery<Quote, Error, Quote, GetQuoteQueryKey>({
 		queryKey: [GET_QUOTE_KEY, time, type, symbol],
-		queryFn: ({ queryKey: [, , theType, theSymbol] }) =>
-			getQuoteFn(theType)([theSymbol]).then((list) => list[0]),
+		queryFn: ({ queryKey: [, , theType, theSymbol], signal }) =>
+			getQuoteFn(theType)([theSymbol], signal).then((list) => list[0]),
 		refetchInterval: getRefetchInterval(time),
 		enabled: shouldLoad
 	});
@@ -124,8 +127,8 @@ export const useGetHistory = (
 		GetHistoryQueryKey
 	>({
 		queryKey: [GET_HISTORY_KEY, time, type, symbol],
-		queryFn: ({ queryKey: [, theTime, theType, theSymbol] }) =>
-			getHistoryFn(theTime, theType)(theSymbol),
+		queryFn: ({ queryKey: [, theTime, theType, theSymbol], signal }) =>
+			getHistoryFn(theTime, theType)(theSymbol, signal),
 		refetchInterval: getRefetchInterval(time),
 		enabled: shouldLoad
 	});
@@ -213,7 +216,7 @@ export const useCheckMarketStatus = (): UseQueryResult<MarketStatus, Error> => {
 	const time = useSelector(timeValueSelector);
 	return useQuery<MarketStatus, Error>({
 		queryKey: [GET_MARKET_STATUS, time],
-		queryFn: tradierService.getMarketStatus,
+		queryFn: ({ signal }) => tradierService.getMarketStatus(signal),
 		enabled: MarketTime.ONE_DAY === time,
 		placeholderData:
 			MarketTime.ONE_DAY === time

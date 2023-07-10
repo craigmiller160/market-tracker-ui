@@ -200,11 +200,15 @@ export const getTimesales = (
 };
 
 export const getQuotes = (
-	symbols: ReadonlyArray<string>
+	symbols: ReadonlyArray<string>,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<Quote>> =>
 	pipe(
 		marketTrackerApiFpTs.get<TradierQuotes>({
-			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`
+			uri: `/tradier/markets/quotes?symbols=${symbols.join(',')}`,
+			config: {
+				signal
+			}
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeQuotes),
@@ -311,14 +315,19 @@ export const getFiveYearHistory = (
 	);
 };
 
-export const getMarketStatus = (): Promise<MarketStatus> => {
+export const getMarketStatus = (
+	signal?: AbortSignal
+): Promise<MarketStatus> => {
 	const today = new Date();
 	const year = formatCalendarYear(today);
 	const month = formatCalendarMonth(today);
 	const calendarDate = formatCalendarDate(today);
 	return pipe(
 		marketTrackerApiFpTs.get<TradierCalendar>({
-			uri: `/tradier/markets/calendar?year=${year}&month=${month}`
+			uri: `/tradier/markets/calendar?year=${year}&month=${month}`,
+			config: {
+				signal
+			}
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeCalendar),

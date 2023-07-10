@@ -91,7 +91,8 @@ const formatPrice =
 		);
 
 export const getQuotes = (
-	symbols: ReadonlyArray<string>
+	symbols: ReadonlyArray<string>,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<Quote>> =>
 	pipe(
 		symbols,
@@ -105,7 +106,10 @@ export const getQuotes = (
 		TaskEither.bind('response', ({ idString }) =>
 			pipe(
 				marketTrackerApiFpTs.get<CoinGeckoPrice>({
-					uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`
+					uri: `/coingecko/simple/price?ids=${idString}&vs_currencies=usd`,
+					config: {
+						signal
+					}
 				}),
 				TaskEither.map(getResponseData),
 				TaskEither.chainEitherK(decodePrice)
