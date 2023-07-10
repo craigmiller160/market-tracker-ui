@@ -133,7 +133,8 @@ const formatMarketChart = (
 	);
 
 const getHistoryQuote = (
-	historyQuery: HistoryQuery
+	historyQuery: HistoryQuery,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const start = Math.floor(historyQuery.start.getTime() / 1000);
 	const end = Math.floor(getTodayEnd().getTime() / 1000);
@@ -142,7 +143,10 @@ const getHistoryQuote = (
 		TaskEither.fromEither,
 		TaskEither.chain((id) =>
 			marketTrackerApiFpTs.get<CoinGeckoMarketChart>({
-				uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`
+				uri: `/coingecko/coins/${id}/market_chart/range?vs_currency=usd&from=${start}&to=${end}`,
+				config: {
+					signal
+				}
 			})
 		),
 		TaskEither.map(getResponseData),
@@ -153,12 +157,16 @@ const getHistoryQuote = (
 };
 
 export const getTodayHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
-		symbol,
-		start: getTodayStart()
-	});
+	getHistoryQuote(
+		{
+			symbol,
+			start: getTodayStart()
+		},
+		signal
+	);
 
 export const getDays = (historyDate: string): number =>
 	pipe(
@@ -168,42 +176,62 @@ export const getDays = (historyDate: string): number =>
 	);
 
 export const getOneWeekHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
-		symbol,
-		start: getOneWeekStartDate()
-	});
+	getHistoryQuote(
+		{
+			symbol,
+			start: getOneWeekStartDate()
+		},
+		signal
+	);
 
 export const getOneMonthHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
-	return getHistoryQuote({
-		symbol,
-		start: getOneMonthStartDate()
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getOneMonthStartDate()
+		},
+		signal
+	);
 };
 
 export const getThreeMonthHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
-		symbol,
-		start: getThreeMonthStartDate()
-	});
+	getHistoryQuote(
+		{
+			symbol,
+			start: getThreeMonthStartDate()
+		},
+		signal
+	);
 
 export const getOneYearHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
-		symbol,
-		start: getOneYearStartDate()
-	});
+	getHistoryQuote(
+		{
+			symbol,
+			start: getOneYearStartDate()
+		},
+		signal
+	);
 
 export const getFiveYearHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> =>
-	getHistoryQuote({
-		symbol,
-		start: getFiveYearStartDate()
-	});
+	getHistoryQuote(
+		{
+			symbol,
+			start: getFiveYearStartDate()
+		},
+		signal
+	);

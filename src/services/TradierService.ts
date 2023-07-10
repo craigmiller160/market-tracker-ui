@@ -180,13 +180,17 @@ const formatTimesales = (
 	);
 
 export const getTimesales = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const start = getTodayStartString();
 	const end = getTodayEndString();
 	return pipe(
 		marketTrackerApiFpTs.get<TradierSeries>({
-			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`
+			uri: `/tradier/markets/timesales?symbol=${symbol}&start=${start}&end=${end}&interval=1min`,
+			config: {
+				signal
+			}
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeTimesales),
@@ -209,12 +213,16 @@ export const getQuotes = (
 	);
 
 const getHistoryQuote = (
-	historyQuery: HistoryQuery
+	historyQuery: HistoryQuery,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const queryString = qs.stringify(historyQuery);
 	return pipe(
 		marketTrackerApiFpTs.get<TradierHistory>({
-			uri: `/tradier/markets/history?${queryString}`
+			uri: `/tradier/markets/history?${queryString}`,
+			config: {
+				signal
+			}
 		}),
 		TaskEither.map(getResponseData),
 		TaskEither.chainEitherK(decodeHistory),
@@ -224,63 +232,83 @@ const getHistoryQuote = (
 };
 
 export const getOneWeekHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
-	return getHistoryQuote({
-		symbol,
-		start: getOneWeekHistoryStartDate(),
-		end: formatHistoryDate(today),
-		interval: 'daily'
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getOneWeekHistoryStartDate(),
+			end: formatHistoryDate(today),
+			interval: 'daily'
+		},
+		signal
+	);
 };
 
 export const getOneMonthHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
-	return getHistoryQuote({
-		symbol,
-		start: getOneMonthHistoryStartDate(),
-		end: formatHistoryDate(today),
-		interval: 'daily'
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getOneMonthHistoryStartDate(),
+			end: formatHistoryDate(today),
+			interval: 'daily'
+		},
+		signal
+	);
 };
 
 export const getThreeMonthHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
-	return getHistoryQuote({
-		symbol,
-		start: getThreeMonthHistoryStartDate(),
-		end: formatHistoryDate(today),
-		interval: 'daily'
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getThreeMonthHistoryStartDate(),
+			end: formatHistoryDate(today),
+			interval: 'daily'
+		},
+		signal
+	);
 };
 
 export const getOneYearHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
-	return getHistoryQuote({
-		symbol,
-		start: getOneYearHistoryStartDate(),
-		end: formatHistoryDate(today),
-		interval: 'weekly'
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getOneYearHistoryStartDate(),
+			end: formatHistoryDate(today),
+			interval: 'weekly'
+		},
+		signal
+	);
 };
 
 export const getFiveYearHistory = (
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<HistoryRecord>> => {
 	const today = new Date();
-	return getHistoryQuote({
-		symbol,
-		start: getFiveYearHistoryStartDate(),
-		end: formatHistoryDate(today),
-		interval: 'monthly'
-	});
+	return getHistoryQuote(
+		{
+			symbol,
+			start: getFiveYearHistoryStartDate(),
+			end: formatHistoryDate(today),
+			interval: 'monthly'
+		},
+		signal
+	);
 };
 
 export const getMarketStatus = (): Promise<MarketStatus> => {

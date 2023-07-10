@@ -30,7 +30,10 @@ const TODAY_REFETCH_INTERVAL = 300_000;
 const getRefetchInterval = (time: MarketTime): number =>
 	time === MarketTime.ONE_DAY ? TODAY_REFETCH_INTERVAL : 0;
 
-type HistoryFn = (symbol: string) => Promise<ReadonlyArray<HistoryRecord>>;
+type HistoryFn = (
+	symbol: string,
+	signal?: AbortSignal
+) => Promise<ReadonlyArray<HistoryRecord>>;
 export const getHistoryFn = (
 	time: MarketTime,
 	type: InvestmentType
