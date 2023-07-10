@@ -30,7 +30,7 @@ const invalidateQueries = (queryClient: QueryClient) =>
 export const useGetAllWatchlists = () =>
 	useQuery({
 		queryKey: [GET_ALL_WATCHLISTS_KEY],
-		queryFn: getAllWatchlists
+		queryFn: ({ signal }) => getAllWatchlists(signal)
 	});
 
 type RenameWatchlistParams = {
@@ -95,7 +95,7 @@ export const useCreateWatchlist = () => {
 export const useGetWatchlistNames = () =>
 	useQuery({
 		queryKey: [GET_WATCHLIST_NAMES_KEY],
-		queryFn: getWatchlistNames
+		queryFn: ({ signal }) => getWatchlistNames(signal)
 	});
 
 type RemoveStockFromWatchlistParams = {

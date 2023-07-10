@@ -1,10 +1,15 @@
 import { marketTrackerApi, getResponseData } from './AjaxApi';
 import { DbWatchlist, Watchlist } from '../types/Watchlist';
 
-export const getAllWatchlists = (): Promise<ReadonlyArray<DbWatchlist>> =>
+export const getAllWatchlists = (
+	signal?: AbortSignal
+): Promise<ReadonlyArray<DbWatchlist>> =>
 	marketTrackerApi
 		.get<ReadonlyArray<DbWatchlist>>({
-			uri: '/watchlists/all'
+			uri: '/watchlists/all',
+			config: {
+				signal
+			}
 		})
 		.then(getResponseData);
 
@@ -58,10 +63,15 @@ export const createWatchlist = (
 		.then(getResponseData);
 };
 
-export const getWatchlistNames = (): Promise<ReadonlyArray<string>> =>
+export const getWatchlistNames = (
+	signal?: AbortSignal
+): Promise<ReadonlyArray<string>> =>
 	marketTrackerApi
 		.get<ReadonlyArray<string>>({
-			uri: '/watchlists/names'
+			uri: '/watchlists/names',
+			config: {
+				signal
+			}
 		})
 		.then(getResponseData);
 
