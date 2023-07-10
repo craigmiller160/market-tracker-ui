@@ -53,7 +53,8 @@ export const useGetPortfolioList = (time: MarketTime) =>
 		[string, MarketTime]
 	>({
 		queryKey: [GET_PORTFOLIO_LIST_KEY, time],
-		queryFn: ({ queryKey: [, theTime] }) => getPortfolioList(theTime),
+		queryFn: ({ queryKey: [, theTime], signal }) =>
+			getPortfolioList(theTime, signal),
 		keepPreviousData: true
 	});
 
@@ -72,8 +73,8 @@ export const useGetCurrentSharesForStockInPortfolio = (
 			portfolioId,
 			symbol
 		],
-		queryFn: ({ queryKey: [, portfolioId, symbol] }) =>
-			getCurrentSharesForStockInPortfolio(portfolioId, symbol)
+		queryFn: ({ queryKey: [, portfolioId, symbol], signal }) =>
+			getCurrentSharesForStockInPortfolio(portfolioId, symbol, signal)
 	});
 
 export const useGetSharesHistoryForStockInPortfolio = (
@@ -93,10 +94,14 @@ export const useGetSharesHistoryForStockInPortfolio = (
 			symbol,
 			time
 		],
-		queryFn: ({ queryKey: [, thePortfolioId, theSymbol, theTime] }) =>
+		queryFn: ({
+			queryKey: [, thePortfolioId, theSymbol, theTime],
+			signal
+		}) =>
 			getSharesHistoryForStockInPortfolio(
 				thePortfolioId,
 				theSymbol,
-				theTime
+				theTime,
+				signal
 			)
 	});

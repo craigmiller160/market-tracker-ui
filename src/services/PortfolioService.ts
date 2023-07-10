@@ -92,32 +92,41 @@ export const downloadUpdatedPortfolioData = (): Promise<unknown> =>
 	});
 
 export const getPortfolioList = (
-	time: MarketTime
+	time: MarketTime,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<PortfolioResponse>> => {
 	const [start, end] = getDateRangeForMarketTime(time);
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<PortfolioResponse>>({
 			uri: `/portfolios?startDate=${start}&endDate=${end}`,
-			errorCustomizer: 'Error getting list of portfolios'
+			errorCustomizer: 'Error getting list of portfolios',
+			config: {
+				signal
+			}
 		})
 		.then(getResponseData);
 };
 
 export const getCurrentSharesForStockInPortfolio = (
 	portfolioId: string,
-	symbol: string
+	symbol: string,
+	signal?: AbortSignal
 ): Promise<SharesOwnedResponse> =>
 	marketTrackerPortfoliosApi
 		.get<SharesOwnedResponse>({
 			uri: `/portfolios/${portfolioId}/stocks/${symbol}/current`,
-			errorCustomizer: `Error getting current shares for stock ${symbol} in portfolio ${portfolioId}`
+			errorCustomizer: `Error getting current shares for stock ${symbol} in portfolio ${portfolioId}`,
+			config: {
+				signal
+			}
 		})
 		.then(getResponseData);
 
 export const getSharesHistoryForStockInPortfolio = (
 	portfolioId: string,
 	symbol: string,
-	time: MarketTime
+	time: MarketTime,
+	signal?: AbortSignal
 ): Promise<ReadonlyArray<SharesOwnedResponse>> => {
 	const [start, end] = getDateRangeForMarketTime(time);
 	const interval = getIntervalForMarketTime(time);
@@ -129,7 +138,10 @@ export const getSharesHistoryForStockInPortfolio = (
 	return marketTrackerPortfoliosApi
 		.get<ReadonlyArray<SharesOwnedResponse>>({
 			uri: `/portfolios/${portfolioId}/stocks/${symbol}/history?${queryString}`,
-			errorCustomizer: `Error getting shares history for stock ${symbol} in portfolio ${portfolioId}`
+			errorCustomizer: `Error getting shares history for stock ${symbol} in portfolio ${portfolioId}`,
+			config: {
+				signal
+			}
 		})
 		.then(getResponseData);
 };
