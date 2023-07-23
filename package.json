@@ -68,7 +68,7 @@
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
-        "@ant-design/charts>antd": "^5.0.0"
+        "antd": "5.2.1"
       }
     }
   },
