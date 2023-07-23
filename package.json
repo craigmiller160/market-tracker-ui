@@ -65,6 +65,13 @@
     "vite": "^4.1.2",
     "vite-plugin-pwa": "^0.16.4"
   },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@ant-design/charts>antd": "^5.0.0"
+      }
+    }
+  },
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^4.8.0",
