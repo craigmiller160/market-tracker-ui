@@ -8,8 +8,6 @@ import { App } from './components/App';
 import { BrowserRouter } from 'react-router-dom';
 import { MarketTrackerKeycloakProvider } from './components/keycloak/MarketTrackerKeycloakProvider';
 
-console.log('foo')
-
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
