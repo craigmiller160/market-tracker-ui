@@ -207,7 +207,7 @@ packages:
     resolution: {integrity: sha512-BcVx6AAnwxSdzAVUZReSuvUVtnT5AkJivq3wmcYj17scll26HHficg35yimGskAj3Gu1upYjBQBz6Tk7GEMJsQ==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      antd: ^4.6.3 || 5.2.1
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
       react: '>=16.8.4'
       react-dom: '>=16.8.4'
@@ -266,7 +266,7 @@ packages:
     resolution: {integrity: sha512-B0AWpsKBRtH+lVlgBXnQuXmI68bVYKGOYoO4bLd75/GdKACk9vKamf62j/4NimfqxTR1yehtRRF8T81ttvhi6Q==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      antd: ^4.6.3 || 5.2.1
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
       react: '>=16.8.4'
       react-dom: '>=16.8.4'
@@ -899,7 +899,7 @@ packages:
   /@antv/x6-react-components@2.0.7(antd@5.2.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-AcnsJgaIup88FWPFs37T/YuiDhwkwOwPlvCs3gMoMPLkoxACeuolip5l6BDcGpWlSSiibTPJ2u24tk6AIB1XxQ==}
     peerDependencies:
-      antd: '>=4.4.2 || >=5.0.0 || 5.2.1'
+      antd: '>=4.4.2 || >=5.0.0 || ^5.0.0'
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
@@ -945,7 +945,7 @@ packages:
       '@antv/x6': ^1.12.11
       '@antv/x6-react-components': ^1.1.15
       '@antv/x6-react-shape': ^1.2.5
-      antd: ^4.6.3 || 5.2.1
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
       react: ^16.8.0  || ^17.0.0
       react-dom: ^16.8.0  || ^17.0.0
@@ -976,7 +976,7 @@ packages:
       '@antv/x6': ^1.12.11
       '@antv/x6-react-components': ^1.1.15
       '@antv/x6-react-shape': ^1.2.5
-      antd: ^4.6.3 || 5.2.1
+      antd: ^4.6.3 || ^5.0.0
       classnames: ^2.2.6
       react: ^16.8.0  || ^17.0.0
       react-dom: ^16.8.0  || ^17.0.0
@@ -1012,7 +1012,7 @@ packages:
     resolution: {integrity: sha512-KX5g9bvvJjWq4OLqyjTsTTzqfVdS8GBoYTScHiMYvs07BdYR1eY9UWQ36FXxeJbc58SLvULmwNJnY6acvgl7vw==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      antd: ^4.6.3 || 5.2.1
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
       react: ^16.8.0  || ^17.0.0
       react-dom: ^16.8.0  || ^17.0.0
