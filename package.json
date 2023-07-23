@@ -72,7 +72,16 @@
     "peerDependencyRules": {
       "allowedVersions": {
         "@ant-design/charts>antd": "^5.0.0",
-        "@ant-design/flowchart>antd": "^5.0.0"
+        "@ant-design/flowchart>antd": "^5.0.0",
+        "@antv/xflow>antd": "^5.0.0",
+        "@antv/xflow>react": "^18.0.0",
+        "@antv/xflow>react-dom": "^18.0.0",
+        "@antv/xflow-core>antd": "^5.0.0",
+        "@antv/xflow-core>react": "^18.0.0",
+        "@antv/xflow-core>react-dom": "^18.0.0",
+        "@antv/xflow-extension>antd": "^5.0.0",
+        "@antv/xflow-extension>react": "^18.0.0",
+        "@antv/xflow-extension>react-dom": "^18.0.0"
       }
     }
   },

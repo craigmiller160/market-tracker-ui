@@ -209,7 +209,7 @@ packages:
       react: '>=16.8.4'
       react-dom: '>=16.8.4'
     dependencies:
-      '@ant-design/flowchart': 1.0.8(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
+      '@ant-design/flowchart': 1.2.2(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
       '@ant-design/graphs': 1.0.8(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/maps': 1.0.6(react-dom@18.2.0)(react@18.2.0)
@@ -221,7 +221,6 @@ packages:
     transitivePeerDependencies:
       - classnames
       - reflect-metadata
-      - supports-color
     dev: false
 
   /@ant-design/colors@4.0.5:
@@ -259,8 +258,8 @@ packages:
       stylis: 4.1.3
     dev: false
 
-  /@ant-design/flowchart@1.0.8(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-B0AWpsKBRtH+lVlgBXnQuXmI68bVYKGOYoO4bLd75/GdKACk9vKamf62j/4NimfqxTR1yehtRRF8T81ttvhi6Q==}
+  /@ant-design/flowchart@1.2.2(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-bzHZ81qqHjWIrXcCMInDB6eMTzbswaVCOAdUTCQJ+B45aybkVsU9LMCKquyOwRM7U7PWNfPC9S/lAlx2i2BvBQ==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
       antd: ^4.6.3 || ^5.0.0
@@ -273,7 +272,7 @@ packages:
       '@antv/x6': 1.30.0
       '@antv/x6-react-components': 1.1.20(antd@5.2.1)(react-dom@18.2.0)(react@18.2.0)
       '@antv/x6-react-shape': 1.6.0(@antv/x6@1.30.0)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow': 1.0.30(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
+      '@antv/xflow': 1.0.55(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
       antd: 5.2.1(date-fns@2.28.0)(react-dom@18.2.0)(react@18.2.0)
       lodash: 4.17.21
       react: 18.2.0
@@ -283,7 +282,6 @@ packages:
     transitivePeerDependencies:
       - classnames
       - reflect-metadata
-      - supports-color
     dev: false
 
   /@ant-design/graphs@1.0.8(react-dom@18.2.0)(react@18.2.0):
@@ -935,56 +933,65 @@ packages:
       utility-types: 3.10.0
     dev: false
 
-  /@antv/xflow-core@1.0.30(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.30.0)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-H1JOFZAZUqQDNvhQcp6ieZxvuywBfdgOTu79ekpeV8Eo+r/boCamP/hBribsan+Zg+pp2FOYuPuhTV2Ri0asvw==}
+  /@antv/x6@1.34.14:
+    resolution: {integrity: sha512-S3FPEVOHczmfneMSTWD3J+hvu6R2XxuEhAfD+Hhs3h1xkWFOmSAoDOIuPF0gzkQcPr0WQNEGnQ5hgfATCxiPpQ==}
+    dependencies:
+      csstype: 3.1.1
+      jquery: 3.6.0
+      jquery-mousewheel: 3.1.13
+      lodash-es: 4.17.21
+      mousetrap: 1.6.5
+      utility-types: 3.10.0
+    dev: false
+
+  /@antv/xflow-core@1.0.55(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.34.14)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-FhjTstp/ZdO6mj8ERARJ6M9PWgikXvOpWwMTLCjc+i8vS4O3t4XL/fIu16MqJNuNdqfETcjJluHd06c32MTB/w==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      '@antv/x6': ^1.12.11
+      '@antv/x6': ^1.30.1
       '@antv/x6-react-components': ^1.1.15
       '@antv/x6-react-shape': ^1.2.5
-      antd: ^4.6.3
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
-      react: ^16.8.0  || ^17.0.0
-      react-dom: ^16.8.0  || ^17.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
-      '@antv/x6': 1.30.0
+      '@antv/x6': 1.34.14
       '@antv/x6-react-components': 1.1.20(antd@5.2.1)(react-dom@18.2.0)(react@18.2.0)
       '@antv/x6-react-shape': 1.6.0(@antv/x6@1.30.0)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow-hook': 1.0.30
+      '@antv/xflow-hook': 1.0.55
       antd: 5.2.1(date-fns@2.28.0)(react-dom@18.2.0)(react@18.2.0)
       classnames: 2.3.2
       immer: 9.0.19
       lodash: 4.17.21
-      mana-common: 0.1.0
+      mana-common: 0.3.2
       mana-syringe: 0.2.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       reflect-metadata: 0.1.13
       rxjs: 6.6.7
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
-  /@antv/xflow-extension@1.0.30(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.30.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-wr4oXeKSrarJSYxjGGyrJNALSr55cMtPUlis0iG1wqMpI6E248bUUkpBthtdyVHt/YXye4kxuY6eDWS94r/GGA==}
+  /@antv/xflow-extension@1.0.55(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.34.14)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-iHRfO/ae4/9xvC5xVFmA9eIFg813DQa06hTgTdxLlt0Aojnfa5VnsGrIrPQoDDQovCXG8SavMDlnLZUpa491GQ==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      '@antv/x6': ^1.12.11
+      '@antv/x6': ^1.30.1
       '@antv/x6-react-components': ^1.1.15
       '@antv/x6-react-shape': ^1.2.5
-      antd: ^4.6.3
+      antd: ^4.6.3 || ^5.0.0
       classnames: ^2.2.6
-      react: ^16.8.0  || ^17.0.0
-      react-dom: ^16.8.0  || ^17.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       reflect-metadata: ^0.1.13
     dependencies:
       '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
-      '@antv/x6': 1.30.0
+      '@antv/x6': 1.34.14
       '@antv/x6-react-components': 1.1.20(antd@5.2.1)(react-dom@18.2.0)(react@18.2.0)
       '@antv/x6-react-shape': 1.6.0(@antv/x6@1.30.0)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow-core': 1.0.30(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.30.0)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow-hook': 1.0.30
+      '@antv/xflow-core': 1.0.55(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.34.14)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
+      '@antv/xflow-hook': 1.0.55
       antd: 5.2.1(date-fns@2.28.0)(react-dom@18.2.0)(react@18.2.0)
       classnames: 2.3.2
       mana-syringe: 0.2.2
@@ -996,32 +1003,31 @@ packages:
       reflect-metadata: 0.1.13
     transitivePeerDependencies:
       - lodash
-      - supports-color
     dev: false
 
-  /@antv/xflow-hook@1.0.30:
-    resolution: {integrity: sha512-j5E4EoJ91FLpYgC30rJ7cv2+NuVk9U0VP4feMFZcf3ba9KbybpVg6uvGdO0XCNs2z5N1KGQqpcJ8s9bnKk4feA==}
+  /@antv/xflow-hook@1.0.55:
+    resolution: {integrity: sha512-NVBrezDue4wd32seaIx1OT5WONpZUhwEp+p86QRhPzO3mmb1qhVxbEqznXhtisxZeHitHFS33J7NqeH1sDFUtQ==}
     dependencies:
       toposort: 2.0.2
     dev: false
 
-  /@antv/xflow@1.0.30(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-KX5g9bvvJjWq4OLqyjTsTTzqfVdS8GBoYTScHiMYvs07BdYR1eY9UWQ36FXxeJbc58SLvULmwNJnY6acvgl7vw==}
+  /@antv/xflow@1.0.55(@ant-design/icons@4.8.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-1LRFZsDZDVuRwEYD0xFt7SGCbHducgXQ4GgPOzmaCMA5FMbQfZVpXhsOG4o/a9X+gKfYdpOELCLqpz7iykyArQ==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
-      antd: ^4.6.3
+      antd: ^4.6.3 || ^5.0.0
       lodash: ^4.17.20
-      react: ^16.8.0  || ^17.0.0
-      react-dom: ^16.8.0  || ^17.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
       '@antv/layout': 0.1.31
-      '@antv/x6': 1.30.0
+      '@antv/x6': 1.34.14
       '@antv/x6-react-components': 1.1.20(antd@5.2.1)(react-dom@18.2.0)(react@18.2.0)
       '@antv/x6-react-shape': 1.6.0(@antv/x6@1.30.0)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow-core': 1.0.30(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.30.0)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
-      '@antv/xflow-extension': 1.0.30(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.30.0)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
-      '@antv/xflow-hook': 1.0.30
+      '@antv/xflow-core': 1.0.55(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.34.14)(antd@5.2.1)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
+      '@antv/xflow-extension': 1.0.55(@ant-design/icons@4.8.0)(@antv/x6-react-components@1.1.20)(@antv/x6-react-shape@1.6.0)(@antv/x6@1.34.14)(antd@5.2.1)(classnames@2.3.2)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)(reflect-metadata@0.1.13)
+      '@antv/xflow-hook': 1.0.55
       antd: 5.2.1(date-fns@2.28.0)(react-dom@18.2.0)(react@18.2.0)
       lodash: 4.17.21
       react: 18.2.0
@@ -1029,7 +1035,6 @@ packages:
     transitivePeerDependencies:
       - classnames
       - reflect-metadata
-      - supports-color
     dev: false
 
   /@apideck/better-ajv-errors@0.3.6(ajv@8.12.0):
@@ -5645,6 +5650,7 @@ packages:
     dependencies:
       ms: 2.1.2
       supports-color: 9.2.1
+    dev: true
 
   /decamelize@1.2.0:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
@@ -8862,12 +8868,8 @@ packages:
       tmpl: 1.0.5
     dev: true
 
-  /mana-common@0.1.0:
-    resolution: {integrity: sha512-FBxsMmWDSX0F4dv0F+M0CyglyDKabSEq64TuuTxTO/AEEb1b7QppsWfxlkLBraRaltv2yqvaoVl8JSJmevmWLQ==}
-    dependencies:
-      debug: 4.3.4(supports-color@9.2.1)
-    transitivePeerDependencies:
-      - supports-color
+  /mana-common@0.3.2:
+    resolution: {integrity: sha512-1oylLR9CcyshQcTiBdM96HxIoaA413eudpo1INiOCwyZE554TDJNUD0zrIjmeBvw8CBAjukzaAHn2gn0hZphIg==}
     dev: false
 
   /mana-syringe@0.2.2:
@@ -9035,6 +9037,7 @@ packages:
 
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
+    dev: true
 
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -11123,6 +11126,7 @@ packages:
   /supports-color@9.2.1:
     resolution: {integrity: sha512-Obv7ycoCTG51N7y175StI9BlAXrmgZrFhZOb0/PyjHBher/NmsdBgbbQ1Inhq+gIhz6+7Gb+jWF2Vqi7Mf1xnQ==}
     engines: {node: '>=12'}
+    dev: true
 
   /supports-hyperlinks@2.3.0:
     resolution: {integrity: sha512-RpsAZlpWcDwOPQA22aCH4J0t7L8JmAvsCxfOSEwm7cQs3LshN36QaTkwd70DnBOXDWGssw2eUoc8CaRWT0XunA==}
