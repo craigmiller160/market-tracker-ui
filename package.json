@@ -66,9 +66,13 @@
     "vite-plugin-pwa": "^0.16.4"
   },
   "pnpm": {
+    "overrides": {
+      "react-use": "^17.4.0"
+    },
     "peerDependencyRules": {
       "allowedVersions": {
-        "antd": "^5.0.0"
+        "@ant-design/charts>antd": "^5.0.0",
+        "@ant-design/flowchart>antd": "^5.0.0"
       }
     }
   },
