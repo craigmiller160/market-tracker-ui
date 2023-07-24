@@ -1,6 +1,6 @@
-import { pipe } from 'fp-ts/es6/function';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
-import * as Option from 'fp-ts/es6/Option';
+import { pipe } from 'fp-ts/function';
+import * as RArray from 'fp-ts/ReadonlyArray';
+import * as Option from 'fp-ts/Option';
 
 export enum MarketTime {
 	ONE_DAY = 'oneDay',

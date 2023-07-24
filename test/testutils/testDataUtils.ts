@@ -19,7 +19,7 @@ import {
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
 import MockAdapter from 'axios-mock-adapter';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 export const BASE_LAST_PRICE = 100;

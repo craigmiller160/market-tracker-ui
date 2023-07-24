@@ -5,15 +5,15 @@ import {
 	marketTimeToMenuKey,
 	menuKeyToMarketTime
 } from '../../types/MarketTime';
-import { identity, pipe } from 'fp-ts/es6/function';
+import { identity, pipe } from 'fp-ts/function';
 import { MenuProps } from 'antd';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import { match } from 'ts-pattern';
 import { Try } from '@craigmiller160/ts-functions/es';
-import * as Either from 'fp-ts/es6/Either';
+import * as Either from 'fp-ts/Either';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
-import * as Option from 'fp-ts/es6/Option';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Option from 'fp-ts/Option';
+import * as RArray from 'fp-ts/ReadonlyArray';
 import { CaretDownOutlined } from '@ant-design/icons';
 
 interface NavbarItem {

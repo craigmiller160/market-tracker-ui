@@ -5,14 +5,14 @@ import {
 	MarketInvestmentInfoArray,
 	marketInvestmentInfoArrayV
 } from '../types/data/MarketInvestmentInfo';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
 import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
-import * as Monoid from 'fp-ts/es6/Monoid';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Monoid from 'fp-ts/Monoid';
+import * as RArray from 'fp-ts/ReadonlyArray';
 import { match } from 'ts-pattern';
-import * as Either from 'fp-ts/es6/Either';
-import * as Option from 'fp-ts/es6/Option';
+import * as Either from 'fp-ts/Either';
+import * as Option from 'fp-ts/Option';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 import {
 	AltInvestmentIds,

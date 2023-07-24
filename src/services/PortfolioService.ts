@@ -15,7 +15,7 @@ import {
 	getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../utils/timeUtils';
-import { flow } from 'fp-ts/es6/function';
+import { flow } from 'fp-ts/function';
 import { addMonths, addWeeks, startOfMonth } from 'date-fns/fp';
 import startOfWeek from 'date-fns/startOfWeek/index';
 

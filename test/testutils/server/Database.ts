@@ -5,7 +5,7 @@ import { DbWatchlist } from '../../../src/types/Watchlist';
 import { DbRecord, UserRecord } from '../../../src/types/db';
 import { OptionT } from '@craigmiller160/ts-functions/es/types';
 import { AuthUser } from '../../../src/types/auth';
-import * as Option from 'fp-ts/es6/Option';
+import * as Option from 'fp-ts/Option';
 import { TradierCalendar } from '../../../src/types/tradier/calendar';
 import { defaultTradierCalendar } from './default/tradier';
 import { TradierQuotes } from '../../../src/types/tradier/quotes';

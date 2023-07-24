@@ -26,7 +26,7 @@ import {
 	setTodayEndTime,
 	setTodayStartTime
 } from '../../src/utils/timeUtils';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 
 const formatTimestamp = Time.format('yyyy-MM-dd HH:mm:ss');

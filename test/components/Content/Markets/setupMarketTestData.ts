@@ -9,7 +9,7 @@ import * as Try from '@craigmiller160/ts-functions/es/Try';
 import { match, P } from 'ts-pattern';
 import { PredicateT } from '@craigmiller160/ts-functions/es/types';
 import { getTodayEnd } from '../../../../src/utils/timeUtils';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 import { getAltIdForSymbol } from '../../../../src/data/MarketPageInvestmentParsing';
 import { isCrypto, isStock } from '../../../../src/types/data/InvestmentType';
 import {

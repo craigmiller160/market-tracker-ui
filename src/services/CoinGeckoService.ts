@@ -1,12 +1,12 @@
 import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
 import { Quote } from '../types/quote';
-import { flow, pipe } from 'fp-ts/es6/function';
+import { flow, pipe } from 'fp-ts/function';
 import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
+import * as TaskEither from 'fp-ts/TaskEither';
 import { CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
-import * as Option from 'fp-ts/es6/Option';
-import * as Either from 'fp-ts/es6/Either';
+import * as RArray from 'fp-ts/ReadonlyArray';
+import * as Option from 'fp-ts/Option';
+import * as Either from 'fp-ts/Either';
 import { HistoryRecord } from '../types/history';
 import {
 	CoinGeckoMarketChart,
@@ -14,7 +14,7 @@ import {
 } from '../types/coingecko/marketchart';
 import * as Time from '@craigmiller160/ts-functions/es/Time';
 import { match } from 'ts-pattern';
-import * as Monoid from 'fp-ts/es6/Monoid';
+import * as Monoid from 'fp-ts/Monoid';
 import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
 import {
 	getFiveYearStartDate,
