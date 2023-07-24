@@ -24,8 +24,8 @@ dependencies:
     specifier: 1.2.0
     version: 1.2.0(react@18.2.0)(vite@4.1.2)
   '@craigmiller160/ts-functions':
-    specifier: 1.7.0-beta.1
-    version: 1.7.0-beta.1(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
+    specifier: 1.7.0-beta.3
+    version: 1.7.0-beta.3(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
   '@reduxjs/toolkit':
     specifier: ^1.9.2
     version: 1.9.2(react-redux@8.0.5)(react@18.2.0)
@@ -3680,8 +3680,8 @@ packages:
       - encoding
     dev: true
 
-  /@craigmiller160/ts-functions@1.7.0-beta.1(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
-    resolution: {integrity: sha512-eVxUIwt/I/iwAxp2BnYKcQe8Nlw5AoM6bCbo+m9R/e7IaePVdJFFhqHSkzr9wFVtdtc+KTrm+o/D+6MGQhpBnA==}
+  /@craigmiller160/ts-functions@1.7.0-beta.3(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
+    resolution: {integrity: sha512-geHycC6IRbLaBtbrqJY6w3X6iqmCEdT5SHuLLR1XC5spZRrNuKLhOAgzJOp8AvmaYSRDlCU4JwnVSTYGjTSLvw==}
     peerDependencies:
       date-fns: ^2.28.0
       fp-ts: '>=2.11.7'
