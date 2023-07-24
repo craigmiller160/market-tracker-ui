@@ -12,7 +12,7 @@ import { pipe } from 'fp-ts/function';
 import * as Option from 'fp-ts/Option';
 import { match, P } from 'ts-pattern';
 import { changeSelectedTime } from '../../store/marketSettings/actions';
-import * as Regex from '@craigmiller160/ts-functions/es/Regex';
+import * as Regex from '@craigmiller160/ts-functions/Regex';
 import { MenuInfo } from 'rc-menu/lib/interface';
 
 interface State {

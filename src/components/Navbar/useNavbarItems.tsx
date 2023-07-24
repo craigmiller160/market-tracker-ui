@@ -9,7 +9,7 @@ import { identity, pipe } from 'fp-ts/function';
 import { MenuProps } from 'antd';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import { match } from 'ts-pattern';
-import { Try } from '@craigmiller160/ts-functions/es';
+import { Try } from '@craigmiller160/ts-functions';
 import * as Either from 'fp-ts/Either';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 import * as Option from 'fp-ts/Option';

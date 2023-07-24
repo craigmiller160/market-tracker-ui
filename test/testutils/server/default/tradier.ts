@@ -1,5 +1,5 @@
 import { TradierCalendar } from '../../../../src/types/tradier/calendar';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 
 export const defaultTradierCalendar: TradierCalendar = {
 	calendar: {

@@ -1,7 +1,7 @@
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/function';
-import * as Try from '@craigmiller160/ts-functions/es/Try';
+import * as Try from '@craigmiller160/ts-functions/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';

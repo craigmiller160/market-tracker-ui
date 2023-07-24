@@ -1,4 +1,4 @@
-import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
+import { MonoidT, TryT } from '@craigmiller160/ts-functions/types';
 import { Quote } from '../types/quote';
 import { flow, pipe } from 'fp-ts/function';
 import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
@@ -12,10 +12,10 @@ import {
 	CoinGeckoMarketChart,
 	coinGeckoMarketChartV
 } from '../types/coingecko/marketchart';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { match } from 'ts-pattern';
 import * as Monoid from 'fp-ts/Monoid';
-import * as Pattern from '@craigmiller160/ts-functions/es/Pattern';
+import * as Pattern from '@craigmiller160/ts-functions/Pattern';
 import {
 	getFiveYearStartDate,
 	getOneMonthStartDate,
@@ -26,7 +26,7 @@ import {
 	getTodayStart,
 	HISTORY_DATE_FORMAT
 } from '../utils/timeUtils';
-import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';
 import {
 	getAltIdForSymbol,
 	getSymbolForAltId

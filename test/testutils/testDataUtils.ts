@@ -13,7 +13,7 @@ import {
 import { TradierQuotes } from '../../src/types/tradier/quotes';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { TradierSeries } from '../../src/types/tradier/timesales';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import {
 	TradierCalendar,
 	TradierCalendarStatus

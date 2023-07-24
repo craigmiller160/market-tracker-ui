@@ -3,14 +3,14 @@ import {
 	OptionT,
 	PredicateT,
 	TryT
-} from '@craigmiller160/ts-functions/es/types';
+} from '@craigmiller160/ts-functions/types';
 import { match, P } from 'ts-pattern';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/function';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import * as Option from 'fp-ts/Option';
 import { Quote } from '../types/quote';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import * as Either from 'fp-ts/Either';
 import { isStock } from '../types/data/InvestmentType';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';

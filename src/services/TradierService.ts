@@ -1,4 +1,4 @@
-import { TryT } from '@craigmiller160/ts-functions/es/types';
+import { TryT } from '@craigmiller160/ts-functions/types';
 import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/function';
 import * as TaskEither from 'fp-ts/TaskEither';
@@ -33,7 +33,7 @@ import {
 	TradierSeriesData,
 	tradierSeriesV
 } from '../types/tradier/timesales';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { MarketStatus } from '../types/MarketStatus';
 import {
 	toMarketStatus,
@@ -41,7 +41,7 @@ import {
 	TradierCalendarStatus,
 	tradierCalendarV
 } from '../types/tradier/calendar';
-import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
+import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';
 import * as Either from 'fp-ts/Either';
 import { InvestmentNotFoundError } from '../error/InvestmentNotFoundError';
 import { taskEitherToPromise } from '../function/TaskEitherToPromise';

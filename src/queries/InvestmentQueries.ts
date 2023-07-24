@@ -14,7 +14,7 @@ import { InvestmentInfo } from '../types/data/InvestmentInfo';
 import { useMemo } from 'react';
 import * as Either from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
-import { TryT } from '@craigmiller160/ts-functions/es/types';
+import { TryT } from '@craigmiller160/ts-functions/types';
 import { handleInvestmentData } from '../services/MarketInvestmentService';
 import { InvestmentData } from '../types/data/InvestmentData';
 import { MarketStatus } from '../types/MarketStatus';

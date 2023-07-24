@@ -6,8 +6,8 @@ import {
 	marketInvestmentInfoArrayV
 } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/function';
-import * as TypeValidation from '@craigmiller160/ts-functions/es/TypeValidation';
-import { MonoidT, TryT } from '@craigmiller160/ts-functions/es/types';
+import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';
+import { MonoidT, TryT } from '@craigmiller160/ts-functions/types';
 import * as Monoid from 'fp-ts/Monoid';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import { match } from 'ts-pattern';

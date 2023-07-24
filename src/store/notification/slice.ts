@@ -1,6 +1,6 @@
 import { createSlice, Draft, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { match } from 'ts-pattern';
-import * as RArrayExt from '@craigmiller160/ts-functions/es/ReadonlyArrayExt';
+import * as RArrayExt from '@craigmiller160/ts-functions/ReadonlyArrayExt';
 import { castDraft } from 'immer';
 
 export type NotificationType = 'success' | 'error';

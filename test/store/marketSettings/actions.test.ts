@@ -9,7 +9,7 @@ import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { TradierCalendar } from '../../../src/types/tradier/calendar';
 
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;

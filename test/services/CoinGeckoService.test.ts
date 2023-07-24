@@ -12,7 +12,7 @@ import {
 	getTodayHistory
 } from '../../src/services/CoinGeckoService';
 import { CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearStartDate,
