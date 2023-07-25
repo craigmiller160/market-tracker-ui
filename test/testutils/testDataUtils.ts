@@ -1,4 +1,4 @@
-import { MarketTime } from '../../src/types/MarketTime.ts';
+import { MarketTime } from '../../src/types/MarketTime';
 import { match } from 'ts-pattern';
 import {
 	getFiveYearStartDate,
@@ -9,15 +9,15 @@ import {
 	getTodayEndString,
 	getTodayStart,
 	getTodayStartString
-} from '../../src/utils/timeUtils.ts';
-import { TradierQuotes } from '../../src/types/tradier/quotes.ts';
-import { TradierHistory } from '../../src/types/tradier/history.ts';
-import { TradierSeries } from '../../src/types/tradier/timesales.ts';
+} from '../../src/utils/timeUtils';
+import { TradierQuotes } from '../../src/types/tradier/quotes';
+import { TradierHistory } from '../../src/types/tradier/history';
+import { TradierSeries } from '../../src/types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/Time';
 import {
 	TradierCalendar,
 	TradierCalendarStatus
-} from '../../src/types/tradier/calendar.ts';
+} from '../../src/types/tradier/calendar';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/function';
 
