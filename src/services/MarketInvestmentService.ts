@@ -1,9 +1,5 @@
 import { MarketTime } from '../types/MarketTime';
-import {
-	OptionT,
-	PredicateT,
-	TryT
-} from '@craigmiller160/ts-functions/types';
+import { OptionT, PredicateT, TryT } from '@craigmiller160/ts-functions/types';
 import { match, P } from 'ts-pattern';
 import { HistoryRecord } from '../types/history';
 import { pipe } from 'fp-ts/function';
