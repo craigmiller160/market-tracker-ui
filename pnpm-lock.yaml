@@ -21,11 +21,11 @@ dependencies:
     specifier: 2.1.0-beta.2
     version: 2.1.0-beta.2(@craigmiller160/ajax-api@2.2.0-beta.8)(axios@1.4.0)(fp-ts@2.11.7)
   '@craigmiller160/react-keycloak':
-    specifier: 1.2.0
-    version: 1.2.0(react@18.2.0)(vite@4.1.2)
+    specifier: 1.3.0-beta.1
+    version: 1.3.0-beta.1(react@18.2.0)(vite@4.1.2)
   '@craigmiller160/ts-functions':
-    specifier: 1.7.0-beta.3
-    version: 1.7.0-beta.3(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
+    specifier: 1.7.0-beta.4
+    version: 1.7.0-beta.4(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
   '@reduxjs/toolkit':
     specifier: ^1.9.2
     version: 1.9.2(react-redux@8.0.5)(react@18.2.0)
@@ -3658,8 +3658,8 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@craigmiller160/react-keycloak@1.2.0(react@18.2.0)(vite@4.1.2):
-    resolution: {integrity: sha512-A5Qn2YrAWiDetUPRgz3GdZ6uJ/UKR11NtlyMDypjjmppvqYyeFLjfFrG9eyAH/xvtE9R5vkkZkb46Xs6BcAk/Q==}
+  /@craigmiller160/react-keycloak@1.3.0-beta.1(react@18.2.0)(vite@4.1.2):
+    resolution: {integrity: sha512-ccacPsGpgyvYJoHhcVt6WJwboasjvYz7fBj7J9kPJDKC+nem0FSancxvBgE4hRZgkYp8CPDru9ju1pdr3vx1yw==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -3680,8 +3680,8 @@ packages:
       - encoding
     dev: true
 
-  /@craigmiller160/ts-functions@1.7.0-beta.3(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
-    resolution: {integrity: sha512-geHycC6IRbLaBtbrqJY6w3X6iqmCEdT5SHuLLR1XC5spZRrNuKLhOAgzJOp8AvmaYSRDlCU4JwnVSTYGjTSLvw==}
+  /@craigmiller160/ts-functions@1.7.0-beta.4(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
+    resolution: {integrity: sha512-wN8vWxVDwrHJhewxijFHcLsw7rJZcYSWJI76GfuLDK2MNo9J8mJiAR9l83cNYcFNydKnrtHqoPRFFIDXb5MctA==}
     peerDependencies:
       date-fns: ^2.28.0
       fp-ts: '>=2.11.7'
