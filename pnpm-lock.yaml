@@ -24,8 +24,8 @@ dependencies:
     specifier: 1.3.0-beta.1
     version: 1.3.0-beta.1(react@18.2.0)(vite@4.1.2)
   '@craigmiller160/ts-functions':
-    specifier: 1.7.0-beta.7
-    version: 1.7.0-beta.7(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
+    specifier: file:.yalc/@craigmiller160/ts-functions
+    version: file:.yalc/@craigmiller160/ts-functions(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2)
   '@reduxjs/toolkit':
     specifier: ^1.9.2
     version: 1.9.2(react-redux@8.0.5)(react@18.2.0)
@@ -3683,18 +3683,6 @@ packages:
       - debug
       - encoding
     dev: true
-
-  /@craigmiller160/ts-functions@1.7.0-beta.7(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
-    resolution: {integrity: sha512-BotcaiGth/1dh3S6H7ZFG/xBcQGXcdDMpuA71/2T2tN9QopT69stfSxY6ngkLoOLVxdPbyBPRK3Cw27PSpuZaQ==}
-    peerDependencies:
-      date-fns: ^2.28.0
-      fp-ts: '>=2.11.7'
-      ts-pattern: ^4.0.2
-    dependencies:
-      date-fns: 2.28.0
-      fp-ts: 2.11.7
-      ts-pattern: 4.0.2
-    dev: false
 
   /@ctrl/tinycolor@3.4.0:
     resolution: {integrity: sha512-JZButFdZ1+/xAfpguQHoabIXkcqRRKpMrWKBkpEZZyxfY9C1DpADFB8PEqGSTeFr135SaTRfKqGKx5xSCLI7ZQ==}
@@ -12363,3 +12351,17 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  file:.yalc/@craigmiller160/ts-functions(date-fns@2.28.0)(fp-ts@2.11.7)(ts-pattern@4.0.2):
+    resolution: {directory: .yalc/@craigmiller160/ts-functions, type: directory}
+    id: file:.yalc/@craigmiller160/ts-functions
+    name: '@craigmiller160/ts-functions'
+    peerDependencies:
+      date-fns: ^2.28.0
+      fp-ts: '>=2.11.7'
+      ts-pattern: ^4.0.2
+    dependencies:
+      date-fns: 2.28.0
+      fp-ts: 2.11.7
+      ts-pattern: 4.0.2
+    dev: false
