@@ -25,9 +25,10 @@ import {
 	getTodayStartString,
 	setTodayEndTime,
 	setTodayStartTime
-} from '../../src/utils/timeUtils.ts';
+} from '../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/function';
 import * as Time from '@craigmiller160/ts-functions/Time';
+import { TaskTry } from '@craigmiller160/ts-functions';
 
 const formatTimestamp = Time.format('yyyy-MM-dd HH:mm:ss');
 
