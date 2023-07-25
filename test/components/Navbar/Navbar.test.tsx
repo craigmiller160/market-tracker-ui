@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import * as Option from 'fp-ts/Option';
 import { restoreLocation } from '../../testutils/mockLocation';

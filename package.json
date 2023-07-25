@@ -45,7 +45,7 @@
     "@craigmiller160/prettier-config": "^1.0.2",
     "@craigmiller160/swagger-typescript-api-formatted": "^1.1.2",
     "@relmify/jest-fp-ts": "^2.0.2",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.3",
