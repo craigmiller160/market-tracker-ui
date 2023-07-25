@@ -25,7 +25,7 @@ import {
 	getTodayStartString,
 	setTodayEndTime,
 	setTodayStartTime
-} from '../../src/utils/timeUtils';
+} from '../../src/utils/timeUtils.ts';
 import { pipe } from 'fp-ts/function';
 import * as Time from '@craigmiller160/ts-functions/Time';
 
