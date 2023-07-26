@@ -5,14 +5,3 @@ const path = require('path');
 module.exports = merge(jestConfig, {
 	setupFilesAfterEnv: [path.join(process.cwd(), 'test', 'setup.tsx')]
 });
-
-// module.exports = {
-// 	...config,
-// 	transformIgnorePatterns: [
-// 		...config.transformIgnorePatterns.slice(1),
-// 		createCombinedPattern([
-// 			...libPatterns,
-// 			'@antv\/xflow-core' // eslint-disable-line
-// 		])
-// 	]
-// };
