@@ -18,8 +18,8 @@ dependencies:
     specifier: ^1.2.5
     version: 1.2.5(react-dom@18.2.0)(react@18.2.0)
   '@craigmiller160/ajax-api-fp-ts':
-    specifier: 2.1.0-beta.2
-    version: 2.1.0-beta.2(@craigmiller160/ajax-api@2.2.0-beta.8)(axios@1.4.0)(fp-ts@2.11.7)
+    specifier: 2.1.0-beta.4
+    version: 2.1.0-beta.4(@craigmiller160/ajax-api@2.2.0-beta.9)(axios@1.4.0)(fp-ts@2.11.7)
   '@craigmiller160/react-keycloak':
     specifier: 1.3.0-beta.1
     version: 1.3.0-beta.1(react@18.2.0)(vite@4.1.2)
@@ -3522,20 +3522,20 @@ packages:
     dev: true
     optional: true
 
-  /@craigmiller160/ajax-api-fp-ts@2.1.0-beta.2(@craigmiller160/ajax-api@2.2.0-beta.8)(axios@1.4.0)(fp-ts@2.11.7):
-    resolution: {integrity: sha512-jUcoJtEuY0KxjpiaGN39qiLwtNUa+ZWzl80ZZvIV6ey04KcIAtvFs6tvjEiVLqO+u5s4Nf//mmYQVlyuGuMm+Q==}
+  /@craigmiller160/ajax-api-fp-ts@2.1.0-beta.4(@craigmiller160/ajax-api@2.2.0-beta.9)(axios@1.4.0)(fp-ts@2.11.7):
+    resolution: {integrity: sha512-pSr7OJ3177stw5hgCgj8IoxbHYp7ko6dB/g4TpdSmsw8jWPNaZE2n8QalM3MY8Rf0LsEvcA8VNzXb5Vhomgtng==}
     peerDependencies:
-      '@craigmiller160/ajax-api': ^2.2.0-beta
+      '@craigmiller160/ajax-api': 2.2.0-beta.9
       axios: ^1.4.0
       fp-ts: ^2.9.3
     dependencies:
-      '@craigmiller160/ajax-api': 2.2.0-beta.8(axios@1.4.0)
+      '@craigmiller160/ajax-api': 2.2.0-beta.9(axios@1.4.0)
       axios: 1.4.0
       fp-ts: 2.11.7
     dev: false
 
-  /@craigmiller160/ajax-api@2.2.0-beta.8(axios@1.4.0):
-    resolution: {integrity: sha512-QS8Z52c2/1OSHeAeh8PJTh3hq7/s0BbckZa95lEhIfKe8gjI+gwhPKMYR+wQTqwaRWNxIHcwUgurYYtwE/WPTw==}
+  /@craigmiller160/ajax-api@2.2.0-beta.9(axios@1.4.0):
+    resolution: {integrity: sha512-tXpOtvbwk6nieg5UIPk+KX5H5zdFlmyJNijb9eokYzMGeJf92ves4llYFKb1SxkKsxCK1UWAGCjBjFTdxtdTHA==}
     peerDependencies:
       axios: ^1.4.0
     dependencies:
