@@ -134,8 +134,10 @@ describe('Search', () => {
 		);
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
-		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
-			'Chart is Here'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+				'Chart is Here'
+			)
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
@@ -161,8 +163,10 @@ describe('Search', () => {
 		);
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
-		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
-			'Chart is Here'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+				'Chart is Here'
+			)
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
@@ -188,8 +192,10 @@ describe('Search', () => {
 		);
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
-		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
-			'Chart is Here'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+				'Chart is Here'
+			)
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
@@ -215,8 +221,10 @@ describe('Search', () => {
 		);
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
-		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
-			'Chart is Here'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+				'Chart is Here'
+			)
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
@@ -242,8 +250,10 @@ describe('Search', () => {
 		);
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
-		expect(within(card).queryByText(/Chart/)).toHaveTextContent(
-			'Chart is Here'
+		await waitFor(() =>
+			expect(within(card).queryByText(/Chart/)).toHaveTextContent(
+				'Chart is Here'
+			)
 		);
 		expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00');
 		expect(within(card).queryByText(/98/)).toHaveTextContent(
