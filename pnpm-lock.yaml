@@ -172,12 +172,18 @@ devDependencies:
   axios-mock-adapter:
     specifier: ^1.20.0
     version: 1.20.0(axios@1.4.0)
+  cross-env:
+    specifier: ^7.0.3
+    version: 7.0.3
   cypress:
     specifier: ^12.14.0
     version: 12.16.0
   husky:
     specifier: ^7.0.4
     version: 7.0.4
+  jest:
+    specifier: ^29.6.1
+    version: 29.6.1(@types/node@20.4.5)
   lint-staged:
     specifier: ^12.1.7
     version: 12.1.7
