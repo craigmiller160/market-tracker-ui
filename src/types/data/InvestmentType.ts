@@ -1,4 +1,4 @@
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { PredicateT } from '@craigmiller160/ts-functions/types';
 import * as ioType from 'io-ts';
 
 export enum InvestmentType {

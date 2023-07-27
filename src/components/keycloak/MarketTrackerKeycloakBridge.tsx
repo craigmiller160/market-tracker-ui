@@ -2,7 +2,7 @@ import { PropsWithChildren, useContext, useEffect } from 'react';
 import { KeycloakAuthContext } from '@craigmiller160/react-keycloak';
 import { useDispatch } from 'react-redux';
 import { authSlice } from '../../store/auth/slice';
-import * as Option from 'fp-ts/es6/Option';
+import * as Option from 'fp-ts/Option';
 
 export const MarketTrackerKeycloakBridge = (props: PropsWithChildren) => {
 	const auth = useContext(KeycloakAuthContext);

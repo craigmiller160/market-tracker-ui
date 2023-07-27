@@ -2,8 +2,8 @@ import { Database } from '../Database';
 import { Server } from 'miragejs/server';
 import { Response } from 'miragejs';
 import { match } from 'ts-pattern';
-import * as Option from 'fp-ts/es6/Option';
-import { pipe } from 'fp-ts/es6/function';
+import * as Option from 'fp-ts/Option';
+import { pipe } from 'fp-ts/function';
 
 export const createOAuthRoutes = (database: Database, server: Server) => {
 	server.get('/oauth/user', () =>

@@ -1,5 +1,5 @@
-import { flow, pipe } from 'fp-ts/es6/function';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import { flow, pipe } from 'fp-ts/function';
+import * as Time from '@craigmiller160/ts-functions/Time';
 
 export const HISTORY_DATE_FORMAT = 'yyyy-MM-dd';
 const TIMESALES_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";

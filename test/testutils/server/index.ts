@@ -3,7 +3,7 @@ import { Server } from 'miragejs/server';
 import { Database } from './Database';
 import { createWatchlistRoutes } from './routes/watchlists';
 import { seedWatchlists } from './seedData/watchlists';
-import * as Option from 'fp-ts/es6/Option';
+import * as Option from 'fp-ts/Option';
 import { createOAuthRoutes } from './routes/oauth';
 import { createTradierRoutes } from './routes/tradier';
 import { seedTradier } from './seedData/tradier';

@@ -1,11 +1,11 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer/dist/types/types-external';
+import { Draft } from 'immer';
 import produce from 'immer';
 import { DbWatchlist } from '../../../src/types/Watchlist';
 import { DbRecord, UserRecord } from '../../../src/types/db';
-import { OptionT } from '@craigmiller160/ts-functions/es/types';
+import { OptionT } from '@craigmiller160/ts-functions/types';
 import { AuthUser } from '../../../src/types/auth';
-import * as Option from 'fp-ts/es6/Option';
+import * as Option from 'fp-ts/Option';
 import { TradierCalendar } from '../../../src/types/tradier/calendar';
 import { defaultTradierCalendar } from './default/tradier';
 import { TradierQuotes } from '../../../src/types/tradier/quotes';
@@ -57,7 +57,7 @@ export const ensureDbUserRecord = <T extends object>(
 	};
 };
 
-export type DataUpdater = (draft: WritableDraft<Data>) => void;
+export type DataUpdater = (draft: Draft<Data>) => void;
 
 export class Database {
 	data: Data = {

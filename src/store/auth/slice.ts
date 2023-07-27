@@ -1,4 +1,4 @@
-import * as O from 'fp-ts/es6/Option';
+import * as O from 'fp-ts/Option';
 import { AuthUser } from '../../types/auth';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Draft } from '@reduxjs/toolkit';

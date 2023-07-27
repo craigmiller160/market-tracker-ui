@@ -1,6 +1,6 @@
 import { Database } from '../Database';
 import { Server } from 'miragejs';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { validationError } from '../utils/validate';
 
 interface CalendarQuery {

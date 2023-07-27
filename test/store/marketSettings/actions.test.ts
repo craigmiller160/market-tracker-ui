@@ -4,12 +4,12 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 import { RootState, StoreType } from '../../../src/store';
-import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AnyAction, Draft, ThunkDispatch } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { TradierCalendar } from '../../../src/types/tradier/calendar';
 
 type DispatchExts = ThunkDispatch<RootState, void, AnyAction>;
@@ -61,9 +61,12 @@ describe('marketSettings actions', () => {
 			mockApi
 				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
 				.reply(200, tradierCalendar);
-			const newDefaultState = produce(defaultState, (draft) => {
-				draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
-			});
+			const newDefaultState = produce(
+				defaultState,
+				(draft: Draft<RootState>) => {
+					draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
+				}
+			);
 			const mockStore = newMockStore(newDefaultState) as MockStoreType;
 			await mockStore.dispatch(changeSelectedTime(todayKey));
 
@@ -76,9 +79,12 @@ describe('marketSettings actions', () => {
 		});
 
 		it('changes time and checks market status for other time', async () => {
-			const newDefaultState = produce(defaultState, (draft) => {
-				draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
-			});
+			const newDefaultState = produce(
+				defaultState,
+				(draft: Draft<RootState>) => {
+					draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
+				}
+			);
 			const mockStore = newMockStore(newDefaultState) as MockStoreType;
 			await mockStore.dispatch(changeSelectedTime(oneWeekKey));
 

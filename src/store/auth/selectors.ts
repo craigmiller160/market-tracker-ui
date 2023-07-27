@@ -1,6 +1,6 @@
 import { RootState } from '../index';
 import { createSelector } from '@reduxjs/toolkit';
-import * as O from 'fp-ts/es6/Option';
+import * as O from 'fp-ts/Option';
 import { AuthUser } from '../../types/auth';
 
 export const hasCheckedSelector = (state: RootState): boolean =>

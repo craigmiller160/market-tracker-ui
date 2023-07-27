@@ -8,11 +8,11 @@ import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router';
 import { useCallback, useEffect } from 'react';
 import { StoreDispatch } from '../../store';
-import { pipe } from 'fp-ts/es6/function';
-import * as Option from 'fp-ts/es6/Option';
+import { pipe } from 'fp-ts/function';
+import * as Option from 'fp-ts/Option';
 import { match, P } from 'ts-pattern';
 import { changeSelectedTime } from '../../store/marketSettings/actions';
-import * as Regex from '@craigmiller160/ts-functions/es/Regex';
+import * as Regex from '@craigmiller160/ts-functions/Regex';
 import { MenuInfo } from 'rc-menu/lib/interface';
 
 interface State {

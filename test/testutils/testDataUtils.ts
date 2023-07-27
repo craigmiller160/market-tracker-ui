@@ -13,13 +13,13 @@ import {
 import { TradierQuotes } from '../../src/types/tradier/quotes';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { TradierSeries } from '../../src/types/tradier/timesales';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
 import MockAdapter from 'axios-mock-adapter';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 
 const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 export const BASE_LAST_PRICE = 100;

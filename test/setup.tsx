@@ -1,5 +1,3 @@
-export {};
-
 jest.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
 	return {

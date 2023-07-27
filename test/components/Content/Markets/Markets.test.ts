@@ -1,7 +1,7 @@
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import { pipe } from 'fp-ts/es6/function';
-import * as Try from '@craigmiller160/ts-functions/es/Try';
+import { pipe } from 'fp-ts/function';
+import * as Try from '@craigmiller160/ts-functions/Try';
 import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
@@ -9,7 +9,7 @@ import { renderApp } from '../../../testutils/RenderApp';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
-import * as TaskEither from 'fp-ts/es6/TaskEither';
+import * as TaskEither from 'fp-ts/TaskEither';
 import '@testing-library/jest-dom/extend-expect';
 import { match, P } from 'ts-pattern';
 import {

@@ -4,8 +4,8 @@ import {
 	InvestmentsByType,
 	marketInvestmentsByType
 } from '../../../data/MarketPageInvestmentParsing';
-import { pipe } from 'fp-ts/es6/function';
-import * as Either from 'fp-ts/es6/Either';
+import { pipe } from 'fp-ts/function';
+import * as Either from 'fp-ts/Either';
 import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';

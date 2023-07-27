@@ -1,6 +1,6 @@
 import { format, subDays } from 'date-fns/fp';
 import Chainable = Cypress.Chainable;
-import { flow } from 'fp-ts/es6/function';
+import { flow } from 'fp-ts/function';
 import { match } from 'ts-pattern';
 import { HistoryTime } from './common';
 

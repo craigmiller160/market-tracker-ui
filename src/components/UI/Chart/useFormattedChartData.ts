@@ -1,6 +1,6 @@
-import * as Time from '@craigmiller160/ts-functions/es/Time';
-import { pipe } from 'fp-ts/es6/function';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
+import * as Time from '@craigmiller160/ts-functions/Time';
+import { pipe } from 'fp-ts/function';
+import * as RArray from 'fp-ts/ReadonlyArray';
 import { getFirstPrice } from './chartUtils';
 import { useMemo } from 'react';
 import { InvestmentData } from '../../../types/data/InvestmentData';

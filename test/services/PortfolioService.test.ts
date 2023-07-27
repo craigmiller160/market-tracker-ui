@@ -15,7 +15,7 @@ import {
 	getOneYearStartDate,
 	getThreeMonthHistoryStartDate
 } from '../../src/utils/timeUtils';
-import { pipe } from 'fp-ts/es6/function';
+import { pipe } from 'fp-ts/function';
 
 describe('PortfolioService', () => {
 	describe('getDateRangeForMarketTime', () => {

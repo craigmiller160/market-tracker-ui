@@ -1,5 +1,5 @@
 import { Breakpoint as AntdBreakpoint } from 'antd/es/_util/responsiveObserver';
-import { PredicateT } from '@craigmiller160/ts-functions/es/types';
+import { PredicateT } from '@craigmiller160/ts-functions/types';
 import { match } from 'ts-pattern';
 import { useContext } from 'react';
 import { ScreenContext } from '../ScreenContext';

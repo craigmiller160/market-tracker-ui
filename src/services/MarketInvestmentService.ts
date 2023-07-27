@@ -1,17 +1,13 @@
 import { MarketTime } from '../types/MarketTime';
-import {
-	OptionT,
-	PredicateT,
-	TryT
-} from '@craigmiller160/ts-functions/es/types';
+import { OptionT, PredicateT, TryT } from '@craigmiller160/ts-functions/types';
 import { match, P } from 'ts-pattern';
 import { HistoryRecord } from '../types/history';
-import { pipe } from 'fp-ts/es6/function';
-import * as RArray from 'fp-ts/es6/ReadonlyArray';
-import * as Option from 'fp-ts/es6/Option';
+import { pipe } from 'fp-ts/function';
+import * as RArray from 'fp-ts/ReadonlyArray';
+import * as Option from 'fp-ts/Option';
 import { Quote } from '../types/quote';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
-import * as Either from 'fp-ts/es6/Either';
+import * as Time from '@craigmiller160/ts-functions/Time';
+import * as Either from 'fp-ts/Either';
 import { isStock } from '../types/data/InvestmentType';
 import { InvestmentInfo } from '../types/data/InvestmentInfo';
 import { InvestmentData } from '../types/data/InvestmentData';

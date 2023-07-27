@@ -16,7 +16,7 @@ import {
 import '@relmify/jest-fp-ts';
 import { Quote } from '../../src/types/quote';
 import qs from 'qs';
-import * as Time from '@craigmiller160/ts-functions/es/Time';
+import * as Time from '@craigmiller160/ts-functions/Time';
 import { TradierHistory } from '../../src/types/tradier/history';
 import { HistoryRecord } from '../../src/types/history';
 import {
