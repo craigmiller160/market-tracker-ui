@@ -3,7 +3,7 @@ app_deployment:
   image: nexus-docker-craigmiller160.ddns.net/market-tracker-ui:latest
   ports:
     - containerPort: 443
-  livenessProbe:
+  commonProbe:
     httpGet:
       path: /healthcheck
       port: 443
