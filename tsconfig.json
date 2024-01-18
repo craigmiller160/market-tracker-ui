@@ -30,5 +30,10 @@
     "lib",
     "build",
     ".yalc"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "moduleResolution": "Node"
+    }
+  }
 }
