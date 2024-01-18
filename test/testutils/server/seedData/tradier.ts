@@ -5,24 +5,24 @@ import {
 	createTradierTimesale
 } from '../../testDataUtils';
 import { castDraft } from 'immer';
-import { WritableDraft } from 'immer/dist/types/types-external';
+import { Draft } from 'immer';
 
 const createAddQuote =
-	(draft: WritableDraft<Data>) => (symbol: string, modifier: number) => {
+	(draft: Draft<Data>) => (symbol: string, modifier: number) => {
 		draft.tradier.quotes[symbol] = castDraft(
 			createTradierQuote(symbol, modifier)
 		);
 	};
 
 const createAddHistory =
-	(draft: WritableDraft<Data>) => (symbol: string, modifier: number) => {
+	(draft: Draft<Data>) => (symbol: string, modifier: number) => {
 		draft.tradier.history[symbol] = castDraft(
 			createTradierHistory(modifier)
 		);
 	};
 
 const createAddTimesale =
-	(draft: WritableDraft<Data>) => (symbol: string, modifier: number) => {
+	(draft: Draft<Data>) => (symbol: string, modifier: number) => {
 		draft.tradier.timesales[symbol] = castDraft(
 			createTradierTimesale(modifier)
 		);

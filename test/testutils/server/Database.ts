@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer/dist/types/types-external';
+import { Draft } from 'immer';
 import produce from 'immer';
 import { DbWatchlist } from '../../../src/types/Watchlist';
 import { DbRecord, UserRecord } from '../../../src/types/db';
@@ -57,7 +57,7 @@ export const ensureDbUserRecord = <T extends object>(
 	};
 };
 
-export type DataUpdater = (draft: WritableDraft<Data>) => void;
+export type DataUpdater = (draft: Draft<Data>) => void;
 
 export class Database {
 	data: Data = {
