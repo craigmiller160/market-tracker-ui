@@ -2711,6 +2711,13 @@
     jest-environment-jsdom "^29.5.0"
     jsdom "^22.1.0"
 
+"@craigmiller160/keycloak-js@1.0.0":
+  version "1.0.0"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/keycloak-js/-/keycloak-js-1.0.0.tgz#d78d265575193db68e1bb1c68f63385b80f013c2"
+  integrity sha512-gg/irNVjtZKW6+iqGschIOtC6wwGcH5YkbbJk57VV0vdVxgx6L3hk2KCIymyL4l5SZz61vIYf0qonvW2sjkviA==
+  dependencies:
+    keycloak-js "^20.0.3"
+
 "@craigmiller160/prettier-config@1.0.2":
   version "1.0.2"
   resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/prettier-config/-/prettier-config-1.0.2.tgz#2510781091f6aee0f0837f5a4b08217fb756c4ac"
@@ -2718,12 +2725,12 @@
   dependencies:
     prettier "^2.8.8"
 
-"@craigmiller160/react-keycloak@1.2.0":
-  version "1.2.0"
-  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/react-keycloak/-/react-keycloak-1.2.0.tgz#778765898d3da4f2328d832ea98bfdc2d440d99b"
-  integrity sha512-A5Qn2YrAWiDetUPRgz3GdZ6uJ/UKR11NtlyMDypjjmppvqYyeFLjfFrG9eyAH/xvtE9R5vkkZkb46Xs6BcAk/Q==
+"@craigmiller160/react-keycloak@1.2.1":
+  version "1.2.1"
+  resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@craigmiller160/react-keycloak/-/react-keycloak-1.2.1.tgz#8eb652442eb1d804fbbcbdca828aff306b882c66"
+  integrity sha512-8U8EgsV4M+Q5MLZHgpiqkDWR0zP+3Ap4KITkSxfgHajTxNE4nAU49cnIbzTwSmUPaVfCynf1E8B4QtLSncr7xw==
   dependencies:
-    "@vitejs/plugin-react-swc" "^3.2.0"
+    "@craigmiller160/keycloak-js" "1.0.0"
     keycloak-js "^20.0.3"
 
 "@craigmiller160/swagger-typescript-api-formatted@^1.1.2":
@@ -4159,7 +4166,7 @@
     "@typescript-eslint/types" "5.9.1"
     eslint-visitor-keys "^3.0.0"
 
-"@vitejs/plugin-react-swc@^3.1.0", "@vitejs/plugin-react-swc@^3.2.0":
+"@vitejs/plugin-react-swc@^3.1.0":
   version "3.2.0"
   resolved "https://nexus-craigmiller160.ddns.net/repository/npm-group/@vitejs/plugin-react-swc/-/plugin-react-swc-3.2.0.tgz#7c4f6e116a296c27f680d05750f9dbf798cf7709"
   integrity sha512-IcBoXL/mcH7JdQr/nfDlDwTdIaH8Rg7LpfQDF4nAht+juHWIuv6WhpKPCSfY4+zztAaB07qdBoFz1XCZsgo3pQ==

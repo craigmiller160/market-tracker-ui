@@ -1,6 +1,6 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
-  "version": "1.10.9",
+  "version": "1.10.10",
   "author": "craigmiller160",
   "files": [
     "build"
@@ -71,7 +71,7 @@
     "@ant-design/plots": "^1.2.5",
     "@craigmiller160/ajax-api-fp-ts": "2.0.3",
     "@craigmiller160/ajax-error-handler": "1.0.1",
-    "@craigmiller160/react-keycloak": "1.2.0",
+    "@craigmiller160/react-keycloak": "1.2.1",
     "@craigmiller160/ts-functions": "1.6.0",
     "@reduxjs/toolkit": "^1.9.2",
     "@tanstack/react-query": "^4.24.9",
