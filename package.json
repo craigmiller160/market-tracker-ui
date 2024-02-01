@@ -1,12 +1,12 @@
 {
   "name": "@craigmiller160/market-tracker-ui",
-  "version": "1.10.10",
+  "version": "1.10.12",
   "author": "craigmiller160",
   "files": [
     "build"
   ],
   "publishConfig": {
-    "registry": "https://nexus-craigmiller160.ddns.net/repository/npm-private/"
+    "registry": "https://nexus.craigmiller160.us/repository/npm-private/"
   },
   "scripts": {
     "start": "node scripts/startDev.js",
