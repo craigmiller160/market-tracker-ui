@@ -7,7 +7,7 @@
     "build"
   ],
   "publishConfig": {
-    "registry": "https://nexus-craigmiller160.ddns.net/repository/npm-private/"
+    "registry": "https://nexus.craigmiller160.us/repository/npm-private/"
   },
   "scripts": {
     "start": "node scripts/startDev.js",

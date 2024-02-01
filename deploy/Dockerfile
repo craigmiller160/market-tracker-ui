@@ -1,4 +1,4 @@
-FROM nexus-docker-craigmiller160.ddns.net/nginx-base:1.1.3
+FROM nexus-docker.craigmiller160.us/nginx-base:1.1.3
 
 COPY build/market-tracker-ui-*.tgz /var/www/market-tracker-ui.tgz
 RUN tar xvf /var/www/market-tracker-ui.tgz -C /var/www/
