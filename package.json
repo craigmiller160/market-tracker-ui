@@ -10,20 +10,7 @@
     "registry": "https://nexus.craigmiller160.us/repository/npm-private/"
   },
   "scripts": {
-    "start": "node scripts/startDev.js",
-    "build": "npm run validate && npm run forceBuild",
-    "forceBuild": "vite build",
-    "typeCheck": "tsc --noEmit && cd cypress && tsc --noEmit",
-    "lint": "craig-lint",
-    "test": "craig-test",
-    "prepare": "husky install",
-    "validate": "npm run typeCheck && npm run lint && npm run test && npm run cypress:headless",
-    "cypress": "cypress open",
-    "cypress:headless": "cypress run --component",
     "generateTypes": "craig-swagger market-tracker-portfolio-service http://127.0.0.1:8081/v3/api-docs ./src/types/generated/market-tracker-portfolio-service.ts"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": "craig-lint"
   },
   "resolutions": {
     "rc-util": ">=5.27.2",
