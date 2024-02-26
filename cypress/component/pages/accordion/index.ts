@@ -4,9 +4,9 @@ import { createMobileAccordion } from './mobileAccordion';
 
 const getPanels = (id?: string) => {
 	if (id) {
-		return cy.get(`#${id} .AccordionPanel`);
+		return cy.get(`#${id} .accordion-panel`);
 	}
-	return cy.get('.Accordion .AccordionPanel');
+	return cy.get('.Accordion .accordion-panel');
 };
 
 const getPanel: GetPanel = (panel) => {

@@ -18,7 +18,7 @@ export const AccordionSection = (props: Props) => {
 	const { investments } = props;
 	const cards = investments.map(investmentToCard);
 	return (
-		<div className="AccordionSection" role="list">
+		<div className="accordion-section" role="list">
 			{cards}
 		</div>
 	);
