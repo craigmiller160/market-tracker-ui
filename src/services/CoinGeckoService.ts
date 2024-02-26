@@ -13,9 +13,8 @@ import {
 	coinGeckoMarketChartV
 } from '../types/coingecko/marketchart';
 import * as Time from '@craigmiller160/ts-functions/Time';
-import { match } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import * as Monoid from 'fp-ts/Monoid';
-import * as Pattern from '@craigmiller160/ts-functions/Pattern';
 import {
 	getFiveYearStartDate,
 	getOneMonthStartDate,
@@ -40,7 +39,7 @@ const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
 	concat: (s1, s2) =>
 		match(s1)
-			.with(Pattern.lengthGT(0), () => `${s1},${s2}`)
+			.with(P.string.minLength(1), () => `${s1},${s2}`)
 			.otherwise(() => s2)
 };
 
