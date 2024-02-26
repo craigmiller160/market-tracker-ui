@@ -19,6 +19,7 @@
 
   &.xs {
     width: 100%;
+
     .Price {
       display: flex;
       flex-direction: column;
@@ -49,10 +50,12 @@
 
   p {
     margin: 0;
+
     &.up {
       color: green;
       font-weight: bold;
     }
+
     &.down {
       color: red;
       font-weight: bold;
