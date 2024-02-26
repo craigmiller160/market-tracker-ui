@@ -1,6 +1,6 @@
 import {
 	Form,
-	FormInstance,
+	type FormInstance,
 	Input,
 	Modal,
 	Radio,

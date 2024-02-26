@@ -4,8 +4,8 @@ import {
 	useDownloadUpdatedPortfolioData,
 	useGetPortfolioList
 } from '../../../queries/PortfolioQueries';
-import { PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
-import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
+import { type PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
+import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
 import { match, P } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
-import { PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
+import { type PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>

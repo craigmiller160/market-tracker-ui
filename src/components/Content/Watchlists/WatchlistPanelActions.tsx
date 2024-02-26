@@ -1,8 +1,8 @@
-import { MouseEvent } from 'react';
+import { type MouseEvent } from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import { match } from 'ts-pattern';
 import { BreakpointName } from '../../utils/Breakpoints';
-import { MenuInfo } from 'rc-menu/lib/interface';
+import { type MenuInfo } from 'rc-menu/lib/interface';
 
 interface ActionsProps {
 	readonly breakpointName: BreakpointName;

@@ -2,7 +2,7 @@ import { Line } from '@ant-design/charts';
 import { castDraft } from 'immer';
 import { getFirstPrice } from './chartUtils';
 import { useFormattedChartData } from './useFormattedChartData';
-import { InvestmentData } from '../../../types/data/InvestmentData';
+import { type InvestmentData } from '../../../types/data/InvestmentData';
 
 interface Props {
 	readonly data: InvestmentData;

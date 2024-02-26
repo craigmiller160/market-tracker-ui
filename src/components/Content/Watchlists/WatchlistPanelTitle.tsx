@@ -1,6 +1,6 @@
-import { DbWatchlist } from '../../../types/Watchlist';
-import { Button, Form, FormInstance, Input, Typography } from 'antd';
-import { MouseEvent } from 'react';
+import { type DbWatchlist } from '../../../types/Watchlist';
+import { Button, Form, type FormInstance, Input, Typography } from 'antd';
+import { type MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import './WatchlistPanelTitle.scss';

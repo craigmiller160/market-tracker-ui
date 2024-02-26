@@ -5,8 +5,8 @@ import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
 } from '../../../types/data/MarketInvestmentType';
-import { InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
-import { MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+import { type InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
+import { type MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
 
 interface Props {
 	readonly marketType: MarketInvestmentType;

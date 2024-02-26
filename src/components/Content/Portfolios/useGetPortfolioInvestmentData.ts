@@ -1,10 +1,10 @@
 import {
-	InvestmentInfo,
-	PortfolioInvestmentInfo
+	type InvestmentInfo,
+	type PortfolioInvestmentInfo
 } from '../../../types/data/InvestmentInfo';
 import {
 	useGetInvestmentData,
-	UseGetInvestmentDataResult
+	type UseGetInvestmentDataResult
 } from '../../../queries/InvestmentQueries';
 import {
 	useGetCurrentSharesForStockInPortfolio,
@@ -12,11 +12,11 @@ import {
 } from '../../../queries/PortfolioQueries';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
-import { SharesOwnedResponse } from '../../../types/generated/market-tracker-portfolio-service';
+import { type SharesOwnedResponse } from '../../../types/generated/market-tracker-portfolio-service';
 import { useMemo } from 'react';
-import { InvestmentData } from '../../../types/data/InvestmentData';
+import { type InvestmentData } from '../../../types/data/InvestmentData';
 import { MarketTime } from '../../../types/MarketTime';
-import { HistoryRecord } from '../../../types/history';
+import { type HistoryRecord } from '../../../types/history';
 import { match, P } from 'ts-pattern';
 
 const isPortfolioInvestmentInfo = (

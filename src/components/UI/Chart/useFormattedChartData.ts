@@ -3,7 +3,7 @@ import { pipe } from 'fp-ts/function';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import { getFirstPrice } from './chartUtils';
 import { useMemo } from 'react';
-import { InvestmentData } from '../../../types/data/InvestmentData';
+import { type InvestmentData } from '../../../types/data/InvestmentData';
 
 const parseTableDate = Time.parse('yyyy-MM-dd HH:mm:ss');
 const formatTableDate = Time.format("M/d/yy'\n'HH:mm");

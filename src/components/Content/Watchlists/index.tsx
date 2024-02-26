@@ -1,14 +1,14 @@
-import { Updater, useImmer } from 'use-immer';
-import { DbWatchlist } from '../../../types/Watchlist';
+import { type Updater, useImmer } from 'use-immer';
+import { type DbWatchlist } from '../../../types/Watchlist';
 import { match } from 'ts-pattern';
 import './Watchlists.scss';
 import { useMemo } from 'react';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Typography } from 'antd';
-import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
+import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
-import { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
+import { type AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { WatchlistPanelTitle } from './WatchlistPanelTitle';
 import { WatchlistPanelActions } from './WatchlistPanelActions';

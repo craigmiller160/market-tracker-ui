@@ -1,7 +1,7 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
 import { useMemo } from 'react';
-import { SearchValues } from './constants';
+import { type SearchValues } from './constants';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { toNameCase } from '../../../utils/stringUtils';
 import { useBreakpointName } from '../../utils/Breakpoints';

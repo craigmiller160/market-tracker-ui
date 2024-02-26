@@ -1,4 +1,4 @@
-import { HistoryRecord } from '../../../types/history';
+import { type HistoryRecord } from '../../../types/history';
 import { flow } from 'fp-ts/function';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import * as Option from 'fp-ts/Option';

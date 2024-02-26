@@ -1,6 +1,6 @@
 import './AccordionSection.scss';
 import { InvestmentCard } from '../../Content/common/InvestmentCard/InvestmentCard';
-import { AccordionInvestment } from './AccordionInvestment';
+import { type AccordionInvestment } from './AccordionInvestment';
 
 interface Props {
 	readonly investments: ReadonlyArray<AccordionInvestment>;

@@ -1,5 +1,5 @@
 import * as TaskEither from 'fp-ts/TaskEither';
-import { TaskEitherT } from '@craigmiller160/ts-functions/types';
+import { type TaskEitherT } from '@craigmiller160/ts-functions/types';
 
 export const taskEitherToPromise = <E, T>(
 	taskEither: TaskEitherT<E, T>

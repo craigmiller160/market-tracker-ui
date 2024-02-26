@@ -1,6 +1,6 @@
 import { Card, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -16,10 +16,10 @@ import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import { Chart as ChartComp } from '../../../UI/Chart';
-import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
+import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
-import { InvestmentData } from '../../../../types/data/InvestmentData';
+import { type InvestmentData } from '../../../../types/data/InvestmentData';
 import { useInvestmentCardDataLoadingContext } from './InvestmentCardDataLoadingContext';
 
 interface Props {

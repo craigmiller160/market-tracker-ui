@@ -1,4 +1,4 @@
-import { Form, FormInstance, Input, Modal } from 'antd';
+import { Form, type FormInstance, Input, Modal } from 'antd';
 import { useForceUpdate } from '../../hooks/useForceUpdate';
 
 interface Props {

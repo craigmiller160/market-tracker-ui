@@ -1,8 +1,8 @@
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { Breakpoints } from './utils/Breakpoints';
-import { ScreenContext, ScreenContextValue } from './ScreenContext';
+import { type Breakpoints } from './utils/Breakpoints';
+import { ScreenContext, type ScreenContextValue } from './ScreenContext';
 import { RootLayout } from './RootLayout';
 import { ConfigProvider } from 'antd';
 import { MarketTrackerKeycloakBridge } from './keycloak/MarketTrackerKeycloakBridge';
