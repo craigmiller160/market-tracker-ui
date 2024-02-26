@@ -1,5 +1,5 @@
 import { mount, MountReturn } from 'cypress/react18';
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 import { match, P } from 'ts-pattern';
 import {
 	KeycloakAuth,

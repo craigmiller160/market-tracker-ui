@@ -1,4 +1,4 @@
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 
 const getPortfoliosPageTitle = (): Chainable<JQuery> =>
 	cy.get('#portfoliosPageTitle');

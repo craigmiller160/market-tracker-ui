@@ -1,4 +1,4 @@
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 
 const getInvestmentCards = (): Chainable<JQuery> => cy.get('.InvestmentCard');
 const getTitle = (card: JQuery): Chainable<JQuery> =>

@@ -1,3 +1,3 @@
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 
 export type GetPanel = (panel: JQuery | number) => Chainable<JQuery>;

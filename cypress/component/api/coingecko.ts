@@ -1,5 +1,5 @@
 import { HistoryTime } from './common';
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 import { match } from 'ts-pattern';
 
 const getCGSymbol = (symbol: string): string =>
