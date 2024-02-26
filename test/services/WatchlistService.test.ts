@@ -1,4 +1,4 @@
-import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
+import { type DbWatchlist, type Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import MockAdapter from 'axios-mock-adapter';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';

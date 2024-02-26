@@ -2,7 +2,7 @@ import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/function';
 import * as Try from '@craigmiller160/ts-functions/Try';
-import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import { type MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { renderApp } from '../../../testutils/RenderApp';
@@ -31,7 +31,7 @@ import {
 	BASE_LAST_PRICE,
 	BASE_PREV_CLOSE_PRICE
 } from '../../../testutils/testDataUtils';
-import { ApiServer, newApiServer } from '../../../testutils/server';
+import { type ApiServer, newApiServer } from '../../../testutils/server';
 import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
 import { TaskTry } from '@craigmiller160/ts-functions';
 

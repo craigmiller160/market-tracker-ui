@@ -1,9 +1,9 @@
 import { getResponseData, marketTrackerPortfoliosApi } from './AjaxApi';
 import {
-	PortfolioResponse,
-	SharesOwnedResponse
+	type PortfolioResponse,
+	type SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
-import { StockHistoryInterval } from '../types/portfolios';
+import { type StockHistoryInterval } from '../types/portfolios';
 import qs from 'qs';
 import { MarketTime } from '../types/MarketTime';
 import { match } from 'ts-pattern';

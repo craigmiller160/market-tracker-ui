@@ -13,7 +13,7 @@ import {
 	removeWatchlist,
 	renameWatchlist
 } from '../services/WatchlistService';
-import { DbWatchlist } from '../types/Watchlist';
+import { type DbWatchlist } from '../types/Watchlist';
 import { notificationSlice } from '../store/notification/slice';
 import { useDispatch } from 'react-redux';
 import { match, P } from 'ts-pattern';

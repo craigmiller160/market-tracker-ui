@@ -1,4 +1,4 @@
-import { RootState, StoreDispatch } from '../index';
+import { type RootState, type StoreDispatch } from '../index';
 import { timeValueSelector } from './selectors';
 import { menuKeyToMarketTime } from '../../types/MarketTime';
 import { marketSettingsSlice } from './slice';

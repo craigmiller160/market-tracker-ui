@@ -1,4 +1,4 @@
-import { HistoryRecord } from '../history';
+import { type HistoryRecord } from '../history';
 
 export type InvestmentData = {
 	readonly name: string;

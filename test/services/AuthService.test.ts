@@ -1,7 +1,7 @@
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { getAuthUser } from '../../src/services/AuthService';
-import { AuthUser } from '../../src/types/auth';
+import { type AuthUser } from '../../src/types/auth';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 import { nanoid } from '@reduxjs/toolkit';
 

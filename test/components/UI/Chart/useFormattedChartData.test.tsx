@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import {
-	ChartData,
+	type ChartData,
 	useFormattedChartData
 } from '../../../../src/components/UI/Chart/useFormattedChartData';
-import { InvestmentData } from '../../../../src/types/data/InvestmentData';
+import { type InvestmentData } from '../../../../src/types/data/InvestmentData';
 
 const marketData: InvestmentData = {
 	currentPrice: 50,
