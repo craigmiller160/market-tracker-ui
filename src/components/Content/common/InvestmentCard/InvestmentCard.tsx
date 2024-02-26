@@ -31,7 +31,7 @@ const createTitle = (
 	info: InvestmentInfo,
 	data: InvestmentData | undefined
 ): ReactNode => (
-	<div className="Title">
+	<div className="title">
 		<h3>
 			<strong>{`(${info.symbol}) ${data?.name ?? ''}`}</strong>
 		</h3>
@@ -71,7 +71,7 @@ const createPrice = (data: InvestmentData, status: MarketStatus) => {
 
 	return (
 		<p className={priceClassName}>
-			<span className="Price">
+			<span className="price">
 				<span>
 					{status !== MarketStatus.CLOSED && (
 						<span className="Icon">{ChangeIcon}</span>
@@ -142,7 +142,7 @@ const createTime = (time: MarketTime): ReactNode => {
 		.run();
 
 	return (
-		<div className="Time">
+		<div className="time">
 			<h3>{timeInfo.label}</h3>
 			<p>Since {timeInfo.sinceDate}</p>
 		</div>
