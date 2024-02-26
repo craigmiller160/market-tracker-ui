@@ -1,4 +1,4 @@
-import { AuthUser } from '../types/auth';
+import { type AuthUser } from '../types/auth';
 import { marketTrackerApi, getResponseData } from './AjaxApi';
 import { isAxiosError } from '@craigmiller160/ajax-api-fp-ts';
 

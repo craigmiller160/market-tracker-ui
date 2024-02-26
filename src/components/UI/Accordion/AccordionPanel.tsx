@@ -1,7 +1,7 @@
 import { Collapse } from 'antd';
 import './AccordionPanel.scss';
-import { ReactNode } from 'react';
-import { AccordionInvestment } from './AccordionInvestment';
+import { type ReactNode } from 'react';
+import { type AccordionInvestment } from './AccordionInvestment';
 import { AccordionSection } from './AccordionSection';
 
 interface Props {

@@ -1,13 +1,13 @@
 import marketDataJson from './marketsPageInvestments.json';
 import altInvestmentIdsJson from './altInvestmentIds.json';
 import {
-	MarketInvestmentInfo,
-	MarketInvestmentInfoArray,
+	type MarketInvestmentInfo,
+	type MarketInvestmentInfoArray,
 	marketInvestmentInfoArrayV
 } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/function';
 import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';
-import { MonoidT, TryT } from '@craigmiller160/ts-functions/types';
+import { type MonoidT, type TryT } from '@craigmiller160/ts-functions/types';
 import * as Monoid from 'fp-ts/Monoid';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import { match } from 'ts-pattern';
@@ -15,7 +15,7 @@ import * as Either from 'fp-ts/Either';
 import * as Option from 'fp-ts/Option';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 import {
-	AltInvestmentIds,
+	type AltInvestmentIds,
 	altInvestmentIdsV
 } from '../types/data/AltInvestmentIds';
 

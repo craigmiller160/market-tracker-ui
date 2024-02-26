@@ -2,11 +2,11 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { notificationsSelector } from '../../../store/notification/selectors';
 import { notification as antNotification } from 'antd';
 import {
-	Notification,
+	type Notification,
 	notificationSlice
 } from '../../../store/notification/slice';
 import { useCallback, useEffect } from 'react';
-import { Dispatch } from 'redux';
+import { type Dispatch } from 'redux';
 
 const useHandleShowingNotifications = (dispatch: Dispatch) =>
 	useCallback(

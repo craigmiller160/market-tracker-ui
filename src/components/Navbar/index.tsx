@@ -1,19 +1,19 @@
 import './Navbar.scss';
-import { Layout, Menu, MenuProps } from 'antd';
-import { Updater, useImmer } from 'use-immer';
+import { Layout, Menu, type MenuProps } from 'antd';
+import { type Updater, useImmer } from 'use-immer';
 import { useNavbarItems } from './useNavbarItems';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router';
+import { type NavigateFunction, useLocation, useNavigate } from 'react-router';
 import { useCallback, useEffect } from 'react';
-import { StoreDispatch } from '../../store';
+import { type StoreDispatch } from '../../store';
 import { pipe } from 'fp-ts/function';
 import * as Option from 'fp-ts/Option';
 import { match, P } from 'ts-pattern';
 import { changeSelectedTime } from '../../store/marketSettings/actions';
 import * as Regex from '@craigmiller160/ts-functions/Regex';
-import { MenuInfo } from 'rc-menu/lib/interface';
+import { type MenuInfo } from 'rc-menu/lib/interface';
 
 interface State {
 	readonly selectedPageKey: string;

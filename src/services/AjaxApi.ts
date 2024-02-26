@@ -1,5 +1,5 @@
 import { createBaseApi, wrapApi } from '@craigmiller160/ajax-api-fp-ts';
-import { AxiosResponse } from 'axios';
+import { type AxiosResponse } from 'axios';
 
 export const getResponseData = <T>(res: AxiosResponse<T>): T => res.data;
 
