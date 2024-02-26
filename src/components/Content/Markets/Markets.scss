@@ -1,7 +1,7 @@
 @import "../../../styles/page";
 
 .GlobalMarkets {
-  @include PageRoot;
+  @include page-root;
 
   width: 95%;
 }

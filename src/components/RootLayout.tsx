@@ -5,7 +5,7 @@ import { Navbar } from './Navbar';
 import { NotificationContainer } from './NotificationContainer';
 
 export const RootLayout = () => (
-	<Layout className="RootLayout">
+	<Layout className="root-layout">
 		<Navbar />
 		<Content />
 		<NotificationContainer />

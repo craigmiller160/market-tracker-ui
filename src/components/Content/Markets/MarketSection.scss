@@ -9,6 +9,6 @@
   text-align: center;
 
   .MarketCardList {
-    @include CardList;
+    @include card-list;
   }
 }
