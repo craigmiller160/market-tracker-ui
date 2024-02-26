@@ -1,4 +1,4 @@
-import { HistoryTime } from './common';
+import { type HistoryTime } from './common';
 type Chainable<T> = Cypress.Chainable<T>;
 import { match } from 'ts-pattern';
 

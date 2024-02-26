@@ -1,4 +1,4 @@
-import { GetPanel } from './types';
+import { type GetPanel } from './types';
 
 export const createMobileAccordion = (getPanel: GetPanel) => {
 	const getPanelActionsButton: GetPanel = (panel) =>

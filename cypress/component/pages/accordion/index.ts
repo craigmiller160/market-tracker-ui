@@ -1,5 +1,5 @@
 import { createDesktopAccordion } from './desktopAccordion';
-import { GetPanel } from './types';
+import { type GetPanel } from './types';
 import { createMobileAccordion } from './mobileAccordion';
 
 const getPanels = (id?: string) => {
