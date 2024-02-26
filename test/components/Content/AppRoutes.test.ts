@@ -2,8 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { renderApp } from '../../testutils/RenderApp';
-import '@testing-library/jest-dom/extend-expect';
-import { ApiServer, newApiServer } from '../../testutils/server';
+import { type ApiServer, newApiServer } from '../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
@@ -82,10 +81,6 @@ describe('AppRoutes', () => {
 				timeout: 2000
 			}
 		);
-		await waitFor(() =>
-			expect(
-				screen.queryByText('Data Source Recognition')
-			).toBeInTheDocument()
-		);
+		await screen.findByText('Data Source Recognition');
 	});
 });

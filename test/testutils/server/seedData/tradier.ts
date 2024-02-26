@@ -1,11 +1,11 @@
-import { Data, DataUpdater } from '../Database';
+import { type Data, type DataUpdater } from '../Database';
 import {
 	createTradierHistory,
 	createTradierQuote,
 	createTradierTimesale
 } from '../../testDataUtils';
 import { castDraft } from 'immer';
-import { Draft } from 'immer';
+import { type Draft } from 'immer';
 
 const createAddQuote =
 	(draft: Draft<Data>) => (symbol: string, modifier: number) => {

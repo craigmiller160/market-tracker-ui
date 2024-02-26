@@ -1,9 +1,8 @@
-import { ApiServer, newApiServer } from '../../../testutils/server';
+import { type ApiServer, newApiServer } from '../../../testutils/server';
 import { renderApp } from '../../../testutils/RenderApp';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
-import { ScreenContextValue } from '../../../../src/components/ScreenContext';
+import { type ScreenContextValue } from '../../../../src/components/ScreenContext';
 
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });

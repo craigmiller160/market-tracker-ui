@@ -1,5 +1,5 @@
-import { DataUpdater, ensureDbUserRecord } from '../Database';
-import { Watchlist } from '../../../../src/types/Watchlist';
+import { type DataUpdater, ensureDbUserRecord } from '../Database';
+import { type Watchlist } from '../../../../src/types/Watchlist';
 import { castDraft } from 'immer';
 
 export const seedWatchlists: DataUpdater = (draft) => {

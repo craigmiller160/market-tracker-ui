@@ -10,7 +10,6 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import * as TaskEither from 'fp-ts/TaskEither';
-import '@testing-library/jest-dom/extend-expect';
 import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,

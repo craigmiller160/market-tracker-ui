@@ -2,7 +2,6 @@ import MockAdapter from 'axios-mock-adapter';
 import { screen, waitFor, within } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import { renderApp } from '../../../testutils/RenderApp';
-import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import {
 	mockCalenderRequest,
@@ -12,7 +11,7 @@ import {
 	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
 import { MarketTime } from '../../../../src/types/MarketTime';
-import { ApiServer, newApiServer } from '../../../testutils/server';
+import { type ApiServer, newApiServer } from '../../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 

@@ -1,7 +1,7 @@
 import { Response, Server } from 'miragejs';
 import { Database, ensureDbUserRecord } from '../Database';
 import { validationError } from '../utils/validate';
-import { DbWatchlist, Watchlist } from '../../../../src/types/Watchlist';
+import { type DbWatchlist, type Watchlist } from '../../../../src/types/Watchlist';
 import { castDraft } from 'immer';
 
 interface RenameWatchlistParams {

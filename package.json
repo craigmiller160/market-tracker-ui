@@ -38,10 +38,11 @@
     "cypress": "^13.4.0",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^24.0.0",
+    "miragejs": "^0.1.48",
     "redux-mock-store": "^1.5.4",
     "vite": "^5.1.4",
-    "vitest": "^0.34.3",
-    "vite-plugin-pwa": "^0.19.0"
+    "vite-plugin-pwa": "^0.19.0",
+    "vitest": "^0.34.3"
   },
   "pnpm": {
     "overrides": {

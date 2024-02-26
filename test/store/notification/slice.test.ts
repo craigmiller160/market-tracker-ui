@@ -1,7 +1,7 @@
 import {
 	notificationSlice,
-	Notification,
-	StateType
+	type Notification,
+	type StateType
 } from '../../../src/store/notification/slice';
 import { nanoid } from '@reduxjs/toolkit';
 
