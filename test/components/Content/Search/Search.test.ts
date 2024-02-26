@@ -75,9 +75,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -102,9 +100,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		expect(within(card).queryByText(/Chart/)).not.toBeInTheDocument();
@@ -128,9 +124,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Week'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -157,9 +151,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Month'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -186,9 +178,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('3 Months'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -215,9 +205,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Year'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -244,9 +232,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('5 Years'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -271,9 +257,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		await waitFor(() =>
 			expect(within(card).queryByText(/Error/)).toHaveTextContent(

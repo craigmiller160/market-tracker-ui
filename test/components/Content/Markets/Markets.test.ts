@@ -215,9 +215,9 @@ const validateInvestmentCard = (
 	);
 };
 
-const testMarketsPage = (config: MarketTestConfig) => {
+const testMarketsPage = async (config: MarketTestConfig) => {
 	const marketsPage = screen.getByTestId('markets-page');
-	userEvent.click(screen.getByText('US Markets'));
+	await userEvent.click(screen.getByText('US Markets'));
 
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.USA_ETF) {
@@ -225,14 +225,14 @@ const testMarketsPage = (config: MarketTestConfig) => {
 		}
 	});
 
-	userEvent.click(screen.getByText('International Markets'));
+	await userEvent.click(screen.getByText('International Markets'));
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.INTERNATIONAL_ETF) {
 			validateInvestmentCard(marketsPage, info, config, index);
 		}
 	});
 
-	userEvent.click(screen.getByText('Cryptocurrency'));
+	await userEvent.click(screen.getByText('Cryptocurrency'));
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.CRYPTO) {
 			validateInvestmentCard(marketsPage, info, config, index);
@@ -261,9 +261,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -277,9 +275,7 @@ describe('Markets', () => {
 			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -294,9 +290,7 @@ describe('Markets', () => {
 			status: 'closed'
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
 		testMarketsPage({
@@ -310,9 +304,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_WEEK
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Week');
 		testPageHeaders();
 		testMarketsPage({
@@ -325,9 +317,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_MONTH
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Month');
 		testPageHeaders();
 		testMarketsPage({
@@ -340,9 +330,7 @@ describe('Markets', () => {
 			time: MarketTime.THREE_MONTHS
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('3 Months');
 		testPageHeaders();
 		testMarketsPage({
@@ -355,9 +343,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_YEAR
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Year');
 		testPageHeaders();
 		testMarketsPage({
@@ -370,9 +356,7 @@ describe('Markets', () => {
 			time: MarketTime.FIVE_YEARS
 		});
 		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		await screen.findByText('Markets');
 		await selectMenuItem('5 Years');
 		testPageHeaders();
 		testMarketsPage({

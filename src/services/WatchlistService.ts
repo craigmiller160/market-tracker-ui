@@ -48,7 +48,7 @@ export const createWatchlist = (
 				{
 					symbol: stockSymbol
 				}
-		  ]
+			]
 		: [];
 	const input: Watchlist = {
 		watchlistName,

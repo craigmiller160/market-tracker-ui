@@ -4,7 +4,11 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 import { type RootState, type StoreType } from '../../../src/store';
-import { type AnyAction, type Draft, type ThunkDispatch } from '@reduxjs/toolkit';
+import {
+	type AnyAction,
+	type Draft,
+	type ThunkDispatch
+} from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';

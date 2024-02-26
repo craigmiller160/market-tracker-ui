@@ -63,9 +63,7 @@ describe('Watchlists', () => {
 		await userEvent.type(input, 'New Watchlist');
 
 		await userEvent.click(screen.getByText('Save'));
-		await waitFor(() =>
-			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
-		);
+		await screen.findByText('New Watchlist');
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 
@@ -102,9 +100,7 @@ describe('Watchlists', () => {
 		await userEvent.type(input, 'New Watchlist');
 
 		await userEvent.click(screen.getByText('Save'));
-		await waitFor(() =>
-			expect(screen.queryByText('New Watchlist')).toBeInTheDocument()
-		);
+		await screen.findByText('New Watchlist');
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 
@@ -112,14 +108,10 @@ describe('Watchlists', () => {
 		renderApp({
 			initialPath: '/market-tracker/search'
 		});
-		await waitFor(() =>
-			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
-		);
+		await screen.findByTestId('search-page');
 		await userEvent.type(getSymbolField(), 'MSFT');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-MSFT');
 		const card = screen.getByTestId('market-card-MSFT');
 		await waitFor(
 			() =>
@@ -144,11 +136,7 @@ describe('Watchlists', () => {
 		const select = screen.getByTestId('existing-watchlist-select');
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		fireEvent.mouseDown(select.querySelector('.ant-select-selector')!);
-		await waitFor(() =>
-			expect(
-				screen.queryByRole('option', { name: 'First Watchlist' })
-			).toBeInTheDocument()
-		);
+		await screen.findByRole('option', { name: 'First Watchlist' });
 		expect(
 			screen.queryByRole('option', { name: 'Second Watchlist' })
 		).toBeInTheDocument();
@@ -172,14 +160,10 @@ describe('Watchlists', () => {
 		renderApp({
 			initialPath: '/market-tracker/search'
 		});
-		await waitFor(() =>
-			expect(screen.queryByTestId('search-page')).toBeInTheDocument()
-		);
+		await screen.findByTestId('search-page');
 		await userEvent.type(getSymbolField(), 'MSFT');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-MSFT')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-MSFT');
 		const card = screen.getByTestId('market-card-MSFT');
 		await waitFor(
 			() =>

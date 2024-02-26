@@ -1,7 +1,6 @@
 import * as O from 'fp-ts/Option';
 import { type AuthUser } from '../../types/auth';
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Draft } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction, type Draft } from '@reduxjs/toolkit';
 
 interface StateType {
 	readonly userData: O.Option<AuthUser>;

@@ -35,12 +35,11 @@ const createDoSearch = (setState: Updater<State>) => (values: SearchValues) => {
 const createGetActions =
 	(addToWatchlist: (symbol: string) => void) =>
 	// eslint-disable-next-line react/display-name
-	(symbol: string): ReactNode[] =>
-		[
-			<Button key="addToWatchlist" onClick={() => addToWatchlist(symbol)}>
-				+ Watchlist
-			</Button>
-		];
+	(symbol: string): ReactNode[] => [
+		<Button key="addToWatchlist" onClick={() => addToWatchlist(symbol)}>
+			+ Watchlist
+		</Button>
+	];
 
 export const Search = () => {
 	const marketTime = useSelector(timeValueSelector);
