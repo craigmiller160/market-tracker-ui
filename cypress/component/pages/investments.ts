@@ -1,6 +1,6 @@
 type Chainable<T> = Cypress.Chainable<T>;
 
-const getCards = () => cy.get('.InvestmentCard');
+const getCards = () => cy.get('.investment-card');
 const getCard = (card: JQuery | number): Chainable<JQuery> => {
 	if (typeof card === 'number') {
 		return getCards().eq(card);

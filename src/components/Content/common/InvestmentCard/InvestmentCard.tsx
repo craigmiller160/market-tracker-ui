@@ -238,7 +238,7 @@ export const InvestmentCard = (props: Props) => {
 		<Card
 			title={FullTitle}
 			extra={Time}
-			className={`InvestmentCard ${breakpointName}`}
+			className={`investment-card ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
 			actions={!loading && !error ? getActions(info.symbol) : []}
