@@ -323,11 +323,11 @@ export const Watchlists = () => {
 	return (
 		<>
 			<div
-				className={`WatchlistsPage ${breakpointName}`}
+				className={`watchlists-page ${breakpointName}`}
 				data-testid="watchlist-page"
 			>
 				<Typography.Title level={2}>Watchlists</Typography.Title>
-				<div className="RootActions">
+				<div className="root-actions">
 					<Button onClick={showAddWatchlistModal}>Add</Button>
 				</div>
 				{body}

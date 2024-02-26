@@ -6,7 +6,7 @@ const getPanels = (id?: string) => {
 	if (id) {
 		return cy.get(`#${id} .accordion-panel`);
 	}
-	return cy.get('.Accordion .accordion-panel');
+	return cy.get('.accordion .accordion-panel');
 };
 
 const getPanel: GetPanel = (panel) => {

@@ -30,7 +30,7 @@ export const Accordion = (props: Props) => {
 	const panelComponents = panels.map(panelConfigToPanels);
 	return (
 		<div id={props.id} style={{ width: '100%' }}>
-			<Collapse className="Accordion" accordion destroyInactivePanel>
+			<Collapse className="accordion" accordion destroyInactivePanel>
 				{panelComponents}
 			</Collapse>
 		</div>
