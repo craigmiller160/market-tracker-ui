@@ -61,7 +61,7 @@ export const Portfolios = () => {
 				<Typography.Title id="portfoliosPageTitle" level={2}>
 					Portfolios
 				</Typography.Title>
-				<div className="ButtonWrapper">
+				<div className="button-wrapper">
 					<Button
 						id="downloadPortfolioDataBtn"
 						onClick={downloadPortfolioData}
@@ -77,5 +77,5 @@ export const Portfolios = () => {
 			</>
 		));
 
-	return <div className="Portfolios">{body}</div>;
+	return <div className="portfolios">{body}</div>;
 };

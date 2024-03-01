@@ -1,6 +1,14 @@
-.PanelTitleForm {
+.panel-title-form {
   width: 90%;
   display: flex;
+
+  .ant-form-item {
+    width: 100%;
+
+    input.ant-input {
+      font-size: 20px;
+    }
+  }
 
   &:not(.xs) {
     flex-direction: row;
@@ -19,17 +27,9 @@
     }
   }
 
-  .TitleFormActions {
+  .title-form-actions {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-  }
-
-  .ant-form-item {
-    width: 100%;
-
-    input.ant-input {
-      font-size: 20px;
-    }
   }
 }

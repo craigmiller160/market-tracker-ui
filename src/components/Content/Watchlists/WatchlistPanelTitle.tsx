@@ -62,7 +62,7 @@ export const WatchlistPanelTitle = (props: Props) => {
 
 	return (
 		<Form
-			className={`PanelTitleForm ${breakpointName}`}
+			className={`panel-title-form ${breakpointName}`}
 			form={form}
 			initialValues={{
 				watchlistName: watchlist.watchlistName
@@ -71,7 +71,7 @@ export const WatchlistPanelTitle = (props: Props) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear onClick={(e) => e.stopPropagation()} />
 			</Form.Item>
-			<div className={`TitleFormActions ${breakpointName}`}>
+			<div className={`title-form-actions ${breakpointName}`}>
 				<Button onClick={onCancelRenamedTitle}>Cancel</Button>
 				<Button
 					htmlType="submit"
