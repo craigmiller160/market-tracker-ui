@@ -1,4 +1,4 @@
-.Navbar {
+.navbar {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -6,16 +6,37 @@
   z-index: 1;
   width: 100%;
 
+  .menu {
+    width: 100%;
+
+    .brand {
+      cursor: auto;
+      color: white;
+      font-size: 1rem;
+
+      :hover, &.ant-menu-item:hover {
+        background-color: #001529;
+        color: white;
+      }
+    }
+
+    .auth-item {
+      &:not(.is-auth) {
+        margin-left: auto;
+      }
+    }
+  }
+
   &:not(.xs) {
     padding: 1rem;
 
-    .Menu {
-      .OneDayItem {
+    .menu {
+      .one-day-item {
         margin-left: auto;
       }
 
-      .AuthItem {
-        &.IsAuth {
+      .auth-item {
+        &.is-auth {
           margin-left: 2rem;
         }
       }
@@ -30,27 +51,6 @@
 
       &:not(.ant-menu-submenu-active) {
         color: hsl(0deg 0% 100% / 65%);
-      }
-    }
-  }
-
-  .Menu {
-    width: 100%;
-
-    .Brand {
-      cursor: auto;
-      color: white;
-      font-size: 1rem;
-
-      :hover, &.ant-menu-item:hover {
-        background-color: #001529;
-        color: white;
-      }
-    }
-
-    .AuthItem {
-      &:not(.IsAuth) {
-        margin-left: auto;
       }
     }
   }

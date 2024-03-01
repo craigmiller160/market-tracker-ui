@@ -121,12 +121,12 @@ export const Navbar = () => {
 
 	return (
 		<Layout.Header
-			className={`Navbar ${breakpointName}`}
+			className={`navbar ${breakpointName}`}
 			data-testid="navbar"
 		>
 			<Menu
 				onClick={handleMenuClick}
-				className="Menu"
+				className="menu"
 				theme="dark"
 				mode="horizontal"
 				data-testid={testId}
