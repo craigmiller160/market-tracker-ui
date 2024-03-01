@@ -43,7 +43,7 @@ export const SearchForm = (props: Props) => {
 				searchType: InvestmentType.STOCK
 			}}
 		>
-			<div className="SearchType">
+			<div className="search-type">
 				<Form.Item name="searchType">
 					<Radio.Group>
 						<SearchTypeRadio searchType={InvestmentType.STOCK} />
@@ -55,7 +55,7 @@ export const SearchForm = (props: Props) => {
 					</Radio.Group>
 				</Form.Item>
 			</div>
-			<div className="SearchFieldAndButton">
+			<div className="search-field-and-button">
 				<Form.Item name="symbol" normalize={toUpperCase}>
 					<Input placeholder="Symbol" allowClear />
 				</Form.Item>
