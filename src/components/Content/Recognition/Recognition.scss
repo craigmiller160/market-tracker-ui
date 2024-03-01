@@ -1,11 +1,11 @@
 @import "../../../styles/page";
 
-.Recognition {
+.recognition {
   @include page-root;
 
   text-align: center;
 
-  .Source {
+  .source {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -73,7 +73,7 @@ export const Markets = () => {
 	const panels = createPanels(investmentResult.investments);
 	return (
 		<>
-			<div className="GlobalMarkets" data-testid="markets-page">
+			<div className="global-markets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
 				<Accordion panels={panels} />
 			</div>

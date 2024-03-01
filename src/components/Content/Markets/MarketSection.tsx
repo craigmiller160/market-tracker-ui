@@ -23,9 +23,9 @@ export const MarketSection = (props: Props) => {
 	const cards = data[marketType].map(investmentInfoToCard);
 
 	return (
-		<section className="MarketSection">
+		<section className="market-section">
 			<Typography.Title level={3}>{title}</Typography.Title>
-			<div className="MarketCardList" role="list">
+			<div className="market-card-list" role="list">
 				{cards}
 			</div>
 		</section>

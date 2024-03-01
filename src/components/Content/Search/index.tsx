@@ -82,7 +82,7 @@ export const Search = () => {
 
 	return (
 		<>
-			<div className="SearchPage" data-testid="search-page">
+			<div className="search-page" data-testid="search-page">
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
 				<InvestmentCardDataLoadingContext.Provider
