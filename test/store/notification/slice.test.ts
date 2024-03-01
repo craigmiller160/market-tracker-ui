@@ -27,6 +27,7 @@ describe('notification slice', () => {
 		expect(result).toEqual({
 			notifications: [
 				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					id: expect.any(String),
 					isShown: false,
 					type: 'success',
@@ -45,6 +46,7 @@ describe('notification slice', () => {
 		expect(result).toEqual({
 			notifications: [
 				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					id: expect.any(String),
 					isShown: false,
 					type: 'error',

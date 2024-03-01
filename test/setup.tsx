@@ -1,4 +1,6 @@
-jest.mock('@ant-design/charts', () => {
+import { vi } from 'vitest';
+
+vi.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
 	return {
 		Line
@@ -10,15 +12,15 @@ window.URL.createObjectURL = () => '';
 const mockWindowMatchMedia = () =>
 	Object.defineProperty(window, 'matchMedia', {
 		writable: true,
-		value: jest.fn().mockImplementation((query) => ({
+		value: vi.fn().mockImplementation((query: unknown) => ({
 			matches: false,
 			media: query,
 			onchange: null,
-			addListener: jest.fn(), // Deprecated
-			removeListener: jest.fn(), // Deprecated
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
-			dispatchEvent: jest.fn()
+			addListener: vi.fn(), // Deprecated
+			removeListener: vi.fn(), // Deprecated
+			addEventListener: vi.fn(),
+			removeEventListener: vi.fn(),
+			dispatchEvent: vi.fn()
 		}))
 	});
 

@@ -34,6 +34,7 @@ describe('WatchlistService', () => {
 		expect(result).toEqual(watchlists);
 	});
 
+	// eslint-disable-next-line vitest/expect-expect
 	it('renameWatchlist', async () => {
 		mockApi
 			.onPut('/watchlists/First%20Watchlist/rename/NewWatchlist')
@@ -124,6 +125,7 @@ describe('WatchlistService', () => {
 		expect(result).toEqual(newWatchlist);
 	});
 
+	// eslint-disable-next-line vitest/expect-expect
 	it('removeWatchlist', async () => {
 		mockApi.onDelete('/watchlists/First%20Watchlist').reply(200);
 		await WatchlistService.removeWatchlist('First Watchlist');

@@ -31,7 +31,7 @@ describe('Search', () => {
 	});
 
 	it('renders initial layout correctly', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -47,7 +47,7 @@ describe('Search', () => {
 	});
 
 	it('formats value and changes button status when text input happens', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -67,7 +67,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierTimesaleRequest(mockApi, 'VTI', 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -92,7 +92,7 @@ describe('Search', () => {
 	it('searches for and finds a stock for Today, with the market closed', async () => {
 		mockCalenderRequest(mockApi, 'closed');
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -115,7 +115,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_WEEK, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -142,7 +142,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_MONTH, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -169,7 +169,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.THREE_MONTHS, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -196,7 +196,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_YEAR, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -223,7 +223,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.FIVE_YEARS, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -249,7 +249,7 @@ describe('Search', () => {
 	it('searches for but cannot find a stock', async () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteNotFound(mockApi, 'VTI');
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>

@@ -79,20 +79,18 @@ describe('Watchlists', () => {
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 		expect(screen.queryByText('Save')).not.toBeInTheDocument();
 		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
-		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.getByText('First Watchlist')).toBeInTheDocument();
 
 		await userEvent.click(screen.queryAllByText('Rename')[0]);
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
-		expect(
-			screen.queryByDisplayValue('First Watchlist')
-		).toBeInTheDocument();
+		expect(screen.getByDisplayValue('First Watchlist')).toBeInTheDocument();
 		expect(screen.queryByText('Rename')).not.toBeInTheDocument();
-		expect(screen.queryByText('Save')).toBeInTheDocument();
-		expect(screen.queryByText('Cancel')).toBeInTheDocument();
+		expect(screen.getByText('Save')).toBeInTheDocument();
+		expect(screen.getByText('Cancel')).toBeInTheDocument();
 
 		await userEvent.click(screen.getByText('Cancel'));
-		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
-		expect(screen.queryAllByText('Rename')).toHaveLength(2);
+		expect(screen.getByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.getAllByText('Rename')).toHaveLength(2);
 
 		await userEvent.click(screen.queryAllByText('Rename')[0]);
 		const input = screen.getByDisplayValue('First Watchlist');
@@ -134,11 +132,11 @@ describe('Watchlists', () => {
 		expect(screen.queryByLabelText('New Watchlist')).not.toBeChecked();
 
 		const select = screen.getByTestId('existing-watchlist-select');
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, testing-library/no-node-access
 		fireEvent.mouseDown(select.querySelector('.ant-select-selector')!);
 		await screen.findByRole('option', { name: 'First Watchlist' });
 		expect(
-			screen.queryByRole('option', { name: 'Second Watchlist' })
+			screen.getByRole('option', { name: 'Second Watchlist' })
 		).toBeInTheDocument();
 
 		fireEvent.click(screen.getAllByText('First Watchlist')[1]);
@@ -168,7 +166,7 @@ describe('Watchlists', () => {
 		await waitFor(
 			() =>
 				expect(
-					within(card).queryByText(/\+ Watchlist/)
+					within(card).getByText(/\+ Watchlist/)
 				).toBeInTheDocument(),
 			{
 				timeout: 30000

@@ -260,7 +260,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
@@ -274,7 +274,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY,
 			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
@@ -289,7 +289,7 @@ describe('Markets', () => {
 			time: MarketTime.ONE_DAY,
 			status: 'closed'
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
@@ -303,7 +303,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_WEEK
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('1 Week');
 		testPageHeaders();
@@ -316,7 +316,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_MONTH
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('1 Month');
 		testPageHeaders();
@@ -329,7 +329,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.THREE_MONTHS
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('3 Months');
 		testPageHeaders();
@@ -342,7 +342,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_YEAR
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('1 Year');
 		testPageHeaders();
@@ -355,7 +355,7 @@ describe('Markets', () => {
 		setupMockApiCalls({
 			time: MarketTime.FIVE_YEARS
 		});
-		await renderApp();
+		renderApp();
 		await screen.findByText('Markets');
 		await selectMenuItem('5 Years');
 		testPageHeaders();
