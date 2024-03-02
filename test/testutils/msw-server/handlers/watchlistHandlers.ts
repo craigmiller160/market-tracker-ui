@@ -10,10 +10,14 @@ type RenameWatchlistParams = Readonly<{
 	newName: string;
 }>;
 
-type AddInvestmentToWatchlistParams = Readonly<{
+type WatchlistInvestmentParams = Readonly<{
 	name: string;
 	type: InvestmentType;
 	symbol: string;
+}>;
+
+type DeleteWatchlistParams = Readonly<{
+	name: string;
 }>;
 
 export const createWatchlistHandlers = (
@@ -71,43 +75,84 @@ export const createWatchlistHandlers = (
 		}
 	);
 
-	const addInvestmentToWatchlistHandler =
-		http.put<AddInvestmentToWatchlistParams>(
+	const addInvestmentToWatchlistHandler = http.put<WatchlistInvestmentParams>(
+		'http://localhost/market-tracker/api/watchlists/:name/:type/:symbol',
+		({ params }) => {
+			if (params.type === InvestmentType.CRYPTO) {
+				return validationError(
+					'Crypto not yet supported for add/remove investments'
+				);
+			}
+
+			const watchlistIndex = database.data.watchlists.findIndex(
+				(watchlist) => watchlist.watchlistName === params.name
+			);
+			if (watchlistIndex < 0) {
+				return validationError(
+					`Invalid watchlist name: ${params.name}`
+				);
+			}
+
+			if (
+				database.data.watchlists[watchlistIndex].stocks.findIndex(
+					(stock) => stock.symbol === params.symbol
+				) >= 0
+			) {
+				return validationError(
+					`Investment already in watchlist. Watchlist ${params.name} Type: ${params.type} Symbol: ${params.symbol}`
+				);
+			}
+
+			database.updateData((draft) => {
+				draft.watchlists[watchlistIndex].stocks.push({
+					symbol: params.symbol
+				});
+			});
+			return HttpResponse.json(database.data.watchlists[watchlistIndex]);
+		}
+	);
+
+	const deleteWatchlistHandler = http.delete<DeleteWatchlistParams>(
+		'http://localhost/market-tracker/api/watchlists/:name',
+		({ params }) => {
+			database.updateData((draft) => {
+				draft.watchlists = draft.watchlists.filter(
+					(watchlist) => watchlist.watchlistName !== params.name
+				);
+			});
+			return HttpResponse.text('', {
+				status: 204
+			});
+		}
+	);
+
+	const removeInvestmentFromWatchlistHandler =
+		http.delete<WatchlistInvestmentParams>(
 			'http://localhost/market-tracker/api/watchlists/:name/:type/:symbol',
 			({ params }) => {
 				if (params.type === InvestmentType.CRYPTO) {
 					return validationError(
-						'Crypto not yet supported for add/remove investments'
-					);
-				}
-
-				const watchlistIndex = database.data.watchlists.findIndex(
-					(watchlist) => watchlist.watchlistName === params.name
-				);
-				if (watchlistIndex < 0) {
-					return validationError(
-						`Invalid watchlist name: ${params.name}`
-					);
-				}
-
-				if (
-					database.data.watchlists[watchlistIndex].stocks.findIndex(
-						(stock) => stock.symbol === params.symbol
-					) >= 0
-				) {
-					return validationError(
-						`Investment already in watchlist. Watchlist ${params.name} Type: ${params.type} Symbol: ${params.symbol}`
+						'Crypto not yet supported for removing investments'
 					);
 				}
 
 				database.updateData((draft) => {
-					draft.watchlists[watchlistIndex].stocks.push({
-						symbol: params.symbol
-					});
+					const foundIndex = draft.watchlists.findIndex(
+						(watchlist) => watchlist.watchlistName === params.name
+					);
+					if (foundIndex >= 0) {
+						draft.watchlists[foundIndex].stocks = draft.watchlists[
+							foundIndex
+						].stocks.filter(
+							(stock) => stock.symbol !== params.symbol
+						);
+					}
 				});
-				return HttpResponse.json(
-					database.data.watchlists[watchlistIndex]
-				);
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const match = database.data.watchlists.find(
+					(watchlist) => watchlist.watchlistName === params.name
+				)!;
+				return HttpResponse.json(match);
 			}
 		);
 
@@ -116,6 +161,8 @@ export const createWatchlistHandlers = (
 		createWatchlistHandler,
 		getAllWatchlistsHandler,
 		renameWatchlistHandler,
-		addInvestmentToWatchlistHandler
+		addInvestmentToWatchlistHandler,
+		deleteWatchlistHandler,
+		removeInvestmentFromWatchlistHandler
 	];
 };
