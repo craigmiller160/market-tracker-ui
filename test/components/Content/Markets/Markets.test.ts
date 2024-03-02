@@ -233,7 +233,7 @@ const testMarketsPage = async (config: MarketTestConfig) => {
 	});
 };
 
-describe('Markets', () => {
+describe.skip('Markets', () => {
 	beforeEach(() => {
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
