@@ -37,7 +37,7 @@ describe('Watchlists', () => {
 		);
 		expect(screen.queryByText('Save')).not.toBeInTheDocument();
 		expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
-		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.getByText('First Watchlist')).toBeInTheDocument();
 
 		await userEvent.click(
 			screen.getAllByRole('button', { name: '...' })[0]
@@ -47,14 +47,14 @@ describe('Watchlists', () => {
 		await userEvent.click(screen.getByText('Rename'));
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
 		expect(
-			screen.queryByDisplayValue('First Watchlist')
+			screen.getByDisplayValue('First Watchlist')
 		).toBeInTheDocument();
 		expect(screen.queryByText('Rename')).not.toBeInTheDocument();
-		expect(screen.queryByText('Save')).toBeInTheDocument();
-		expect(screen.queryByText('Cancel')).toBeInTheDocument();
+		expect(screen.getByText('Save')).toBeInTheDocument();
+		expect(screen.getByText('Cancel')).toBeInTheDocument();
 
 		await userEvent.click(screen.getByText('Cancel'));
-		expect(screen.queryByText('First Watchlist')).toBeInTheDocument();
+		expect(screen.getByText('First Watchlist')).toBeInTheDocument();
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 
 		await userEvent.click(screen.queryAllByText('Rename')[0]);
@@ -114,7 +114,7 @@ describe('Watchlists', () => {
 		await waitFor(
 			() =>
 				expect(
-					within(card).queryByText(/\+ Watchlist/)
+					within(card).getByText(/\+ Watchlist/)
 				).toBeInTheDocument(),
 			{
 				timeout: 30000

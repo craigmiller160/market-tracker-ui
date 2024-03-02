@@ -37,13 +37,13 @@ describe('Search', () => {
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
 		);
-		expect(screen.queryByText('Stock')).toBeInTheDocument();
-		expect(screen.queryByText('Crypto')).toBeInTheDocument();
+		expect(screen.getByText('Stock')).toBeInTheDocument();
+		expect(screen.getByText('Crypto')).toBeInTheDocument();
 		expect(
-			screen.queryByRole('button', { name: 'Search' })
+			screen.getByRole('button', { name: 'Search' })
 		).toBeInTheDocument();
 		expect(getSearchBtn()).toBeDisabled();
-		expect(screen.queryByPlaceholderText('Symbol')).toBeInTheDocument();
+		expect(screen.getByPlaceholderText('Symbol')).toBeInTheDocument();
 	});
 
 	it('formats value and changes button status when text input happens', async () => {
@@ -108,7 +108,7 @@ describe('Search', () => {
 			expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00')
 		);
 		expect(within(card).queryByText(/225/)).not.toBeInTheDocument();
-		expect(within(card).queryByText('Market Closed')).toBeInTheDocument();
+		expect(within(card).getByText('Market Closed')).toBeInTheDocument();
 	});
 
 	it('searches for and finds a stock for One Week', async () => {
