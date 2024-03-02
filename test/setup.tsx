@@ -4,7 +4,9 @@ import { newApiServer } from './testutils/msw-server';
 vi.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
 	return {
-		Line
+		default: {
+			Line
+		}
 	};
 });
 

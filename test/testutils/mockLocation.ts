@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { vi } from 'vitest';
 
 export const mockLocation = (): Location => {
 	const location = window.location;
