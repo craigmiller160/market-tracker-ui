@@ -1,7 +1,12 @@
-import { type Database, ensureDbRecord } from '../Database';
+import { type Database, ensureDbUserRecord } from '../Database';
 import { type RequestHandler, http, HttpResponse, type PathParams } from 'msw';
 import type { Watchlist } from '../../../../src/types/Watchlist';
 import { castDraft } from 'immer';
+
+type RenameWatchlistParams = Readonly<{
+	oldName: string;
+	newName: string;
+}>;
 
 export const createWatchlistHandlers = (
 	database: Database
@@ -20,7 +25,7 @@ export const createWatchlistHandlers = (
 		'http://localhost/market-tracker/api/watchlists',
 		async ({ request }) => {
 			const body = await request.json();
-			const dbWatchlist = ensureDbRecord(body);
+			const dbWatchlist = ensureDbUserRecord(body);
 			database.updateData((draft) => {
 				draft.watchlists.push(castDraft(dbWatchlist));
 			});
@@ -35,9 +40,33 @@ export const createWatchlistHandlers = (
 		}
 	);
 
+	const renameWatchlistHandler = http.put<RenameWatchlistParams>(
+		'http://localhost/market-tracker/api/watchlists/:oldName/rename/:newName',
+		({ params }) => {
+			const existingIndex = database.data.watchlists.findIndex(
+				(watchlist) => watchlist.watchlistName === params.oldName
+			);
+			if (existingIndex >= 0) {
+				database.updateData((draft) => {
+					draft.watchlists[existingIndex] = {
+						...draft.watchlists[existingIndex],
+						watchlistName: params.newName
+					};
+				});
+				return HttpResponse.text('', {
+					status: 204
+				});
+			}
+			return HttpResponse.text('', {
+				status: 400
+			});
+		}
+	);
+
 	return [
 		getWatchlistNamesHandler,
 		createWatchlistHandler,
-		getAllWatchlistsHandler
+		getAllWatchlistsHandler,
+		renameWatchlistHandler
 	];
 };
