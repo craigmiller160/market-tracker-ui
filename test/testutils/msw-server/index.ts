@@ -8,6 +8,7 @@ import { seedTradier } from './seedData/tradier';
 import { createOAuthHandlers } from './handlers/oauthHandlers';
 import { createWatchlistHandlers } from './handlers/watchlistHandlers';
 import { createTradierHandlers } from './handlers/tradierHandlers';
+import {createPortfolioHandlers} from './handlers/portfolioHandlers';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
@@ -43,7 +44,8 @@ export const newApiServer = (): ApiServer => {
 	const server: SetupServerApi = setupServer(
 		...createOAuthHandlers(database),
 		...createWatchlistHandlers(database),
-		...createTradierHandlers(database)
+		...createTradierHandlers(database),
+		...createPortfolioHandlers()
 	);
 	return {
 		server,
