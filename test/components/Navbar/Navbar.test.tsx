@@ -70,12 +70,12 @@ describe('Navbar', () => {
 
 	it('starts on recognition page due to route, then navigates to search page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/recognition'
+			initialPath: '/recognition'
 		});
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/recognition'
+			'http://localhost:3000/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -83,9 +83,7 @@ describe('Navbar', () => {
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
 		await userEvent.click(screen.getByText('Search'));
 
-		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/search'
-		);
+		expect(window.location.href).toEqual('http://localhost:3000/search');
 		const navbar = screen.getByTestId('desktop-navbar');
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -95,12 +93,12 @@ describe('Navbar', () => {
 
 	it('starts on recognition page due to route, then navigates to investment info page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/recognition'
+			initialPath: '/recognition'
 		});
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/recognition'
+			'http://localhost:3000/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -110,7 +108,7 @@ describe('Navbar', () => {
 		await userEvent.click(screen.getByText('Investment Info'));
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/investments'
+			'http://localhost:3000/investments'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access

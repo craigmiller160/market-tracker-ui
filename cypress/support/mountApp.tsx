@@ -22,7 +22,7 @@ export type MountConfig = {
 export const defaultConfig: MountConfig = {
 	viewport: 'desktop',
 	isAuthorized: true,
-	initialRoute: '/market-tracker'
+	initialRoute: '/'
 };
 
 const handleViewport = (config?: Partial<MountConfig>): Chainable<null> =>
@@ -32,9 +32,9 @@ const handleViewport = (config?: Partial<MountConfig>): Chainable<null> =>
 		.otherwise(desktopViewport);
 const getInitialEntries = (config?: Partial<MountConfig>): string[] =>
 	match(config)
-		.with(undefined, () => ['/market-tracker'])
+		.with(undefined, () => ['/'])
 		.with({ initialRoute: P.string }, ({ initialRoute }) => [initialRoute])
-		.otherwise(() => ['/market-tracker']);
+		.otherwise(() => ['/']);
 
 const keycloakAuth: KeycloakAuth = {
 	status: 'authorized',

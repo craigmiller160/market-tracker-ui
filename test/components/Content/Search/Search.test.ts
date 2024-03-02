@@ -26,7 +26,7 @@ describe('Search', () => {
 
 	it('renders initial layout correctly', async () => {
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -42,7 +42,7 @@ describe('Search', () => {
 
 	it('formats value and changes button status when text input happens', async () => {
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -62,7 +62,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierTimesaleRequest(mockApi, 'VTI', 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -87,7 +87,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi, 'closed');
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -110,7 +110,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_WEEK, 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -137,7 +137,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_MONTH, 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -164,7 +164,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.THREE_MONTHS, 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -191,7 +191,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_YEAR, 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -218,7 +218,7 @@ describe('Search', () => {
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.FIVE_YEARS, 1);
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
@@ -244,7 +244,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteNotFound(mockApi, 'VTI');
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)

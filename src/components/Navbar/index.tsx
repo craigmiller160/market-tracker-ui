@@ -32,7 +32,7 @@ interface MenuKeyParts {
 	readonly action: string;
 }
 
-const PATH_REGEX = /^\/market-tracker\/(?<key>.*)\/?.*$/;
+const PATH_REGEX = /^\/(?<key>.*)\/?.*$/;
 const MENU_KEY_PARTS_REGEX = /^(?<prefix>.*)\.(?<action>.*)$/;
 const capturePathKey = Regex.capture<PathRegexGroups>(PATH_REGEX);
 const captureMenuKeyParts = Regex.capture<MenuKeyParts>(MENU_KEY_PARTS_REGEX);
@@ -59,14 +59,14 @@ const useHandleMenuClick = (
 					// Do nothing
 				})
 				.with({ prefix: 'page', action: P.select() }, (page) => {
-					navigate(`/market-tracker/${page}`);
+					navigate(`/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
 					void dispatch(changeSelectedTime(menuItemInfo.key));
 				})
 				.otherwise(() => {
 					console.error('Invalid MenuInfo keyParts', keyParts);
-					navigate('/market-tracker/');
+					navigate('/');
 				});
 		},
 		[navigate, dispatch]

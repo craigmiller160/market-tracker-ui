@@ -10,6 +10,7 @@
     "registry": "https://nexus.craigmiller160.us/repository/npm-private/"
   },
   "scripts": {
+    "build": "c-validate && c-build-app",
     "postinstall": "c-init browser",
     "generateTypes": "craig-swagger market-tracker-portfolio-service http://127.0.0.1:8081/v3/api-docs ./src/types/generated/market-tracker-portfolio-service.ts"
   },

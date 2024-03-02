@@ -12,8 +12,8 @@ app_deployment:
     name: market-tracker-ingress
     backendIsHttps: true
     hosts:
-      - name: apps.craigmiller160.us
+      - name: market-tracker.craigmiller160.us
         services:
-          - path: /(market-tracker(/.*)?)
+          - path: /(.*)
             serviceName: market-tracker-ui
             portNumber: 443

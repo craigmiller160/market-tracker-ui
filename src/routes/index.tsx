@@ -43,10 +43,6 @@ const getAuthorizedRoutes = () => {
 export const routes = (rules: RouteRules): RouteObject[] => [
 	{
 		path: '/',
-		element: <Navigate to="/market-tracker" />
-	},
-	{
-		path: '/market-tracker',
 		children: match(rules)
 			.with({ isAuthorized: true, hasChecked: true }, getAuthorizedRoutes)
 			.with({ isAuthorized: false, hasChecked: true }, () => [
@@ -76,6 +72,6 @@ export const routes = (rules: RouteRules): RouteObject[] => [
 	},
 	{
 		path: '*',
-		element: <Navigate to="/market-tracker" />
+		element: <Navigate to="/" />
 	}
 ];

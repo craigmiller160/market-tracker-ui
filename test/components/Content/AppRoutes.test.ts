@@ -17,7 +17,7 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost:3000/market-tracker/investments'
+					'http://localhost:3000/investments'
 				),
 			{
 				timeout: 2000
@@ -35,7 +35,7 @@ describe('AppRoutes', () => {
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost:3000/market-tracker/investments'
+					'http://localhost:3000/investments'
 				),
 			{
 				timeout: 2000
@@ -46,12 +46,12 @@ describe('AppRoutes', () => {
 
 	it('renders investment info route', async () => {
 		renderApp({
-			initialPath: '/market-tracker/investments'
+			initialPath: '/investments'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost:3000/market-tracker/investments'
+					'http://localhost:3000/investments'
 				),
 			{
 				timeout: 2000
@@ -64,12 +64,12 @@ describe('AppRoutes', () => {
 
 	it('renders recognition route', async () => {
 		renderApp({
-			initialPath: '/market-tracker/recognition'
+			initialPath: '/recognition'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost:3000/market-tracker/recognition'
+					'http://localhost:3000/recognition'
 				),
 			{
 				timeout: 2000
