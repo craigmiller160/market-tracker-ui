@@ -2,11 +2,11 @@ import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
 import { Database } from '../msw-server/Database';
 import { createWatchlistRoutes } from './routes/watchlists';
-import { seedWatchlists } from './seedData/watchlists';
+import { seedWatchlists } from '../msw-server/seedData/watchlists';
 import * as Option from 'fp-ts/Option';
 import { createOAuthRoutes } from './routes/oauth';
 import { createTradierRoutes } from './routes/tradier';
-import { seedTradier } from './seedData/tradier';
+import { seedTradier } from '../msw-server/seedData/tradier';
 import { nanoid } from '@reduxjs/toolkit';
 
 interface ApiServerActions {

@@ -1,4 +1,4 @@
-import { type Data, type DataUpdater } from '../../msw-server/Database';
+import { type Data, type DataUpdater } from '../Database';
 import {
 	createTradierHistory,
 	createTradierQuote,

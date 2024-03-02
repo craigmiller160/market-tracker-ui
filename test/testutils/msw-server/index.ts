@@ -3,8 +3,8 @@ import { setupServer, SetupServerApi } from 'msw/node';
 import { Database } from './Database';
 import * as Option from 'fp-ts/Option';
 import { nanoid } from '@reduxjs/toolkit';
-import { seedWatchlists } from '../server/seedData/watchlists';
-import { seedTradier } from '../server/seedData/tradier';
+import { seedWatchlists } from './seedData/watchlists';
+import { seedTradier } from './seedData/tradier';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
