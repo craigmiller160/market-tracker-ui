@@ -1,5 +1,42 @@
 // eslint-disable-next-line import/no-unresolved
-import { setupServer, type SetupServer } from 'msw/node';
-import { database, Database } from './Database';
+import { setupServer, SetupServerApi } from 'msw/node';
+import { Database } from './Database';
 import * as Option from 'fp-ts/Option';
+import { nanoid } from '@reduxjs/toolkit';
+import { seedWatchlists } from '../server/seedData/watchlists';
+import { seedTradier } from '../server/seedData/tradier';
 
+type ApiServerActions = Readonly<{
+	clearDefaultUser: () => void;
+}>;
+
+export type ApiServer = Readonly<{
+	server: SetupServerApi;
+	database: Database;
+	actions: ApiServerActions;
+}>;
+
+const createClearDefaultUser = (database: Database) => () =>
+	database.updateData((draft) => {
+		draft.authUser = Option.none;
+	});
+
+export const newApiServer = (): ApiServer => {
+	const database = new Database();
+	database.updateData((draft) => {
+		draft.authUser = Option.some({
+			userId: nanoid()
+		});
+		seedWatchlists(draft);
+		seedTradier(draft);
+	});
+
+	const server: SetupServerApi = setupServer();
+	return {
+		server,
+		database,
+		actions: {
+			clearDefaultUser: createClearDefaultUser(database)
+		}
+	};
+};
