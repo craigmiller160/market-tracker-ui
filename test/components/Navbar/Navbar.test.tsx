@@ -83,9 +83,7 @@ describe('Navbar', () => {
 		).toEqual(expect.stringContaining(SELECTED_CLASS));
 		await userEvent.click(screen.getByText('Search'));
 
-		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/search'
-		);
+		expect(window.location.href).toEqual('http://localhost:3000/search');
 		const navbar = screen.getByTestId('desktop-navbar');
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -110,7 +108,7 @@ describe('Navbar', () => {
 		await userEvent.click(screen.getByText('Investment Info'));
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/investments'
+			'http://localhost:3000/investments'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
