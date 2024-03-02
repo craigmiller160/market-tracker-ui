@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { type DbWatchlist, type Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import MockAdapter from 'axios-mock-adapter';

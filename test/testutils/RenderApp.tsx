@@ -36,7 +36,7 @@ const keycloakAuth: KeycloakAuth = {
 	status: 'authorized',
 	isPostAuthorization: true,
 	isPreAuthorization: false,
-	logout: jest.fn()
+	logout: vi.fn()
 };
 
 const queryClient = new QueryClient({

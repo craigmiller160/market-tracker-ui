@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, it, expect } from 'vitest';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { type TradierQuote } from '../../src/types/tradier/quotes';

@@ -6,7 +6,7 @@ export const mockLocation = (): Location => {
 	delete window.location;
 	// @ts-ignore
 	window.location = {
-		assign: jest.fn(),
+		assign: vi.fn(),
 		pathname: '/',
 		search: '',
 		hash: '',
