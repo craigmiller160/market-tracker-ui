@@ -65,6 +65,7 @@ export const SearchForm = (props: Props) => {
 							type="primary"
 							htmlType="submit"
 							disabled={
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 								(innerForm.getFieldsValue()?.symbol?.length ??
 									0) === 0
 							}

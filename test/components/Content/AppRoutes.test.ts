@@ -19,7 +19,7 @@ describe('AppRoutes', () => {
 	});
 
 	it('shows correct initial route for authenticated user', async () => {
-		await renderApp();
+		renderApp();
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
@@ -35,7 +35,7 @@ describe('AppRoutes', () => {
 	});
 
 	it('correctly redirects for totally wrong route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/auth-management/'
 		});
 		await waitFor(
@@ -51,7 +51,7 @@ describe('AppRoutes', () => {
 	});
 
 	it('renders investment info route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/investments'
 		});
 		await waitFor(
@@ -69,7 +69,7 @@ describe('AppRoutes', () => {
 	});
 
 	it('renders recognition route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(

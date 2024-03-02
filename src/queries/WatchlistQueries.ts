@@ -57,7 +57,7 @@ export const useAddStockToWatchlist = (onSuccess?: () => void) => {
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			addStockToWatchlist(watchlistName, stockSymbol),
 		onSuccess: () => {
-			invalidateQueries(queryClient);
+			void invalidateQueries(queryClient);
 			onSuccess?.();
 		}
 	});
@@ -75,7 +75,7 @@ export const useCreateWatchlist = () => {
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			createWatchlist(watchlistName, stockSymbol),
 		onSuccess: (_, variables) => {
-			invalidateQueries(queryClient);
+			void invalidateQueries(queryClient);
 			const message = match(variables)
 				.with(
 					{

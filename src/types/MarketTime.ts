@@ -21,12 +21,13 @@ export const menuKeyToMarketTime = (menuKey: string): MarketTime =>
 		Option.chain((key) =>
 			pipe(
 				Object.entries(MarketTime),
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 				RArray.findFirst(([, value]) => value === key)
 			)
 		),
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		Option.map(([key]) => MarketTime[key]),
+		Option.map(([key]) => MarketTime[key] as string),
 		Option.getOrElse(() => {
 			throw new Error(
 				`Critical error, invalid menu key for MarketTime: ${menuKey}`

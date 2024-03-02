@@ -46,9 +46,7 @@ describe('Watchlists', () => {
 		expect(screen.getByText('Remove')).toBeVisible();
 		await userEvent.click(screen.getByText('Rename'));
 		expect(screen.queryByText('First Watchlist')).not.toBeInTheDocument();
-		expect(
-			screen.getByDisplayValue('First Watchlist')
-		).toBeInTheDocument();
+		expect(screen.getByDisplayValue('First Watchlist')).toBeInTheDocument();
 		expect(screen.queryByText('Rename')).not.toBeInTheDocument();
 		expect(screen.getByText('Save')).toBeInTheDocument();
 		expect(screen.getByText('Cancel')).toBeInTheDocument();

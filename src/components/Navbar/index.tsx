@@ -62,7 +62,7 @@ const useHandleMenuClick = (
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
-					dispatch(changeSelectedTime(menuItemInfo.key));
+					void dispatch(changeSelectedTime(menuItemInfo.key));
 				})
 				.otherwise(() => {
 					console.error('Invalid MenuInfo keyParts', keyParts);
