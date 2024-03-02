@@ -5,6 +5,7 @@ import * as Option from 'fp-ts/Option';
 import { nanoid } from '@reduxjs/toolkit';
 import { seedWatchlists } from './seedData/watchlists';
 import { seedTradier } from './seedData/tradier';
+import { createOAuthHandlers } from './handlers/oauthHandlers';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
@@ -31,7 +32,9 @@ export const newApiServer = (): ApiServer => {
 		seedTradier(draft);
 	});
 
-	const server: SetupServerApi = setupServer();
+	const server: SetupServerApi = setupServer(
+		...createOAuthHandlers(database)
+	);
 	return {
 		server,
 		database,
