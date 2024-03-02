@@ -15,7 +15,7 @@ describe('Watchlists', () => {
 			}
 		};
 		renderApp({
-			initialPath: '/market-tracker/watchlists',
+			initialPath: '/watchlists',
 			screenContextValue
 		});
 		const panelTitles = await screen.findAllByTestId(
@@ -57,7 +57,7 @@ describe('Watchlists', () => {
 
 	it.skip('renames a watchlist', async () => {
 		renderApp({
-			initialPath: '/market-tracker/watchlists'
+			initialPath: '/watchlists'
 		});
 		await waitFor(() =>
 			expect(
@@ -92,7 +92,7 @@ describe('Watchlists', () => {
 
 	it.skip('adds stock to existing watchlist', async () => {
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await screen.findByTestId('search-page');
 		await userEvent.type(getSymbolField(), 'MSFT');
@@ -144,7 +144,7 @@ describe('Watchlists', () => {
 
 	it.skip('adds stock to new watchlist', async () => {
 		renderApp({
-			initialPath: '/market-tracker/search'
+			initialPath: '/search'
 		});
 		await screen.findByTestId('search-page');
 		await userEvent.type(getSymbolField(), 'MSFT');
@@ -192,7 +192,7 @@ describe('Watchlists', () => {
 
 	it.skip('removes watchlist', async () => {
 		renderApp({
-			initialPath: '/market-tracker/investments'
+			initialPath: '/investments'
 		});
 		await waitFor(() =>
 			expect(screen.queryByText('Watchlists')).toBeVisible()
@@ -224,7 +224,7 @@ describe('Watchlists', () => {
 
 	it('add watchlist from watchlists page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/investments'
+			initialPath: '/investments'
 		});
 		await waitFor(() =>
 			expect(screen.queryByText('Watchlists')).toBeVisible()

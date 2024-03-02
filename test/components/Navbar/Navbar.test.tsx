@@ -70,12 +70,12 @@ describe('Navbar', () => {
 
 	it('starts on recognition page due to route, then navigates to search page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/recognition'
+			initialPath: '/recognition'
 		});
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/recognition'
+			'http://localhost:3000/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -95,12 +95,12 @@ describe('Navbar', () => {
 
 	it('starts on recognition page due to route, then navigates to investment info page', async () => {
 		renderApp({
-			initialPath: '/market-tracker/recognition'
+			initialPath: '/recognition'
 		});
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost:3000/market-tracker/recognition'
+			'http://localhost:3000/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
