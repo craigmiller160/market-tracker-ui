@@ -1,11 +1,19 @@
 import { type Database, ensureDbUserRecord } from '../Database';
-import { type RequestHandler, http, HttpResponse, type PathParams } from 'msw';
+import { http, HttpResponse, type PathParams, type RequestHandler } from 'msw';
 import type { Watchlist } from '../../../../src/types/Watchlist';
 import { castDraft } from 'immer';
+import { InvestmentType } from '../../../../src/types/data/InvestmentType';
+import { validationError } from '../utils/validate';
 
 type RenameWatchlistParams = Readonly<{
 	oldName: string;
 	newName: string;
+}>;
+
+type AddInvestmentToWatchlistParams = Readonly<{
+	name: string;
+	type: InvestmentType;
+	symbol: string;
 }>;
 
 export const createWatchlistHandlers = (
@@ -63,10 +71,51 @@ export const createWatchlistHandlers = (
 		}
 	);
 
+	const addInvestmentToWatchlistHandler =
+		http.put<AddInvestmentToWatchlistParams>(
+			'http://localhost/market-tracker/api/watchlists/:name/:type/:symbol',
+			({ params }) => {
+				if (params.type === InvestmentType.CRYPTO) {
+					return validationError(
+						'Crypto not yet supported for add/remove investments'
+					);
+				}
+
+				const watchlistIndex = database.data.watchlists.findIndex(
+					(watchlist) => watchlist.watchlistName === params.name
+				);
+				if (watchlistIndex < 0) {
+					return validationError(
+						`Invalid watchlist name: ${params.name}`
+					);
+				}
+
+				if (
+					database.data.watchlists[watchlistIndex].stocks.findIndex(
+						(stock) => stock.symbol === params.symbol
+					) >= 0
+				) {
+					return validationError(
+						`Investment already in watchlist. Watchlist ${params.name} Type: ${params.type} Symbol: ${params.symbol}`
+					);
+				}
+
+				database.updateData((draft) => {
+					draft.watchlists[watchlistIndex].stocks.push({
+						symbol: params.symbol
+					});
+				});
+				return HttpResponse.json(
+					database.data.watchlists[watchlistIndex]
+				);
+			}
+		);
+
 	return [
 		getWatchlistNamesHandler,
 		createWatchlistHandler,
 		getAllWatchlistsHandler,
-		renameWatchlistHandler
+		renameWatchlistHandler,
+		addInvestmentToWatchlistHandler
 	];
 };
