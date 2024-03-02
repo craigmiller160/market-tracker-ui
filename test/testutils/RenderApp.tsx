@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { store, type StoreType } from '../../src/store';
 import {
 	ScreenContext,
