@@ -10,24 +10,20 @@ import {
 	menuItemIsNotSelected,
 	menuItemIsSelected
 } from '../../testutils/menuUtils';
-import { type ApiServer, newApiServer } from '../../testutils/server';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('Navbar', () => {
-	let apiServer: ApiServer;
 	const location: Option.Option<Location> = Option.none;
 	beforeEach(() => {
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
-		apiServer = newApiServer();
 	});
 
 	afterEach(() => {
 		Option.map(restoreLocation)(location);
-		apiServer.server.shutdown();
 	});
 
 	it('renders for desktop', () => {

@@ -11,7 +11,6 @@ import {
 	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
 import { MarketTime } from '../../../../src/types/MarketTime';
-import { type ApiServer, newApiServer } from '../../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
@@ -19,15 +18,9 @@ const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 
 describe('Search', () => {
-	let apiServer: ApiServer;
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
-	});
-
-	afterEach(() => {
-		apiServer.server.shutdown();
 	});
 
 	it('renders initial layout correctly', async () => {

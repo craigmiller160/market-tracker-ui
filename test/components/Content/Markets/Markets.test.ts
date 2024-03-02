@@ -31,7 +31,6 @@ import {
 	BASE_LAST_PRICE,
 	BASE_PREV_CLOSE_PRICE
 } from '../../../testutils/testDataUtils';
-import { type ApiServer, newApiServer } from '../../../testutils/server';
 import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
 import { TaskTry } from '@craigmiller160/ts-functions';
 
@@ -234,15 +233,9 @@ const testMarketsPage = async (config: MarketTestConfig) => {
 };
 
 describe('Markets', () => {
-	let apiServer: ApiServer;
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
-	});
-
-	afterEach(() => {
-		apiServer.server.shutdown();
 	});
 
 	it('dummy test to allow this file to exist', () => {

@@ -1,4 +1,3 @@
-import { type ApiServer, newApiServer } from '../../../testutils/server';
 import { renderApp } from '../../../testutils/RenderApp';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -8,16 +7,7 @@ const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 
 describe('Watchlists', () => {
-	let apiServer: ApiServer;
-	beforeEach(() => {
-		apiServer = newApiServer();
-	});
-
-	afterEach(() => {
-		apiServer.server.shutdown();
-	});
-
-	it.skip('renames a watchlist on mobile', async () => {
+	it('renames a watchlist on mobile', async () => {
 		const screenContextValue: ScreenContextValue = {
 			breakpoints: {
 				xs: true

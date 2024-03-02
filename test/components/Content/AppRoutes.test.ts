@@ -2,20 +2,13 @@ import { screen, waitFor } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { renderApp } from '../../testutils/RenderApp';
-import { type ApiServer, newApiServer } from '../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('AppRoutes', () => {
-	let apiServer: ApiServer;
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
-	});
-
-	afterEach(() => {
-		apiServer.server.shutdown();
 	});
 
 	it('shows correct initial route for authenticated user', async () => {
