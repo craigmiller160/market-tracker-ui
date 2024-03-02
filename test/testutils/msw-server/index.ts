@@ -6,6 +6,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { seedWatchlists } from './seedData/watchlists';
 import { seedTradier } from './seedData/tradier';
 import { createOAuthHandlers } from './handlers/oauthHandlers';
+import {createWatchlistHandlers} from './handlers/watchlistHandlers';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
@@ -33,7 +34,8 @@ export const newApiServer = (): ApiServer => {
 	});
 
 	const server: SetupServerApi = setupServer(
-		...createOAuthHandlers(database)
+		...createOAuthHandlers(database),
+		...createWatchlistHandlers(database)
 	);
 	return {
 		server,
