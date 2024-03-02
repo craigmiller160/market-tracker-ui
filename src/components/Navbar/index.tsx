@@ -113,7 +113,7 @@ export const Navbar = () => {
 	const itemsPlusBrand: MenuProps['items'] = [
 		{
 			key: 'nothing',
-			className: 'Brand',
+			className: 'brand',
 			label: 'Market Tracker'
 		},
 		...(items ?? [])
