@@ -1,7 +1,11 @@
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
-	screenshotOnRunFailure: false,
+	retries: {
+		openMode: 0,
+		runMode: 4
+	},
+	screenshotOnRunFailure: true,
 	video: false,
 	component: {
 		devServer: {
