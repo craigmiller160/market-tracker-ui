@@ -1,4 +1,4 @@
-import { PropsWithChildren, useContext, useEffect } from 'react';
+import { type PropsWithChildren, useContext, useEffect } from 'react';
 import { KeycloakAuthContext } from '@craigmiller160/react-keycloak';
 import { useDispatch } from 'react-redux';
 import { authSlice } from '../../store/auth/slice';

@@ -13,7 +13,7 @@ import {
 	removeWatchlist,
 	renameWatchlist
 } from '../services/WatchlistService';
-import { DbWatchlist } from '../types/Watchlist';
+import { type DbWatchlist } from '../types/Watchlist';
 import { notificationSlice } from '../store/notification/slice';
 import { useDispatch } from 'react-redux';
 import { match, P } from 'ts-pattern';
@@ -57,7 +57,7 @@ export const useAddStockToWatchlist = (onSuccess?: () => void) => {
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			addStockToWatchlist(watchlistName, stockSymbol),
 		onSuccess: () => {
-			invalidateQueries(queryClient);
+			void invalidateQueries(queryClient);
 			onSuccess?.();
 		}
 	});
@@ -75,7 +75,7 @@ export const useCreateWatchlist = () => {
 		mutationFn: ({ watchlistName, stockSymbol }) =>
 			createWatchlist(watchlistName, stockSymbol),
 		onSuccess: (_, variables) => {
-			invalidateQueries(queryClient);
+			void invalidateQueries(queryClient);
 			const message = match(variables)
 				.with(
 					{

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
-import { CoinGeckoPrice } from '../../../../src/types/coingecko/price';
+import { type CoinGeckoMarketChart } from '../../../../src/types/coingecko/marketchart';
+import { type CoinGeckoPrice } from '../../../../src/types/coingecko/price';
 import MockAdapter from 'axios-mock-adapter';
-import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import { type MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { MarketTime } from '../../../../src/types/MarketTime';
-import { TradierCalendarStatus } from '../../../../src/types/tradier/calendar';
+import { type TradierCalendarStatus } from '../../../../src/types/tradier/calendar';
 import * as Try from '@craigmiller160/ts-functions/Try';
 import { match, P } from 'ts-pattern';
-import { PredicateT } from '@craigmiller160/ts-functions/types';
+import { type PredicateT } from '@craigmiller160/ts-functions/types';
 import { getTodayEnd } from '../../../../src/utils/timeUtils';
 import { pipe } from 'fp-ts/function';
 import { getAltIdForSymbol } from '../../../../src/data/MarketPageInvestmentParsing';

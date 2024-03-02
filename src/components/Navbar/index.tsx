@@ -1,19 +1,19 @@
 import './Navbar.scss';
-import { Layout, Menu, MenuProps } from 'antd';
-import { Updater, useImmer } from 'use-immer';
+import { Layout, Menu, type MenuProps } from 'antd';
+import { type Updater, useImmer } from 'use-immer';
 import { useNavbarItems } from './useNavbarItems';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeMenuKeySelector } from '../../store/marketSettings/selectors';
 import { BreakpointName, useBreakpointName } from '../utils/Breakpoints';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router';
+import { type NavigateFunction, useLocation, useNavigate } from 'react-router';
 import { useCallback, useEffect } from 'react';
-import { StoreDispatch } from '../../store';
+import { type StoreDispatch } from '../../store';
 import { pipe } from 'fp-ts/function';
 import * as Option from 'fp-ts/Option';
 import { match, P } from 'ts-pattern';
 import { changeSelectedTime } from '../../store/marketSettings/actions';
 import * as Regex from '@craigmiller160/ts-functions/Regex';
-import { MenuInfo } from 'rc-menu/lib/interface';
+import { type MenuInfo } from 'rc-menu/lib/interface';
 
 interface State {
 	readonly selectedPageKey: string;
@@ -62,7 +62,7 @@ const useHandleMenuClick = (
 					navigate(`/market-tracker/${page}`);
 				})
 				.with({ prefix: 'time' }, () => {
-					dispatch(changeSelectedTime(menuItemInfo.key));
+					void dispatch(changeSelectedTime(menuItemInfo.key));
 				})
 				.otherwise(() => {
 					console.error('Invalid MenuInfo keyParts', keyParts);
@@ -113,7 +113,7 @@ export const Navbar = () => {
 	const itemsPlusBrand: MenuProps['items'] = [
 		{
 			key: 'nothing',
-			className: 'Brand',
+			className: 'brand',
 			label: 'Market Tracker'
 		},
 		...(items ?? [])
@@ -121,12 +121,12 @@ export const Navbar = () => {
 
 	return (
 		<Layout.Header
-			className={`Navbar ${breakpointName}`}
+			className={`navbar ${breakpointName}`}
 			data-testid="navbar"
 		>
 			<Menu
 				onClick={handleMenuClick}
-				className="Menu"
+				className="menu"
 				theme="dark"
 				mode="horizontal"
 				data-testid={testId}

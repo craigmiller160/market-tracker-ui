@@ -1,7 +1,8 @@
-import { store, StoreType } from '../../src/store';
+import { vi } from 'vitest';
+import { store, type StoreType } from '../../src/store';
 import {
 	ScreenContext,
-	ScreenContextValue
+	type ScreenContextValue
 } from '../../src/components/ScreenContext';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -11,7 +12,7 @@ import { marketSettingsSlice } from '../../src/store/marketSettings/slice';
 import { authSlice } from '../../src/store/auth/slice';
 import { notificationSlice } from '../../src/store/notification/slice';
 import {
-	KeycloakAuth,
+	type KeycloakAuth,
 	KeycloakAuthContext
 } from '@craigmiller160/react-keycloak';
 import { MarketTrackerKeycloakBridge } from '../../src/components/keycloak/MarketTrackerKeycloakBridge';
@@ -36,7 +37,7 @@ const keycloakAuth: KeycloakAuth = {
 	status: 'authorized',
 	isPostAuthorization: true,
 	isPreAuthorization: false,
-	logout: jest.fn()
+	logout: vi.fn()
 };
 
 const queryClient = new QueryClient({

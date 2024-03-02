@@ -1,4 +1,4 @@
-.InvestmentCard {
+.investment-card {
   margin-bottom: 1rem;
 
   &.xxl {
@@ -13,23 +13,24 @@
     width: 90%;
   }
 
-  .Title {
+  .title {
     overflow: auto;
   }
 
   &.xs {
     width: 100%;
-    .Price {
+
+    .price {
       display: flex;
       flex-direction: column;
     }
   }
 
-  .Spinner {
+  .spinner {
     margin-top: 1rem;
   }
 
-  .ErrorMsg {
+  .error-msg {
     color: red;
   }
 
@@ -42,28 +43,30 @@
     flex-direction: column;
     align-items: center;
 
-    >div:not(.Spinner) {
+    >div:not(.spinner) {
       width: 100%;
     }
   }
 
   p {
     margin: 0;
+
     &.up {
       color: green;
       font-weight: bold;
     }
+
     &.down {
       color: red;
       font-weight: bold;
     }
 
-    >.Icon {
+    >.icon {
       margin-right: 0.5rem;
     }
   }
 
-  .Time {
+  .time {
     display: flex;
     flex-direction: column;
     align-items: flex-end;

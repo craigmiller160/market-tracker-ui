@@ -1,30 +1,35 @@
-.PanelTitleForm {
+.panel-title-form {
   width: 90%;
   display: flex;
+
+  .ant-form-item {
+    width: 100%;
+
+    input.ant-input {
+      font-size: 20px;
+    }
+  }
+
   &:not(.xs) {
     flex-direction: row;
     align-items: center;
+
     .ant-form-item {
       margin: 0 0.5rem 0 0;
     }
   }
+
   &.xs {
     flex-direction: column;
+
     .ant-form-item {
       margin: 0;
     }
   }
 
-  .TitleFormActions {
+  .title-form-actions {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-  }
-
-  .ant-form-item {
-    width: 100%;
-    input.ant-input {
-      font-size: 20px;
-    }
   }
 }

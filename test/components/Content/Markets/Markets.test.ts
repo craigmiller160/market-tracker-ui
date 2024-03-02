@@ -1,16 +1,16 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/function';
 import * as Try from '@craigmiller160/ts-functions/Try';
-import { MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
+import { type MarketInvestmentInfo } from '../../../../src/types/data/MarketInvestmentInfo';
 import { createSetupMockApiCalls } from './setupMarketTestData';
 import { MarketTime } from '../../../../src/types/MarketTime';
 import { renderApp } from '../../../testutils/RenderApp';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getMenuItem, menuItemIsSelected } from '../../../testutils/menuUtils';
 import * as TaskEither from 'fp-ts/TaskEither';
-import '@testing-library/jest-dom/extend-expect';
 import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -32,7 +32,6 @@ import {
 	BASE_LAST_PRICE,
 	BASE_PREV_CLOSE_PRICE
 } from '../../../testutils/testDataUtils';
-import { ApiServer, newApiServer } from '../../../testutils/server';
 import { MarketInvestmentType } from '../../../../src/types/data/MarketInvestmentType';
 import { TaskTry } from '@craigmiller160/ts-functions';
 
@@ -56,17 +55,15 @@ const setupMockApiCalls = createSetupMockApiCalls(mockApi, investmentInfo);
 
 const selectMenuItem = async (text: string) => {
 	const menuItem = getMenuItem(text);
-	await act(async () => {
-		await userEvent.click(menuItem);
-	});
+	await userEvent.click(menuItem);
 	menuItemIsSelected(text);
 };
 
 const testPageHeaders = () => {
-	expect(screen.queryByText('All Markets')).toBeInTheDocument();
-	expect(screen.queryByText('US Markets')).toBeInTheDocument();
-	expect(screen.queryByText('International Markets')).toBeInTheDocument();
-	expect(screen.queryByText('Cryptocurrency')).toBeInTheDocument();
+	expect(screen.getByText('All Markets')).toBeInTheDocument();
+	expect(screen.getByText('US Markets')).toBeInTheDocument();
+	expect(screen.getByText('International Markets')).toBeInTheDocument();
+	expect(screen.getByText('Cryptocurrency')).toBeInTheDocument();
 };
 
 interface MarketTestConfig {
@@ -80,6 +77,7 @@ const handleValidationError =
 	(ex: Error): Error => {
 		console.error('Investment card validation failure for symbol', symbol);
 		if (maybeCard) {
+			// eslint-disable-next-line testing-library/no-debugging-utils
 			screen.debug(maybeCard);
 		}
 		return ex;
@@ -112,9 +110,7 @@ const validateMarketStatus = (
 ) =>
 	match({ type, status })
 		.with({ type: P.when(isStock), status: MarketStatus.CLOSED }, () => {
-			expect(
-				within(card).queryByText('Market Closed')
-			).toBeInTheDocument();
+			expect(within(card).getByText('Market Closed')).toBeInTheDocument();
 			expect(
 				within(card).queryByText('Chart is Here')
 			).not.toBeInTheDocument();
@@ -123,9 +119,7 @@ const validateMarketStatus = (
 			expect(
 				within(card).queryByText('Market Closed')
 			).not.toBeInTheDocument();
-			expect(
-				within(card).queryByText('Chart is Here')
-			).toBeInTheDocument();
+			expect(within(card).getByText('Chart is Here')).toBeInTheDocument();
 		});
 
 const validatePriceLine = (
@@ -173,9 +167,7 @@ const validatePriceLine = (
 	match({ type, status })
 		.with({ type: P.when(isStock), status: MarketStatus.CLOSED }, () => {
 			expect(currentPriceResult).toBeInTheDocument();
-			expect(
-				within(card).queryByText('Market Closed')
-			).toBeInTheDocument();
+			expect(within(card).getByText('Market Closed')).toBeInTheDocument();
 		})
 		.otherwise(() => expect(currentPriceResult).toBeInTheDocument());
 
@@ -216,9 +208,9 @@ const validateInvestmentCard = (
 	);
 };
 
-const testMarketsPage = (config: MarketTestConfig) => {
+const testMarketsPage = async (config: MarketTestConfig) => {
 	const marketsPage = screen.getByTestId('markets-page');
-	userEvent.click(screen.getByText('US Markets'));
+	await userEvent.click(screen.getByText('US Markets'));
 
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.USA_ETF) {
@@ -226,14 +218,14 @@ const testMarketsPage = (config: MarketTestConfig) => {
 		}
 	});
 
-	userEvent.click(screen.getByText('International Markets'));
+	await userEvent.click(screen.getByText('International Markets'));
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.INTERNATIONAL_ETF) {
 			validateInvestmentCard(marketsPage, info, config, index);
 		}
 	});
 
-	userEvent.click(screen.getByText('Cryptocurrency'));
+	await userEvent.click(screen.getByText('Cryptocurrency'));
 	investmentInfo.forEach((info, index) => {
 		if (info.marketType === MarketInvestmentType.CRYPTO) {
 			validateInvestmentCard(marketsPage, info, config, index);
@@ -241,142 +233,128 @@ const testMarketsPage = (config: MarketTestConfig) => {
 	});
 };
 
-describe('Markets', () => {
-	let apiServer: ApiServer;
+describe.skip('Markets', () => {
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
-	});
-
-	afterEach(() => {
-		apiServer.server.shutdown();
 	});
 
 	it('dummy test to allow this file to exist', () => {
 		expect(true).toEqual(true);
 	});
 
-	it.skip('renders for today', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for today', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_DAY
 		});
 	});
 
-	it.skip('renders for today when history has higher millis than current time', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for today when history has higher millis than current time', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY,
 			tradierTimesaleBaseMillis: new Date().getTime() + 100_000
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_DAY,
 			currentPriceStrategy: CurrentPriceStrategy.HISTORY
 		});
 	});
 
-	it.skip('renders for today with market closed', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for today with market closed', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_DAY,
 			status: 'closed'
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('Today');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_DAY,
 			status: MarketStatus.CLOSED
 		});
 	});
 
-	it.skip('renders for 1 week', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for 1 week', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_WEEK
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Week');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_WEEK
 		});
 	});
 
-	it.skip('renders for 1 month', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for 1 month', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_MONTH
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Month');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_MONTH
 		});
 	});
 
-	it.skip('renders for 3 months', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for 3 months', async () => {
 		setupMockApiCalls({
 			time: MarketTime.THREE_MONTHS
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('3 Months');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.THREE_MONTHS
 		});
 	});
 
-	it.skip('renders for 1 year', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for 1 year', async () => {
 		setupMockApiCalls({
 			time: MarketTime.ONE_YEAR
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('1 Year');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.ONE_YEAR
 		});
 	});
 
-	it.skip('renders for 5 years', async () => {
+	// eslint-disable-next-line vitest/expect-expect
+	it('renders for 5 years', async () => {
 		setupMockApiCalls({
 			time: MarketTime.FIVE_YEARS
 		});
-		await renderApp();
-		await waitFor(() =>
-			expect(screen.queryByText('Markets')).toBeInTheDocument()
-		);
+		renderApp();
+		await screen.findByText('Markets');
 		await selectMenuItem('5 Years');
 		testPageHeaders();
-		testMarketsPage({
+		await testMarketsPage({
 			time: MarketTime.FIVE_YEARS
 		});
 	});

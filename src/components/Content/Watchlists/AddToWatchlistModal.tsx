@@ -1,6 +1,6 @@
 import {
 	Form,
-	FormInstance,
+	type FormInstance,
 	Input,
 	Modal,
 	Radio,
@@ -165,7 +165,7 @@ export const AddToWatchlistModal = (props: Props) => {
 	return (
 		<Modal
 			title={`Add ${props.symbol} to Watchlist`}
-			className="AddToWatchlistModal"
+			className="add-to-watchlist-modal"
 			data-testid="add-to-watchlist-modal"
 			open={props.show}
 			onCancel={onClose}

@@ -3,7 +3,7 @@ import './Breadcrumb.scss';
 
 export const Breadcrumb = () => {
 	return (
-		<AntBreadcrumb className="MarketBreadcrumb">
+		<AntBreadcrumb className="market-breadcrumb">
 			<AntBreadcrumb.Item>Hello</AntBreadcrumb.Item>
 			<AntBreadcrumb.Item>World</AntBreadcrumb.Item>
 		</AntBreadcrumb>

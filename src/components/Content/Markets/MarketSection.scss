@@ -1,6 +1,6 @@
 @import "../../../styles/card_list";
 
-.MarketSection {
+.market-section {
   margin: 2rem auto;
   width: 100%;
   display: flex;
@@ -8,7 +8,7 @@
   align-items: center;
   text-align: center;
 
-  .MarketCardList {
-    @include CardList;
+  .market-card-list {
+    @include card-list;
   }
 }

@@ -1,8 +1,8 @@
 import { format, subDays } from 'date-fns/fp';
-import Chainable = Cypress.Chainable;
+type Chainable<T> = Cypress.Chainable<T>;
 import { flow } from 'fp-ts/function';
 import { match } from 'ts-pattern';
-import { HistoryTime } from './common';
+import { type HistoryTime } from './common';
 
 const formatYear = format('yyyy');
 const formatMonth = format('MM');

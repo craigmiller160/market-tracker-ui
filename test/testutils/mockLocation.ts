@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { vi } from 'vitest';
 
 export const mockLocation = (): Location => {
 	const location = window.location;
@@ -6,7 +7,7 @@ export const mockLocation = (): Location => {
 	delete window.location;
 	// @ts-ignore
 	window.location = {
-		assign: jest.fn(),
+		assign: vi.fn(),
 		pathname: '/',
 		search: '',
 		hash: '',

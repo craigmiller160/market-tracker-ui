@@ -1,5 +1,5 @@
 import { MarketTime } from '../types/MarketTime';
-import { HistoryRecord } from '../types/history';
+import { type HistoryRecord } from '../types/history';
 import {
 	InvestmentType,
 	isCrypto,
@@ -8,15 +8,15 @@ import {
 import { match, P } from 'ts-pattern';
 import * as tradierService from '../services/TradierService';
 import * as coinGeckoService from '../services/CoinGeckoService';
-import { Quote } from '../types/quote';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { InvestmentInfo } from '../types/data/InvestmentInfo';
+import { type Quote } from '../types/quote';
+import { useQuery, type UseQueryResult } from '@tanstack/react-query';
+import { type InvestmentInfo } from '../types/data/InvestmentInfo';
 import { useMemo } from 'react';
 import * as Either from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
-import { TryT } from '@craigmiller160/ts-functions/types';
+import { type TryT } from '@craigmiller160/ts-functions/types';
 import { handleInvestmentData } from '../services/MarketInvestmentService';
-import { InvestmentData } from '../types/data/InvestmentData';
+import { type InvestmentData } from '../types/data/InvestmentData';
 import { MarketStatus } from '../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../store/marketSettings/selectors';

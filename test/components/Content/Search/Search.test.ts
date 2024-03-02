@@ -1,8 +1,8 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
 import { screen, waitFor, within } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import { renderApp } from '../../../testutils/RenderApp';
-import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
 import {
 	mockCalenderRequest,
@@ -12,7 +12,6 @@ import {
 	mockTradierTimesaleRequest
 } from '../../../testutils/testDataUtils';
 import { MarketTime } from '../../../../src/types/MarketTime';
-import { ApiServer, newApiServer } from '../../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
@@ -20,35 +19,29 @@ const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 
 describe('Search', () => {
-	let apiServer: ApiServer;
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
 	});
 
-	afterEach(() => {
-		apiServer.server.shutdown();
-	});
-
 	it('renders initial layout correctly', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
 			expect(screen.queryAllByText('Search')).toHaveLength(3)
 		);
-		expect(screen.queryByText('Stock')).toBeInTheDocument();
-		expect(screen.queryByText('Crypto')).toBeInTheDocument();
+		expect(screen.getByText('Stock')).toBeInTheDocument();
+		expect(screen.getByText('Crypto')).toBeInTheDocument();
 		expect(
-			screen.queryByRole('button', { name: 'Search' })
+			screen.getByRole('button', { name: 'Search' })
 		).toBeInTheDocument();
 		expect(getSearchBtn()).toBeDisabled();
-		expect(screen.queryByPlaceholderText('Symbol')).toBeInTheDocument();
+		expect(screen.getByPlaceholderText('Symbol')).toBeInTheDocument();
 	});
 
 	it('formats value and changes button status when text input happens', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -68,7 +61,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierTimesaleRequest(mockApi, 'VTI', 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -76,9 +69,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -95,7 +86,7 @@ describe('Search', () => {
 	it('searches for and finds a stock for Today, with the market closed', async () => {
 		mockCalenderRequest(mockApi, 'closed');
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -103,9 +94,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		expect(within(card).queryByText(/Chart/)).not.toBeInTheDocument();
@@ -113,14 +102,14 @@ describe('Search', () => {
 			expect(within(card).queryByText(/101/)).toHaveTextContent('$101.00')
 		);
 		expect(within(card).queryByText(/225/)).not.toBeInTheDocument();
-		expect(within(card).queryByText('Market Closed')).toBeInTheDocument();
+		expect(within(card).getByText('Market Closed')).toBeInTheDocument();
 	});
 
 	it('searches for and finds a stock for One Week', async () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_WEEK, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -129,9 +118,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Week'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -149,7 +136,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_MONTH, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -158,9 +145,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Month'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -178,7 +163,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.THREE_MONTHS, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -187,9 +172,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('3 Months'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -207,7 +190,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.ONE_YEAR, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -216,9 +199,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('1 Year'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -236,7 +217,7 @@ describe('Search', () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteRequest(mockApi, 'VTI', 1);
 		mockTradierHistoryRequest(mockApi, 'VTI', MarketTime.FIVE_YEARS, 1);
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -245,9 +226,7 @@ describe('Search', () => {
 		await userEvent.click(screen.getByText('5 Years'));
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		expect(within(card).queryByText(/VTI/)).toHaveTextContent('(VTI)');
 		await waitFor(() =>
@@ -264,7 +243,7 @@ describe('Search', () => {
 	it('searches for but cannot find a stock', async () => {
 		mockCalenderRequest(mockApi);
 		mockTradierQuoteNotFound(mockApi, 'VTI');
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/search'
 		});
 		await waitFor(() =>
@@ -272,9 +251,7 @@ describe('Search', () => {
 		);
 		await userEvent.type(getSymbolField(), 'VTI');
 		await userEvent.click(getSearchBtn());
-		await waitFor(() =>
-			expect(screen.queryByTestId('market-card-VTI')).toBeInTheDocument()
-		);
+		await screen.findByTestId('market-card-VTI');
 		const card = screen.getByTestId('market-card-VTI');
 		await waitFor(() =>
 			expect(within(card).queryByText(/Error/)).toHaveTextContent(

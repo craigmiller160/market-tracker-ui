@@ -1,5 +1,5 @@
-@import "src/styles/card_list";
+@import "../../../styles/card_list";
 
-.AccordionSection {
-  @include CardList;
+.accordion-section {
+  @include card-list;
 }

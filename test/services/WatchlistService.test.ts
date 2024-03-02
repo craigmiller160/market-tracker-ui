@@ -1,4 +1,5 @@
-import { DbWatchlist, Watchlist } from '../../src/types/Watchlist';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { type DbWatchlist, type Watchlist } from '../../src/types/Watchlist';
 import * as WatchlistService from '../../src/services/WatchlistService';
 import MockAdapter from 'axios-mock-adapter';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
@@ -34,6 +35,7 @@ describe('WatchlistService', () => {
 		expect(result).toEqual(watchlists);
 	});
 
+	// eslint-disable-next-line vitest/expect-expect
 	it('renameWatchlist', async () => {
 		mockApi
 			.onPut('/watchlists/First%20Watchlist/rename/NewWatchlist')
@@ -124,6 +126,7 @@ describe('WatchlistService', () => {
 		expect(result).toEqual(newWatchlist);
 	});
 
+	// eslint-disable-next-line vitest/expect-expect
 	it('removeWatchlist', async () => {
 		mockApi.onDelete('/watchlists/First%20Watchlist').reply(200);
 		await WatchlistService.removeWatchlist('First Watchlist');

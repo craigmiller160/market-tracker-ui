@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 

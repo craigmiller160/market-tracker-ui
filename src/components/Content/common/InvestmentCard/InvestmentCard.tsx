@@ -1,6 +1,6 @@
 import { Card, Typography } from 'antd';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { match, P } from 'ts-pattern';
 import {
 	getFiveYearDisplayStartDate,
@@ -16,10 +16,10 @@ import { MarketStatus } from '../../../../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import { Chart as ChartComp } from '../../../UI/Chart';
-import { InvestmentInfo } from '../../../../types/data/InvestmentInfo';
+import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
-import { InvestmentData } from '../../../../types/data/InvestmentData';
+import { type InvestmentData } from '../../../../types/data/InvestmentData';
 import { useInvestmentCardDataLoadingContext } from './InvestmentCardDataLoadingContext';
 
 interface Props {
@@ -31,7 +31,7 @@ const createTitle = (
 	info: InvestmentInfo,
 	data: InvestmentData | undefined
 ): ReactNode => (
-	<div className="Title">
+	<div className="title">
 		<h3>
 			<strong>{`(${info.symbol}) ${data?.name ?? ''}`}</strong>
 		</h3>
@@ -71,7 +71,7 @@ const createPrice = (data: InvestmentData, status: MarketStatus) => {
 
 	return (
 		<p className={priceClassName}>
-			<span className="Price">
+			<span className="price">
 				<span>
 					{status !== MarketStatus.CLOSED && (
 						<span className="Icon">{ChangeIcon}</span>
@@ -142,7 +142,7 @@ const createTime = (time: MarketTime): ReactNode => {
 		.run();
 
 	return (
-		<div className="Time">
+		<div className="time">
 			<h3>{timeInfo.label}</h3>
 			<p>Since {timeInfo.sinceDate}</p>
 		</div>
@@ -238,7 +238,7 @@ export const InvestmentCard = (props: Props) => {
 		<Card
 			title={FullTitle}
 			extra={Time}
-			className={`InvestmentCard ${breakpointName}`}
+			className={`investment-card ${breakpointName}`}
 			role="listitem"
 			data-testid={`market-card-${info.symbol}`}
 			actions={!loading && !error ? getActions(info.symbol) : []}

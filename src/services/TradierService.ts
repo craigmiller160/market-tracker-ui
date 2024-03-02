@@ -1,23 +1,23 @@
-import { TryT } from '@craigmiller160/ts-functions/types';
+import { type TryT } from '@craigmiller160/ts-functions/types';
 import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
 import { flow, pipe } from 'fp-ts/function';
 import * as TaskEither from 'fp-ts/TaskEither';
 import qs from 'qs';
 import {
-	TradierHistory,
-	TradierHistoryDay,
+	type TradierHistory,
+	type TradierHistoryDay,
 	tradierHistoryV
 } from '../types/tradier/history';
 import {
-	TradierQuote,
-	TradierQuotes,
+	type TradierQuote,
+	type TradierQuotes,
 	tradierQuotesV
 } from '../types/tradier/quotes';
 import { match, P } from 'ts-pattern';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import * as Option from 'fp-ts/Option';
-import { Quote } from '../types/quote';
-import { HistoryRecord } from '../types/history';
+import { type Quote } from '../types/quote';
+import { type HistoryRecord } from '../types/history';
 import {
 	formatHistoryDate,
 	getFiveYearHistoryStartDate,
@@ -29,16 +29,16 @@ import {
 	getTodayStartString
 } from '../utils/timeUtils';
 import {
-	TradierSeries,
-	TradierSeriesData,
+	type TradierSeries,
+	type TradierSeriesData,
 	tradierSeriesV
 } from '../types/tradier/timesales';
 import * as Time from '@craigmiller160/ts-functions/Time';
 import { MarketStatus } from '../types/MarketStatus';
 import {
 	toMarketStatus,
-	TradierCalendar,
-	TradierCalendarStatus,
+	type TradierCalendar,
+	type TradierCalendarStatus,
 	tradierCalendarV
 } from '../types/tradier/calendar';
 import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';

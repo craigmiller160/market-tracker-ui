@@ -1,7 +1,7 @@
 import {
 	QueryClient,
 	useMutation,
-	UseMutationResult,
+	type UseMutationResult,
 	useQuery,
 	useQueryClient
 } from '@tanstack/react-query';
@@ -12,8 +12,8 @@ import {
 	getSharesHistoryForStockInPortfolio
 } from '../services/PortfolioService';
 import {
-	PortfolioResponse,
-	SharesOwnedResponse
+	type PortfolioResponse,
+	type SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
 import { MarketTime } from '../types/MarketTime';
 

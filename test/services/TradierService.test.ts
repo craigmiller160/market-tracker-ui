@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, it, expect, beforeEach } from 'vitest';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import { TradierQuote } from '../../src/types/tradier/quotes';
+import { type TradierQuote } from '../../src/types/tradier/quotes';
 import {
 	getFiveYearHistory,
 	getMarketStatus,
@@ -11,14 +12,13 @@ import {
 	getQuotes,
 	getThreeMonthHistory,
 	getTimesales,
-	HistoryQuery
+	type HistoryQuery
 } from '../../src/services/TradierService';
-import '@relmify/jest-fp-ts';
-import { Quote } from '../../src/types/quote';
+import { type Quote } from '../../src/types/quote';
 import qs from 'qs';
 import * as Time from '@craigmiller160/ts-functions/Time';
-import { TradierHistory } from '../../src/types/tradier/history';
-import { HistoryRecord } from '../../src/types/history';
+import { type TradierHistory } from '../../src/types/tradier/history';
+import { type HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearHistoryStartDate,
 	getOneMonthHistoryStartDate,
@@ -28,9 +28,9 @@ import {
 	getTodayEndString,
 	getTodayStartString
 } from '../../src/utils/timeUtils';
-import { TradierSeries } from '../../src/types/tradier/timesales';
+import { type TradierSeries } from '../../src/types/tradier/timesales';
 import { MarketStatus } from '../../src/types/MarketStatus';
-import { TradierCalendar } from '../../src/types/tradier/calendar';
+import { type TradierCalendar } from '../../src/types/tradier/calendar';
 
 const formatCalendarYear = Time.format('yyyy');
 const formatCalendarMonth = Time.format('MM');

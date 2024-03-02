@@ -1,4 +1,4 @@
-import { DbRecord, UserRecord } from './db';
+import { type DbRecord, type UserRecord } from './db';
 
 export interface WatchlistItem {
 	readonly symbol: string;

@@ -1,7 +1,7 @@
-import { CoinGeckoPrice } from '../../src/types/coingecko/price';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { type CoinGeckoPrice } from '../../src/types/coingecko/price';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import '@relmify/jest-fp-ts';
 import {
 	getFiveYearHistory,
 	getOneMonthHistory,
@@ -11,9 +11,9 @@ import {
 	getThreeMonthHistory,
 	getTodayHistory
 } from '../../src/services/CoinGeckoService';
-import { CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
+import { type CoinGeckoMarketChart } from '../../src/types/coingecko/marketchart';
 import * as Time from '@craigmiller160/ts-functions/Time';
-import { HistoryRecord } from '../../src/types/history';
+import { type HistoryRecord } from '../../src/types/history';
 import {
 	getFiveYearStartDate,
 	getOneMonthStartDate,

@@ -1,16 +1,16 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { Draft } from 'immer';
+import { type Draft } from 'immer';
 import produce from 'immer';
-import { DbWatchlist } from '../../../src/types/Watchlist';
-import { DbRecord, UserRecord } from '../../../src/types/db';
-import { OptionT } from '@craigmiller160/ts-functions/types';
-import { AuthUser } from '../../../src/types/auth';
+import { type DbWatchlist } from '../../../src/types/Watchlist';
+import { type DbRecord, type UserRecord } from '../../../src/types/db';
+import { type OptionT } from '@craigmiller160/ts-functions/types';
+import { type AuthUser } from '../../../src/types/auth';
 import * as Option from 'fp-ts/Option';
-import { TradierCalendar } from '../../../src/types/tradier/calendar';
+import { type TradierCalendar } from '../../../src/types/tradier/calendar';
 import { defaultTradierCalendar } from './default/tradier';
-import { TradierQuotes } from '../../../src/types/tradier/quotes';
-import { TradierSeries } from '../../../src/types/tradier/timesales';
-import { TradierHistory } from '../../../src/types/tradier/history';
+import { type TradierQuotes } from '../../../src/types/tradier/quotes';
+import { type TradierSeries } from '../../../src/types/tradier/timesales';
+import { type TradierHistory } from '../../../src/types/tradier/history';
 
 const USER_ID = nanoid();
 

@@ -1,7 +1,7 @@
 import { Typography } from 'antd';
 import './Markets.scss';
 import {
-	InvestmentsByType,
+	type InvestmentsByType,
 	marketInvestmentsByType
 } from '../../../data/MarketPageInvestmentParsing';
 import { pipe } from 'fp-ts/function';
@@ -13,7 +13,7 @@ import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
 } from '../../../types/data/MarketInvestmentType';
-import { Accordion, AccordionPanelConfig } from '../../UI/Accordion';
+import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -73,7 +73,7 @@ export const Markets = () => {
 	const panels = createPanels(investmentResult.investments);
 	return (
 		<>
-			<div className="GlobalMarkets" data-testid="markets-page">
+			<div className="global-markets" data-testid="markets-page">
 				<Typography.Title>All Markets</Typography.Title>
 				<Accordion panels={panels} />
 			</div>

@@ -1,39 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "es2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "webworker"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "declaration": false,
-    "module": "es2022"
-  },
+  "extends": "@craigmiller160/js-config/configs/typescript/tsconfig.module.browser.json",
   "include": [
-    "src/**/*",
-    "test/**/*",
-    "./vite.config.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "lib",
     "build",
-    ".yalc"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "moduleResolution": "Node"
-    }
-  }
+    "lib"
+  ]
 }

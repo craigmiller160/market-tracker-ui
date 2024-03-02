@@ -1,14 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress", "node"]
+    "types": [
+      "node",
+      "cypress"
+    ]
   },
-  "include": ["**/*"],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "build",
-    ".yalc",
-    "../test/**"
+  "include": [
+    "../src/**/*",
+    "**/*"
   ]
 }

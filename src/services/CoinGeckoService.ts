@@ -1,21 +1,20 @@
-import { MonoidT, TryT } from '@craigmiller160/ts-functions/types';
-import { Quote } from '../types/quote';
+import { type MonoidT, type TryT } from '@craigmiller160/ts-functions/types';
+import { type Quote } from '../types/quote';
 import { flow, pipe } from 'fp-ts/function';
 import { marketTrackerApiFpTs, getResponseData } from './AjaxApi';
 import * as TaskEither from 'fp-ts/TaskEither';
-import { CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
+import { type CoinGeckoPrice, coinGeckoPriceV } from '../types/coingecko/price';
 import * as RArray from 'fp-ts/ReadonlyArray';
 import * as Option from 'fp-ts/Option';
 import * as Either from 'fp-ts/Either';
-import { HistoryRecord } from '../types/history';
+import { type HistoryRecord } from '../types/history';
 import {
-	CoinGeckoMarketChart,
+	type CoinGeckoMarketChart,
 	coinGeckoMarketChartV
 } from '../types/coingecko/marketchart';
 import * as Time from '@craigmiller160/ts-functions/Time';
-import { match } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 import * as Monoid from 'fp-ts/Monoid';
-import * as Pattern from '@craigmiller160/ts-functions/Pattern';
 import {
 	getFiveYearStartDate,
 	getOneMonthStartDate,
@@ -40,7 +39,7 @@ const quoteSymbolMonoid: MonoidT<string> = {
 	empty: '',
 	concat: (s1, s2) =>
 		match(s1)
-			.with(Pattern.lengthGT(0), () => `${s1},${s2}`)
+			.with(P.string.minLength(1), () => `${s1},${s2}`)
 			.otherwise(() => s2)
 };
 

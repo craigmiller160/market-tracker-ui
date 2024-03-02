@@ -1,13 +1,14 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { getAuthUser } from '../../src/services/AuthService';
-import { AuthUser } from '../../src/types/auth';
+import { type AuthUser } from '../../src/types/auth';
 import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 import { nanoid } from '@reduxjs/toolkit';
 
-jest.mock('../../src/store', () => ({
+vi.mock('../../src/store', () => ({
 	store: {
-		dispatch: jest.fn()
+		dispatch: vi.fn()
 	}
 }));
 
@@ -21,7 +22,7 @@ describe('AuthService', () => {
 	let location: Location;
 	beforeEach(() => {
 		mockApi.reset();
-		jest.resetAllMocks();
+		vi.resetAllMocks();
 		location = mockLocation();
 	});
 

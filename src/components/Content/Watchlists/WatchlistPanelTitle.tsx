@@ -1,6 +1,6 @@
-import { DbWatchlist } from '../../../types/Watchlist';
-import { Button, Form, FormInstance, Input, Typography } from 'antd';
-import { MouseEvent } from 'react';
+import { type DbWatchlist } from '../../../types/Watchlist';
+import { Button, Form, type FormInstance, Input, Typography } from 'antd';
+import { type MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { notificationSlice } from '../../../store/notification/slice';
 import './WatchlistPanelTitle.scss';
@@ -62,7 +62,7 @@ export const WatchlistPanelTitle = (props: Props) => {
 
 	return (
 		<Form
-			className={`PanelTitleForm ${breakpointName}`}
+			className={`panel-title-form ${breakpointName}`}
 			form={form}
 			initialValues={{
 				watchlistName: watchlist.watchlistName
@@ -71,7 +71,7 @@ export const WatchlistPanelTitle = (props: Props) => {
 			<Form.Item name="watchlistName">
 				<Input allowClear onClick={(e) => e.stopPropagation()} />
 			</Form.Item>
-			<div className={`TitleFormActions ${breakpointName}`}>
+			<div className={`title-form-actions ${breakpointName}`}>
 				<Button onClick={onCancelRenamedTitle}>Cancel</Button>
 				<Button
 					htmlType="submit"

@@ -3,7 +3,7 @@ import { watchlistApi } from './api/watchlists';
 import { portfolioApi } from './api/portfolios';
 import { portfoliosPage } from './pages/portfolios';
 import portfolios from '../fixtures/portfolios.json';
-import { PortfolioResponse } from '../../src/types/generated/market-tracker-portfolio-service';
+import { type PortfolioResponse } from '../../src/types/generated/market-tracker-portfolio-service';
 import { accordion } from './pages/accordion';
 import { investmentCardPage } from './pages/investmentCard';
 

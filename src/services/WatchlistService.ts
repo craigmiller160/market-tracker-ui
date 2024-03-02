@@ -1,5 +1,5 @@
 import { marketTrackerApi, getResponseData } from './AjaxApi';
-import { DbWatchlist, Watchlist } from '../types/Watchlist';
+import { type DbWatchlist, type Watchlist } from '../types/Watchlist';
 
 export const getAllWatchlists = (
 	signal?: AbortSignal
@@ -48,7 +48,7 @@ export const createWatchlist = (
 				{
 					symbol: stockSymbol
 				}
-		  ]
+			]
 		: [];
 	const input: Watchlist = {
 		watchlistName,

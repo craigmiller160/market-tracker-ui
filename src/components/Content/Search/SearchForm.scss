@@ -1,9 +1,9 @@
-.SearchForm {
+.search-form {
   display: flex;
   flex-direction: row;
   margin: 2rem auto;
 
-  .SearchFieldAndButton {
+  .search-field-and-button {
     display: flex;
     flex-direction: row;
   }
@@ -11,12 +11,14 @@
   &.xs {
     flex-direction: column;
 
-    .SearchType {
+    .search-type {
       margin: 1rem auto;
       width: 100%;
+
       .ant-radio-group {
         width: 100%;
         text-align: center;
+
         .ant-radio-button-wrapper {
           width: 50%;
         }

@@ -4,9 +4,9 @@ import { Watchlists } from '../Watchlists';
 import { Portfolios } from '../Portfolios';
 
 export const InvestmentInfo = () => (
-	<div className="InvestmentInfoPage">
+	<div className="investment-info-page">
 		<Typography.Title>Investment Info</Typography.Title>
-		<div className="ContentWrapper">
+		<div className="content-wrapper">
 			<Portfolios />
 			<Watchlists />
 		</div>

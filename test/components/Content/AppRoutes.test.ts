@@ -1,30 +1,23 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { marketTrackerApiFpTs } from '../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { renderApp } from '../../testutils/RenderApp';
-import '@testing-library/jest-dom/extend-expect';
-import { ApiServer, newApiServer } from '../../testutils/server';
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('AppRoutes', () => {
-	let apiServer: ApiServer;
 	beforeEach(() => {
-		apiServer = newApiServer();
 		mockApi.reset();
 		mockApi.onGet('/oauth/user').passThrough();
 	});
 
-	afterEach(() => {
-		apiServer.server.shutdown();
-	});
-
 	it('shows correct initial route for authenticated user', async () => {
-		await renderApp();
+		renderApp();
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/investments'
+					'http://localhost:3000/market-tracker/investments'
 				),
 			{
 				timeout: 2000
@@ -36,13 +29,13 @@ describe('AppRoutes', () => {
 	});
 
 	it('correctly redirects for totally wrong route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/auth-management/'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/investments'
+					'http://localhost:3000/market-tracker/investments'
 				),
 			{
 				timeout: 2000
@@ -52,13 +45,13 @@ describe('AppRoutes', () => {
 	});
 
 	it('renders investment info route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/investments'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/investments'
+					'http://localhost:3000/market-tracker/investments'
 				),
 			{
 				timeout: 2000
@@ -70,22 +63,18 @@ describe('AppRoutes', () => {
 	});
 
 	it('renders recognition route', async () => {
-		await renderApp({
+		renderApp({
 			initialPath: '/market-tracker/recognition'
 		});
 		await waitFor(
 			() =>
 				expect(window.location.href).toEqual(
-					'http://localhost/market-tracker/recognition'
+					'http://localhost:3000/market-tracker/recognition'
 				),
 			{
 				timeout: 2000
 			}
 		);
-		await waitFor(() =>
-			expect(
-				screen.queryByText('Data Source Recognition')
-			).toBeInTheDocument()
-		);
+		await screen.findByText('Data Source Recognition');
 	});
 });

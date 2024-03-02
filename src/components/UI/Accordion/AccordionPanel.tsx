@@ -1,7 +1,7 @@
 import { Collapse } from 'antd';
 import './AccordionPanel.scss';
-import { ReactNode } from 'react';
-import { AccordionInvestment } from './AccordionInvestment';
+import { type ReactNode } from 'react';
+import { type AccordionInvestment } from './AccordionInvestment';
 import { AccordionSection } from './AccordionSection';
 
 interface Props {
@@ -19,7 +19,7 @@ export const AccordionPanel = (props: Props) => {
 			header={title}
 			key={key}
 			extra={actions}
-			className="AccordionPanel"
+			className="accordion-panel"
 		>
 			<AccordionSection investments={investments} />
 		</Collapse.Panel>

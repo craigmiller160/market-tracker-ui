@@ -1,7 +1,7 @@
 import { Button, Form, Input, Radio } from 'antd';
 import './SearchForm.scss';
 import { useMemo } from 'react';
-import { SearchValues } from './constants';
+import { type SearchValues } from './constants';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { toNameCase } from '../../../utils/stringUtils';
 import { useBreakpointName } from '../../utils/Breakpoints';
@@ -43,7 +43,7 @@ export const SearchForm = (props: Props) => {
 				searchType: InvestmentType.STOCK
 			}}
 		>
-			<div className="SearchType">
+			<div className="search-type">
 				<Form.Item name="searchType">
 					<Radio.Group>
 						<SearchTypeRadio searchType={InvestmentType.STOCK} />
@@ -55,7 +55,7 @@ export const SearchForm = (props: Props) => {
 					</Radio.Group>
 				</Form.Item>
 			</div>
-			<div className="SearchFieldAndButton">
+			<div className="search-field-and-button">
 				<Form.Item name="symbol" normalize={toUpperCase}>
 					<Input placeholder="Symbol" allowClear />
 				</Form.Item>
@@ -65,6 +65,7 @@ export const SearchForm = (props: Props) => {
 							type="primary"
 							htmlType="submit"
 							disabled={
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 								(innerForm.getFieldsValue()?.symbol?.length ??
 									0) === 0
 							}

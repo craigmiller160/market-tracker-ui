@@ -1,7 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import {
 	notificationSlice,
-	Notification,
-	StateType
+	type Notification,
+	type StateType
 } from '../../../src/store/notification/slice';
 import { nanoid } from '@reduxjs/toolkit';
 
@@ -27,6 +28,7 @@ describe('notification slice', () => {
 		expect(result).toEqual({
 			notifications: [
 				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					id: expect.any(String),
 					isShown: false,
 					type: 'success',
@@ -45,6 +47,7 @@ describe('notification slice', () => {
 		expect(result).toEqual({
 			notifications: [
 				{
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					id: expect.any(String),
 					isShown: false,
 					type: 'error',

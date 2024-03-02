@@ -1,12 +1,12 @@
 import { createDesktopAccordion } from './desktopAccordion';
-import { GetPanel } from './types';
+import { type GetPanel } from './types';
 import { createMobileAccordion } from './mobileAccordion';
 
 const getPanels = (id?: string) => {
 	if (id) {
-		return cy.get(`#${id} .AccordionPanel`);
+		return cy.get(`#${id} .accordion-panel`);
 	}
-	return cy.get('.Accordion .AccordionPanel');
+	return cy.get('.accordion .accordion-panel');
 };
 
 const getPanel: GetPanel = (panel) => {

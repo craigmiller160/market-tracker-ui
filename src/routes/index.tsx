@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router';
+import { type RouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { Welcome } from '../components/Content/Welcome';
 import { match } from 'ts-pattern';

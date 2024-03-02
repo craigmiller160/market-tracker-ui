@@ -1,11 +1,13 @@
-@import "src/styles/page";
+@import "../../../styles/page";
 
-.InvestmentInfoPage {
-  @include PageRoot;
+.investment-info-page {
+  @include page-root;
+
   width: 95%;
 
-  .ContentWrapper {
+  .content-wrapper {
     width: 100%;
+
     >* {
       margin-bottom: 2rem;
     }

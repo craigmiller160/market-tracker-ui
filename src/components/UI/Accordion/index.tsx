@@ -1,6 +1,6 @@
 import { Collapse } from 'antd';
-import { ReactNode } from 'react';
-import { AccordionInvestment } from './AccordionInvestment';
+import { type ReactNode } from 'react';
+import { type AccordionInvestment } from './AccordionInvestment';
 import { AccordionPanel } from './AccordionPanel';
 import './Accordion.scss';
 
@@ -30,7 +30,7 @@ export const Accordion = (props: Props) => {
 	const panelComponents = panels.map(panelConfigToPanels);
 	return (
 		<div id={props.id} style={{ width: '100%' }}>
-			<Collapse className="Accordion" accordion destroyInactivePanel>
+			<Collapse className="accordion" accordion destroyInactivePanel>
 				{panelComponents}
 			</Collapse>
 		</div>

@@ -1,7 +1,7 @@
-import { RootState } from '../index';
+import { type RootState } from '../index';
 import { createSelector } from '@reduxjs/toolkit';
 import * as O from 'fp-ts/Option';
-import { AuthUser } from '../../types/auth';
+import { type AuthUser } from '../../types/auth';
 
 export const hasCheckedSelector = (state: RootState): boolean =>
 	state.auth.hasChecked;
