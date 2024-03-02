@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 import { screen, within } from '@testing-library/react';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';

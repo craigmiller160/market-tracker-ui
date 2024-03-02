@@ -75,7 +75,7 @@ describe('Navbar', () => {
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
+			'http://localhost:3000/market-tracker/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -84,7 +84,7 @@ describe('Navbar', () => {
 		await userEvent.click(screen.getByText('Search'));
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/search'
+			'http://localhost:3000/market-tracker/search'
 		);
 		const navbar = screen.getByTestId('desktop-navbar');
 		expect(
@@ -100,7 +100,7 @@ describe('Navbar', () => {
 		await screen.findByText('Recognition');
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/recognition'
+			'http://localhost:3000/market-tracker/recognition'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
@@ -110,7 +110,7 @@ describe('Navbar', () => {
 		await userEvent.click(screen.getByText('Investment Info'));
 
 		expect(window.location.href).toEqual(
-			'http://localhost/market-tracker/investments'
+			'http://localhost:3000/market-tracker/investments'
 		);
 		expect(
 			// eslint-disable-next-line testing-library/no-node-access
