@@ -42,12 +42,12 @@ resource "keycloak_openid_client" "market_tracker_ui_prod" {
   access_type = local.client_common.access_type
   standard_flow_enabled = local.client_common.standard_flow_enabled
   valid_redirect_uris = [
-    "https://apps.craigmiller160.us/*"
+    "https://market-tracker.craigmiller160.us/*"
   ]
   valid_post_logout_redirect_uris = [
-    "https://apps.craigmiller160.us/*"
+    "https://market-tracker.craigmiller160.us/*"
   ]
   web_origins = [
-    "https://apps.craigmiller160.us"
+    "https://market-tracker.craigmiller160.us"
   ]
 }
