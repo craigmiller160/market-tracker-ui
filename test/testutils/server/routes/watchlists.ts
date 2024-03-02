@@ -1,5 +1,5 @@
 import { Response, Server } from 'miragejs';
-import { Database, ensureDbUserRecord } from '../Database';
+import { Database, ensureDbUserRecord } from '../../msw-server/Database';
 import { validationError } from '../utils/validate';
 import {
 	type DbWatchlist,

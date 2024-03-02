@@ -7,7 +7,7 @@ import { type OptionT } from '@craigmiller160/ts-functions/types';
 import { type AuthUser } from '../../../src/types/auth';
 import * as Option from 'fp-ts/Option';
 import { type TradierCalendar } from '../../../src/types/tradier/calendar';
-import { defaultTradierCalendar } from './default/tradier';
+import { defaultTradierCalendar } from '../server/default/tradier';
 import { type TradierQuotes } from '../../../src/types/tradier/quotes';
 import { type TradierSeries } from '../../../src/types/tradier/timesales';
 import { type TradierHistory } from '../../../src/types/tradier/history';

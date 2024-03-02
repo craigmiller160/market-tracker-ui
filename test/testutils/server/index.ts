@@ -1,6 +1,6 @@
 import { createServer } from 'miragejs';
 import { Server } from 'miragejs/server';
-import { Database } from './Database';
+import { Database } from '../msw-server/Database';
 import { createWatchlistRoutes } from './routes/watchlists';
 import { seedWatchlists } from './seedData/watchlists';
 import * as Option from 'fp-ts/Option';

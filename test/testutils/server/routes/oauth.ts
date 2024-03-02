@@ -1,4 +1,4 @@
-import { Database } from '../Database';
+import { Database } from '../../msw-server/Database';
 import { Server } from 'miragejs/server';
 import { Response } from 'miragejs';
 import { match } from 'ts-pattern';

@@ -1,4 +1,4 @@
-import { type DataUpdater, ensureDbUserRecord } from '../Database';
+import { type DataUpdater, ensureDbUserRecord } from '../../msw-server/Database';
 import { type Watchlist } from '../../../../src/types/Watchlist';
 import { castDraft } from 'immer';
 
