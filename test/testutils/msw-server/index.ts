@@ -6,11 +6,14 @@ import { nanoid } from '@reduxjs/toolkit';
 import { seedWatchlists } from './seedData/watchlists';
 import { seedTradier } from './seedData/tradier';
 import { createOAuthHandlers } from './handlers/oauthHandlers';
-import {createWatchlistHandlers} from './handlers/watchlistHandlers';
-import {createTradierHandlers} from './handlers/tradierHandlers';
+import { createWatchlistHandlers } from './handlers/watchlistHandlers';
+import { createTradierHandlers } from './handlers/tradierHandlers';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
+	startServer: () => void;
+	resetServer: () => void;
+	stopServer: () => void;
 }>;
 
 export type ApiServer = Readonly<{
@@ -24,8 +27,7 @@ const createClearDefaultUser = (database: Database) => () =>
 		draft.authUser = Option.none;
 	});
 
-export const newApiServer = (): ApiServer => {
-	const database = new Database();
+const setInitialData = (database: Database) =>
 	database.updateData((draft) => {
 		draft.authUser = Option.some({
 			userId: nanoid()
@@ -33,6 +35,10 @@ export const newApiServer = (): ApiServer => {
 		seedWatchlists(draft);
 		seedTradier(draft);
 	});
+
+export const newApiServer = (): ApiServer => {
+	const database = new Database();
+	setInitialData(database);
 
 	const server: SetupServerApi = setupServer(
 		...createOAuthHandlers(database),
@@ -43,7 +49,10 @@ export const newApiServer = (): ApiServer => {
 		server,
 		database,
 		actions: {
-			clearDefaultUser: createClearDefaultUser(database)
+			clearDefaultUser: createClearDefaultUser(database),
+			resetServer: () => setInitialData(database),
+			startServer: () => server.listen({ onUnhandledRequest: 'error' }),
+			stopServer: () => server.close()
 		}
 	};
 };

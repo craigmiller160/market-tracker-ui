@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { newApiServer } from './testutils/msw-server';
 
 vi.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
@@ -24,14 +25,22 @@ const mockWindowMatchMedia = () =>
 		}))
 	});
 
+const server = newApiServer();
+
 beforeAll(() => {
 	mockWindowMatchMedia();
+	server.actions.startServer();
 });
 
 beforeEach(() => {
 	process.env.NODE_ENV = 'test';
+	server.actions.resetServer();
 });
 
 afterEach(() => {
 	process.env.NODE_ENV = 'test';
+});
+
+afterAll(() => {
+	server.actions.stopServer();
 });
