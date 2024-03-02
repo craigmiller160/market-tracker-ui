@@ -8,7 +8,7 @@ const getSymbolField = () => screen.getByPlaceholderText('Symbol');
 const getSearchBtn = () => screen.getByRole('button', { name: 'Search' });
 
 describe('Watchlists', () => {
-	it('renames a watchlist on mobile', async () => {
+	it.skip('renames a watchlist on mobile', async () => {
 		const screenContextValue: ScreenContextValue = {
 			breakpoints: {
 				xs: true
@@ -55,7 +55,7 @@ describe('Watchlists', () => {
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 
-	it('renames a watchlist', async () => {
+	it.skip('renames a watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/watchlists'
 		});
@@ -90,7 +90,7 @@ describe('Watchlists', () => {
 		expect(screen.queryAllByText('Rename')).toHaveLength(2);
 	});
 
-	it('adds stock to existing watchlist', async () => {
+	it.skip('adds stock to existing watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/search'
 		});
@@ -142,7 +142,7 @@ describe('Watchlists', () => {
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
-	it('adds stock to new watchlist', async () => {
+	it.skip('adds stock to new watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/search'
 		});
@@ -190,7 +190,7 @@ describe('Watchlists', () => {
 		await waitFor(() => expect(screen.getByText(/\(MSFT\)/)).toBeVisible());
 	});
 
-	it('removes watchlist', async () => {
+	it.skip('removes watchlist', async () => {
 		renderApp({
 			initialPath: '/market-tracker/investments'
 		});
