@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { type CoinGeckoPrice } from '../../src/types/coingecko/price';
 import { marketTrackerApiFpTs } from '../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
-import '@relmify/jest-fp-ts';
 import {
 	getFiveYearHistory,
 	getOneMonthHistory,

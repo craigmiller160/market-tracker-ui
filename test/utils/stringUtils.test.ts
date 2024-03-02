@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { toNameCase } from '../../src/utils/stringUtils';
 
 describe('stringUtils', () => {

@@ -3,7 +3,6 @@ import {
 	getAltIdForSymbol,
 	getSymbolForAltId
 } from '../../src/data/MarketPageInvestmentParsing';
-import '@relmify/jest-fp-ts';
 
 describe('MarketPageInvestmentParsing', () => {
 	describe('getAltIdForSymbol', () => {
