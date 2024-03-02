@@ -19,7 +19,7 @@ export const AccordionPanel = (props: Props) => {
 			header={title}
 			key={key}
 			extra={actions}
-			className="AccordionPanel"
+			className="accordion-panel"
 		>
 			<AccordionSection investments={investments} />
 		</Collapse.Panel>
