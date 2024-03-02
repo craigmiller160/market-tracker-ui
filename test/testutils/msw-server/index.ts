@@ -8,7 +8,7 @@ import { seedTradier } from './seedData/tradier';
 import { createOAuthHandlers } from './handlers/oauthHandlers';
 import { createWatchlistHandlers } from './handlers/watchlistHandlers';
 import { createTradierHandlers } from './handlers/tradierHandlers';
-import {createPortfolioHandlers} from './handlers/portfolioHandlers';
+import { createPortfolioHandlers } from './handlers/portfolioHandlers';
 
 type ApiServerActions = Readonly<{
 	clearDefaultUser: () => void;
