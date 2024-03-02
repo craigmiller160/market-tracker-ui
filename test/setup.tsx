@@ -10,6 +10,17 @@ vi.mock('@ant-design/charts', () => {
 	};
 });
 
+vi.mock('@ant-design/icons', () => {
+	const Icon = () => <p>Icon</p>;
+	return {
+		default: {
+			CaretDownOutlined: Icon,
+			CaretDownFilled: Icon,
+			CaretUpFilled: Icon
+		}
+	};
+});
+
 window.URL.createObjectURL = () => '';
 
 const mockWindowMatchMedia = () =>

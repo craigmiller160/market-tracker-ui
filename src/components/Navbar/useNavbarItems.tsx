@@ -73,7 +73,7 @@ const createAuthNavItem = (
 	isAuthorized: boolean,
 	authBtnAction: () => void,
 	authBtnTxt: string
-): MenuProps['items'] => {
+): NonNullable<MenuProps['items']> => {
 	const className = ['AuthItem', isAuthorized ? 'IsAuth' : null]
 		.filter(identity)
 		.join(' ');
@@ -107,8 +107,8 @@ const navbarItemToMenuItem = (item: NavbarItem): ItemType => {
 };
 
 type NavbarItemComponents = [
-	PageItems: MenuProps['items'],
-	TimeItems: MenuProps['items']
+	PageItems: NonNullable<MenuProps['items']>,
+	TimeItems: NonNullable<MenuProps['items']>
 ];
 
 const useDesktopItems = (): NavbarItemComponents => [
@@ -130,7 +130,7 @@ const getItemName = (
 const createMobileItemMenu = (
 	title: string,
 	items: ReadonlyArray<NavbarItem>
-): MenuProps['items'] => [
+): NonNullable<MenuProps['items']> => [
 	{
 		label: title,
 		key: title,
@@ -160,7 +160,7 @@ const useMobileItems = (
 export const useNavbarItems = (
 	selectedPageKey: string,
 	selectedTimeKey: string
-): MenuProps['items'] => {
+): NonNullable<MenuProps['items']> => {
 	const [isAuthorized, hasChecked, authBtnTxt, authBtnAction] =
 		useNavbarAuthCheck();
 	const breakpointName = useBreakpointName();
