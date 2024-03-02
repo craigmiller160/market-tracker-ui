@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { marketTrackerApiFpTs } from '../../../../src/services/AjaxApi';
 import MockAdapter from 'axios-mock-adapter';
 import { pipe } from 'fp-ts/function';

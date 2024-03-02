@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { MarketTime } from '../../src/types/MarketTime';
 import { InvestmentType } from '../../src/types/data/InvestmentType';
 import * as tradierService from '../../src/services/TradierService';
