@@ -18,11 +18,10 @@ describe('Watchlists', () => {
 			initialPath: '/market-tracker/watchlists',
 			screenContextValue
 		});
-		await waitFor(() =>
-			expect(
-				screen.queryAllByTestId('watchlist-panel-title')
-			).toHaveLength(2)
+		const panelTitles = await screen.findAllByTestId(
+			'watchlist-panel-title'
 		);
+		expect(panelTitles).toHaveLength(2);
 		expect(screen.queryAllByRole('button', { name: '...' })).toHaveLength(
 			2
 		);
