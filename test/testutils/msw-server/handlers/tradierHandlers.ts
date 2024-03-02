@@ -20,7 +20,7 @@ export const createTradierHandlers = (
 	database: Database
 ): ReadonlyArray<HttpHandler> => {
 	const getCalendarHandler = http.get<PathParams, DefaultBodyType>(
-		'http://localhost/market-tracker/api/tradier/markets/calendar',
+		'http://localhost:3000/market-tracker/api/tradier/markets/calendar',
 		({ request }) => {
 			const queryParams = new URL(request.url).searchParams;
 			const year = queryParams.get('year');
@@ -41,7 +41,7 @@ export const createTradierHandlers = (
 	);
 
 	const getTimesalesHandler = http.get(
-		'http://localhost/market-tracker/api/tradier/markets/timesales',
+		'http://localhost:3000/market-tracker/api/tradier/markets/timesales',
 		({ request }): StrictResponse<TradierSeries | string> => {
 			const queryParams = new URL(request.url).searchParams;
 			const start = queryParams.get('start');
@@ -65,7 +65,7 @@ export const createTradierHandlers = (
 	);
 
 	const getQuotesHandler = http.get(
-		'http://localhost/market-tracker/api/tradier/markets/quotas',
+		'http://localhost:3000/market-tracker/api/tradier/markets/quotas',
 		({ request }): StrictResponse<TradierQuotes | string> => {
 			const queryParams = new URL(request.url).searchParams;
 			const symbols = queryParams.get('symbols');
@@ -82,7 +82,7 @@ export const createTradierHandlers = (
 	);
 
 	const getHistoryHandler = http.get(
-		'http://localhost/market-tracker/api/tradier/markets/history',
+		'http://localhost:3000/market-tracker/api/tradier/markets/history',
 		({ request }): StrictResponse<TradierHistory | string> => {
 			const queryParams = new URL(request.url).searchParams;
 			const start = queryParams.get('start');

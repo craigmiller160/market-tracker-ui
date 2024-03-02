@@ -24,7 +24,7 @@ export const createWatchlistHandlers = (
 	database: Database
 ): ReadonlyArray<RequestHandler> => {
 	const getWatchlistNamesHandler = http.get(
-		'http://localhost/market-tracker/api/watchlists/names',
+		'http://localhost:3000/market-tracker/api/watchlists/names',
 		() => {
 			const names = database.data.watchlists.map(
 				(watchlist) => watchlist.watchlistName
@@ -34,7 +34,7 @@ export const createWatchlistHandlers = (
 	);
 
 	const createWatchlistHandler = http.post<PathParams, Watchlist>(
-		'http://localhost/market-tracker/api/watchlists',
+		'http://localhost:3000/market-tracker/api/watchlists',
 		async ({ request }) => {
 			const body = await request.json();
 			const dbWatchlist = ensureDbUserRecord(body);
@@ -46,14 +46,14 @@ export const createWatchlistHandlers = (
 	);
 
 	const getAllWatchlistsHandler = http.get(
-		'http://localhost/market-tracker/api/watchlists/all',
+		'http://localhost:3000/market-tracker/api/watchlists/all',
 		() => {
 			return HttpResponse.json(database.data.watchlists);
 		}
 	);
 
 	const renameWatchlistHandler = http.put<RenameWatchlistParams>(
-		'http://localhost/market-tracker/api/watchlists/:oldName/rename/:newName',
+		'http://localhost:3000/market-tracker/api/watchlists/:oldName/rename/:newName',
 		({ params }) => {
 			const existingIndex = database.data.watchlists.findIndex(
 				(watchlist) => watchlist.watchlistName === params.oldName
@@ -76,7 +76,7 @@ export const createWatchlistHandlers = (
 	);
 
 	const addInvestmentToWatchlistHandler = http.put<WatchlistInvestmentParams>(
-		'http://localhost/market-tracker/api/watchlists/:name/:type/:symbol',
+		'http://localhost:3000/market-tracker/api/watchlists/:name/:type/:symbol',
 		({ params }) => {
 			if (params.type === InvestmentType.CRYPTO) {
 				return validationError(
@@ -113,7 +113,7 @@ export const createWatchlistHandlers = (
 	);
 
 	const deleteWatchlistHandler = http.delete<DeleteWatchlistParams>(
-		'http://localhost/market-tracker/api/watchlists/:name',
+		'http://localhost:3000/market-tracker/api/watchlists/:name',
 		({ params }) => {
 			database.updateData((draft) => {
 				draft.watchlists = draft.watchlists.filter(
@@ -128,7 +128,7 @@ export const createWatchlistHandlers = (
 
 	const removeInvestmentFromWatchlistHandler =
 		http.delete<WatchlistInvestmentParams>(
-			'http://localhost/market-tracker/api/watchlists/:name/:type/:symbol',
+			'http://localhost:3000/market-tracker/api/watchlists/:name/:type/:symbol',
 			({ params }) => {
 				if (params.type === InvestmentType.CRYPTO) {
 					return validationError(

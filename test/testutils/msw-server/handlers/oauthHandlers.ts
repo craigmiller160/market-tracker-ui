@@ -8,7 +8,7 @@ export const createOAuthHandlers = (
 	database: Database
 ): ReadonlyArray<RequestHandler> => {
 	const getUserHandler = http.get(
-		'http://localhost/market-tracker/api/oauth/user',
+		'http://localhost:3000/market-tracker/api/oauth/user',
 		() => {
 			return func.pipe(
 				database.data.authUser,
