@@ -31,6 +31,7 @@ const useHandleShowingNotifications = (dispatch: Dispatch) =>
 		[dispatch]
 	);
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 antNotification.config({
 	maxCount: 10
 });

@@ -9,7 +9,7 @@ import { BEARER_TOKEN_KEY } from '@craigmiller160/ajax-api-fp-ts';
 
 const getRealm = (): string => {
 	if (process.env.NODE_ENV !== 'test') {
-		return import.meta.env.VITE_KEYCLOAK_REALM;
+		return import.meta.env.VITE_KEYCLOAK_REALM as string;
 	}
 	return '';
 };
