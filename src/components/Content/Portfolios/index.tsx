@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
 import { type PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
-import type {AccordionPanelConfig} from '../../UI/Accordion/AccordionPanelConfig';
+import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>

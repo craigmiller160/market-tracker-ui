@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
 
-export interface WithActions {
-	readonly getActions?: (symbol: string) => ReactNode[];
-}
+export type WithActions = Readonly<{
+	getActions?: (symbol: string) => ReactNode[];
+}>;
