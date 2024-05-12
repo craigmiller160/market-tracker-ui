@@ -16,6 +16,10 @@ import {
 	type SharesOwnedResponse
 } from '../types/generated/market-tracker-portfolio-service';
 import { MarketTime } from '../types/MarketTime';
+import {
+	GET_AGGREGATE_CURRENT_SHARES_FOR_STOCKS_IN_PORTFOLIO_KEY,
+	GET_AGGREGATE_SHARES_HISTORY_FOR_STOCKS_IN_PORTFOLIO_KEY
+} from './PortfolioAggregateQueries';
 
 export const GET_PORTFOLIO_LIST_KEY = 'PortfolioQueries_GetPortfolioList';
 export const GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY =
@@ -27,10 +31,16 @@ const invalidateQueries = (queryClient: QueryClient) =>
 	Promise.all([
 		queryClient.invalidateQueries([GET_PORTFOLIO_LIST_KEY]),
 		queryClient.invalidateQueries([
-			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY
+			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY,
 		]),
 		queryClient.invalidateQueries([
 			GET_SHARES_HISTORY_FOR_STOCK_IN_PORTFOLIO_KEY
+		]),
+		queryClient.invalidateQueries([
+			GET_AGGREGATE_CURRENT_SHARES_FOR_STOCKS_IN_PORTFOLIO_KEY
+		]),
+		queryClient.invalidateQueries([
+			GET_AGGREGATE_SHARES_HISTORY_FOR_STOCKS_IN_PORTFOLIO_KEY
 		])
 	]);
 
