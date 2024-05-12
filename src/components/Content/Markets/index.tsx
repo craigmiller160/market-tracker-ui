@@ -16,6 +16,7 @@ import {
 import { Accordion } from '../../UI/Accordion';
 import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
+import type { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;
@@ -65,8 +66,12 @@ const createPanels = (
 				</Typography.Title>
 			),
 			key: marketInvestmentType,
-			investments,
-			useLoadInvestmentData: useGetInvestmentData
+			investments: investments.map(
+				(investment): AccordionInvestment => ({
+					...investment,
+					useLoadInvestmentData: useGetInvestmentData
+				})
+			)
 		})
 	);
 

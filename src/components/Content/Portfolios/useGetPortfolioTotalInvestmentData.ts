@@ -1,4 +1,4 @@
-import type { UseLoadInvestmentData } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
+import type { UseLoadInvestmentData } from '../common/InvestmentCard/UseLoadInvestmentData';
 import { MarketStatus } from '../../../types/MarketStatus';
 
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = () => {

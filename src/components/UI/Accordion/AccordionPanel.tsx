@@ -2,7 +2,6 @@ import { Collapse } from 'antd';
 import './AccordionPanel.scss';
 import { AccordionSection } from './AccordionSection';
 import type { AccordionPanelConfig } from './AccordionPanelConfig';
-import { InvestmentCardDataLoadingContext } from '../../Content/common/InvestmentCard/InvestmentCardDataLoadingContext';
 
 type Props = Readonly<{
 	config: AccordionPanelConfig;
@@ -10,7 +9,7 @@ type Props = Readonly<{
 
 export const AccordionPanel = (props: Props) => {
 	const {
-		config: { title, actions, investments, key, useLoadInvestmentData },
+		config: { title, actions, investments, key },
 		...rest
 	} = props;
 	return (
@@ -21,11 +20,7 @@ export const AccordionPanel = (props: Props) => {
 			extra={actions}
 			className="accordion-panel"
 		>
-			<InvestmentCardDataLoadingContext.Provider
-				value={useLoadInvestmentData}
-			>
-				<AccordionSection investments={investments} />
-			</InvestmentCardDataLoadingContext.Provider>
+			<AccordionSection investments={investments} />
 		</Collapse.Panel>
 	);
 };

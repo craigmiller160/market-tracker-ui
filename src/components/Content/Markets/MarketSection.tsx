@@ -7,6 +7,7 @@ import {
 } from '../../../types/data/MarketInvestmentType';
 import { type InvestmentsByType } from '../../../data/MarketPageInvestmentParsing';
 import { type MarketInvestmentInfo } from '../../../types/data/MarketInvestmentInfo';
+import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
 
 interface Props {
 	readonly marketType: MarketInvestmentType;
@@ -14,7 +15,11 @@ interface Props {
 }
 
 const investmentInfoToCard = (info: MarketInvestmentInfo) => (
-	<InvestmentCard key={info.symbol} info={info} />
+	<InvestmentCard
+		key={info.symbol}
+		info={info}
+		useLoadInvestmentData={useGetInvestmentData}
+	/>
 );
 
 export const MarketSection = (props: Props) => {

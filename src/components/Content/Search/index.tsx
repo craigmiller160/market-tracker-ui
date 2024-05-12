@@ -10,7 +10,6 @@ import { type ReactNode, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { AddToWatchlistModal } from '../Watchlists/AddToWatchlistModal';
-import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
 
 interface State {
@@ -85,16 +84,13 @@ export const Search = () => {
 			<div className="search-page" data-testid="search-page">
 				<Typography.Title>Search</Typography.Title>
 				<SearchForm doSearch={doSearch} />
-				<InvestmentCardDataLoadingContext.Provider
-					value={useGetInvestmentData}
-				>
-					{state.showCard && (
-						<InvestmentCard
-							info={state.info}
-							getActions={getActions}
-						/>
-					)}
-				</InvestmentCardDataLoadingContext.Provider>
+				{state.showCard && (
+					<InvestmentCard
+						info={state.info}
+						getActions={getActions}
+						useLoadInvestmentData={useGetInvestmentData}
+					/>
+				)}
 			</div>
 			<AddToWatchlistModal
 				symbol={state.addToWatchlistModal.symbol}

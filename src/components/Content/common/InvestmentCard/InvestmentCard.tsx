@@ -20,16 +20,13 @@ import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { type InvestmentData } from '../../../../types/data/InvestmentData';
-import {
-	useGetLoadInvestmentData,
-	type UseLoadInvestmentData
-} from './InvestmentCardDataLoadingContext';
+import { type UseLoadInvestmentData } from './UseLoadInvestmentData';
 import type { WithActions } from '../../../../types/data/WithActions';
 
 type Props = Readonly<{
 	info: InvestmentInfo;
 	getActions?: WithActions['getActions'];
-	useOverrideLoadInvestmentData?: UseLoadInvestmentData;
+	useLoadInvestmentData: UseLoadInvestmentData;
 }>;
 
 const createTitle = (
@@ -216,11 +213,8 @@ export const InvestmentCard = (props: Props) => {
 	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	const useLoadInvestmentData = useGetLoadInvestmentData(
-		props.useOverrideLoadInvestmentData
-	);
 	const { respectMarketStatus, status, loading, error, data } =
-		useLoadInvestmentData(info);
+		props.useLoadInvestmentData(info);
 
 	const { Price, Body } = getPriceAndBody(
 		status,

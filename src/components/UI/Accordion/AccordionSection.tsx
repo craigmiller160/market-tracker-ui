@@ -11,7 +11,7 @@ const investmentToCard = (investment: AccordionInvestment) => (
 		key={investment.symbol}
 		info={investment}
 		getActions={investment.getActions}
-		useOverrideLoadInvestmentData={investment.useOverrideLoadInvestmentData}
+		useLoadInvestmentData={investment.useLoadInvestmentData}
 	/>
 );
 

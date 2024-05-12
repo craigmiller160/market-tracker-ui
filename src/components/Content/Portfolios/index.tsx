@@ -12,9 +12,9 @@ import { InvestmentType } from '../../../types/data/InvestmentType';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
-import { type PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
 import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 import { useGetPortfolioTotalInvestmentData } from './useGetPortfolioTotalInvestmentData';
+import type { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -28,20 +28,19 @@ const createPanels = (
 					name: res.name,
 					type: InvestmentType.STOCK_TOTALS,
 					portfolioId: res.id,
-					useOverrideLoadInvestmentData:
-						useGetPortfolioTotalInvestmentData
+					useLoadInvestmentData: useGetPortfolioTotalInvestmentData
 				},
 				...res.stockSymbols.map(
-					(symbol): PortfolioInvestmentInfo => ({
+					(symbol): AccordionInvestment => ({
 						symbol,
 						name: '',
 						type: InvestmentType.STOCK,
-						portfolioId: res.id
+						portfolioId: res.id,
+						useLoadInvestmentData: useGetPortfolioInvestmentData
 					})
 				)
 			],
-			title: <Typography.Title level={4}>{res.name}</Typography.Title>,
-			useLoadInvestmentData: useGetPortfolioInvestmentData
+			title: <Typography.Title level={4}>{res.name}</Typography.Title>
 		})
 	);
 
