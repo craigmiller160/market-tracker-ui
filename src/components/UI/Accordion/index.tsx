@@ -21,25 +21,30 @@ type Props = Readonly<{
 	panels: ReadonlyArray<AccordionPanelConfig>;
 }>;
 
+type PanelProps = Readonly<{
+	config: AccordionPanelConfig;
+}>;
+const Panel = ({ config }: PanelProps) => (
+	<AccordionPanel
+		title={config.title}
+		panelKey={config.key}
+		actions={config.actions}
+		investments={config.investments}
+	/>
+);
+
 const panelConfigToPanels = (config: AccordionPanelConfig) => {
-	const Panel = (
-		<AccordionPanel
-			title={config.title}
-			key={config.key}
-			actions={config.actions}
-			investments={config.investments}
-		/>
-	);
 	if (config.useLoadInvestmentData) {
 		return (
 			<InvestmentCardDataLoadingContext.Provider
+				key={config.key}
 				value={config.useLoadInvestmentData}
 			>
-				{Panel}
+				<Panel config={config} />
 			</InvestmentCardDataLoadingContext.Provider>
 		);
 	}
-	return Panel;
+	return <Panel config={config} key={config.key} />;
 };
 
 export const Accordion = (props: Props) => {

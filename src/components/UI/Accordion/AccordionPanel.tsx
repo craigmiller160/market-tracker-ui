@@ -4,20 +4,20 @@ import { type ReactNode } from 'react';
 import { type AccordionInvestment } from './AccordionInvestment';
 import { AccordionSection } from './AccordionSection';
 
-interface Props {
-	readonly title: ReactNode;
-	readonly key: string;
-	readonly actions?: ReactNode;
-	readonly investments: ReadonlyArray<AccordionInvestment>;
-}
+type Props = Readonly<{
+	title: ReactNode;
+	panelKey: string;
+	actions?: ReactNode;
+	investments: ReadonlyArray<AccordionInvestment>;
+}>;
 
 export const AccordionPanel = (props: Props) => {
-	const { title, actions, investments, key, ...rest } = props;
+	const { title, actions, investments, panelKey, ...rest } = props;
 	return (
 		<Collapse.Panel
 			{...rest}
 			header={title}
-			key={key}
+			key={panelKey}
 			extra={actions}
 			className="accordion-panel"
 		>
