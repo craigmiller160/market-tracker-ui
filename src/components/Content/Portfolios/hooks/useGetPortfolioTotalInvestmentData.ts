@@ -9,6 +9,7 @@ import type {
 import { isPortfolioInvestmentInfo } from './common';
 import type { MarketTime } from '../../../../types/MarketTime';
 import { useGetPortfolioList } from '../../../../queries/PortfolioQueries';
+import { useCheckMarketStatus } from '../../../../queries/InvestmentQueries';
 
 type IntermediateQueryResult<T> = Readonly<{
 	data?: T;
@@ -30,6 +31,7 @@ const useGetPortfolioStockList = (
 	};
 };
 
+// TODO write tests for this
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	info: InvestmentInfo
 ) => {
@@ -39,10 +41,11 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	}
 
 	const portfolioStockListResult = useGetPortfolioStockList(info, time);
+	const checkMarketStatusResult = useCheckMarketStatus();
 
 	return {
-		loading: false,
-		status: MarketStatus.CLOSED,
+		loading: portfolioStockListResult.isLoading,
+		status: checkMarketStatusResult?.data ?? MarketStatus.UNKNOWN,
 		respectMarketStatus: true
 	};
 };
