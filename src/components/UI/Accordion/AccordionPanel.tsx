@@ -21,16 +21,11 @@ export const AccordionPanel = (props: Props) => {
 			extra={actions}
 			className="accordion-panel"
 		>
-			{useLoadInvestmentData && (
-				<InvestmentCardDataLoadingContext.Provider
-					value={useLoadInvestmentData}
-				>
-					<AccordionSection investments={investments} />
-				</InvestmentCardDataLoadingContext.Provider>
-			)}
-			{!useLoadInvestmentData && (
+			<InvestmentCardDataLoadingContext.Provider
+				value={useLoadInvestmentData}
+			>
 				<AccordionSection investments={investments} />
-			)}
+			</InvestmentCardDataLoadingContext.Provider>
 		</Collapse.Panel>
 	);
 };

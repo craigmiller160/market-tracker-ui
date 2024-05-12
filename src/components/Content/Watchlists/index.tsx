@@ -20,7 +20,6 @@ import {
 	useRemoveWatchlist,
 	useRenameWatchlist
 } from '../../../queries/WatchlistQueries';
-import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
 import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 
@@ -206,6 +205,7 @@ const createPanels = (
 					/>
 				) : undefined,
 			key: watchlist._id,
+			useLoadInvestmentData: useGetInvestmentData,
 			investments: [
 				...watchlist.stocks.map(
 					(stock): AccordionInvestment => ({
@@ -313,13 +313,7 @@ export const Watchlists = () => {
 	const panels = createPanels(combinedWatchlists, panelConfig);
 	const body = match(loading)
 		.with(true, () => <Spinner />)
-		.otherwise(() => (
-			<InvestmentCardDataLoadingContext.Provider
-				value={useGetInvestmentData}
-			>
-				<Accordion panels={panels} />
-			</InvestmentCardDataLoadingContext.Provider>
-		));
+		.otherwise(() => <Accordion panels={panels} />);
 
 	return (
 		<>

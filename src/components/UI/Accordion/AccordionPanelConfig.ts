@@ -7,5 +7,5 @@ export type AccordionPanelConfig = Readonly<{
 	key: string;
 	actions?: ReactNode;
 	investments: ReadonlyArray<AccordionInvestment>;
-	useLoadInvestmentData?: UseLoadInvestmentData;
+	useLoadInvestmentData: UseLoadInvestmentData;
 }>;
