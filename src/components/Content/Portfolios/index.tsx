@@ -5,15 +5,15 @@ import {
 	useGetPortfolioList
 } from '../../../queries/PortfolioQueries';
 import { type PortfolioResponse } from '../../../types/generated/market-tracker-portfolio-service';
-import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
+import { Accordion } from '../../UI/Accordion';
 import { Spinner } from '../../UI/Spinner';
 import { match, P } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
-import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
 import { type PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
+import type {AccordionPanelConfig} from '../../UI/Accordion/AccordionPanelConfig';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -29,7 +29,8 @@ const createPanels = (
 					portfolioId: res.id
 				})
 			),
-			title: <Typography.Title level={4}>{res.name}</Typography.Title>
+			title: <Typography.Title level={4}>{res.name}</Typography.Title>,
+			useLoadInvestmentData: useGetPortfolioInvestmentData
 		})
 	);
 
@@ -69,11 +70,7 @@ export const Portfolios = () => {
 						Update Portfolios Now
 					</Button>
 				</div>
-				<InvestmentCardDataLoadingContext.Provider
-					value={useGetPortfolioInvestmentData}
-				>
-					<Accordion id="portfolioAccordion" panels={panels} />
-				</InvestmentCardDataLoadingContext.Provider>
+				<Accordion id="portfolioAccordion" panels={panels} />
 			</>
 		));
 
