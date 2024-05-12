@@ -10,13 +10,18 @@ export const InvestmentCardDataLoadingContext = createContext<
 	UseLoadInvestmentData | undefined
 >(undefined);
 
-export const useInvestmentCardDataLoadingContext =
-	(): UseLoadInvestmentData => {
-		const value = useContext(InvestmentCardDataLoadingContext);
-		if (!value) {
-			throw new Error(
-				'No provider available for InvestmentCardDataLoadingContext'
-			);
-		}
-		return value;
-	};
+export const useGetLoadInvestmentData = (
+	useOverrideLoadInvestmentData?: UseLoadInvestmentData
+): UseLoadInvestmentData => {
+	const value = useContext(InvestmentCardDataLoadingContext);
+	if (useOverrideLoadInvestmentData) {
+		return useOverrideLoadInvestmentData;
+	}
+
+	if (!value) {
+		throw new Error(
+			'No provider available for InvestmentCardDataLoadingContext'
+		);
+	}
+	return value;
+};

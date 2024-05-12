@@ -21,7 +21,7 @@ import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { type InvestmentData } from '../../../../types/data/InvestmentData';
 import {
-	useInvestmentCardDataLoadingContext,
+	useGetLoadInvestmentData,
 	type UseLoadInvestmentData
 } from './InvestmentCardDataLoadingContext';
 import type { WithActions } from '../../../../types/data/WithActions';
@@ -216,9 +216,9 @@ export const InvestmentCard = (props: Props) => {
 	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	// const { respectMarketStatus, status, loading, error, data } =
-	// 	useGetInvestmentData(info);
-	const useLoadInvestmentData = useInvestmentCardDataLoadingContext();
+	const useLoadInvestmentData = useGetLoadInvestmentData(
+		props.useOverrideLoadInvestmentData
+	);
 	const { respectMarketStatus, status, loading, error, data } =
 		useLoadInvestmentData(info);
 
