@@ -21,14 +21,22 @@ const createPanels = (
 	data.map(
 		(res): AccordionPanelConfig => ({
 			key: res.id,
-			investments: res.stockSymbols.map(
-				(symbol): PortfolioInvestmentInfo => ({
-					symbol,
-					name: '',
-					type: InvestmentType.STOCK,
+			investments: [
+				{
+					symbol: 'Total',
+					name: res.name,
+					type: InvestmentType.STOCK_TOTALS,
 					portfolioId: res.id
-				})
-			),
+				},
+				...res.stockSymbols.map(
+					(symbol): PortfolioInvestmentInfo => ({
+						symbol,
+						name: '',
+						type: InvestmentType.STOCK,
+						portfolioId: res.id
+					})
+				)
+			],
 			title: <Typography.Title level={4}>{res.name}</Typography.Title>,
 			useLoadInvestmentData: useGetPortfolioInvestmentData
 		})
