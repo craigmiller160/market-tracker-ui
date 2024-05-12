@@ -1,23 +1,63 @@
 import type { SharesOwnedResponse } from '../types/generated/market-tracker-portfolio-service';
-import { getCurrentSharesForStockInPortfolio } from './PortfolioService';
+import {
+	getCurrentSharesForStockInPortfolio,
+	getSharesHistoryForStockInPortfolio
+} from './PortfolioService';
+import type { MarketTime } from '../types/MarketTime';
 
-export type AggregateSharesOwnedResponse = SharesOwnedResponse &
-	Readonly<{
-		symbol: string;
-	}>;
+export type AggregateCurrentSharesOwnedResponse = Readonly<
+	Record<string, SharesOwnedResponse>
+>;
+export type AggregateSharesOwnedHistoryResponse = Readonly<
+	Record<string, ReadonlyArray<SharesOwnedResponse>>
+>;
 
-export const getAggregateCurrentSharesForStocksInPortfolio = (
+export const getAggregateCurrentSharesForStocksInPortfolio = async (
 	portfolioId: string,
 	symbols: ReadonlyArray<string>,
-	signal: AbortSignal
-): Promise<ReadonlyArray<AggregateSharesOwnedResponse>> => {
+	signal?: AbortSignal
+): Promise<AggregateCurrentSharesOwnedResponse> => {
 	const promises = symbols.map((symbol) =>
 		getCurrentSharesForStockInPortfolio(portfolioId, symbol, signal).then(
-			(res): AggregateSharesOwnedResponse => ({
-				...res,
-				symbol
+			(res): AggregateCurrentSharesOwnedResponse => ({
+				[symbol]: res
 			})
 		)
 	);
-	return Promise.all(promises);
+	const responses = await Promise.all(promises);
+	return responses.reduce<AggregateCurrentSharesOwnedResponse>(
+		(acc, res) => ({
+			...acc,
+			...res
+		}),
+		{}
+	);
+};
+
+export const getAggregateSharesHistoryForStocksInPortfolio = async (
+	portfolioId: string,
+	symbols: ReadonlyArray<string>,
+	time: MarketTime,
+	signal?: AbortSignal
+): Promise<AggregateSharesOwnedHistoryResponse> => {
+	const promises = symbols.map((symbol) =>
+		getSharesHistoryForStockInPortfolio(
+			portfolioId,
+			symbol,
+			time,
+			signal
+		).then(
+			(res): AggregateSharesOwnedHistoryResponse => ({
+				[symbol]: res
+			})
+		)
+	);
+	const responses = await Promise.all(promises);
+	return responses.reduce<AggregateSharesOwnedHistoryResponse>(
+		(acc, res) => ({
+			...acc,
+			...res
+		}),
+		{}
+	);
 };
