@@ -11,9 +11,9 @@ import { match, P } from 'ts-pattern';
 import { InvestmentType } from '../../../types/data/InvestmentType';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../store/marketSettings/selectors';
-import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
+import { useGetPortfolioInvestmentData } from './hooks/useGetPortfolioInvestmentData';
 import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
-import { useGetPortfolioTotalInvestmentData } from './useGetPortfolioTotalInvestmentData';
+import { useGetPortfolioTotalInvestmentData } from './hooks/useGetPortfolioTotalInvestmentData';
 import type { AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
 
 const createPanels = (

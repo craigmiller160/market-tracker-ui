@@ -1,22 +1,22 @@
 import {
 	type InvestmentInfo,
 	type PortfolioInvestmentInfo
-} from '../../../types/data/InvestmentInfo';
+} from '../../../../types/data/InvestmentInfo';
 import {
 	useGetInvestmentData,
 	type UseGetInvestmentDataResult
-} from '../../../queries/InvestmentQueries';
+} from '../../../../queries/InvestmentQueries';
 import {
 	useGetCurrentSharesForStockInPortfolio,
 	useGetSharesHistoryForStockInPortfolio
-} from '../../../queries/PortfolioQueries';
+} from '../../../../queries/PortfolioQueries';
 import { useSelector } from 'react-redux';
-import { timeValueSelector } from '../../../store/marketSettings/selectors';
-import { type SharesOwnedResponse } from '../../../types/generated/market-tracker-portfolio-service';
+import { timeValueSelector } from '../../../../store/marketSettings/selectors';
+import { type SharesOwnedResponse } from '../../../../types/generated/market-tracker-portfolio-service';
 import { useMemo } from 'react';
-import { type InvestmentData } from '../../../types/data/InvestmentData';
-import { MarketTime } from '../../../types/MarketTime';
-import { type HistoryRecord } from '../../../types/history';
+import { type InvestmentData } from '../../../../types/data/InvestmentData';
+import { MarketTime } from '../../../../types/MarketTime';
+import { type HistoryRecord } from '../../../../types/history';
 import { match, P } from 'ts-pattern';
 
 const isPortfolioInvestmentInfo = (
