@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-./node_modules/.pnpm/@craigmiller160+js-config@1.0.15_@relmify+jest-fp-ts@2.1.1_@testing-library+dom@9.3.4_@types+_m3zedomp6hamdfxpvacsvfjtxa/node_modules/lint-staged/bin/lint-staged.js --config ./node_modules/@craigmiller160/js-config/configs/lintstaged/.lintstagedrc
+./node_modules/.pnpm/@craigmiller160+js-config@1.1.0-beta.1_@relmify+jest-fp-ts@2.1.1_@testing-library+dom@9.3.4_c_fsaoutguup342smzj4467xluh4/node_modules/lint-staged/bin/lint-staged.js --config ./node_modules/@craigmiller160/js-config/configs/lintstaged/.lintstagedrc

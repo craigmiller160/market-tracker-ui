@@ -4,20 +4,16 @@ import { newApiServer } from './testutils/msw-server';
 vi.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
 	return {
-		default: {
-			Line
-		}
+		Line
 	};
 });
 
 vi.mock('@ant-design/icons', () => {
 	const Icon = () => <p>Icon</p>;
 	return {
-		default: {
-			CaretDownOutlined: Icon,
-			CaretDownFilled: Icon,
-			CaretUpFilled: Icon
-		}
+		CaretDownOutlined: Icon,
+		CaretDownFilled: Icon,
+		CaretUpFilled: Icon
 	};
 });
 

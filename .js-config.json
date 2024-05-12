@@ -1,0 +1,16 @@
+{
+  "workingDirectoryPath": "/Users/craigmiller/Development/Applications/market-tracker-ui",
+  "projectType": "module",
+  "eslintPlugins": {
+    "react": true,
+    "vitest": true,
+    "jestDom": true,
+    "cypress": true,
+    "testingLibraryReact": true,
+    "tanstackQuery": true
+  },
+  "directories": {
+    "test": true,
+    "cypress": true
+  }
+}
