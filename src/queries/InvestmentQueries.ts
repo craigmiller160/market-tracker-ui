@@ -133,13 +133,13 @@ export const useGetHistory = (
 		enabled: shouldLoad
 	});
 
-export type UseGetInvestmentDataResult = {
-	readonly data?: InvestmentData;
-	readonly error?: Error;
-	readonly loading: boolean;
-	readonly respectMarketStatus: boolean;
-	readonly status: MarketStatus;
-};
+export type UseGetInvestmentDataResult = Readonly<{
+	data?: InvestmentData;
+	error?: Error;
+	loading: boolean;
+	respectMarketStatus: boolean;
+	status: MarketStatus;
+}>;
 
 const shouldRespectMarketStatus = (info: InvestmentInfo) =>
 	info.type !== InvestmentType.CRYPTO;
