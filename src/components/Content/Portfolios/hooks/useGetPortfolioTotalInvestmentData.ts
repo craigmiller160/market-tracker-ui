@@ -9,6 +9,7 @@ import type {
 import { isPortfolioInvestmentInfo } from './common';
 import type { MarketTime } from '../../../../types/MarketTime';
 import { useGetPortfolioList } from '../../../../queries/PortfolioQueries';
+import { useMemo } from 'react';
 
 type IntermediateQueryResult<T> = Readonly<{
 	data?: T;
@@ -21,10 +22,16 @@ const useGetPortfolioStockList = (
 	time: MarketTime
 ): IntermediateQueryResult<ReadonlyArray<string>> => {
 	const result = useGetPortfolioList(time);
-	return {
-		data: result.data?.find(
+	const data = useMemo(() => {
+		if (!result.data) {
+			return undefined;
+		}
+		return result.data.find(
 			(portfolio) => portfolio.id === info.portfolioId
-		)?.stockSymbols,
+		)?.stockSymbols;
+	}, [result.data, info.portfolioId]);
+	return {
+		data,
 		error: result.error,
 		isLoading: result.isLoading
 	};
