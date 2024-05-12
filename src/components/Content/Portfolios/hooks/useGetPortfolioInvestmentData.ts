@@ -18,10 +18,9 @@ import { type InvestmentData } from '../../../../types/data/InvestmentData';
 import { MarketTime } from '../../../../types/MarketTime';
 import { type HistoryRecord } from '../../../../types/history';
 import { match, P } from 'ts-pattern';
+import {isPortfolioInvestmentInfo} from './common';
 
-const isPortfolioInvestmentInfo = (
-	info: InvestmentInfo
-): info is PortfolioInvestmentInfo => Object.hasOwn(info, 'portfolioId');
+
 
 type UseGetPortfolioDataReturn = Readonly<{
 	currentData?: SharesOwnedResponse;
