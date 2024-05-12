@@ -14,6 +14,7 @@ import { timeValueSelector } from '../../../store/marketSettings/selectors';
 import { useGetPortfolioInvestmentData } from './useGetPortfolioInvestmentData';
 import { type PortfolioInvestmentInfo } from '../../../types/data/InvestmentInfo';
 import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
+import { useGetPortfolioTotalInvestmentData } from './useGetPortfolioTotalInvestmentData';
 
 const createPanels = (
 	data: ReadonlyArray<PortfolioResponse>
@@ -26,7 +27,9 @@ const createPanels = (
 					symbol: 'Total',
 					name: res.name,
 					type: InvestmentType.STOCK_TOTALS,
-					portfolioId: res.id
+					portfolioId: res.id,
+					useOverrideLoadInvestmentData:
+						useGetPortfolioTotalInvestmentData
 				},
 				...res.stockSymbols.map(
 					(symbol): PortfolioInvestmentInfo => ({
