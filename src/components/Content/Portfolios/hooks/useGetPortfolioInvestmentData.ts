@@ -1,7 +1,4 @@
-import {
-	type InvestmentInfo,
-	type PortfolioInvestmentInfo
-} from '../../../../types/data/InvestmentInfo';
+import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import {
 	useGetInvestmentData,
 	type UseGetInvestmentDataResult
@@ -18,9 +15,7 @@ import { type InvestmentData } from '../../../../types/data/InvestmentData';
 import { MarketTime } from '../../../../types/MarketTime';
 import { type HistoryRecord } from '../../../../types/history';
 import { match, P } from 'ts-pattern';
-import {isPortfolioInvestmentInfo} from './common';
-
-
+import { isPortfolioInvestmentInfo } from './common';
 
 type UseGetPortfolioDataReturn = Readonly<{
 	currentData?: SharesOwnedResponse;
