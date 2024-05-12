@@ -13,7 +13,8 @@ import {
 	getMarketInvestmentTypeTitle,
 	MarketInvestmentType
 } from '../../../types/data/MarketInvestmentType';
-import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
+import { Accordion } from '../../UI/Accordion';
+import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 
 interface InvestmentResult {
 	readonly investments: InvestmentsByType;

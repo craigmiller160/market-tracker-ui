@@ -5,7 +5,7 @@ import './Watchlists.scss';
 import { useMemo } from 'react';
 import { Spinner } from '../../UI/Spinner';
 import { Button, Typography } from 'antd';
-import { Accordion, type AccordionPanelConfig } from '../../UI/Accordion';
+import { Accordion } from '../../UI/Accordion';
 import { ConfirmModal, ConfirmModalResult } from '../../UI/ConfirmModal';
 import { InputModal } from '../../UI/InputModal';
 import { type AccordionInvestment } from '../../UI/Accordion/AccordionInvestment';
@@ -22,6 +22,7 @@ import {
 } from '../../../queries/WatchlistQueries';
 import { InvestmentCardDataLoadingContext } from '../common/InvestmentCard/InvestmentCardDataLoadingContext';
 import { useGetInvestmentData } from '../../../queries/InvestmentQueries';
+import type { AccordionPanelConfig } from '../../UI/Accordion/AccordionPanelConfig';
 
 interface State {
 	readonly renameWatchlistId?: string;
