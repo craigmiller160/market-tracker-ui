@@ -20,12 +20,17 @@ import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { type InvestmentData } from '../../../../types/data/InvestmentData';
-import { useInvestmentCardDataLoadingContext } from './InvestmentCardDataLoadingContext';
+import {
+	useInvestmentCardDataLoadingContext,
+	type UseLoadInvestmentData
+} from './InvestmentCardDataLoadingContext';
+import type { WithActions } from '../../../../types/data/WithActions';
 
-interface Props {
-	readonly info: InvestmentInfo;
-	readonly getActions?: (symbol: string) => ReactNode[];
-}
+type Props = Readonly<{
+	info: InvestmentInfo;
+	getActions?: WithActions['getActions'];
+	useOverrideLoadInvestmentData?: UseLoadInvestmentData;
+}>;
 
 const createTitle = (
 	info: InvestmentInfo,

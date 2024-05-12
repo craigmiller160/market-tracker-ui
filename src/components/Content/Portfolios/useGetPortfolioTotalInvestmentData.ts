@@ -2,6 +2,7 @@ import type { UseLoadInvestmentData } from '../common/InvestmentCard/InvestmentC
 import { MarketStatus } from '../../../types/MarketStatus';
 
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = () => {
+	console.log('WORKING');
 	return {
 		loading: false,
 		status: MarketStatus.CLOSED,
