@@ -29,7 +29,8 @@ export const useGetAggregateCurrentSharesForStocksInPortfolio = (
 			symbols
 		],
 		queryFn: ({ queryKey: [, pId, sym], signal }) =>
-			getAggregateCurrentSharesForStocksInPortfolio(pId, sym, signal)
+			getAggregateCurrentSharesForStocksInPortfolio(pId, sym, signal),
+		enabled: symbols.length > 0
 	});
 
 type AggregateShareHistoryKey = [
@@ -56,5 +57,6 @@ export const useGetAggregateSharesHistoryForStocksInPortfolio = (
 			time
 		],
 		queryFn: ({ queryKey: [, pId, sym, t], signal }) =>
-			getAggregateSharesHistoryForStocksInPortfolio(pId, sym, t, signal)
+			getAggregateSharesHistoryForStocksInPortfolio(pId, sym, t, signal),
+		enabled: symbols.length > 0
 	});

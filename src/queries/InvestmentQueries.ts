@@ -17,6 +17,7 @@ import { timeValueSelector } from '../store/marketSettings/selectors';
 import { getHistoryFn, getQuoteFn } from '../services/ServiceSelectors';
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
+export const GET_QUOTES_KEY = 'InvestmentQueries_GetQuotes';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
 export const GET_MARKET_STATUS = 'InvestmentQueries_GetMarketStatus';
 
@@ -36,6 +37,31 @@ export const useGetQuote = (
 		queryKey: [GET_QUOTE_KEY, time, type, symbol],
 		queryFn: ({ queryKey: [, , theType, theSymbol], signal }) =>
 			getQuoteFn(theType)([theSymbol], signal).then((list) => list[0]),
+		refetchInterval: getRefetchInterval(time),
+		enabled: shouldLoad
+	});
+
+type GetQuotesQueryKey = [
+	string,
+	MarketTime,
+	InvestmentType,
+	ReadonlyArray<string>
+];
+export const useGetQuotes = (
+	time: MarketTime,
+	type: InvestmentType,
+	symbols: ReadonlyArray<string>,
+	shouldLoad: boolean
+) =>
+	useQuery<
+		ReadonlyArray<Quote>,
+		Error,
+		ReadonlyArray<Quote>,
+		GetQuotesQueryKey
+	>({
+		queryKey: [GET_QUOTES_KEY, time, type, symbols],
+		queryFn: ({ queryKey: [, , theType, theSymbols], signal }) =>
+			getQuoteFn(theType)(theSymbols, signal),
 		refetchInterval: getRefetchInterval(time),
 		enabled: shouldLoad
 	});
