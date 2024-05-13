@@ -99,7 +99,8 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	);
 
 	return {
-		loading: portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
+		loading:
+			portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
 		// TODO need to get that from a better source
 		status: MarketStatus.UNKNOWN,
 		respectMarketStatus: true

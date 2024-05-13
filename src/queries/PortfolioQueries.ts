@@ -31,7 +31,7 @@ const invalidateQueries = (queryClient: QueryClient) =>
 	Promise.all([
 		queryClient.invalidateQueries([GET_PORTFOLIO_LIST_KEY]),
 		queryClient.invalidateQueries([
-			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY,
+			GET_CURRENT_SHARES_FOR_STOCK_IN_PORTFOLIO_KEY
 		]),
 		queryClient.invalidateQueries([
 			GET_SHARES_HISTORY_FOR_STOCK_IN_PORTFOLIO_KEY
