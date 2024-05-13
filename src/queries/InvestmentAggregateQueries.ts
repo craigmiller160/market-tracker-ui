@@ -10,6 +10,8 @@ import { MarketStatus } from '../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../store/marketSettings/selectors';
 import { useCheckMarketStatus, useGetQuotes } from './InvestmentQueries';
+import type { Quote } from '../types/quote';
+import { useMemo } from 'react';
 
 const GET_AGGREGATE_HISTORY_KEY = 'GET_AGGREGATE_HISTORY_KEY';
 
@@ -53,6 +55,13 @@ export type UseGetAggregateInvestmentDataResult = Readonly<{
 	status: MarketStatus;
 }>;
 
+const combineResults = (
+	quotes: ReadonlyArray<Quote>,
+	history: AggregateHistoryRecords
+): AggregateInvestmentData => {
+	throw new Error();
+};
+
 // TODO need tests for this
 export const useGetAggregateInvestmentData = (
 	symbols: ReadonlyArray<string>
@@ -76,8 +85,18 @@ export const useGetAggregateInvestmentData = (
 		shouldLoadHistoryData
 	);
 
+	const data = useMemo(() => {
+		if (
+			quoteResult.data === undefined ||
+			historyResult.data === undefined
+		) {
+			return undefined;
+		}
+		return combineResults(quoteResult.data, historyResult.data);
+	}, [quoteResult.data, historyResult.data]);
+
 	return {
-		data: undefined,
+		data,
 		error:
 			marketStatusResult.error ??
 			quoteResult.error ??
