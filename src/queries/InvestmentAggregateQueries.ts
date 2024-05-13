@@ -5,6 +5,8 @@ import {
 	type AggregateHistoryRecords,
 	getAggregateHistory
 } from '../services/TradierAggregateService';
+import type { InvestmentData } from '../types/data/InvestmentData';
+import { MarketStatus } from '../types/MarketStatus';
 
 const GET_AGGREGATE_HISTORY_KEY = 'GET_AGGREGATE_HISTORY_KEY';
 
@@ -38,3 +40,17 @@ export const useGetAggregateHistory = (
 		enabled: shouldLoad
 	});
 };
+
+export type AggregateInvestmentData = Readonly<Record<string, InvestmentData>>;
+export type UseGetAggregateInvestmentDataResult = Readonly<{
+	data?: AggregateInvestmentData;
+	error?: Error;
+	loading: boolean;
+	respectMarketStatus: boolean;
+	status: MarketStatus;
+}>;
+
+// TODO need tests for this
+export const useGetAggregateInvestmentData = (
+	symbols: ReadonlyArray<string>
+) => {};
