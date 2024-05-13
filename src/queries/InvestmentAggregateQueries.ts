@@ -57,10 +57,26 @@ export type UseGetAggregateInvestmentDataResult = Readonly<{
 
 const combineResults = (
 	quotes: ReadonlyArray<Quote>,
-	history: AggregateHistoryRecords
-): AggregateInvestmentData => {
-	throw new Error();
-};
+	aggregateHistory: AggregateHistoryRecords
+): AggregateInvestmentData =>
+	quotes
+		.map((quote): AggregateInvestmentData => {
+			const history = aggregateHistory[quote.symbol] ?? [];
+			return {
+				[quote.symbol]: {
+					// TODO lots more to do here, re-use handleInvestmentData to achieve this
+					name: quote.name,
+					history
+				}
+			};
+		})
+		.reduce<AggregateInvestmentData>(
+			(acc, rec) => ({
+				...acc,
+				...rec
+			}),
+			{}
+		);
 
 // TODO need tests for this
 export const useGetAggregateInvestmentData = (
