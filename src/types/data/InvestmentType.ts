@@ -3,8 +3,7 @@ import * as ioType from 'io-ts';
 
 export enum InvestmentType {
 	STOCK = 'STOCK',
-	CRYPTO = 'CRYPTO',
-	STOCK_TOTALS = 'STOCK_TOTALS'
+	CRYPTO = 'CRYPTO'
 }
 
 export const investmentTypeV = ioType.keyof({

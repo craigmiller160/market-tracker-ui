@@ -26,7 +26,7 @@ const createPanels = (
 				{
 					symbol: 'Total',
 					name: res.name,
-					type: InvestmentType.STOCK_TOTALS,
+					type: InvestmentType.STOCK,
 					portfolioId: res.id,
 					useLoadInvestmentData: useGetPortfolioTotalInvestmentData
 				},
