@@ -7,6 +7,9 @@ import {
 } from '../services/TradierAggregateService';
 import type { InvestmentData } from '../types/data/InvestmentData';
 import { MarketStatus } from '../types/MarketStatus';
+import { useSelector } from 'react-redux';
+import { timeValueSelector } from '../store/marketSettings/selectors';
+import { useCheckMarketStatus, useGetQuotes } from './InvestmentQueries';
 
 const GET_AGGREGATE_HISTORY_KEY = 'GET_AGGREGATE_HISTORY_KEY';
 
@@ -28,7 +31,7 @@ export const useGetAggregateHistory = (
 		);
 	}
 
-	useQuery<
+	return useQuery<
 		AggregateHistoryRecords,
 		Error,
 		AggregateHistoryRecords,
@@ -53,4 +56,25 @@ export type UseGetAggregateInvestmentDataResult = Readonly<{
 // TODO need tests for this
 export const useGetAggregateInvestmentData = (
 	symbols: ReadonlyArray<string>
-) => {};
+): UseGetAggregateInvestmentDataResult => {
+	const time = useSelector(timeValueSelector);
+	const { data: status, isFetching: statusIsFetching } =
+		useCheckMarketStatus();
+	const shouldLoadQuoteData = status !== MarketStatus.UNKNOWN;
+	const shouldLoadHistoryData = status === MarketStatus.OPEN;
+
+	const quoteResult = useGetQuotes(
+		time,
+		InvestmentType.STOCK,
+		symbols,
+		shouldLoadQuoteData
+	);
+	const historyResult = useGetAggregateHistory(
+		time,
+		InvestmentType.STOCK,
+		symbols,
+		shouldLoadHistoryData
+	);
+
+	throw new Error();
+};
