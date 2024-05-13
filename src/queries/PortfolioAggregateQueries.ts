@@ -39,7 +39,7 @@ type AggregateShareHistoryKey = [
 	MarketTime
 ];
 export const useGetAggregateSharesHistoryForStocksInPortfolio = (
-	portfolioid: string,
+	portfolioId: string,
 	symbols: ReadonlyArray<string>,
 	time: MarketTime
 ) =>
@@ -51,7 +51,7 @@ export const useGetAggregateSharesHistoryForStocksInPortfolio = (
 	>({
 		queryKey: [
 			GET_AGGREGATE_SHARES_HISTORY_FOR_STOCKS_IN_PORTFOLIO_KEY,
-			portfolioid,
+			portfolioId,
 			symbols,
 			time
 		],

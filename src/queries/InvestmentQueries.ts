@@ -1,13 +1,7 @@
 import { MarketTime } from '../types/MarketTime';
 import { type HistoryRecord } from '../types/history';
-import {
-	InvestmentType,
-	isCrypto,
-	isStock
-} from '../types/data/InvestmentType';
-import { match, P } from 'ts-pattern';
+import { InvestmentType } from '../types/data/InvestmentType';
 import * as tradierService from '../services/TradierService';
-import * as coinGeckoService from '../services/CoinGeckoService';
 import { type Quote } from '../types/quote';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { type InvestmentInfo } from '../types/data/InvestmentInfo';
@@ -20,6 +14,7 @@ import { type InvestmentData } from '../types/data/InvestmentData';
 import { MarketStatus } from '../types/MarketStatus';
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../store/marketSettings/selectors';
+import { getHistoryFn, getQuoteFn } from '../services/ServiceSelectors';
 
 export const GET_QUOTE_KEY = 'InvestmentQueries_GetQuote';
 export const GET_HISTORY_KEY = 'InvestmentQueries_GetHistory';
@@ -29,74 +24,6 @@ const TODAY_REFETCH_INTERVAL = 300_000;
 
 const getRefetchInterval = (time: MarketTime): number =>
 	time === MarketTime.ONE_DAY ? TODAY_REFETCH_INTERVAL : 0;
-
-type HistoryFn = (
-	symbol: string,
-	signal?: AbortSignal
-) => Promise<ReadonlyArray<HistoryRecord>>;
-export const getHistoryFn = (
-	time: MarketTime,
-	type: InvestmentType
-): HistoryFn =>
-	match({ time, type })
-		.with(
-			{ time: MarketTime.ONE_DAY, type: P.when(isStock) },
-			() => tradierService.getTimesales
-		)
-		.with(
-			{ time: MarketTime.ONE_DAY, type: P.when(isCrypto) },
-			() => coinGeckoService.getTodayHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_WEEK, type: P.when(isStock) },
-			() => tradierService.getOneWeekHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_WEEK, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneWeekHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_MONTH, type: P.when(isStock) },
-			() => tradierService.getOneMonthHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_MONTH, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneMonthHistory
-		)
-		.with(
-			{ time: MarketTime.THREE_MONTHS, type: P.when(isStock) },
-			() => tradierService.getThreeMonthHistory
-		)
-		.with(
-			{ time: MarketTime.THREE_MONTHS, type: P.when(isCrypto) },
-			() => coinGeckoService.getThreeMonthHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_YEAR, type: P.when(isStock) },
-			() => tradierService.getOneYearHistory
-		)
-		.with(
-			{ time: MarketTime.ONE_YEAR, type: P.when(isCrypto) },
-			() => coinGeckoService.getOneYearHistory
-		)
-		.with(
-			{ time: MarketTime.FIVE_YEARS, type: P.when(isStock) },
-			() => tradierService.getFiveYearHistory
-		)
-		.with(
-			{ time: MarketTime.FIVE_YEARS, type: P.when(isCrypto) },
-			() => coinGeckoService.getFiveYearHistory
-		)
-		.run();
-
-type QuoteFn = (
-	symbol: ReadonlyArray<string>,
-	signal?: AbortSignal
-) => Promise<ReadonlyArray<Quote>>;
-export const getQuoteFn = (type: InvestmentType): QuoteFn =>
-	match(type)
-		.when(isStock, () => tradierService.getQuotes)
-		.otherwise(() => coinGeckoService.getQuotes);
 
 type GetQuoteQueryKey = [string, MarketTime, InvestmentType, string];
 export const useGetQuote = (
