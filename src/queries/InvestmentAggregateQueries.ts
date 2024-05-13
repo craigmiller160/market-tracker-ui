@@ -78,7 +78,10 @@ export const useGetAggregateInvestmentData = (
 
 	return {
 		data: undefined,
-		error: null,
+		error:
+			marketStatusResult.error ??
+			quoteResult.error ??
+			historyResult.error,
 		isLoading:
 			marketStatusResult.isFetching ||
 			quoteResult.isFetching ||
