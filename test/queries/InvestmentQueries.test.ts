@@ -3,7 +3,7 @@ import { MarketTime } from '../../src/types/MarketTime';
 import { InvestmentType } from '../../src/types/data/InvestmentType';
 import * as tradierService from '../../src/services/TradierService';
 import * as coinGeckoService from '../../src/services/CoinGeckoService';
-import { getHistoryFn, getQuoteFn } from '../../src/queries/InvestmentQueries';
+import { getHistoryFn, getQuoteFn } from '../../src/services/ServiceSelectors';
 
 describe('InvestmentQueries', () => {
 	describe('getHistoryFn', () => {
