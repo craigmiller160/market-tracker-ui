@@ -12,6 +12,10 @@ import { timeValueSelector } from '../store/marketSettings/selectors';
 import { useCheckMarketStatus, useGetQuotes } from './InvestmentQueries';
 import type { Quote } from '../types/quote';
 import { useMemo } from 'react';
+import type { InvestmentInfo } from '../types/data/InvestmentInfo';
+import { handleInvestmentData } from '../services/MarketInvestmentService';
+import { getOrThrow } from '@craigmiller160/ts-functions/Try';
+import { function as func } from 'fp-ts';
 
 const GET_AGGREGATE_HISTORY_KEY = 'GET_AGGREGATE_HISTORY_KEY';
 
@@ -56,18 +60,24 @@ export type UseGetAggregateInvestmentDataResult = Readonly<{
 }>;
 
 const combineResults = (
+	time: MarketTime,
 	quotes: ReadonlyArray<Quote>,
 	aggregateHistory: AggregateHistoryRecords
 ): AggregateInvestmentData =>
 	quotes
 		.map((quote): AggregateInvestmentData => {
 			const history = aggregateHistory[quote.symbol] ?? [];
+			const info: InvestmentInfo = {
+				type: InvestmentType.STOCK,
+				name: '',
+				symbol: quote.symbol
+			};
+			const data = func.pipe(
+				handleInvestmentData(time, info, quote, history),
+				getOrThrow
+			);
 			return {
-				[quote.symbol]: {
-					// TODO lots more to do here, re-use handleInvestmentData to achieve this
-					name: quote.name,
-					history
-				}
+				[quote.symbol]: data
 			};
 		})
 		.reduce<AggregateInvestmentData>(
@@ -108,8 +118,8 @@ export const useGetAggregateInvestmentData = (
 		) {
 			return undefined;
 		}
-		return combineResults(quoteResult.data, historyResult.data);
-	}, [quoteResult.data, historyResult.data]);
+		return combineResults(time, quoteResult.data, historyResult.data);
+	}, [time, quoteResult.data, historyResult.data]);
 
 	return {
 		data,
