@@ -21,8 +21,7 @@
     "axios": "0.27.2"
   },
   "devDependencies": {
-    "@craigmiller160/js-config": "^1.1.0-beta.1",
-    "@craigmiller160/swagger-typescript-api-formatted": "^1.1.2",
+    "@craigmiller160/js-config": "file:.yalc/@craigmiller160/js-config",
     "@relmify/jest-fp-ts": "^2.1.1",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.4.2",
@@ -69,10 +68,11 @@
     "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^4.8.0",
     "@ant-design/plots": "^1.2.5",
-    "@craigmiller160/ajax-api": "2.2.2",
-    "@craigmiller160/ajax-api-fp-ts": "2.1.1",
-    "@craigmiller160/react-keycloak": "1.2.2",
-    "@craigmiller160/ts-functions": "1.8.0",
+    "@craigmiller160/ajax-api": "file:.yalc/@craigmiller160/ajax-api",
+    "@craigmiller160/ajax-api-fp-ts": "file:.yalc/@craigmiller160/ajax-api-fp-ts",
+    "@craigmiller160/keycloak-js": "file:.yalc/@craigmiller160/keycloak-js",
+    "@craigmiller160/react-keycloak": "file:.yalc/@craigmiller160/react-keycloak",
+    "@craigmiller160/ts-functions": "file:.yalc/@craigmiller160/ts-functions",
     "@reduxjs/toolkit": "^1.9.2",
     "@tanstack/react-query": "^4.24.9",
     "antd": "^5.2.1",
@@ -95,5 +95,6 @@
     "redux-thunk": "^2.4.2",
     "ts-pattern": "^5.0.4",
     "use-immer": "^0.9.0"
-  }
+  },
+  "packageManager": "pnpm@9.1.1+sha512.14e915759c11f77eac07faba4d019c193ec8637229e62ec99eefb7cf3c3b75c64447882b7c485142451ee3a6b408059cdfb7b7fa0341b975f12d0f7629c71195"
 }
