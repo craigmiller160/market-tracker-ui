@@ -1,4 +1,4 @@
-import { type RootState } from '../index';
+import { type RootState } from '../createStore';
 import { MarketTime } from '../../types/MarketTime';
 
 export const timeMenuKeySelector = (state: RootState): string =>

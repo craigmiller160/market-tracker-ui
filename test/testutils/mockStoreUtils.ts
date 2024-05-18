@@ -1,4 +1,4 @@
-import { type RootState } from '../../src/store';
+import { type RootState } from '../../src/store/createStore';
 import * as Option from 'fp-ts/Option';
 import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
 
