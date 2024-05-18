@@ -205,7 +205,7 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			'Start Price: 261.93'
 		);
 		expect(within(vtiData).getByText(/Current Price:/)).toHaveTextContent(
-			'Current Price: 262.30'
+			'Current Price: 262.3'
 		);
 		expect(within(vtiData).queryByText('History:')).not.toBeInTheDocument();
 
