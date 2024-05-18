@@ -1,4 +1,4 @@
-import { test } from 'vitest';
+import { test, expect } from 'vitest';
 import { server } from '../testutils/msw-server';
 import type {
 	TradierQuote,
@@ -11,6 +11,7 @@ import type {
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
 import { MarketTime } from '../../src/types/MarketTime';
+import { render, screen } from '@testing-library/react';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -102,15 +103,29 @@ const tradierQuoteHandler: HttpHandler = http.get(
 	}
 );
 
+const QueryValidationComponent = () => {
+	return (
+		<div>
+			<h1>Hello World</h1>
+		</div>
+	);
+};
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData',
 	(time) => {
+		if (time === MarketTime.ONE_WEEK) {
+			throw new Error('Not implemented yet');
+		}
+
 		server.server.resetHandlers(
 			tradierQuoteHandler,
 			createTradierCalendarHandler(
 				time === MarketTime.ONE_DAY ? 'closed' : 'open'
 			)
 		);
-		expect(true).toEqual(false);
+
+		render(<QueryValidationComponent />);
+		expect(screen.getByText('Hello World')).toBeVisible();
 	}
 );
