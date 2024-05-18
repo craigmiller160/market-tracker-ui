@@ -210,6 +210,13 @@ const validateData = (
 
 		const recordElements = within(root).getAllByText(/History Record:/);
 		expect(recordElements).toHaveLength(expectedData.history.length);
+
+		expectedData.history.forEach((expectedRecord, index) => {
+			const actualElement = recordElements[index];
+			expect(actualElement).toHaveTextContent(
+				`History Record: ${expectedRecord.date} ${expectedRecord.time}: ${expectedRecord.price}`
+			);
+		});
 	}
 };
 
