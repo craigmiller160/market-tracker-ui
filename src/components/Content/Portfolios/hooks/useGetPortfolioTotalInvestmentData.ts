@@ -5,7 +5,7 @@ import type {
 	InvestmentInfo,
 	PortfolioInvestmentInfo
 } from '../../../../types/data/InvestmentInfo';
-import { isPortfolioInvestmentInfo } from './common';
+import { isPortfolioInvestmentInfo, mergeInvestmentData } from './common';
 import type { MarketTime } from '../../../../types/MarketTime';
 import { useGetPortfolioList } from '../../../../queries/PortfolioQueries';
 import { useMemo } from 'react';
@@ -21,6 +21,7 @@ import {
 	type AggregateInvestmentData,
 	useGetAggregateInvestmentData
 } from '../../../../queries/InvestmentAggregateQueries';
+import type { InvestmentData } from '../../../../types/data/InvestmentData';
 
 type IntermediateQueryResult<T> = Readonly<{
 	data?: T;
@@ -89,7 +90,41 @@ const mergeTotalInvestmentData = (
 	time: MarketTime,
 	investmentData: AggregateInvestmentData,
 	portfolioData: AggregatePortfolioData
-): AggregateInvestmentData => {};
+): AggregateInvestmentData =>
+	Object.entries(portfolioData.current)
+		.map(([symbol, currentData]): [string, InvestmentData] => {
+			const historyData = portfolioData.history[symbol];
+			if (!historyData) {
+				throw new Error(
+					`Cannot find portfolio history for symbol ${symbol}`
+				);
+			}
+
+			const stockData = investmentData[symbol];
+			if (!investmentData) {
+				throw new Error(`Cannot find investment data for ${symbol}`);
+			}
+
+			const mergedData = mergeInvestmentData(
+				time,
+				stockData,
+				currentData,
+				historyData
+			);
+			return [symbol, mergedData];
+		})
+		.map(
+			([symbol, mergedData]): AggregateInvestmentData => ({
+				[symbol]: mergedData
+			})
+		)
+		.reduce<AggregateInvestmentData>(
+			(acc, record) => ({
+				...acc,
+				...record
+			}),
+			{}
+		);
 
 // TODO write tests for this
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
@@ -109,6 +144,7 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	const investmentDataResult = useGetAggregateInvestmentData(
 		portfolioStockListResult.data
 	);
+	console.log('DATA', portfolioDataResult.data, investmentDataResult.data);
 
 	const mergedInvestmentData = useMemo(() => {
 		if (!portfolioDataResult.data || !investmentDataResult.data) {
