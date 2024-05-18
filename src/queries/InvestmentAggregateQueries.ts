@@ -112,11 +112,21 @@ export const useGetAggregateInvestmentData = (
 	);
 
 	const data = useMemo(() => {
-		if (quoteResult.data === undefined) {
+		if (
+			quoteResult.data === undefined ||
+			!!quoteResult.error ||
+			!!historyResult.error
+		) {
 			return undefined;
 		}
 		return combineResults(time, quoteResult.data, historyResult.data);
-	}, [time, quoteResult.data, historyResult.data]);
+	}, [
+		time,
+		quoteResult.data,
+		historyResult.data,
+		quoteResult.error,
+		historyResult.error
+	]);
 
 	return {
 		data,
