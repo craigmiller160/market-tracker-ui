@@ -50,6 +50,7 @@ const getFirstHistoryRecordDate = (
 
 const hasPrevClose: PredicateT<Quote> = (quote) => quote.previousClose > 0;
 
+// TODO need to update tests for new condition
 const getStartPrice = (
 	time: MarketTime,
 	quote: Quote,
