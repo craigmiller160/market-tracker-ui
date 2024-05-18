@@ -19,35 +19,13 @@ import {
 import { Provider } from 'react-redux';
 import { createStore, type StoreType } from '../../src/store/createStore';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+	vtiQuote,
+	vxusQuote
+} from '../testutils/support/aggregate-queries/data';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 const queryClient = new QueryClient();
-
-const vtiQuote: TradierQuote = {
-	symbol: 'VTI',
-	description: 'VTI Name',
-	ask: 0,
-	bid: 0,
-	close: 0,
-	high: 0,
-	last: 262.3,
-	low: 0,
-	open: 0,
-	prevclose: 261.93
-};
-
-const vxusQuote: TradierQuote = {
-	symbol: 'VXUS',
-	description: 'VXUS Name',
-	ask: 0,
-	bid: 0,
-	close: 0,
-	high: 0,
-	last: 62.21,
-	low: 0,
-	open: 0,
-	prevclose: 61.94
-};
 
 const createTradierCalendarHandler = (
 	status: TradierCalendarStatus
