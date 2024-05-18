@@ -128,7 +128,8 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 		error:
 			portfolioStockListResult.error ??
 			portfolioDataResult.error ??
-			investmentDataResult.error,
+			investmentDataResult.error ??
+			undefined,
 		loading:
 			portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
 		status: investmentDataResult.status,
