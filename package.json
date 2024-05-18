@@ -14,12 +14,6 @@
     "postinstall": "c-init browser",
     "generateTypes": "craig-swagger market-tracker-portfolio-service http://127.0.0.1:8081/v3/api-docs ./src/types/generated/market-tracker-portfolio-service.ts"
   },
-  "resolutions": {
-    "rc-util": ">=5.27.2",
-    "@babel/runtime": ">=7.18.3",
-    "@antv/x6-react-components": ">=1.1.20",
-    "axios": "0.27.2"
-  },
   "devDependencies": {
     "@craigmiller160/js-config": "^1.1.0-beta.1",
     "@craigmiller160/swagger-typescript-api-formatted": "^1.1.2",
