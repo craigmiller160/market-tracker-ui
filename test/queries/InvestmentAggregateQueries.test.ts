@@ -5,6 +5,13 @@ import type {
 	TradierQuotes
 } from '../../src/types/tradier/quotes';
 import { http, type HttpHandler, HttpResponse } from 'msw';
+import { format, getMonth, getYear } from 'date-fns';
+import type {
+	TradierCalendar,
+	TradierCalendarStatus
+} from '../../src/types/tradier/calendar';
+
+const DATE_FORMAT = 'yyyy-MM-dd';
 
 const vtiQuote: TradierQuote = {
 	symbol: 'VTI',
@@ -32,7 +39,32 @@ const vxusQuote: TradierQuote = {
 	prevclose: 61.94
 };
 
-const tradierHandler: HttpHandler = http.get(
+const createTradierCalendarHandler = (
+	status: TradierCalendarStatus
+): HttpHandler =>
+	http.get(
+		'http://localhost:3000/market-tracker/api/tradier/marekts/calendar',
+		({ request }) => {
+			const today = new Date();
+			const calendar: TradierCalendar = {
+				calendar: {
+					days: {
+						day: [
+							{
+								date: format(today, DATE_FORMAT),
+								status
+							}
+						]
+					},
+					month: getMonth(today) + 1,
+					year: getYear(today)
+				}
+			};
+			return HttpResponse.json(calendar);
+		}
+	);
+
+const tradierQuoteHandler: HttpHandler = http.get(
 	'http://localhost:3000/market-tracker/api/tradier/markets/quotes',
 	({ request }) => {
 		const url = new URL(request.url);
@@ -70,7 +102,7 @@ const tradierHandler: HttpHandler = http.get(
 );
 
 beforeEach(() => {
-	server.server.resetHandlers(tradierHandler);
+	server.server.resetHandlers(tradierQuoteHandler);
 });
 
 test.fails('validates useGetAggregateInvestmentData');
