@@ -26,12 +26,15 @@ import { Provider } from 'react-redux';
 import { createStore, type StoreType } from '../../src/store/createStore';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
+	expectedVtiData,
+	expectedVxusData,
 	vtiHistory,
 	vtiQuote,
 	vxusHistory,
 	vxusQuote
 } from '../testutils/support/aggregate-queries/data';
 import type { TradierHistory } from '../../src/types/tradier/history';
+import type { InvestmentData } from '../../src/types/data/InvestmentData';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 const queryClient = new QueryClient();
@@ -176,6 +179,19 @@ const RootComponent = ({ store }: RootComponentProps) => {
 	);
 };
 
+const validateData = (root: HTMLElement, expectedData: InvestmentData) => {
+	expect(within(root).getByText(/Name:/)).toHaveTextContent(
+		`Name: ${expectedData.name}`
+	);
+	expect(within(root).getByText(/Start Price:/)).toHaveTextContent(
+		`Start Price: ${expectedData.startPrice}`
+	);
+	expect(within(root).getByText(/Current Price:/)).toHaveTextContent(
+		`Current Price: ${expectedData.currentPrice}`
+	);
+	expect(within(root).queryByText('History:')).not.toBeInTheDocument();
+};
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData',
 	async (time) => {
@@ -209,29 +225,9 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 		expect(screen.getByText('Has Error: false')).toBeVisible();
 
 		const vtiData = screen.getByTestId('VTI-data');
-		expect(within(vtiData).getByText(/Name:/)).toHaveTextContent(
-			'Name: VTI Name'
-		);
-		expect(within(vtiData).getByText(/Start Price:/)).toHaveTextContent(
-			'Start Price: 261.93'
-		);
-		expect(within(vtiData).getByText(/Current Price:/)).toHaveTextContent(
-			'Current Price: 262.3'
-		);
-		expect(within(vtiData).queryByText('History:')).not.toBeInTheDocument();
+		validateData(vtiData, expectedVtiData);
 
 		const vxusData = screen.getByTestId('VXUS-data');
-		expect(within(vxusData).getByText(/Name:/)).toHaveTextContent(
-			'Name: VXUS Name'
-		);
-		expect(within(vxusData).getByText(/Start Price:/)).toHaveTextContent(
-			'Start Price: 61.94'
-		);
-		expect(within(vxusData).getByText(/Current Price:/)).toHaveTextContent(
-			'Current Price: 62.21'
-		);
-		expect(
-			within(vxusData).queryByText('History:')
-		).not.toBeInTheDocument();
+		validateData(vxusData, expectedVxusData);
 	}
 );
