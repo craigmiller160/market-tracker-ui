@@ -1,5 +1,7 @@
 import type { TradierQuote } from '../../../../src/types/tradier/quotes';
 import type { TradierHistory } from '../../../../src/types/tradier/history';
+import type { InvestmentData } from '../../../../src/types/data/InvestmentData';
+import type { HistoryRecord } from '../../../../src/types/history';
 
 export const vtiQuote: TradierQuote = {
 	symbol: 'VTI',
@@ -110,3 +112,31 @@ export const vxusHistory: TradierHistory = {
 		]
 	}
 };
+
+const tradierToInvestmentData = (
+	quote: TradierQuote,
+	history: TradierHistory
+): InvestmentData => ({
+	name: quote.description,
+	startPrice: quote.prevclose,
+	currentPrice: quote.last ?? 0,
+	history:
+		history.history?.day?.map(
+			(day): HistoryRecord => ({
+				date: day.date,
+				unixTimestampMillis: 0,
+				price: parseFloat(day.close.toString()),
+				time: '0'
+			})
+		) ?? []
+});
+
+export const expectedVtiData: InvestmentData = tradierToInvestmentData(
+	vtiQuote,
+	vtiHistory
+);
+
+export const expectedVxusData: InvestmentData = tradierToInvestmentData(
+	vxusQuote,
+	vxusHistory
+);
