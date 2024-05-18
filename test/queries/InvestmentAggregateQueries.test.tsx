@@ -11,7 +11,7 @@ import type {
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
 import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import {
 	type AggregateInvestmentData,
 	useGetAggregateInvestmentData
@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
 
 const vtiQuote: TradierQuote = {
 	symbol: 'VTI',
-	description: '',
+	description: 'VTI Name',
 	ask: 0,
 	bid: 0,
 	close: 0,
@@ -38,7 +38,7 @@ const vtiQuote: TradierQuote = {
 
 const vxusQuote: TradierQuote = {
 	symbol: 'VXUS',
-	description: '',
+	description: 'VXUS Name',
 	ask: 0,
 	bid: 0,
 	close: 0,
@@ -196,5 +196,31 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			)
 		);
 		expect(screen.getByText('Has Error: false')).toBeVisible();
+
+		const vtiData = screen.getByTestId('VTI-data');
+		expect(within(vtiData).getByText(/Name:/)).toHaveTextContent(
+			'Name: VTI Name'
+		);
+		expect(within(vtiData).getByText(/Start Price:/)).toHaveTextContent(
+			'Start Price: 261.93'
+		);
+		expect(within(vtiData).getByText(/Current Price:/)).toHaveTextContent(
+			'Current Price: 262.30'
+		);
+		expect(within(vtiData).queryByText('History:')).not.toBeInTheDocument();
+
+		const vxusData = screen.getByTestId('VXUS-data');
+		expect(within(vxusData).getByText(/Name:/)).toHaveTextContent(
+			'Name: VXUS Name'
+		);
+		expect(within(vxusData).getByText(/Start Price:/)).toHaveTextContent(
+			'Start Price: 61.94'
+		);
+		expect(within(vxusData).getByText(/Current Price:/)).toHaveTextContent(
+			'Current Price: 62.21'
+		);
+		expect(
+			within(vxusData).queryByText('History:')
+		).not.toBeInTheDocument();
 	}
 );
