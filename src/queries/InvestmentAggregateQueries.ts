@@ -62,11 +62,11 @@ export type UseGetAggregateInvestmentDataResult = Readonly<{
 const combineResults = (
 	time: MarketTime,
 	quotes: ReadonlyArray<Quote>,
-	aggregateHistory: AggregateHistoryRecords
+	aggregateHistory?: AggregateHistoryRecords
 ): AggregateInvestmentData =>
 	quotes
 		.map((quote): AggregateInvestmentData => {
-			const history = aggregateHistory[quote.symbol] ?? [];
+			const history = aggregateHistory?.[quote.symbol] ?? [];
 			const info: InvestmentInfo = {
 				type: InvestmentType.STOCK,
 				name: '',
@@ -112,10 +112,7 @@ export const useGetAggregateInvestmentData = (
 	);
 
 	const data = useMemo(() => {
-		if (
-			quoteResult.data === undefined ||
-			historyResult.data === undefined
-		) {
+		if (quoteResult.data === undefined) {
 			return undefined;
 		}
 		return combineResults(time, quoteResult.data, historyResult.data);
