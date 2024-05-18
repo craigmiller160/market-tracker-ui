@@ -1,75 +1,73 @@
 import { test } from 'vitest';
 import { server } from '../testutils/msw-server';
+import type {
+	TradierQuote,
+	TradierQuotes
+} from '../../src/types/tradier/quotes';
+import { http, type HttpHandler, HttpResponse } from 'msw';
 
-/*
- * https://localhost:3000/market-tracker/api/tradier/markets/quotes?symbols=VTI,VXUS
- * {
-    "quotes": {
-        "quote": [
-            {
-                "symbol": "VTI",
-                "description": "Vanguard Total Stock Market ETF",
-                "exch": "P",
-                "type": "etf",
-                "last": 262.3,
-                "change": 0.37,
-                "volume": 2208726,
-                "open": 262.15,
-                "high": 262.3,
-                "low": 261.24,
-                "close": 262.3,
-                "bid": 262.2,
-                "ask": 262.5,
-                "change_percentage": 0.15,
-                "average_volume": 2996596,
-                "last_volume": 0,
-                "trade_date": 1715990400003,
-                "prevclose": 261.93,
-                "week_52_high": 263.28,
-                "week_52_low": 202.44,
-                "bidsize": 1,
-                "bidexch": "P",
-                "bid_date": 1715990264000,
-                "asksize": 7,
-                "askexch": "P",
-                "ask_date": 1715989598000,
-                "root_symbols": "VTI"
-            },
-            {
-                "symbol": "VXUS",
-                "description": "Vanguard Total International Stock ETF",
-                "exch": "Q",
-                "type": "etf",
-                "last": 62.21,
-                "change": 0.27,
-                "volume": 3793677,
-                "open": 61.99,
-                "high": 62.24,
-                "low": 61.92,
-                "close": 62.21,
-                "bid": 61.59,
-                "ask": 62.25,
-                "change_percentage": 0.44,
-                "average_volume": 3231428,
-                "last_volume": 0,
-                "trade_date": 1715976900013,
-                "prevclose": 61.94,
-                "week_52_high": 62.24,
-                "week_52_low": 50.95,
-                "bidsize": 1,
-                "bidexch": "Q",
-                "bid_date": 1715976019000,
-                "asksize": 1,
-                "askexch": "P",
-                "ask_date": 1715977370000,
-                "root_symbols": "VXUS"
-            }
-        ]
-    }
-}
-*
-*
- */
+const vtiQuote: TradierQuote = {
+	symbol: 'VTI',
+	description: '',
+	ask: 0,
+	bid: 0,
+	close: 0,
+	high: 0,
+	last: 262.3,
+	low: 0,
+	open: 0,
+	prevclose: 261.93
+};
+
+const vxusQuote: TradierQuote = {
+	symbol: 'VXUS',
+	description: '',
+	ask: 0,
+	bid: 0,
+	close: 0,
+	high: 0,
+	last: 62.21,
+	low: 0,
+	open: 0,
+	prevclose: 61.94
+};
+
+const tradierHandler: HttpHandler = http.get(
+	'http://localhost:3000/market-tracker/api/tradier/markets/quotes',
+	({ request }) => {
+		const url = new URL(request.url);
+		const symbols = url.searchParams.get('symbols')?.split(',') ?? [];
+		const quotes = [
+			symbols.includes('VTI') ? vtiQuote : undefined,
+			symbols.includes('VXUS') ? vxusQuote : undefined
+		].filter((quote): quote is TradierQuote => !!quote);
+
+		if (quotes.length === 0) {
+			return HttpResponse.json<TradierQuotes>({
+				quotes: {
+					quote: undefined,
+					unmatched_symbols: undefined
+				}
+			});
+		}
+
+		if (quotes.length === 0) {
+			return HttpResponse.json<TradierQuotes>({
+				quotes: {
+					quote: quotes[0],
+					unmatched_symbols: undefined
+				}
+			});
+		}
+
+		return HttpResponse.json<TradierQuotes>({
+			quotes: {
+				quote: quotes,
+				unmatched_symbols: undefined
+			}
+		});
+	}
+);
 
 beforeEach(() => {
 	server.server.resetHandlers();
