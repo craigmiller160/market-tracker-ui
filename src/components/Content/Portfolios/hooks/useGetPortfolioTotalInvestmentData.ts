@@ -17,7 +17,10 @@ import {
 	useGetAggregateCurrentSharesForStocksInPortfolio,
 	useGetAggregateSharesHistoryForStocksInPortfolio
 } from '../../../../queries/PortfolioAggregateQueries';
-import { useGetAggregateInvestmentData } from '../../../../queries/InvestmentAggregateQueries';
+import {
+	type AggregateInvestmentData,
+	useGetAggregateInvestmentData
+} from '../../../../queries/InvestmentAggregateQueries';
 
 type IntermediateQueryResult<T> = Readonly<{
 	data?: T;
@@ -82,6 +85,12 @@ const useGetPortfolioData = (
 	};
 };
 
+const mergeTotalInvestmentData = (
+	time: MarketTime,
+	investmentData: AggregateInvestmentData,
+	portfolioData: AggregatePortfolioData
+): AggregateInvestmentData => {};
+
 // TODO write tests for this
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	info: InvestmentInfo
@@ -101,7 +110,25 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 		portfolioStockListResult.data
 	);
 
+	const mergedInvestmentData = useMemo(() => {
+		if (!portfolioDataResult.data || !investmentDataResult.data) {
+			return undefined;
+		}
+
+		return mergeTotalInvestmentData(
+			time,
+			investmentDataResult.data,
+			portfolioDataResult.data
+		);
+	}, [time, investmentDataResult.data, portfolioDataResult.data]);
+
 	return {
+		// todo fix this part
+		data: undefined,
+		error:
+			portfolioStockListResult.error ??
+			portfolioDataResult.error ??
+			investmentDataResult.error,
 		loading:
 			portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
 		status: investmentDataResult.status,
