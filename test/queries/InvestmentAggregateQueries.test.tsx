@@ -188,9 +188,17 @@ const validateData = (
 	expect(within(root).getByText(/Name:/)).toHaveTextContent(
 		`Name: ${expectedData.name}`
 	);
-	expect(within(root).getByText(/Start Price:/)).toHaveTextContent(
-		`Start Price: ${expectedData.startPrice}`
-	);
+
+	if (MarketTime.ONE_DAY === time) {
+		expect(within(root).getByText(/Start Price:/)).toHaveTextContent(
+			`Start Price: ${expectedData.startPrice}`
+		);
+	} else {
+		expect(within(root).getByText(/Start Price:/)).toHaveTextContent(
+			`Start Price: ${expectedData.history[0].price}`
+		);
+	}
+
 	expect(within(root).getByText(/Current Price:/)).toHaveTextContent(
 		`Current Price: ${expectedData.currentPrice}`
 	);

@@ -121,13 +121,21 @@ const tradierToInvestmentData = (
 	startPrice: quote.prevclose,
 	currentPrice: quote.last ?? 0,
 	history:
-		history.history?.day?.map(
-			(day): HistoryRecord => ({
-				date: day.date,
-				unixTimestampMillis: 0,
-				price: parseFloat(day.close.toString()),
-				time: '0'
-			})
+		history.history?.day?.flatMap(
+			(day): ReadonlyArray<HistoryRecord> => [
+				{
+					date: day.date,
+					unixTimestampMillis: 0,
+					price: parseInt(day.open.toString()),
+					time: '00:00:00'
+				},
+				{
+					date: day.date,
+					unixTimestampMillis: 0,
+					price: parseInt(day.close.toString()),
+					time: '23:59:59'
+				}
+			]
 		) ?? []
 });
 
