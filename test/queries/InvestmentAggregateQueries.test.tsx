@@ -140,7 +140,8 @@ const StockDataComponent = ({ symbol, data }: StockDataComponentProps) => (
 				<ul>
 					{data?.[symbol]?.history?.map((record, index) => (
 						<li key={index}>
-							{record.date} {record.time}: {record.price}
+							History Record: {record.date} {record.time}:{' '}
+							{record.price}
 						</li>
 					))}
 				</ul>
@@ -179,7 +180,11 @@ const RootComponent = ({ store }: RootComponentProps) => {
 	);
 };
 
-const validateData = (root: HTMLElement, expectedData: InvestmentData) => {
+const validateData = (
+	root: HTMLElement,
+	time: MarketTime,
+	expectedData: InvestmentData
+) => {
 	expect(within(root).getByText(/Name:/)).toHaveTextContent(
 		`Name: ${expectedData.name}`
 	);
@@ -189,16 +194,20 @@ const validateData = (root: HTMLElement, expectedData: InvestmentData) => {
 	expect(within(root).getByText(/Current Price:/)).toHaveTextContent(
 		`Current Price: ${expectedData.currentPrice}`
 	);
-	expect(within(root).queryByText('History:')).not.toBeInTheDocument();
+
+	if (MarketTime.ONE_DAY === time) {
+		expect(within(root).queryByText('History:')).not.toBeInTheDocument();
+	} else {
+		expect(within(root).queryByText('History:')).toBeVisible();
+
+		const recordElements = within(root).getAllByText(/History Record:/);
+		expect(recordElements).toHaveLength(expectedData.history.length);
+	}
 };
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData',
 	async (time) => {
-		if (time === MarketTime.ONE_WEEK) {
-			throw new Error('Not implemented yet');
-		}
-
 		server.server.resetHandlers(
 			tradierQuoteHandler,
 			tradierHistoryHandler,
@@ -225,9 +234,9 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 		expect(screen.getByText('Has Error: false')).toBeVisible();
 
 		const vtiData = screen.getByTestId('VTI-data');
-		validateData(vtiData, expectedVtiData);
+		validateData(vtiData, time, expectedVtiData);
 
 		const vxusData = screen.getByTestId('VXUS-data');
-		validateData(vxusData, expectedVxusData);
+		validateData(vxusData, time, expectedVxusData);
 	}
 );
