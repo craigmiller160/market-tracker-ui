@@ -72,6 +72,10 @@ const getStartPrice = (
 				)
 			)
 		)
+		.with(
+			{ time: P.not(MarketTime.ONE_DAY), history: P.when(hasNoHistory) },
+			() => Either.right(0)
+		)
 		.otherwise(() => Either.left(new Error('Unable to get start price')));
 
 const notEqualToHistoryStartPrice =
@@ -119,6 +123,9 @@ const priceAndPrevCloseEqual: PredicateT<Quote> = (quote) =>
 
 const hasHistory: PredicateT<ReadonlyArray<HistoryRecord>> = (history) =>
 	history.length > 0;
+
+const hasNoHistory: PredicateT<ReadonlyArray<HistoryRecord>> = (history) =>
+	history.length === 0;
 
 const getCurrentPrice = (
 	info: InvestmentInfo,
