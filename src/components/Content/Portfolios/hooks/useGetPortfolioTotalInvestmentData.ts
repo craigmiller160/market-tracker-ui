@@ -115,13 +115,13 @@ const mergeTotalInvestmentData = (
 		})
 		.reduce<InvestmentData>(
 			(acc, [, record]) => ({
-				name: '',
+				name: acc.name,
 				startPrice: acc.startPrice + record.startPrice,
 				currentPrice: acc.currentPrice + record.currentPrice,
 				history: []
 			}),
 			{
-				name: '',
+				name: 'Portfolio',
 				startPrice: 0,
 				currentPrice: 0,
 				history: []
