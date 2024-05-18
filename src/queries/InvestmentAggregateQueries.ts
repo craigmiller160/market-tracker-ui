@@ -88,7 +88,6 @@ const combineResults = (
 			{}
 		);
 
-// TODO need tests for this
 export const useGetAggregateInvestmentData = (
 	symbols?: ReadonlyArray<string>
 ): UseGetAggregateInvestmentDataResult => {
