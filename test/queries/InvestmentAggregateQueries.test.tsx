@@ -12,6 +12,10 @@ import type {
 } from '../../src/types/tradier/calendar';
 import { MarketTime } from '../../src/types/MarketTime';
 import { render, screen } from '@testing-library/react';
+import {
+	type AggregateInvestmentData,
+	useGetAggregateInvestmentData
+} from '../../src/queries/InvestmentAggregateQueries';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -103,10 +107,42 @@ const tradierQuoteHandler: HttpHandler = http.get(
 	}
 );
 
+type StockDataComponentProps = Readonly<{
+	symbol: string;
+	data?: AggregateInvestmentData;
+}>;
+const StockDataComponent = ({ symbol, data }: StockDataComponentProps) => (
+	<div data-testid={`${symbol}-data`}>
+		<p>VTI</p>
+		<p>Name: {data?.[symbol]?.name}</p>
+		<p>Start Price: {data?.[symbol]?.startPrice}</p>
+		<p>Current Price: {data?.[symbol]?.currentPrice}</p>
+		{(data?.[symbol]?.history?.length ?? 0) > 0 && (
+			<>
+				<p>History:</p>
+				<ul>
+					{data?.[symbol]?.history?.map((record, index) => (
+						<li key={index}>
+							{record.date} {record.time}: {record.price}
+						</li>
+					))}
+				</ul>
+			</>
+		)}
+	</div>
+);
+
 const QueryValidationComponent = () => {
+	const { data, isLoading, error } = useGetAggregateInvestmentData([
+		'VTI',
+		'VXUS'
+	]);
 	return (
 		<div>
-			<h1>Hello World</h1>
+			<p>Is Loading: {isLoading}</p>
+			<p>Has Error: {error !== null}</p>
+			<StockDataComponent symbol="VTI" data={data} />
+			<StockDataComponent symbol="VXUS" data={data} />
 		</div>
 	);
 };
