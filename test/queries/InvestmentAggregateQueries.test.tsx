@@ -18,8 +18,10 @@ import {
 } from '../../src/queries/InvestmentAggregateQueries';
 import { Provider } from 'react-redux';
 import { createStore, type StoreType } from '../../src/store/createStore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
+const queryClient = new QueryClient();
 
 const vtiQuote: TradierQuote = {
 	symbol: 'VTI',
@@ -156,7 +158,9 @@ const RootComponent = ({ store }: RootComponentProps) => {
 	return (
 		<div>
 			<Provider store={store}>
-				<QueryValidationComponent />
+				<QueryClientProvider client={queryClient}>
+					<QueryValidationComponent />
+				</QueryClientProvider>
 			</Provider>
 		</div>
 	);
