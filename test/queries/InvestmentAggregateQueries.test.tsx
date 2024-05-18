@@ -11,7 +11,7 @@ import type {
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
 import { MarketTime } from '../../src/types/MarketTime';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import {
 	type AggregateInvestmentData,
 	useGetAggregateInvestmentData
@@ -149,7 +149,7 @@ const QueryValidationComponent = () => {
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData',
-	(time) => {
+	async (time) => {
 		if (time === MarketTime.ONE_WEEK) {
 			throw new Error('Not implemented yet');
 		}
@@ -162,6 +162,11 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 		);
 
 		render(<QueryValidationComponent />);
-		expect(screen.getByText('Hello World')).toBeVisible();
+		await waitFor(() =>
+			expect(screen.getByText(/Is Loading/)).toHaveTextContent(
+				'Is Loading: false'
+			)
+		);
+		expect(screen.getByText('Has Error: false')).toBeVisible();
 	}
 );
