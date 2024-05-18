@@ -2,109 +2,109 @@ import type { UseLoadInvestmentData } from '../../common/InvestmentCard/UseLoadI
 import { useSelector } from 'react-redux';
 import { timeValueSelector } from '../../../../store/marketSettings/selectors';
 import type {
-    InvestmentInfo,
-    PortfolioInvestmentInfo
+	InvestmentInfo,
+	PortfolioInvestmentInfo
 } from '../../../../types/data/InvestmentInfo';
 import { isPortfolioInvestmentInfo } from './common';
 import type { MarketTime } from '../../../../types/MarketTime';
 import { useGetPortfolioList } from '../../../../queries/PortfolioQueries';
 import { useMemo } from 'react';
 import type {
-    AggregateCurrentSharesOwnedResponse,
-    AggregateSharesOwnedHistoryResponse
+	AggregateCurrentSharesOwnedResponse,
+	AggregateSharesOwnedHistoryResponse
 } from '../../../../services/PortfolioAggregateService';
 import {
-    useGetAggregateCurrentSharesForStocksInPortfolio,
-    useGetAggregateSharesHistoryForStocksInPortfolio
+	useGetAggregateCurrentSharesForStocksInPortfolio,
+	useGetAggregateSharesHistoryForStocksInPortfolio
 } from '../../../../queries/PortfolioAggregateQueries';
 import { useGetAggregateInvestmentData } from '../../../../queries/InvestmentAggregateQueries';
 
 type IntermediateQueryResult<T> = Readonly<{
-    data?: T;
-    error: Error | null;
-    isLoading: boolean;
+	data?: T;
+	error: Error | null;
+	isLoading: boolean;
 }>;
 
 type AggregatePortfolioData = Readonly<{
-    current: AggregateCurrentSharesOwnedResponse;
-    history: AggregateSharesOwnedHistoryResponse;
+	current: AggregateCurrentSharesOwnedResponse;
+	history: AggregateSharesOwnedHistoryResponse;
 }>;
 
 const useGetPortfolioStockList = (
-    info: PortfolioInvestmentInfo,
-    time: MarketTime
+	info: PortfolioInvestmentInfo,
+	time: MarketTime
 ): IntermediateQueryResult<ReadonlyArray<string>> => {
-    const result = useGetPortfolioList(time);
-    const data = useMemo(() => {
-        if (!result.data) {
-            return undefined;
-        }
-        return result.data.find(
-            (portfolio) => portfolio.id === info.portfolioId
-        )?.stockSymbols;
-    }, [result.data, info.portfolioId]);
-    return {
-        data,
-        error: result.error,
-        isLoading: result.isFetching
-    };
+	const result = useGetPortfolioList(time);
+	const data = useMemo(() => {
+		if (!result.data) {
+			return undefined;
+		}
+		return result.data.find(
+			(portfolio) => portfolio.id === info.portfolioId
+		)?.stockSymbols;
+	}, [result.data, info.portfolioId]);
+	return {
+		data,
+		error: result.error,
+		isLoading: result.isFetching
+	};
 };
 
 const useGetPortfolioData = (
-    info: PortfolioInvestmentInfo,
-    time: MarketTime,
-    symbols?: ReadonlyArray<string>
+	info: PortfolioInvestmentInfo,
+	time: MarketTime,
+	symbols?: ReadonlyArray<string>
 ): IntermediateQueryResult<AggregatePortfolioData> => {
-    const aggregateCurrentResult =
-        useGetAggregateCurrentSharesForStocksInPortfolio(
-            info.portfolioId,
-            symbols ?? []
-        );
-    const aggregateHistoryResult =
-        useGetAggregateSharesHistoryForStocksInPortfolio(
-            info.portfolioId,
-            symbols ?? [],
-            time
-        );
+	const aggregateCurrentResult =
+		useGetAggregateCurrentSharesForStocksInPortfolio(
+			info.portfolioId,
+			symbols ?? []
+		);
+	const aggregateHistoryResult =
+		useGetAggregateSharesHistoryForStocksInPortfolio(
+			info.portfolioId,
+			symbols ?? [],
+			time
+		);
 
-    return {
-        data:
-            aggregateCurrentResult.data && aggregateHistoryResult.data
-                ? {
-                      current: aggregateCurrentResult.data,
-                      history: aggregateHistoryResult.data
-                  }
-                : undefined,
-        isLoading:
-            aggregateCurrentResult.isFetching ||
-            aggregateHistoryResult.isFetching,
-        error: aggregateCurrentResult.error ?? aggregateHistoryResult.error
-    };
+	return {
+		data:
+			aggregateCurrentResult.data && aggregateHistoryResult.data
+				? {
+						current: aggregateCurrentResult.data,
+						history: aggregateHistoryResult.data
+					}
+				: undefined,
+		isLoading:
+			aggregateCurrentResult.isFetching ||
+			aggregateHistoryResult.isFetching,
+		error: aggregateCurrentResult.error ?? aggregateHistoryResult.error
+	};
 };
 
 // TODO write tests for this
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
-    info: InvestmentInfo
+	info: InvestmentInfo
 ) => {
-    const time = useSelector(timeValueSelector);
-    if (!isPortfolioInvestmentInfo(info)) {
-        throw new Error('InvestmentInfo is not PortfolioInvestmentInfo');
-    }
+	const time = useSelector(timeValueSelector);
+	if (!isPortfolioInvestmentInfo(info)) {
+		throw new Error('InvestmentInfo is not PortfolioInvestmentInfo');
+	}
 
-    const portfolioStockListResult = useGetPortfolioStockList(info, time);
-    const portfolioDataResult = useGetPortfolioData(
-        info,
-        time,
-        portfolioStockListResult.data
-    );
-    const investmentDataResult = useGetAggregateInvestmentData(
-        portfolioStockListResult.data
-    );
+	const portfolioStockListResult = useGetPortfolioStockList(info, time);
+	const portfolioDataResult = useGetPortfolioData(
+		info,
+		time,
+		portfolioStockListResult.data
+	);
+	const investmentDataResult = useGetAggregateInvestmentData(
+		portfolioStockListResult.data
+	);
 
-    return {
-        loading:
-            portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
-        status: investmentDataResult.status,
-        respectMarketStatus: investmentDataResult.shouldRespectMarketStatus
-    };
+	return {
+		loading:
+			portfolioStockListResult.isLoading || portfolioDataResult.isLoading,
+		status: investmentDataResult.status,
+		respectMarketStatus: investmentDataResult.shouldRespectMarketStatus
+	};
 };

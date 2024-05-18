@@ -20,7 +20,7 @@
     "@antv/x6-react-components": ">=1.1.20"
   },
   "devDependencies": {
-    "@craigmiller160/js-config": "^1.1.0-beta.1",
+    "@craigmiller160/js-config": "1.1.0-beta.1",
     "@craigmiller160/swagger-typescript-api-formatted": "^1.1.2",
     "@relmify/jest-fp-ts": "^2.1.1",
     "@testing-library/dom": "^9.3.4",
