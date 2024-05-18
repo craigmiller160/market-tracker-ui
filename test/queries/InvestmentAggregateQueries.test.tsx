@@ -10,12 +10,14 @@ import type {
 	TradierCalendar,
 	TradierCalendarStatus
 } from '../../src/types/tradier/calendar';
-import { MarketTime } from '../../src/types/MarketTime';
+import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
 	type AggregateInvestmentData,
 	useGetAggregateInvestmentData
 } from '../../src/queries/InvestmentAggregateQueries';
+import { Provider } from 'react-redux';
+import { createStore, type StoreType } from '../../src/store/createStore';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -147,6 +149,19 @@ const QueryValidationComponent = () => {
 	);
 };
 
+type RootComponentProps = Readonly<{
+	store: StoreType;
+}>;
+const RootComponent = ({ store }: RootComponentProps) => {
+	return (
+		<div>
+			<Provider store={store}>
+				<QueryValidationComponent />
+			</Provider>
+		</div>
+	);
+};
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData',
 	async (time) => {
@@ -161,7 +176,16 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			)
 		);
 
-		render(<QueryValidationComponent />);
+		const store = createStore({
+			marketSettings: {
+				time: {
+					menuKey: marketTimeToMenuKey(time),
+					value: time
+				}
+			}
+		});
+
+		render(<RootComponent store={store} />);
 		await waitFor(() =>
 			expect(screen.getByText(/Is Loading/)).toHaveTextContent(
 				'Is Loading: false'

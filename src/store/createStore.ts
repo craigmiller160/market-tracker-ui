@@ -18,3 +18,5 @@ export const createStore = (preloadedState?: Partial<RootState>) =>
 		preloadedState,
 		devTools: process.env.NODE_ENV !== 'production'
 	});
+
+export type StoreType = ReturnType<typeof createStore>;
