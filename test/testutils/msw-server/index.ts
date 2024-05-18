@@ -58,3 +58,5 @@ export const newApiServer = (): ApiServer => {
 		}
 	};
 };
+
+export const server = newApiServer();
