@@ -133,7 +133,6 @@ const mergeTotalInvestmentData = (
 			}
 		);
 
-// TODO write tests for this
 export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	info: InvestmentInfo
 ) => {
