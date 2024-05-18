@@ -90,7 +90,7 @@ const mergeTotalInvestmentData = (
 	time: MarketTime,
 	investmentData: AggregateInvestmentData,
 	portfolioData: AggregatePortfolioData
-): AggregateInvestmentData =>
+): InvestmentData =>
 	Object.entries(portfolioData.current)
 		.map(([symbol, currentData]): [string, InvestmentData] => {
 			const historyData = portfolioData.history[symbol];
@@ -113,17 +113,19 @@ const mergeTotalInvestmentData = (
 			);
 			return [symbol, mergedData];
 		})
-		.map(
-			([symbol, mergedData]): AggregateInvestmentData => ({
-				[symbol]: mergedData
-			})
-		)
-		.reduce<AggregateInvestmentData>(
-			(acc, record) => ({
-				...acc,
-				...record
+		.reduce<InvestmentData>(
+			(acc, [, record]) => ({
+				name: '',
+				startPrice: acc.startPrice + record.startPrice,
+				currentPrice: acc.currentPrice + record.currentPrice,
+				history: []
 			}),
-			{}
+			{
+				name: '',
+				startPrice: 0,
+				currentPrice: 0,
+				history: []
+			}
 		);
 
 // TODO write tests for this
@@ -144,7 +146,6 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	const investmentDataResult = useGetAggregateInvestmentData(
 		portfolioStockListResult.data
 	);
-	console.log('DATA', portfolioDataResult.data, investmentDataResult.data);
 
 	const mergedInvestmentData = useMemo(() => {
 		if (!portfolioDataResult.data || !investmentDataResult.data) {
@@ -159,8 +160,7 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 	}, [time, investmentDataResult.data, portfolioDataResult.data]);
 
 	return {
-		// todo fix this part
-		data: undefined,
+		data: mergedInvestmentData,
 		error:
 			portfolioStockListResult.error ??
 			portfolioDataResult.error ??
