@@ -70,7 +70,7 @@ const tradierHandler: HttpHandler = http.get(
 );
 
 beforeEach(() => {
-	server.server.resetHandlers();
+	server.server.resetHandlers(tradierHandler);
 });
 
 test.fails('validates useGetAggregateInvestmentData');
