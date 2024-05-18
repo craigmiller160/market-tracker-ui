@@ -51,18 +51,10 @@ const mergeHistory = (
 
 export const mergeInvestmentData = (
 	time: MarketTime,
-	investmentData?: InvestmentData,
-	portfolioCurrentData?: SharesOwnedResponse,
-	portfolioHistoryData?: ReadonlyArray<SharesOwnedResponse>
-): InvestmentData | undefined => {
-	if (
-		investmentData === undefined ||
-		portfolioCurrentData === undefined ||
-		portfolioHistoryData === undefined
-	) {
-		return undefined;
-	}
-
+	investmentData: InvestmentData,
+	portfolioCurrentData: SharesOwnedResponse,
+	portfolioHistoryData: ReadonlyArray<SharesOwnedResponse>
+): InvestmentData => {
 	const startPrice =
 		portfolioHistoryData[0].totalShares * investmentData.startPrice;
 	const currentPrice =

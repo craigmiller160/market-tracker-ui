@@ -69,16 +69,17 @@ export const useGetPortfolioInvestmentData = (
 		status
 	} = useGetInvestmentData(info);
 
-	const mergedInvestmentData = useMemo(
-		() =>
-			mergeInvestmentData(
-				time,
-				investmentData,
-				portfolioCurrentData,
-				portfolioHistoryData
-			),
-		[time, investmentData, portfolioCurrentData, portfolioHistoryData]
-	);
+	const mergedInvestmentData = useMemo(() => {
+		if (!investmentData || !portfolioCurrentData || !portfolioHistoryData) {
+			return undefined;
+		}
+		return mergeInvestmentData(
+			time,
+			investmentData,
+			portfolioCurrentData,
+			portfolioHistoryData
+		);
+	}, [time, investmentData, portfolioCurrentData, portfolioHistoryData]);
 
 	return {
 		respectMarketStatus,
