@@ -114,12 +114,19 @@ const mergeTotalInvestmentData = (
 			return [symbol, mergedData];
 		})
 		.reduce<InvestmentData>(
-			(acc, [, record]) => ({
-				name: acc.name,
-				startPrice: acc.startPrice + record.startPrice,
-				currentPrice: acc.currentPrice + record.currentPrice,
-				history: []
-			}),
+			(acc, [, record]) => {
+				return {
+					name: acc.name,
+					startPrice: acc.startPrice + record.startPrice,
+					currentPrice: acc.currentPrice + record.currentPrice,
+					history: record.history.map((his, index) => ({
+						time: his.time,
+						date: his.date,
+						price: his.price + acc.history[index]?.price ?? 0,
+						unixTimestampMillis: his.unixTimestampMillis
+					}))
+				};
+			},
 			{
 				name: 'Portfolio',
 				startPrice: 0,
