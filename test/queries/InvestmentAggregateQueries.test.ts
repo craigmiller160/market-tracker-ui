@@ -44,7 +44,7 @@ const createTradierCalendarHandler = (
 ): HttpHandler =>
 	http.get(
 		'http://localhost:3000/market-tracker/api/tradier/marekts/calendar',
-		({ request }) => {
+		() => {
 			const today = new Date();
 			const calendar: TradierCalendar = {
 				calendar: {
@@ -101,8 +101,10 @@ const tradierQuoteHandler: HttpHandler = http.get(
 	}
 );
 
-beforeEach(() => {
-	server.server.resetHandlers(tradierQuoteHandler);
+test('validates useGetAggregateInvestmentData', () => {
+	server.server.resetHandlers(
+		tradierQuoteHandler,
+		createTradierCalendarHandler('open')
+	);
+	expect(true).toEqual(false);
 });
-
-test.fails('validates useGetAggregateInvestmentData');
