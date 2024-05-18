@@ -53,7 +53,7 @@ const createTradierCalendarHandler = (
 	status: TradierCalendarStatus
 ): HttpHandler =>
 	http.get(
-		'http://localhost:3000/market-tracker/api/tradier/marekts/calendar',
+		'http://localhost:3000/market-tracker/api/tradier/markets/calendar',
 		() => {
 			const today = new Date();
 			const calendar: TradierCalendar = {
@@ -143,8 +143,8 @@ const QueryValidationComponent = () => {
 	]);
 	return (
 		<div>
-			<p>Is Loading: {isLoading}</p>
-			<p>Has Error: {error !== null}</p>
+			<p>Is Loading: {`${isLoading}`}</p>
+			<p>Has Error: {`${error !== null}`}</p>
 			<StockDataComponent symbol="VTI" data={data} />
 			<StockDataComponent symbol="VXUS" data={data} />
 		</div>
