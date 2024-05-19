@@ -29,7 +29,7 @@ type IntermediateQueryResult<T> = Readonly<{
 	isLoading: boolean;
 }>;
 
-type AggregatePortfolioData = Readonly<{
+export type AggregatePortfolioData = Readonly<{
 	current: AggregateCurrentSharesOwnedResponse;
 	history: AggregateSharesOwnedHistoryResponse;
 }>;

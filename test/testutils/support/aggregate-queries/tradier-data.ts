@@ -139,10 +139,24 @@ const tradierToInvestmentData = (
 		) ?? []
 });
 
+const emptyHistory: TradierHistory = {
+	history: {
+		day: []
+	}
+};
+
+export const expectedVtiDataNoHistory: InvestmentData = tradierToInvestmentData(
+	vtiQuote,
+	emptyHistory
+);
+
 export const expectedVtiData: InvestmentData = tradierToInvestmentData(
 	vtiQuote,
 	vtiHistory
 );
+
+export const expectedVxusDataNoHistory: InvestmentData =
+	tradierToInvestmentData(vxusQuote, emptyHistory);
 
 export const expectedVxusData: InvestmentData = tradierToInvestmentData(
 	vxusQuote,
