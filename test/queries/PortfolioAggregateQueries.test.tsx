@@ -120,6 +120,13 @@ const validateHistory = (
 ) => {
 	const elements = within(root).getAllByText(/History:/);
 	expect(elements).toHaveLength(expectedHistory.length);
+
+	expectedHistory.forEach((expectedRecord, index) => {
+		const actualElement = elements[index];
+		expect(actualElement).toHaveTextContent(
+			`History: ${expectedRecord.date} ${expectedRecord.totalShares}`
+		);
+	});
 };
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
