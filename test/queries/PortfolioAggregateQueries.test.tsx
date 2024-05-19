@@ -7,10 +7,15 @@ import { Provider } from 'react-redux';
 import { render, screen, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { useGetAggregateCurrentSharesForStocksInPortfolio } from '../../src/queries/PortfolioAggregateQueries';
+import type { SharesOwnedResponse } from '../../src/types/generated/market-tracker-portfolio-service';
 
 const queryClient = new QueryClient();
 
-const CurrentSharesComponent = () => {
+type SharesOwnedProps = Readonly<{
+	sharesOwned: SharesOwnedResponse;
+}>;
+
+const CurrentAggregateSharesComponent = () => {
 	const { data, isLoading, error } =
 		useGetAggregateCurrentSharesForStocksInPortfolio('id', ['VTI', 'VXUS']);
 
@@ -18,6 +23,12 @@ const CurrentSharesComponent = () => {
 		<div>
 			<p>Is Loading: {`${isLoading}`}</p>
 			<p>Has Error: {`${error !== null}`}</p>
+			<p>
+				VTI: {data?.VTI?.date} {data?.VTI?.totalShares}
+			</p>
+			<p>
+				VXUS: {data?.VXUS?.date} {data?.VXUS?.totalShares}
+			</p>
 		</div>
 	);
 };
@@ -44,7 +55,7 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 
 	render(
 		<RootComponent store={store}>
-			<CurrentSharesComponent />
+			<CurrentAggregateSharesComponent />
 		</RootComponent>
 	);
 	await waitFor(() =>
