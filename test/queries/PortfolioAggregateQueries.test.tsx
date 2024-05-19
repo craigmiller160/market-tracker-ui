@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
 import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/portfolio-msw-handlers';
 import { createStore, type StoreType } from '../../src/store/createStore';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { render, screen, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import {
@@ -14,6 +14,7 @@ import {
 	vtiCurrent,
 	vxusCurrent
 } from '../testutils/support/aggregate-queries/portfolio-data';
+import { timeValueSelector } from '../../src/store/marketSettings/selectors';
 
 const queryClient = new QueryClient();
 
@@ -35,10 +36,8 @@ const AggregateCurrentSharesComponent = () => {
 	);
 };
 
-type HistoryProps = Readonly<{
-	time: MarketTime;
-}>;
-const AggregateHistoryComponent = ({ time }: HistoryProps) => {
+const AggregateHistoryComponent = () => {
+	const time = useSelector(timeValueSelector);
 	const { data, isLoading, error } =
 		useGetAggregateSharesHistoryForStocksInPortfolio(
 			'id',
@@ -109,7 +108,7 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 
 		render(
 			<RootComponent store={store}>
-				<AggregateHistoryComponent time={time} />
+				<AggregateHistoryComponent />
 			</RootComponent>
 		);
 		await waitFor(() =>
