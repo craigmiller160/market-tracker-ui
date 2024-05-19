@@ -1,4 +1,4 @@
-import { createStore, rootReducer } from './createStore';
+import { createStore } from './createStore';
 import { useDispatch } from 'react-redux';
 
 export const store = createStore();
