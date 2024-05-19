@@ -7,13 +7,12 @@ import { Provider } from 'react-redux';
 import { render, screen, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { useGetAggregateCurrentSharesForStocksInPortfolio } from '../../src/queries/PortfolioAggregateQueries';
-import type { SharesOwnedResponse } from '../../src/types/generated/market-tracker-portfolio-service';
+import {
+	vtiCurrent,
+	vxusCurrent
+} from '../testutils/support/aggregate-queries/portfolio-data';
 
 const queryClient = new QueryClient();
-
-type SharesOwnedProps = Readonly<{
-	sharesOwned: SharesOwnedResponse;
-}>;
 
 const CurrentAggregateSharesComponent = () => {
 	const { data, isLoading, error } =
@@ -64,6 +63,14 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 		)
 	);
 	expect(screen.getByText('Has Error: false')).toBeVisible();
+
+	expect(screen.getByText(/VTI:/)).toHaveTextContent(
+		`VTI: ${vtiCurrent.date} ${vtiCurrent.totalShares}`
+	);
+
+	expect(screen.getByText(/VXUS:/)).toHaveTextContent(
+		`VXUS: ${vxusCurrent.date} ${vxusCurrent.totalShares}`
+	);
 });
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
