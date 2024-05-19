@@ -6,7 +6,10 @@ import { createStore, type StoreType } from '../../src/store/createStore';
 import { Provider } from 'react-redux';
 import { render, screen, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
-import { useGetAggregateCurrentSharesForStocksInPortfolio } from '../../src/queries/PortfolioAggregateQueries';
+import {
+	useGetAggregateCurrentSharesForStocksInPortfolio,
+	useGetAggregateSharesHistoryForStocksInPortfolio
+} from '../../src/queries/PortfolioAggregateQueries';
 import {
 	vtiCurrent,
 	vxusCurrent
@@ -14,7 +17,7 @@ import {
 
 const queryClient = new QueryClient();
 
-const CurrentAggregateSharesComponent = () => {
+const AggregateCurrentSharesComponent = () => {
 	const { data, isLoading, error } =
 		useGetAggregateCurrentSharesForStocksInPortfolio('id', ['VTI', 'VXUS']);
 
@@ -28,6 +31,24 @@ const CurrentAggregateSharesComponent = () => {
 			<p>
 				VXUS: {data?.VXUS?.date} {data?.VXUS?.totalShares}
 			</p>
+		</div>
+	);
+};
+
+type HistoryProps = Readonly<{
+	time: MarketTime;
+}>;
+const AggregateHistoryComponent = ({ time }: HistoryProps) => {
+	const { data, isLoading, error } =
+		useGetAggregateSharesHistoryForStocksInPortfolio(
+			'id',
+			['VTI', 'VXUS'],
+			time
+		);
+	return (
+		<div>
+			<p>Is Loading: {`${isLoading}`}</p>
+			<p>Has Error: {`${error !== null}`}</p>
 		</div>
 	);
 };
@@ -54,7 +75,7 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 
 	render(
 		<RootComponent store={store}>
-			<CurrentAggregateSharesComponent />
+			<AggregateCurrentSharesComponent />
 		</RootComponent>
 	);
 	await waitFor(() =>
@@ -75,7 +96,7 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateSharesHistoryForStocksInPortfolio',
-	(time) => {
+	async (time) => {
 		prepareAggregateQueryMswHandlers();
 		const store = createStore({
 			marketSettings: {
@@ -85,6 +106,17 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 				}
 			}
 		});
-		throw new Error();
+
+		render(
+			<RootComponent store={store}>
+				<AggregateHistoryComponent time={time} />
+			</RootComponent>
+		);
+		await waitFor(() =>
+			expect(screen.getByText(/Is Loading/)).toHaveTextContent(
+				'Is Loading: false'
+			)
+		);
+		expect(screen.getByText('Has Error: false')).toBeVisible();
 	}
 );
