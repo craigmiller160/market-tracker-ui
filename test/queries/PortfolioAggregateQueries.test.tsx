@@ -15,6 +15,7 @@ import {
 	vxusCurrent
 } from '../testutils/support/aggregate-queries/portfolio-data';
 import { timeValueSelector } from '../../src/store/marketSettings/selectors';
+import type { SharesOwnedResponse } from '../../src/types/generated/market-tracker-portfolio-service';
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,20 @@ const AggregateCurrentSharesComponent = () => {
 	);
 };
 
+type HistoryProps = Readonly<{
+	symbol: string;
+	history: ReadonlyArray<SharesOwnedResponse>;
+}>;
+const HistoryComponent = ({ symbol, history }: HistoryProps) => (
+	<div data-testid={`${symbol}-data`}>
+		{history.map((record) => (
+			<p key={record.date}>
+				History: {record.date} {record.totalShares}
+			</p>
+		))}
+	</div>
+);
+
 const AggregateHistoryComponent = () => {
 	const time = useSelector(timeValueSelector);
 	const { data, isLoading, error } =
@@ -48,6 +63,8 @@ const AggregateHistoryComponent = () => {
 		<div>
 			<p>Is Loading: {`${isLoading}`}</p>
 			<p>Has Error: {`${error !== null}`}</p>
+			<HistoryComponent symbol="VTI" history={data?.VTI ?? []} />
+			<HistoryComponent symbol="VXUS" history={data?.VXUS ?? []} />
 		</div>
 	);
 };
