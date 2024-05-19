@@ -3,10 +3,10 @@ import { MarketTime } from '../../../../../src/types/MarketTime';
 import type { AggregateInvestmentData } from '../../../../../src/queries/InvestmentAggregateQueries';
 import { match } from 'ts-pattern';
 import {
-	expectedVtiData,
-	expectedVtiDataNoHistory,
-	expectedVxusData,
-	expectedVxusDataNoHistory
+	expectedVtiOneWeekData,
+	expectedVtiTodayData,
+	expectedVxusOneWeekData,
+	expectedVxusTodayData
 } from '../../../../testutils/support/aggregate-queries/tradier-data';
 import {
 	type AggregatePortfolioData,
@@ -22,12 +22,12 @@ import type { InvestmentData } from '../../../../../src/types/data/InvestmentDat
 const getInvestmentData = (time: MarketTime): AggregateInvestmentData =>
 	match<MarketTime, AggregateInvestmentData>(time)
 		.with(MarketTime.ONE_DAY, () => ({
-			VTI: expectedVtiDataNoHistory,
-			VXUS: expectedVxusDataNoHistory
+			VTI: expectedVtiTodayData,
+			VXUS: expectedVxusTodayData
 		}))
 		.with(MarketTime.ONE_WEEK, () => ({
-			VTI: expectedVtiData,
-			VXUS: expectedVxusData
+			VTI: expectedVtiOneWeekData,
+			VXUS: expectedVxusOneWeekData
 		}))
 		.run();
 

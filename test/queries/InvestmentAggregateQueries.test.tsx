@@ -9,8 +9,8 @@ import { Provider } from 'react-redux';
 import { createStore, type StoreType } from '../../src/store/createStore';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-	expectedVtiData,
-	expectedVxusData
+	expectedVtiOneWeekData,
+	expectedVxusOneWeekData
 } from '../testutils/support/aggregate-queries/tradier-data';
 import type { InvestmentData } from '../../src/types/data/InvestmentData';
 import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/tradier-msw-handlers';
@@ -134,9 +134,9 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 		expect(screen.getByText('Has Error: false')).toBeVisible();
 
 		const vtiData = screen.getByTestId('VTI-data');
-		validateData(vtiData, time, expectedVtiData);
+		validateData(vtiData, time, expectedVtiOneWeekData);
 
 		const vxusData = screen.getByTestId('VXUS-data');
-		validateData(vxusData, time, expectedVxusData);
+		validateData(vxusData, time, expectedVxusOneWeekData);
 	}
 );

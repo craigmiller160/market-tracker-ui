@@ -2,6 +2,7 @@ import type { TradierQuote } from '../../../../src/types/tradier/quotes';
 import type { TradierHistory } from '../../../../src/types/tradier/history';
 import type { InvestmentData } from '../../../../src/types/data/InvestmentData';
 import type { HistoryRecord } from '../../../../src/types/history';
+import { MarketTime } from '../../../../src/types/MarketTime';
 
 export const vtiQuote: TradierQuote = {
 	symbol: 'VTI',
@@ -114,11 +115,15 @@ export const vxusHistory: TradierHistory = {
 };
 
 const tradierToInvestmentData = (
+	time: MarketTime,
 	quote: TradierQuote,
 	history: TradierHistory
 ): InvestmentData => ({
 	name: quote.description,
-	startPrice: quote.prevclose,
+	startPrice:
+		time === MarketTime.ONE_DAY
+			? quote.prevclose
+			: parseInt(history.history?.day?.[0]?.open?.toString() ?? '0'),
 	currentPrice: quote.last ?? 0,
 	history:
 		history.history?.day?.flatMap(
@@ -145,20 +150,26 @@ const emptyHistory: TradierHistory = {
 	}
 };
 
-export const expectedVtiDataNoHistory: InvestmentData = tradierToInvestmentData(
+export const expectedVtiTodayData: InvestmentData = tradierToInvestmentData(
+	MarketTime.ONE_DAY,
 	vtiQuote,
 	emptyHistory
 );
 
-export const expectedVtiData: InvestmentData = tradierToInvestmentData(
+export const expectedVtiOneWeekData: InvestmentData = tradierToInvestmentData(
+	MarketTime.ONE_WEEK,
 	vtiQuote,
 	vtiHistory
 );
 
-export const expectedVxusDataNoHistory: InvestmentData =
-	tradierToInvestmentData(vxusQuote, emptyHistory);
+export const expectedVxusTodayData: InvestmentData = tradierToInvestmentData(
+	MarketTime.ONE_DAY,
+	vxusQuote,
+	emptyHistory
+);
 
-export const expectedVxusData: InvestmentData = tradierToInvestmentData(
+export const expectedVxusOneWeekData: InvestmentData = tradierToInvestmentData(
+	MarketTime.ONE_WEEK,
 	vxusQuote,
 	vxusHistory
 );
