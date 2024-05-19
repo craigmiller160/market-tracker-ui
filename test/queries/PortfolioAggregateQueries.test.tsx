@@ -12,7 +12,11 @@ import {
 } from '../../src/queries/PortfolioAggregateQueries';
 import {
 	vtiCurrent,
-	vxusCurrent
+	vtiOneWeekHistory,
+	vtiTodayHistory,
+	vxusCurrent,
+	vxusOneWeekHistory,
+	vxusTodayHistory
 } from '../testutils/support/aggregate-queries/portfolio-data';
 import { timeValueSelector } from '../../src/store/marketSettings/selectors';
 import type { SharesOwnedResponse } from '../../src/types/generated/market-tracker-portfolio-service';
@@ -110,6 +114,11 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 	);
 });
 
+const validateHistory = (
+	root: HTMLElement,
+	expectedHistory: ReadonlyArray<SharesOwnedResponse>
+) => {};
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateSharesHistoryForStocksInPortfolio',
 	async (time) => {
@@ -134,5 +143,16 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			)
 		);
 		expect(screen.getByText('Has Error: false')).toBeVisible();
+
+		const vtiHistory = screen.getByTestId('VTI-data');
+		validateHistory(
+			vtiHistory,
+			time === MarketTime.ONE_DAY ? vtiTodayHistory : vtiOneWeekHistory
+		);
+		const vxusHistory = screen.getByTestId('VXUS-data');
+		validateHistory(
+			vxusHistory,
+			time === MarketTime.ONE_DAY ? vxusTodayHistory : vxusOneWeekHistory
+		);
 	}
 );
