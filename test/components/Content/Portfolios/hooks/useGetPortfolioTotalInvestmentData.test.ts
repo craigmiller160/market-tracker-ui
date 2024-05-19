@@ -18,6 +18,7 @@ import {
 	aggregateTodayHistory
 } from '../../../../testutils/support/aggregate-queries/portfolio-data';
 import type { InvestmentData } from '../../../../../src/types/data/InvestmentData';
+import type { HistoryRecord } from '../../../../../src/types/history';
 
 const getInvestmentData = (time: MarketTime): AggregateInvestmentData =>
 	match<MarketTime, AggregateInvestmentData>(time)
@@ -81,6 +82,11 @@ const getExpectedCurrentPrice = (
 	return vtiTotal + vxusTotal;
 };
 
+const getExpectedHistory = (
+	investmentData: AggregateInvestmentData,
+	portfolioData: AggregatePortfolioData
+): ReadonlyArray<HistoryRecord> => {};
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validate mergeTotalInvestmentData',
 	(time) => {
@@ -101,13 +107,14 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			investmentData,
 			portfolioData
 		);
+    const expectedHistory = getExpectedHistory(investmentData, portfolioData);
 
 		console.log('RESULT', result); // TODO delete this
 		expect(result).toEqual<InvestmentData>({
 			name: 'Portfolio',
 			startPrice: expectedStartPrice,
 			currentPrice: expectedCurrentPrice,
-			history: expect.anything()
+			history: expectedHistory
 		});
 	}
 );
