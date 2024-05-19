@@ -61,17 +61,15 @@ const QueryValidationComponent = () => {
 type RootComponentProps = Readonly<{
 	store: StoreType;
 }>;
-const RootComponent = ({ store }: RootComponentProps) => {
-	return (
-		<div>
-			<Provider store={store}>
-				<QueryClientProvider client={queryClient}>
-					<QueryValidationComponent />
-				</QueryClientProvider>
-			</Provider>
-		</div>
-	);
-};
+const RootComponent = ({ store }: RootComponentProps) => (
+	<div>
+		<Provider store={store}>
+			<QueryClientProvider client={queryClient}>
+				<QueryValidationComponent />
+			</QueryClientProvider>
+		</Provider>
+	</div>
+);
 
 const validateData = (
 	root: HTMLElement,
