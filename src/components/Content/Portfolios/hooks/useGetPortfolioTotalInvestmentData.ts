@@ -18,6 +18,7 @@ import {
 	useGetAggregateCurrentSharesForStocksInPortfolio,
 	useGetAggregateSharesHistoryForStocksInPortfolio
 } from '../../../../queries/PortfolioAggregateQueries';
+import { useGetAggregateInvestmentData } from "../../../../queries/InvestmentAggregateQueries";
 
 type IntermediateQueryResult<T> = Readonly<{
 	data?: T;
@@ -97,6 +98,7 @@ export const useGetPortfolioTotalInvestmentData: UseLoadInvestmentData = (
 		time,
 		portfolioStockListResult.data
 	);
+	useGetAggregateInvestmentData(portfolioStockListResult.data);
 
 	return {
 		loading:

@@ -46,7 +46,7 @@ export const useGetAggregateHistory = (
 		queryKey: [GET_AGGREGATE_HISTORY_KEY, time, type, symbols],
 		queryFn: ({ queryKey: [, theTime, , theSymbols], signal }) =>
 			getAggregateHistory(theSymbols, theTime, signal),
-		enabled: shouldLoad
+		enabled: shouldLoad && symbols.length > 0
 	});
 };
 
@@ -90,7 +90,7 @@ const combineResults = (
 
 // TODO need tests for this
 export const useGetAggregateInvestmentData = (
-	symbols: ReadonlyArray<string>
+	symbols?: ReadonlyArray<string>
 ): UseGetAggregateInvestmentDataResult => {
 	const time = useSelector(timeValueSelector);
 	const marketStatusResult = useCheckMarketStatus();
@@ -101,13 +101,13 @@ export const useGetAggregateInvestmentData = (
 	const quoteResult = useGetQuotes(
 		time,
 		InvestmentType.STOCK,
-		symbols,
+		symbols ?? [],
 		shouldLoadQuoteData
 	);
 	const historyResult = useGetAggregateHistory(
 		time,
 		InvestmentType.STOCK,
-		symbols,
+		symbols ?? [],
 		shouldLoadHistoryData
 	);
 
