@@ -2,8 +2,7 @@ import {
 	type DefaultBodyType,
 	http,
 	type HttpHandler,
-	HttpResponse,
-	type PathParams
+	HttpResponse
 } from 'msw';
 import type { SharesOwnedResponse } from '../../../../src/types/generated/market-tracker-portfolio-service';
 import { vtiCurrent, vxusCurrent } from './portfolio-data';
