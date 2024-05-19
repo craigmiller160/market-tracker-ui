@@ -4,7 +4,7 @@ import { MarketTime, marketTimeToMenuKey } from '../../src/types/MarketTime';
 import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/portfolio-msw-handlers';
 import { createStore, type StoreType } from '../../src/store/createStore';
 import { Provider, useSelector } from 'react-redux';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import {
 	useGetAggregateCurrentSharesForStocksInPortfolio,
@@ -117,7 +117,10 @@ test('validates useGetAggregateCurrentSharesForStocksInPortfolio', async () => {
 const validateHistory = (
 	root: HTMLElement,
 	expectedHistory: ReadonlyArray<SharesOwnedResponse>
-) => {};
+) => {
+	const elements = within(root).getAllByText(/History:/);
+	expect(elements).toHaveLength(expectedHistory.length);
+};
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateSharesHistoryForStocksInPortfolio',
