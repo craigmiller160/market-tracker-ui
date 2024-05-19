@@ -106,7 +106,7 @@ const getExpectedHistory = (
 };
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
-	'validate mergeTotalInvestmentData',
+	'validate mergeTotalInvestmentData %s',
 	(time) => {
 		const investmentData = getInvestmentData(time);
 		const portfolioData = getPortfolioData(time);

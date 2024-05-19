@@ -112,7 +112,7 @@ const validateData = (
 };
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
-	'validates useGetAggregateInvestmentData',
+	'validates useGetAggregateInvestmentData %s',
 	async (time) => {
 		prepareAggregateQueryMswHandlers(time);
 

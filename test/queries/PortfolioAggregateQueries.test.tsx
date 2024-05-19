@@ -130,7 +130,7 @@ const validateHistory = (
 };
 
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
-	'validates useGetAggregateSharesHistoryForStocksInPortfolio',
+	'validates useGetAggregateSharesHistoryForStocksInPortfolio %s',
 	async (time) => {
 		prepareAggregateQueryMswHandlers();
 		const store = createStore({
