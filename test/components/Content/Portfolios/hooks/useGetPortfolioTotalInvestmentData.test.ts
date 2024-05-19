@@ -88,11 +88,6 @@ const getExpectedHistory = (
 	investmentData: AggregateInvestmentData,
 	portfolioData: AggregatePortfolioData
 ): ReadonlyArray<HistoryRecord> => {
-	console.log(
-		investmentData.VTI.history.length,
-		portfolioData.history.VTI.length
-	);
-
 	const vtiHistory = mergeHistory(
 		time,
 		investmentData.VTI.history,
@@ -136,7 +131,6 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 			portfolioData
 		);
 
-		console.log('RESULT', result); // TODO delete this
 		expect(result).toEqual<InvestmentData>({
 			name: 'Portfolio',
 			startPrice: expectedStartPrice,
