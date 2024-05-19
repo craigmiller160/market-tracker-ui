@@ -30,7 +30,7 @@ const getPortfolioHistoryFinder = (time: MarketTime): PortfolioHistoryFinder =>
 		)
 		.run();
 
-const mergeHistory = (
+export const mergeHistory = (
 	time: MarketTime,
 	investmentHistory: ReadonlyArray<HistoryRecord>,
 	portfolioHistory: ReadonlyArray<SharesOwnedResponse>
