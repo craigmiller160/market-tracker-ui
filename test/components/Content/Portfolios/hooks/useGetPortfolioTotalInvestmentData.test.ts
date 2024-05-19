@@ -8,7 +8,10 @@ import {
 	expectedVxusData,
 	expectedVxusDataNoHistory
 } from '../../../../testutils/support/aggregate-queries/tradier-data';
-import type { AggregatePortfolioData } from '../../../../../src/components/Content/Portfolios/hooks/useGetPortfolioTotalInvestmentData';
+import {
+  type AggregatePortfolioData,
+  mergeTotalInvestmentData
+} from '../../../../../src/components/Content/Portfolios/hooks/useGetPortfolioTotalInvestmentData';
 import {
 	aggregateCurrent,
 	aggregateOneWeekHistory,
@@ -43,7 +46,8 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validate mergeTotalInvestmentData',
 	(time) => {
 		const investmentData = getInvestmentData(time);
-    const portfolioData = getPortfolioData(time);
-		throw new Error();
+		const portfolioData = getPortfolioData(time);
+		const result = mergeTotalInvestmentData(time, investmentData, portfolioData);
+    console.log('RESULT', result); // TODO delete this
 	}
 );
