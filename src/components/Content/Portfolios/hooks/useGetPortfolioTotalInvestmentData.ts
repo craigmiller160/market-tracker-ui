@@ -86,7 +86,7 @@ const useGetPortfolioData = (
 	};
 };
 
-const mergeTotalInvestmentData = (
+export const mergeTotalInvestmentData = (
 	time: MarketTime,
 	investmentData: AggregateInvestmentData,
 	portfolioData: AggregatePortfolioData
