@@ -45,9 +45,6 @@ const portfolioStockCurrentHandler: HttpHandler = http.get<
 	}
 );
 
-// https://localhost:3000/market-tracker/portfolios/portfolios/f56f0db2-e77d-43b8-a466-94825ea8db2a/stocks/VTI/history?startDate=2024-05-11&endDate=2024-05-18&interval=DAILY
-// SINGLE vs DAILY
-
 type HistoryMatch = Readonly<{
 	symbol: string;
 	interval: StockHistoryInterval;

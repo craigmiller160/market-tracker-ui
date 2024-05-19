@@ -1,4 +1,8 @@
 import type { SharesOwnedResponse } from '../../../../src/types/generated/market-tracker-portfolio-service';
+import type {
+	AggregateCurrentSharesOwnedResponse,
+	AggregateSharesOwnedHistoryResponse
+} from '../../../../src/services/PortfolioAggregateService';
 
 export const vtiCurrent: SharesOwnedResponse = {
 	date: '2024-05-18',
@@ -87,3 +91,18 @@ export const vxusOneWeekHistory: ReadonlyArray<SharesOwnedResponse> = [
 		totalShares: 272.599
 	}
 ];
+
+export const aggregateCurrent: AggregateCurrentSharesOwnedResponse = {
+	VTI: vtiCurrent,
+	VXUS: vxusCurrent
+};
+
+export const aggregateTodayHistory: AggregateSharesOwnedHistoryResponse = {
+	VTI: vtiTodayHistory,
+	VXUS: vxusTodayHistory
+};
+
+export const aggregateOneWeekHistory: AggregateSharesOwnedHistoryResponse = {
+	VTI: vtiOneWeekHistory,
+	VXUS: vxusOneWeekHistory
+};
