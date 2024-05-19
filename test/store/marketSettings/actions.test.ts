@@ -4,7 +4,7 @@ import createMockStore, { type MockStoreEnhanced } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
-import { type RootState, type StoreType } from '../../../src/store';
+import { type RootState, type StoreType } from '../../../src/store/createStore';
 import {
 	type AnyAction,
 	type Draft,

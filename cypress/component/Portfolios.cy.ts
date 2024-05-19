@@ -60,10 +60,15 @@ describe('Portfolios', () => {
 			.then(accordion.getPanelTitle)
 			.click();
 
-		investmentCardPage.getInvestmentCards().should('have.length', 1);
+		investmentCardPage.getInvestmentCards().should('have.length', 2);
 		investmentCardPage
 			.getInvestmentCards()
 			.eq(0)
+			.then(investmentCardPage.getTitle)
+			.should('have.text', '(Total) Portfolio');
+		investmentCardPage
+			.getInvestmentCards()
+			.eq(1)
 			.then(investmentCardPage.getTitle)
 			.should('have.text', '(VTI) Vanguard Total Stock Market ETF');
 	});

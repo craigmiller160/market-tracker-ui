@@ -205,7 +205,6 @@ const createPanels = (
 					/>
 				) : undefined,
 			key: watchlist._id,
-			useLoadInvestmentData: useGetInvestmentData,
 			investments: [
 				...watchlist.stocks.map(
 					(stock): AccordionInvestment => ({
@@ -221,14 +220,16 @@ const createPanels = (
 							>
 								Remove
 							</Button>
-						]
+						],
+						useLoadInvestmentData: useGetInvestmentData
 					})
 				),
 				...watchlist.cryptos.map(
 					(crypto): AccordionInvestment => ({
 						symbol: crypto.symbol,
 						type: InvestmentType.CRYPTO,
-						name: ''
+						name: '',
+						useLoadInvestmentData: useGetInvestmentData
 					})
 				)
 			]

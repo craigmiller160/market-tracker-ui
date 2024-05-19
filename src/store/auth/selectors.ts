@@ -1,4 +1,4 @@
-import { type RootState } from '../index';
+import { type RootState } from '../createStore';
 import { createSelector } from '@reduxjs/toolkit';
 import * as O from 'fp-ts/Option';
 import { type AuthUser } from '../../types/auth';

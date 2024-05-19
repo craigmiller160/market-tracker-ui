@@ -1,8 +1,8 @@
 import { type HistoryRecord } from '../history';
 
-export type InvestmentData = {
-	readonly name: string;
-	readonly startPrice: number;
-	readonly currentPrice: number;
-	readonly history: ReadonlyArray<HistoryRecord>;
-};
+export type InvestmentData = Readonly<{
+	name: string;
+	startPrice: number;
+	currentPrice: number;
+	history: ReadonlyArray<HistoryRecord>;
+}>;

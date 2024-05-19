@@ -10,7 +10,7 @@ export const rootReducer = combineReducers({
 	notification: notificationSlice.reducer
 });
 
-type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof rootReducer>;
 
 export const createStore = (preloadedState?: Partial<RootState>) =>
 	configureStore({
@@ -18,3 +18,5 @@ export const createStore = (preloadedState?: Partial<RootState>) =>
 		preloadedState,
 		devTools: process.env.NODE_ENV !== 'production'
 	});
+
+export type StoreType = ReturnType<typeof createStore>;

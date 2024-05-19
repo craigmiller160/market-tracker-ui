@@ -17,11 +17,10 @@
   "resolutions": {
     "rc-util": ">=5.27.2",
     "@babel/runtime": ">=7.18.3",
-    "@antv/x6-react-components": ">=1.1.20",
-    "axios": "0.27.2"
+    "@antv/x6-react-components": ">=1.1.20"
   },
   "devDependencies": {
-    "@craigmiller160/js-config": "^1.1.0-beta.1",
+    "@craigmiller160/js-config": "1.1.0-beta.1",
     "@craigmiller160/swagger-typescript-api-formatted": "^1.1.2",
     "@relmify/jest-fp-ts": "^2.1.1",
     "@testing-library/dom": "^9.3.4",
@@ -36,7 +35,7 @@
     "@types/redux-mock-store": "^1.0.3",
     "axios-mock-adapter": "^1.20.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.6.6",
+    "cypress": "^13.9.0",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^24.0.0",
     "msw": "^2.2.2",

@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { store, type StoreType } from '../../src/store';
+import { store } from '../../src/store';
 import {
 	ScreenContext,
 	type ScreenContextValue
@@ -17,6 +17,7 @@ import {
 } from '@craigmiller160/react-keycloak';
 import { MarketTrackerKeycloakBridge } from '../../src/components/keycloak/MarketTrackerKeycloakBridge';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { StoreType } from '../../src/store/createStore';
 
 interface RenderConfig {
 	readonly initialPath: string;

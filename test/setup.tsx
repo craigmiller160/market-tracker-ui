@@ -1,5 +1,5 @@
 import { vi, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
-import { newApiServer } from './testutils/msw-server';
+import { server } from './testutils/msw-server';
 
 vi.mock('@ant-design/charts', () => {
 	const Line = () => <p>Chart is Here</p>;
@@ -33,8 +33,6 @@ const mockWindowMatchMedia = () =>
 			dispatchEvent: vi.fn()
 		}))
 	});
-
-const server = newApiServer();
 
 beforeAll(() => {
 	mockWindowMatchMedia();

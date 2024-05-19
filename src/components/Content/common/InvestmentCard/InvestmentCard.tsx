@@ -20,12 +20,14 @@ import { type InvestmentInfo } from '../../../../types/data/InvestmentInfo';
 import { Spinner } from '../../../UI/Spinner';
 import { useBreakpointName } from '../../../utils/Breakpoints';
 import { type InvestmentData } from '../../../../types/data/InvestmentData';
-import { useInvestmentCardDataLoadingContext } from './InvestmentCardDataLoadingContext';
+import { type UseLoadInvestmentData } from './UseLoadInvestmentData';
+import type { WithActions } from '../../../../types/data/WithActions';
 
-interface Props {
-	readonly info: InvestmentInfo;
-	readonly getActions?: (symbol: string) => ReactNode[];
-}
+type Props = Readonly<{
+	info: InvestmentInfo;
+	getActions?: WithActions['getActions'];
+	useLoadInvestmentData: UseLoadInvestmentData;
+}>;
 
 const createTitle = (
 	info: InvestmentInfo,
@@ -211,11 +213,8 @@ export const InvestmentCard = (props: Props) => {
 	const breakpointName = useBreakpointName();
 	const time = useSelector(timeValueSelector);
 	const Time = createTime(time);
-	// const { respectMarketStatus, status, loading, error, data } =
-	// 	useGetInvestmentData(info);
-	const useLoadInvestmentData = useInvestmentCardDataLoadingContext();
 	const { respectMarketStatus, status, loading, error, data } =
-		useLoadInvestmentData(info);
+		props.useLoadInvestmentData(info);
 
 	const { Price, Body } = getPriceAndBody(
 		status,
