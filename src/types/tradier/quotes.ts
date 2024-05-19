@@ -1,42 +1,42 @@
 import * as ioType from 'io-ts';
 
 export const tradierQuoteV = ioType.readonly(
-	ioType.type({
-		symbol: ioType.string,
-		description: ioType.string,
-		open: ioType.union([ioType.number, ioType.null]),
-		high: ioType.union([ioType.number, ioType.null]),
-		low: ioType.union([ioType.number, ioType.null]),
-		bid: ioType.union([ioType.number, ioType.null]),
-		ask: ioType.union([ioType.number, ioType.null]),
-		close: ioType.union([ioType.number, ioType.null]),
-		last: ioType.union([ioType.number, ioType.null]),
-		prevclose: ioType.union([ioType.number, ioType.number])
-	})
+    ioType.type({
+        symbol: ioType.string,
+        description: ioType.string,
+        open: ioType.union([ioType.number, ioType.null]),
+        high: ioType.union([ioType.number, ioType.null]),
+        low: ioType.union([ioType.number, ioType.null]),
+        bid: ioType.union([ioType.number, ioType.null]),
+        ask: ioType.union([ioType.number, ioType.null]),
+        close: ioType.union([ioType.number, ioType.null]),
+        last: ioType.union([ioType.number, ioType.null]),
+        prevclose: ioType.union([ioType.number, ioType.number])
+    })
 );
 export type TradierQuote = ioType.TypeOf<typeof tradierQuoteV>;
 
 export const tradierUnmatchedV = ioType.readonly(
-	ioType.type({
-		symbol: ioType.union([ioType.string, ioType.number])
-	})
+    ioType.type({
+        symbol: ioType.union([ioType.string, ioType.number])
+    })
 );
 
 export const tradierQuotesV = ioType.readonly(
-	ioType.type({
-		quotes: ioType.readonly(
-			ioType.type({
-				quote: ioType.union([
-					tradierQuoteV,
-					ioType.readonlyArray(tradierQuoteV),
-					ioType.undefined
-				]),
-				unmatched_symbols: ioType.union([
-					tradierUnmatchedV,
-					ioType.undefined
-				])
-			})
-		)
-	})
+    ioType.type({
+        quotes: ioType.readonly(
+            ioType.type({
+                quote: ioType.union([
+                    tradierQuoteV,
+                    ioType.readonlyArray(tradierQuoteV),
+                    ioType.undefined
+                ]),
+                unmatched_symbols: ioType.union([
+                    tradierUnmatchedV,
+                    ioType.undefined
+                ])
+            })
+        )
+    })
 );
 export type TradierQuotes = ioType.TypeOf<typeof tradierQuotesV>;

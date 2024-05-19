@@ -4,8 +4,8 @@ const getCancelButton = () => cy.get('.ant-modal-footer button:nth-child(1)');
 const getOkButton = () => cy.get('.ant-modal-footer button:nth-child(2)');
 
 export const confirmDialog = {
-	getTitle,
-	getBody,
-	getCancelButton,
-	getOkButton
+    getTitle,
+    getBody,
+    getCancelButton,
+    getOkButton
 };

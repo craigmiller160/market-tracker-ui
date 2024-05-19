@@ -12,11 +12,11 @@ import { MarketTrackerKeycloakProvider } from './components/keycloak/MarketTrack
 const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
 root.render(
-	<BrowserRouter basename="/">
-		<MarketTrackerKeycloakProvider>
-			<App />
-		</MarketTrackerKeycloakProvider>
-	</BrowserRouter>
+    <BrowserRouter basename="/">
+        <MarketTrackerKeycloakProvider>
+            <App />
+        </MarketTrackerKeycloakProvider>
+    </BrowserRouter>
 );
 
 // if ('serviceWorker' in navigator) {

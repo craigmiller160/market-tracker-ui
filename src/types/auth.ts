@@ -1,7 +1,7 @@
 export interface AuthUser {
-	readonly userId: string;
+    readonly userId: string;
 }
 
 export interface AuthCodeLogin {
-	readonly url: string;
+    readonly url: string;
 }

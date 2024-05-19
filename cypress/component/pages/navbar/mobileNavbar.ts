@@ -1,5 +1,5 @@
 const getMenus = () =>
-	cy.get('.ant-menu-submenu-horizontal .ant-menu-title-content');
+    cy.get('.ant-menu-submenu-horizontal .ant-menu-title-content');
 const getPageMenu = () => getMenus().eq(0);
 const getTimeMenu = () => getMenus().eq(1);
 
@@ -16,15 +16,15 @@ const getOneYearItem = () => getMenuItems().eq(4);
 const getFiveYearsItem = () => getMenuItems().eq(5);
 
 export const mobileNavbar = {
-	getPageMenu,
-	getTimeMenu,
-	getSearchItem,
-	getInvestmentInfoItem,
-	getRecognitionItem,
-	getTodayItem,
-	getOneWeekItem,
-	getOneMonthItem,
-	getThreeMonthsItem,
-	getOneYearItem,
-	getFiveYearsItem
+    getPageMenu,
+    getTimeMenu,
+    getSearchItem,
+    getInvestmentInfoItem,
+    getRecognitionItem,
+    getTodayItem,
+    getOneWeekItem,
+    getOneMonthItem,
+    getThreeMonthsItem,
+    getOneYearItem,
+    getFiveYearsItem
 };

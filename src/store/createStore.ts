@@ -5,18 +5,18 @@ import { marketSettingsSlice } from './marketSettings/slice';
 import { notificationSlice } from './notification/slice';
 
 export const rootReducer = combineReducers({
-	auth: authSlice.reducer,
-	marketSettings: marketSettingsSlice.reducer,
-	notification: notificationSlice.reducer
+    auth: authSlice.reducer,
+    marketSettings: marketSettingsSlice.reducer,
+    notification: notificationSlice.reducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const createStore = (preloadedState?: Partial<RootState>) =>
-	configureStore({
-		reducer: rootReducer,
-		preloadedState,
-		devTools: process.env.NODE_ENV !== 'production'
-	});
+    configureStore({
+        reducer: rootReducer,
+        preloadedState,
+        devTools: process.env.NODE_ENV !== 'production'
+    });
 
 export type StoreType = ReturnType<typeof createStore>;

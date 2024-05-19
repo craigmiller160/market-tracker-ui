@@ -5,12 +5,12 @@ import { useContext } from 'react';
 import { ScreenContext } from '../ScreenContext';
 
 export enum BreakpointName {
-	XXL = 'xxl',
-	XL = 'xl',
-	LG = 'lg',
-	MD = 'md',
-	SM = 'sm',
-	XS = 'xs'
+    XXL = 'xxl',
+    XL = 'xl',
+    LG = 'lg',
+    MD = 'md',
+    SM = 'sm',
+    XS = 'xs'
 }
 
 export type Breakpoints = Partial<Record<AntdBreakpoint, boolean>>;
@@ -26,12 +26,12 @@ const isMD: PredicateT<Breakpoints> = (_) => !_.lg && !!_.md;
 const isSM: PredicateT<Breakpoints> = (_) => !_.md && !!_.sm;
 
 export const useBreakpointName = (): BreakpointName => {
-	const { breakpoints } = useContext(ScreenContext);
-	return match(breakpoints)
-		.when(isXXL, () => BreakpointName.XXL)
-		.when(isXL, () => BreakpointName.XL)
-		.when(isLG, () => BreakpointName.LG)
-		.when(isMD, () => BreakpointName.MD)
-		.when(isSM, () => BreakpointName.SM)
-		.otherwise(() => BreakpointName.XS);
+    const { breakpoints } = useContext(ScreenContext);
+    return match(breakpoints)
+        .when(isXXL, () => BreakpointName.XXL)
+        .when(isXL, () => BreakpointName.XL)
+        .when(isLG, () => BreakpointName.LG)
+        .when(isMD, () => BreakpointName.MD)
+        .when(isSM, () => BreakpointName.SM)
+        .otherwise(() => BreakpointName.XS);
 };

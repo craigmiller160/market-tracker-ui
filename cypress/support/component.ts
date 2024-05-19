@@ -26,13 +26,13 @@ import { repeat } from './repeat';
 // Alternatively, can be defined in cypress/support/component.d.ts
 // with a <reference path="./component" /> at the top of your spec.
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
-	namespace Cypress {
-		interface Chainable {
-			mount: typeof mountApp;
-			repeat: typeof repeat;
-		}
-	}
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Cypress {
+        interface Chainable {
+            mount: typeof mountApp;
+            repeat: typeof repeat;
+        }
+    }
 }
 
 Cypress.Commands.add('mount', mountApp);

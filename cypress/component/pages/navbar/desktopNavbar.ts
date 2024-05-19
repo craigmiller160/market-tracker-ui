@@ -10,13 +10,13 @@ const getOneYearItem = () => getItems().eq(8);
 const getFiveYearsItem = () => getItems().eq(9);
 
 export const desktopNavbar = {
-	getInvestmentInfoItem,
-	getSearchItem,
-	getRecognitionItem,
-	getTodayItem,
-	getOneWeekItem,
-	getOneMonthItem,
-	getThreeMonthsItem,
-	getOneYearItem,
-	getFiveYearsItem
+    getInvestmentInfoItem,
+    getSearchItem,
+    getRecognitionItem,
+    getTodayItem,
+    getOneWeekItem,
+    getOneMonthItem,
+    getThreeMonthsItem,
+    getOneYearItem,
+    getFiveYearsItem
 };

@@ -1,7 +1,7 @@
 export interface DbRecord {
-	readonly _id: string;
+    readonly _id: string;
 }
 
 export interface UserRecord {
-	readonly userId: string;
+    readonly userId: string;
 }

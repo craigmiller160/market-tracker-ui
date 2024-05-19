@@ -7,33 +7,33 @@ import { mockLocation, restoreLocation } from '../testutils/mockLocation';
 import { nanoid } from '@reduxjs/toolkit';
 
 vi.mock('../../src/store', () => ({
-	store: {
-		dispatch: vi.fn()
-	}
+    store: {
+        dispatch: vi.fn()
+    }
 }));
 
 const authUser: AuthUser = {
-	userId: nanoid()
+    userId: nanoid()
 };
 
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('AuthService', () => {
-	let location: Location;
-	beforeEach(() => {
-		mockApi.reset();
-		vi.resetAllMocks();
-		location = mockLocation();
-	});
+    let location: Location;
+    beforeEach(() => {
+        mockApi.reset();
+        vi.resetAllMocks();
+        location = mockLocation();
+    });
 
-	afterEach(() => {
-		restoreLocation(location);
-	});
+    afterEach(() => {
+        restoreLocation(location);
+    });
 
-	it('getAuthUser', async () => {
-		mockApi.onGet('/oauth/user').reply(200, authUser);
+    it('getAuthUser', async () => {
+        mockApi.onGet('/oauth/user').reply(200, authUser);
 
-		const result = await getAuthUser();
-		expect(result).toEqual(authUser);
-	});
+        const result = await getAuthUser();
+        expect(result).toEqual(authUser);
+    });
 });

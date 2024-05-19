@@ -8,8 +8,8 @@ import { restoreLocation } from '../../testutils/mockLocation';
 import { renderApp } from '../../testutils/RenderApp';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
 import {
-	menuItemIsNotSelected,
-	menuItemIsSelected
+    menuItemIsNotSelected,
+    menuItemIsSelected
 } from '../../testutils/menuUtils';
 
 const SELECTED_CLASS = 'ant-menu-item-selected';
@@ -17,170 +17,170 @@ const SELECTED_CLASS = 'ant-menu-item-selected';
 const mockApi = new MockAdapter(marketTrackerApiFpTs.instance);
 
 describe('Navbar', () => {
-	const location: Option.Option<Location> = Option.none;
-	beforeEach(() => {
-		mockApi.reset();
-		mockApi.onGet('/oauth/user').passThrough();
-	});
+    const location: Option.Option<Location> = Option.none;
+    beforeEach(() => {
+        mockApi.reset();
+        mockApi.onGet('/oauth/user').passThrough();
+    });
 
-	afterEach(() => {
-		Option.map(restoreLocation)(location);
-	});
+    afterEach(() => {
+        Option.map(restoreLocation)(location);
+    });
 
-	it('renders for desktop', () => {
-		renderApp();
-		expect(screen.getByTestId('desktop-navbar')).toBeInTheDocument();
-	});
+    it('renders for desktop', () => {
+        renderApp();
+        expect(screen.getByTestId('desktop-navbar')).toBeInTheDocument();
+    });
 
-	it('renders for mobile', () => {
-		renderApp({
-			screenContextValue: {
-				breakpoints: {
-					sm: false,
-					xs: true
-				}
-			}
-		});
-		expect(screen.getByTestId('mobile-navbar')).toBeInTheDocument();
-	});
+    it('renders for mobile', () => {
+        renderApp({
+            screenContextValue: {
+                breakpoints: {
+                    sm: false,
+                    xs: true
+                }
+            }
+        });
+        expect(screen.getByTestId('mobile-navbar')).toBeInTheDocument();
+    });
 
-	it('shows correct items for authenticated user', async () => {
-		renderApp();
-		expect(screen.getByText('Market Tracker')).toBeInTheDocument();
-		await screen.findByText('Watchlists');
-		expect(screen.queryAllByText('Investment Info')).toHaveLength(2);
-		expect(screen.getByText('Search')).toBeInTheDocument();
-		expect(screen.getByText('Recognition')).toBeInTheDocument();
-		expect(screen.getByText('Logout')).toBeInTheDocument();
+    it('shows correct items for authenticated user', async () => {
+        renderApp();
+        expect(screen.getByText('Market Tracker')).toBeInTheDocument();
+        await screen.findByText('Watchlists');
+        expect(screen.queryAllByText('Investment Info')).toHaveLength(2);
+        expect(screen.getByText('Search')).toBeInTheDocument();
+        expect(screen.getByText('Recognition')).toBeInTheDocument();
+        expect(screen.getByText('Logout')).toBeInTheDocument();
 
-		const navbar = screen.getByTestId('desktop-navbar');
+        const navbar = screen.getByTestId('desktop-navbar');
 
-		expect(within(navbar).getByText('Today')).toBeInTheDocument();
-		expect(within(navbar).getByText('1 Week')).toBeInTheDocument();
-		expect(within(navbar).getByText('1 Month')).toBeInTheDocument();
-		expect(within(navbar).getByText('3 Months')).toBeInTheDocument();
-		expect(within(navbar).getByText('1 Year')).toBeInTheDocument();
-		expect(within(navbar).getByText('5 Years')).toBeInTheDocument();
+        expect(within(navbar).getByText('Today')).toBeInTheDocument();
+        expect(within(navbar).getByText('1 Week')).toBeInTheDocument();
+        expect(within(navbar).getByText('1 Month')).toBeInTheDocument();
+        expect(within(navbar).getByText('3 Months')).toBeInTheDocument();
+        expect(within(navbar).getByText('1 Year')).toBeInTheDocument();
+        expect(within(navbar).getByText('5 Years')).toBeInTheDocument();
 
-		menuItemIsSelected('Investment Info');
-		menuItemIsSelected('Today');
+        menuItemIsSelected('Investment Info');
+        menuItemIsSelected('Today');
 
-		expect(screen.queryByText('Login')).not.toBeInTheDocument();
-	});
+        expect(screen.queryByText('Login')).not.toBeInTheDocument();
+    });
 
-	it('starts on recognition page due to route, then navigates to search page', async () => {
-		renderApp({
-			initialPath: '/recognition'
-		});
-		await screen.findByText('Recognition');
+    it('starts on recognition page due to route, then navigates to search page', async () => {
+        renderApp({
+            initialPath: '/recognition'
+        });
+        await screen.findByText('Recognition');
 
-		expect(window.location.href).toEqual(
-			'http://localhost:3000/recognition'
-		);
-		expect(
-			// eslint-disable-next-line testing-library/no-node-access
-			screen.getByText('Recognition').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-		await userEvent.click(screen.getByText('Search'));
+        expect(window.location.href).toEqual(
+            'http://localhost:3000/recognition'
+        );
+        expect(
+            // eslint-disable-next-line testing-library/no-node-access
+            screen.getByText('Recognition').closest('li')?.className
+        ).toEqual(expect.stringContaining(SELECTED_CLASS));
+        await userEvent.click(screen.getByText('Search'));
 
-		expect(window.location.href).toEqual('http://localhost:3000/search');
-		const navbar = screen.getByTestId('desktop-navbar');
-		expect(
-			// eslint-disable-next-line testing-library/no-node-access
-			within(navbar).getByText('Search').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-	});
+        expect(window.location.href).toEqual('http://localhost:3000/search');
+        const navbar = screen.getByTestId('desktop-navbar');
+        expect(
+            // eslint-disable-next-line testing-library/no-node-access
+            within(navbar).getByText('Search').closest('li')?.className
+        ).toEqual(expect.stringContaining(SELECTED_CLASS));
+    });
 
-	it('starts on recognition page due to route, then navigates to investment info page', async () => {
-		renderApp({
-			initialPath: '/recognition'
-		});
-		await screen.findByText('Recognition');
+    it('starts on recognition page due to route, then navigates to investment info page', async () => {
+        renderApp({
+            initialPath: '/recognition'
+        });
+        await screen.findByText('Recognition');
 
-		expect(window.location.href).toEqual(
-			'http://localhost:3000/recognition'
-		);
-		expect(
-			// eslint-disable-next-line testing-library/no-node-access
-			screen.getByText('Recognition').closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
+        expect(window.location.href).toEqual(
+            'http://localhost:3000/recognition'
+        );
+        expect(
+            // eslint-disable-next-line testing-library/no-node-access
+            screen.getByText('Recognition').closest('li')?.className
+        ).toEqual(expect.stringContaining(SELECTED_CLASS));
 
-		await userEvent.click(screen.getByText('Investment Info'));
+        await userEvent.click(screen.getByText('Investment Info'));
 
-		expect(window.location.href).toEqual(
-			'http://localhost:3000/investments'
-		);
-		expect(
-			// eslint-disable-next-line testing-library/no-node-access
-			screen.getAllByText('Investment Info')[0].closest('li')?.className
-		).toEqual(expect.stringContaining(SELECTED_CLASS));
-	});
+        expect(window.location.href).toEqual(
+            'http://localhost:3000/investments'
+        );
+        expect(
+            // eslint-disable-next-line testing-library/no-node-access
+            screen.getAllByText('Investment Info')[0].closest('li')?.className
+        ).toEqual(expect.stringContaining(SELECTED_CLASS));
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects 1 Week', async () => {
-		renderApp();
-		await screen.findByText('Watchlists');
-		menuItemIsSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects 1 Week', async () => {
+        renderApp();
+        await screen.findByText('Watchlists');
+        menuItemIsSelected('Today');
 
-		await userEvent.click(screen.getByText('1 Week'));
-		menuItemIsNotSelected('Today');
-		menuItemIsSelected('1 Week');
-	});
+        await userEvent.click(screen.getByText('1 Week'));
+        menuItemIsNotSelected('Today');
+        menuItemIsSelected('1 Week');
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects 1 Month', async () => {
-		renderApp();
-		await screen.findByText('Watchlists');
-		menuItemIsSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects 1 Month', async () => {
+        renderApp();
+        await screen.findByText('Watchlists');
+        menuItemIsSelected('Today');
 
-		await userEvent.click(screen.getByText('1 Month'));
-		menuItemIsNotSelected('Today');
-		menuItemIsSelected('1 Month');
-	});
+        await userEvent.click(screen.getByText('1 Month'));
+        menuItemIsNotSelected('Today');
+        menuItemIsSelected('1 Month');
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects Today', async () => {
-		const { store } = renderApp();
-		await screen.findByText('Watchlists');
-		store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
-		await waitFor(() => menuItemIsSelected('1 Week'));
-		menuItemIsNotSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects Today', async () => {
+        const { store } = renderApp();
+        await screen.findByText('Watchlists');
+        store.dispatch(marketSettingsSlice.actions.setTime('time.oneWeek'));
+        await waitFor(() => menuItemIsSelected('1 Week'));
+        menuItemIsNotSelected('Today');
 
-		await userEvent.click(screen.getByText('Today'));
-		menuItemIsNotSelected('1 Week');
-		menuItemIsSelected('Today');
-	});
+        await userEvent.click(screen.getByText('Today'));
+        menuItemIsNotSelected('1 Week');
+        menuItemIsSelected('Today');
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects 3 Months', async () => {
-		renderApp();
-		await screen.findByText('Watchlists');
-		menuItemIsSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects 3 Months', async () => {
+        renderApp();
+        await screen.findByText('Watchlists');
+        menuItemIsSelected('Today');
 
-		await userEvent.click(screen.getByText('3 Months'));
-		menuItemIsNotSelected('Today');
-		menuItemIsSelected('3 Months');
-	});
+        await userEvent.click(screen.getByText('3 Months'));
+        menuItemIsNotSelected('Today');
+        menuItemIsSelected('3 Months');
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects 1 Year', async () => {
-		renderApp();
-		await screen.findByText('Watchlists');
-		menuItemIsSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects 1 Year', async () => {
+        renderApp();
+        await screen.findByText('Watchlists');
+        menuItemIsSelected('Today');
 
-		await userEvent.click(screen.getByText('1 Year'));
-		menuItemIsNotSelected('Today');
-		menuItemIsSelected('1 Year');
-	});
+        await userEvent.click(screen.getByText('1 Year'));
+        menuItemIsNotSelected('Today');
+        menuItemIsSelected('1 Year');
+    });
 
-	// eslint-disable-next-line vitest/expect-expect
-	it('selects 5 Years', async () => {
-		renderApp();
-		await screen.findByText('Watchlists');
-		menuItemIsSelected('Today');
+    // eslint-disable-next-line vitest/expect-expect
+    it('selects 5 Years', async () => {
+        renderApp();
+        await screen.findByText('Watchlists');
+        menuItemIsSelected('Today');
 
-		await userEvent.click(screen.getByText('5 Years'));
-		menuItemIsNotSelected('Today');
-		menuItemIsSelected('5 Years');
-	});
+        await userEvent.click(screen.getByText('5 Years'));
+        menuItemIsNotSelected('Today');
+        menuItemIsSelected('5 Years');
+    });
 });

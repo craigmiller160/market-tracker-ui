@@ -5,69 +5,69 @@ import { BreakpointName } from '../../utils/Breakpoints';
 import { type MenuInfo } from 'rc-menu/lib/interface';
 
 interface ActionsProps {
-	readonly breakpointName: BreakpointName;
-	readonly onRenameWatchlist: () => void;
-	readonly onRemoveWatchlist: () => void;
-	readonly renameWatchlistId?: string;
+    readonly breakpointName: BreakpointName;
+    readonly onRenameWatchlist: () => void;
+    readonly onRemoveWatchlist: () => void;
+    readonly renameWatchlistId?: string;
 }
 
 const DesktopWatchlistPanelActions = (props: ActionsProps) => {
-	const onRenameClick = (event: MouseEvent) => {
-		event.stopPropagation();
-		props.onRenameWatchlist();
-	};
-	const onRemoveClick = (event: MouseEvent) => {
-		event.stopPropagation();
-		props.onRemoveWatchlist();
-	};
+    const onRenameClick = (event: MouseEvent) => {
+        event.stopPropagation();
+        props.onRenameWatchlist();
+    };
+    const onRemoveClick = (event: MouseEvent) => {
+        event.stopPropagation();
+        props.onRemoveWatchlist();
+    };
 
-	return (
-		<div data-testid="desktop-panel-actions">
-			{props.renameWatchlistId === undefined && (
-				<>
-					<Button onClick={onRenameClick}>Rename</Button>
-					<Button onClick={onRemoveClick}>Remove</Button>
-				</>
-			)}
-		</div>
-	);
+    return (
+        <div data-testid="desktop-panel-actions">
+            {props.renameWatchlistId === undefined && (
+                <>
+                    <Button onClick={onRenameClick}>Rename</Button>
+                    <Button onClick={onRemoveClick}>Remove</Button>
+                </>
+            )}
+        </div>
+    );
 };
 
 const MobileWatchlistPanelActions = (props: ActionsProps) => {
-	const onMenuClick = (menuInfo: MenuInfo) => {
-		menuInfo.domEvent.stopPropagation();
-		match(menuInfo)
-			.with({ key: 'rename' }, () => props.onRenameWatchlist())
-			.otherwise(() => props.onRemoveWatchlist());
-	};
+    const onMenuClick = (menuInfo: MenuInfo) => {
+        menuInfo.domEvent.stopPropagation();
+        match(menuInfo)
+            .with({ key: 'rename' }, () => props.onRenameWatchlist())
+            .otherwise(() => props.onRemoveWatchlist());
+    };
 
-	const TheMenu = (
-		<Menu onClick={onMenuClick}>
-			<Menu.Item key="rename">Rename</Menu.Item>
-			<Menu.Item key="remove">Remove</Menu.Item>
-		</Menu>
-	);
+    const TheMenu = (
+        <Menu onClick={onMenuClick}>
+            <Menu.Item key="rename">Rename</Menu.Item>
+            <Menu.Item key="remove">Remove</Menu.Item>
+        </Menu>
+    );
 
-	const onMenuBtnClick = (event: MouseEvent) => {
-		event.stopPropagation();
-	};
+    const onMenuBtnClick = (event: MouseEvent) => {
+        event.stopPropagation();
+    };
 
-	return (
-		<div data-testid="mobile-panel-actions">
-			{props.renameWatchlistId === undefined && (
-				<>
-					<Dropdown overlay={TheMenu} trigger={['click']}>
-						<Button onClick={onMenuBtnClick}>...</Button>
-					</Dropdown>
-				</>
-			)}
-		</div>
-	);
+    return (
+        <div data-testid="mobile-panel-actions">
+            {props.renameWatchlistId === undefined && (
+                <>
+                    <Dropdown overlay={TheMenu} trigger={['click']}>
+                        <Button onClick={onMenuBtnClick}>...</Button>
+                    </Dropdown>
+                </>
+            )}
+        </div>
+    );
 };
 
 export const WatchlistPanelActions = (props: ActionsProps) =>
-	match(props.breakpointName)
-		.with(BreakpointName.XS, () => (
-			<MobileWatchlistPanelActions {...props} />
-		))
-		.otherwise(() => <DesktopWatchlistPanelActions {...props} />);
+    match(props.breakpointName)
+        .with(BreakpointName.XS, () => (
+            <MobileWatchlistPanelActions {...props} />
+        ))
+        .otherwise(() => <DesktopWatchlistPanelActions {...props} />);

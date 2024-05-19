@@ -1,11 +1,11 @@
 import { InvestmentType } from './InvestmentType';
 
 export type InvestmentInfo = Readonly<{
-	symbol: string;
-	name: string;
-	type: InvestmentType;
+    symbol: string;
+    name: string;
+    type: InvestmentType;
 }>;
 
 export type PortfolioInvestmentInfo = InvestmentInfo & {
-	readonly portfolioId: string;
+    readonly portfolioId: string;
 };

@@ -1,9 +1,9 @@
 import marketDataJson from './marketsPageInvestments.json';
 import altInvestmentIdsJson from './altInvestmentIds.json';
 import {
-	type MarketInvestmentInfo,
-	type MarketInvestmentInfoArray,
-	marketInvestmentInfoArrayV
+    type MarketInvestmentInfo,
+    type MarketInvestmentInfoArray,
+    marketInvestmentInfoArrayV
 } from '../types/data/MarketInvestmentInfo';
 import { pipe } from 'fp-ts/function';
 import * as TypeValidation from '@craigmiller160/ts-functions/TypeValidation';
@@ -15,89 +15,89 @@ import * as Either from 'fp-ts/Either';
 import * as Option from 'fp-ts/Option';
 import { MarketInvestmentType } from '../types/data/MarketInvestmentType';
 import {
-	type AltInvestmentIds,
-	altInvestmentIdsV
+    type AltInvestmentIds,
+    altInvestmentIdsV
 } from '../types/data/AltInvestmentIds';
 
 export type InvestmentsByType = {
-	[key in MarketInvestmentType]: MarketInvestmentInfoArray;
+    [key in MarketInvestmentType]: MarketInvestmentInfoArray;
 };
 
 export const allMarketInvestmentInfo: TryT<MarketInvestmentInfoArray> =
-	TypeValidation.decode(marketInvestmentInfoArrayV)(marketDataJson);
+    TypeValidation.decode(marketInvestmentInfoArrayV)(marketDataJson);
 export const altInvestmentIds: TryT<AltInvestmentIds> =
-	TypeValidation.decode(altInvestmentIdsV)(altInvestmentIdsJson);
+    TypeValidation.decode(altInvestmentIdsV)(altInvestmentIdsJson);
 
 const groupByTypeMonoid: MonoidT<InvestmentsByType> = {
-	empty: {
-		[MarketInvestmentType.USA_ETF]: [],
-		[MarketInvestmentType.INTERNATIONAL_ETF]: [],
-		[MarketInvestmentType.CRYPTO]: []
-	},
-	concat: (invest1, invest2) => ({
-		[MarketInvestmentType.USA_ETF]: invest1[
-			MarketInvestmentType.USA_ETF
-		].concat(invest2[MarketInvestmentType.USA_ETF]),
-		[MarketInvestmentType.INTERNATIONAL_ETF]: invest1[
-			MarketInvestmentType.INTERNATIONAL_ETF
-		].concat(invest2[MarketInvestmentType.INTERNATIONAL_ETF]),
-		[MarketInvestmentType.CRYPTO]: invest1[
-			MarketInvestmentType.CRYPTO
-		].concat(invest2[MarketInvestmentType.CRYPTO])
-	})
+    empty: {
+        [MarketInvestmentType.USA_ETF]: [],
+        [MarketInvestmentType.INTERNATIONAL_ETF]: [],
+        [MarketInvestmentType.CRYPTO]: []
+    },
+    concat: (invest1, invest2) => ({
+        [MarketInvestmentType.USA_ETF]: invest1[
+            MarketInvestmentType.USA_ETF
+        ].concat(invest2[MarketInvestmentType.USA_ETF]),
+        [MarketInvestmentType.INTERNATIONAL_ETF]: invest1[
+            MarketInvestmentType.INTERNATIONAL_ETF
+        ].concat(invest2[MarketInvestmentType.INTERNATIONAL_ETF]),
+        [MarketInvestmentType.CRYPTO]: invest1[
+            MarketInvestmentType.CRYPTO
+        ].concat(invest2[MarketInvestmentType.CRYPTO])
+    })
 };
 
 const createInvestmentsByType = (
-	usaEtfs: ReadonlyArray<MarketInvestmentInfo>,
-	intEtfs: ReadonlyArray<MarketInvestmentInfo>,
-	crypto: ReadonlyArray<MarketInvestmentInfo>
+    usaEtfs: ReadonlyArray<MarketInvestmentInfo>,
+    intEtfs: ReadonlyArray<MarketInvestmentInfo>,
+    crypto: ReadonlyArray<MarketInvestmentInfo>
 ): InvestmentsByType => ({
-	[MarketInvestmentType.USA_ETF]: usaEtfs,
-	[MarketInvestmentType.INTERNATIONAL_ETF]: intEtfs,
-	[MarketInvestmentType.CRYPTO]: crypto
+    [MarketInvestmentType.USA_ETF]: usaEtfs,
+    [MarketInvestmentType.INTERNATIONAL_ETF]: intEtfs,
+    [MarketInvestmentType.CRYPTO]: crypto
 });
 
 const infoToInvestmentByType = (
-	info: MarketInvestmentInfo
+    info: MarketInvestmentInfo
 ): InvestmentsByType =>
-	match(info)
-		.with({ marketType: MarketInvestmentType.USA_ETF }, (_) =>
-			createInvestmentsByType([_], [], [])
-		)
-		.with({ marketType: MarketInvestmentType.INTERNATIONAL_ETF }, (_) =>
-			createInvestmentsByType([], [_], [])
-		)
-		.with({ marketType: MarketInvestmentType.CRYPTO }, (_) =>
-			createInvestmentsByType([], [], [_])
-		)
-		.run();
+    match(info)
+        .with({ marketType: MarketInvestmentType.USA_ETF }, (_) =>
+            createInvestmentsByType([_], [], [])
+        )
+        .with({ marketType: MarketInvestmentType.INTERNATIONAL_ETF }, (_) =>
+            createInvestmentsByType([], [_], [])
+        )
+        .with({ marketType: MarketInvestmentType.CRYPTO }, (_) =>
+            createInvestmentsByType([], [], [_])
+        )
+        .run();
 
 const groupInvestmentsByType = (
-	infoArray: MarketInvestmentInfoArray
+    infoArray: MarketInvestmentInfoArray
 ): InvestmentsByType =>
-	pipe(
-		infoArray,
-		RArray.map(infoToInvestmentByType),
-		Monoid.concatAll(groupByTypeMonoid)
-	);
+    pipe(
+        infoArray,
+        RArray.map(infoToInvestmentByType),
+        Monoid.concatAll(groupByTypeMonoid)
+    );
 
 export const marketInvestmentsByType: TryT<InvestmentsByType> = pipe(
-	allMarketInvestmentInfo,
-	Either.map(groupInvestmentsByType)
+    allMarketInvestmentInfo,
+    Either.map(groupInvestmentsByType)
 );
 
 export const getAltIdForSymbol = (symbol: string): TryT<string> =>
-	pipe(
-		altInvestmentIds,
-		Either.map((altIds) => altIds.symbolToId[symbol]),
-		Either.map(Option.fromNullable),
-		Either.map(Option.getOrElse(() => symbol))
-	);
+    pipe(
+        altInvestmentIds,
+        Either.map((altIds) => altIds.symbolToId[symbol]),
+        Either.map(Option.fromNullable),
+        Either.map(Option.getOrElse(() => symbol))
+    );
 
 export const getSymbolForAltId = (id: string): TryT<string> =>
-	pipe(
-		altInvestmentIds,
-		Either.map((altIds) => altIds.idToSymbol[id]),
-		Either.map(Option.fromNullable),
-		Either.map(Option.getOrElse(() => id))
-	);
+    pipe(
+        altInvestmentIds,
+        Either.map((altIds) => altIds.idToSymbol[id]),
+        Either.map(Option.fromNullable),
+        Either.map(Option.getOrElse(() => id))
+    );

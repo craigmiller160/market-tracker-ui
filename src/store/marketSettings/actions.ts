@@ -5,15 +5,15 @@ import { marketSettingsSlice } from './slice';
 import type { RootState } from '../createStore';
 
 export const changeSelectedTime =
-	(timeMenuKey: string) =>
-	(dispatch: StoreDispatch, getState: () => RootState) => {
-		const state = getState();
-		const currentTimeValue = timeValueSelector(state);
-		const newTimeValue = menuKeyToMarketTime(timeMenuKey);
+    (timeMenuKey: string) =>
+    (dispatch: StoreDispatch, getState: () => RootState) => {
+        const state = getState();
+        const currentTimeValue = timeValueSelector(state);
+        const newTimeValue = menuKeyToMarketTime(timeMenuKey);
 
-		if (currentTimeValue === newTimeValue) {
-			return Promise.resolve();
-		}
+        if (currentTimeValue === newTimeValue) {
+            return Promise.resolve();
+        }
 
-		dispatch(marketSettingsSlice.actions.setTime(timeMenuKey));
-	};
+        dispatch(marketSettingsSlice.actions.setTime(timeMenuKey));
+    };

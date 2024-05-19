@@ -6,9 +6,9 @@ import { defaultState } from '../../testutils/mockStoreUtils';
 import { MarketTime, marketTimeToMenuKey } from '../../../src/types/MarketTime';
 import { type RootState, type StoreType } from '../../../src/store/createStore';
 import {
-	type AnyAction,
-	type Draft,
-	type ThunkDispatch
+    type AnyAction,
+    type Draft,
+    type ThunkDispatch
 } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { marketSettingsSlice } from '../../../src/store/marketSettings/slice';
@@ -33,72 +33,72 @@ const month = formatCalendarMonth(date);
 const year = formatCalendarYear(date);
 
 const tradierCalendar: TradierCalendar = {
-	calendar: {
-		month: 1,
-		year: 2,
-		days: {
-			day: [
-				{
-					date: formattedDate,
-					status: 'closed'
-				}
-			]
-		}
-	}
+    calendar: {
+        month: 1,
+        year: 2,
+        days: {
+            day: [
+                {
+                    date: formattedDate,
+                    status: 'closed'
+                }
+            ]
+        }
+    }
 };
 
 type MockStoreType = StoreType & MockStoreEnhanced;
 
 describe('marketSettings actions', () => {
-	beforeEach(() => {
-		mockApi.reset();
-	});
+    beforeEach(() => {
+        mockApi.reset();
+    });
 
-	describe('changeSelectedTime', () => {
-		it('current & new time match', async () => {
-			const mockStore = newMockStore(defaultState) as MockStoreType;
-			await mockStore.dispatch(changeSelectedTime(todayKey));
+    describe('changeSelectedTime', () => {
+        it('current & new time match', async () => {
+            const mockStore = newMockStore(defaultState) as MockStoreType;
+            await mockStore.dispatch(changeSelectedTime(todayKey));
 
-			expect(mockStore.getActions()).toEqual([]);
-		});
+            expect(mockStore.getActions()).toEqual([]);
+        });
 
-		it('changes time and checks market status for Today', async () => {
-			mockApi
-				.onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
-				.reply(200, tradierCalendar);
-			const newDefaultState = produce(
-				defaultState,
-				(draft: Draft<RootState>) => {
-					draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
-				}
-			);
-			const mockStore = newMockStore(newDefaultState) as MockStoreType;
-			await mockStore.dispatch(changeSelectedTime(todayKey));
+        it('changes time and checks market status for Today', async () => {
+            mockApi
+                .onGet(`/tradier/markets/calendar?year=${year}&month=${month}`)
+                .reply(200, tradierCalendar);
+            const newDefaultState = produce(
+                defaultState,
+                (draft: Draft<RootState>) => {
+                    draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
+                }
+            );
+            const mockStore = newMockStore(newDefaultState) as MockStoreType;
+            await mockStore.dispatch(changeSelectedTime(todayKey));
 
-			expect(mockStore.getActions()).toEqual([
-				{
-					type: marketSettingsSlice.actions.setTime.type,
-					payload: todayKey
-				}
-			]);
-		});
+            expect(mockStore.getActions()).toEqual([
+                {
+                    type: marketSettingsSlice.actions.setTime.type,
+                    payload: todayKey
+                }
+            ]);
+        });
 
-		it('changes time and checks market status for other time', async () => {
-			const newDefaultState = produce(
-				defaultState,
-				(draft: Draft<RootState>) => {
-					draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
-				}
-			);
-			const mockStore = newMockStore(newDefaultState) as MockStoreType;
-			await mockStore.dispatch(changeSelectedTime(oneWeekKey));
+        it('changes time and checks market status for other time', async () => {
+            const newDefaultState = produce(
+                defaultState,
+                (draft: Draft<RootState>) => {
+                    draft.marketSettings.time.value = MarketTime.FIVE_YEARS;
+                }
+            );
+            const mockStore = newMockStore(newDefaultState) as MockStoreType;
+            await mockStore.dispatch(changeSelectedTime(oneWeekKey));
 
-			expect(mockStore.getActions()).toEqual([
-				{
-					type: marketSettingsSlice.actions.setTime.type,
-					payload: oneWeekKey
-				}
-			]);
-		});
-	});
+            expect(mockStore.getActions()).toEqual([
+                {
+                    type: marketSettingsSlice.actions.setTime.type,
+                    payload: oneWeekKey
+                }
+            ]);
+        });
+    });
 });

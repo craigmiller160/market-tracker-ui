@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 import { store } from '../../src/store';
 import {
-	ScreenContext,
-	type ScreenContextValue
+    ScreenContext,
+    type ScreenContextValue
 } from '../../src/components/ScreenContext';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -12,74 +12,74 @@ import { marketSettingsSlice } from '../../src/store/marketSettings/slice';
 import { authSlice } from '../../src/store/auth/slice';
 import { notificationSlice } from '../../src/store/notification/slice';
 import {
-	type KeycloakAuth,
-	KeycloakAuthContext
+    type KeycloakAuth,
+    KeycloakAuthContext
 } from '@craigmiller160/react-keycloak';
 import { MarketTrackerKeycloakBridge } from '../../src/components/keycloak/MarketTrackerKeycloakBridge';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { StoreType } from '../../src/store/createStore';
 
 interface RenderConfig {
-	readonly initialPath: string;
-	readonly screenContextValue: ScreenContextValue;
+    readonly initialPath: string;
+    readonly screenContextValue: ScreenContextValue;
 }
 
 interface RenderResult {
-	readonly store: StoreType;
+    readonly store: StoreType;
 }
 
 const resetStore = () => {
-	store.dispatch(marketSettingsSlice.actions.reset());
-	store.dispatch(notificationSlice.actions.reset());
-	store.dispatch(authSlice.actions.reset());
+    store.dispatch(marketSettingsSlice.actions.reset());
+    store.dispatch(notificationSlice.actions.reset());
+    store.dispatch(authSlice.actions.reset());
 };
 
 const keycloakAuth: KeycloakAuth = {
-	status: 'authorized',
-	isPostAuthorization: true,
-	isPreAuthorization: false,
-	logout: vi.fn()
+    status: 'authorized',
+    isPostAuthorization: true,
+    isPreAuthorization: false,
+    logout: vi.fn()
 };
 
 const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnWindowFocus: false,
-			cacheTime: 0,
-			retry: false
-		}
-	}
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            cacheTime: 0,
+            retry: false
+        }
+    }
 });
 
 export const renderApp = (
-	renderConfig?: Partial<RenderConfig>
+    renderConfig?: Partial<RenderConfig>
 ): RenderResult => {
-	window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
-	const screenContextValue: ScreenContextValue =
-		renderConfig?.screenContextValue ?? {
-			breakpoints: {
-				lg: true
-			}
-		};
+    window.history.replaceState({}, '', renderConfig?.initialPath ?? '/');
+    const screenContextValue: ScreenContextValue =
+        renderConfig?.screenContextValue ?? {
+            breakpoints: {
+                lg: true
+            }
+        };
 
-	resetStore();
+    resetStore();
 
-	render(
-		<Provider store={store}>
-			<QueryClientProvider client={queryClient}>
-				<KeycloakAuthContext.Provider value={keycloakAuth}>
-					<MarketTrackerKeycloakBridge>
-						<ScreenContext.Provider value={screenContextValue}>
-							<BrowserRouter basename="/">
-								<RootLayout />
-							</BrowserRouter>
-						</ScreenContext.Provider>
-					</MarketTrackerKeycloakBridge>
-				</KeycloakAuthContext.Provider>
-			</QueryClientProvider>
-		</Provider>
-	);
-	return {
-		store
-	};
+    render(
+        <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+                <KeycloakAuthContext.Provider value={keycloakAuth}>
+                    <MarketTrackerKeycloakBridge>
+                        <ScreenContext.Provider value={screenContextValue}>
+                            <BrowserRouter basename="/">
+                                <RootLayout />
+                            </BrowserRouter>
+                        </ScreenContext.Provider>
+                    </MarketTrackerKeycloakBridge>
+                </KeycloakAuthContext.Provider>
+            </QueryClientProvider>
+        </Provider>
+    );
+    return {
+        store
+    };
 };
