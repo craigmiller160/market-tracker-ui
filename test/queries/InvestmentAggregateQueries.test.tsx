@@ -10,10 +10,13 @@ import { createStore, type StoreType } from '../../src/store/createStore';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
 	expectedVtiOneWeekData,
-	expectedVxusOneWeekData
+	expectedVtiTodayData,
+	expectedVxusOneWeekData,
+	expectedVxusTodayData
 } from '../testutils/support/aggregate-queries/tradier-data';
 import type { InvestmentData } from '../../src/types/data/InvestmentData';
 import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/tradier-msw-handlers';
+import { match } from 'ts-pattern';
 
 const queryClient = new QueryClient();
 
@@ -111,6 +114,18 @@ const validateData = (
 	}
 };
 
+const getExpectedData = (time: MarketTime): [InvestmentData, InvestmentData] =>
+	match<MarketTime, [InvestmentData, InvestmentData]>(time)
+		.with(MarketTime.ONE_DAY, () => [
+			expectedVtiTodayData,
+			expectedVxusTodayData
+		])
+		.with(MarketTime.ONE_WEEK, () => [
+			expectedVtiOneWeekData,
+			expectedVxusOneWeekData
+		])
+		.run();
+
 test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 	'validates useGetAggregateInvestmentData %s',
 	async (time) => {
@@ -133,10 +148,12 @@ test.each<MarketTime>([MarketTime.ONE_DAY, MarketTime.ONE_WEEK])(
 		);
 		expect(screen.getByText('Has Error: false')).toBeVisible();
 
+		const [expectedVti, expectedVxus] = getExpectedData(time);
+
 		const vtiData = screen.getByTestId('VTI-data');
-		validateData(vtiData, time, expectedVtiOneWeekData);
+		validateData(vtiData, time, expectedVti);
 
 		const vxusData = screen.getByTestId('VXUS-data');
-		validateData(vxusData, time, expectedVxusOneWeekData);
+		validateData(vxusData, time, expectedVxus);
 	}
 );
