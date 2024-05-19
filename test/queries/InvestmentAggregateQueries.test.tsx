@@ -11,9 +11,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
 	expectedVtiData,
 	expectedVxusData
-} from '../testutils/support/aggregate-queries/data';
+} from '../testutils/support/aggregate-queries/tradier-data';
 import type { InvestmentData } from '../../src/types/data/InvestmentData';
-import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/msw-handlers';
+import { prepareAggregateQueryMswHandlers } from '../testutils/support/aggregate-queries/tradier-msw-handlers';
 
 const queryClient = new QueryClient();
 

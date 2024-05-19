@@ -11,7 +11,7 @@ import {
 } from 'msw';
 import { format, getMonth, getYear } from 'date-fns';
 import type { TradierHistory } from '../../../../src/types/tradier/history';
-import { vtiHistory, vtiQuote, vxusHistory, vxusQuote } from './data';
+import { vtiHistory, vtiQuote, vxusHistory, vxusQuote } from './tradier-data';
 import type {
 	TradierQuote,
 	TradierQuotes
